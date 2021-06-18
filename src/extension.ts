@@ -1,26 +1,39 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import { LocalCiProvider } from './LocalCiProvider';
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-	
+	const actionsProvider = new LocalCiProvider(vscode.workspace);
+	vscode.window.registerTreeDataProvider('ciJobs', actionsProvider);
+	vscode.commands.registerCommand('ciJobs.refresh', () => actionsProvider.refresh());
+	vscode.window.createTreeView('ciJobs', {
+		treeDataProvider: actionsProvider,
+	});
+
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "localci" is now active!');
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('localci.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from LocalCi!');
+	let disposable = vscode.commands.registerCommand('localci.welcome', () => {
+		console.log('inside welcome!');
 	});
 
 	context.subscriptions.push(disposable);
+
+	let runActionDisposable = vscode.commands.registerCommand('localci.runAction', ( jobName ) => {
+		vscode.window.showInformationMessage('About to run an action');
+
+		const command = 'all' === jobName
+			? 'act'
+			: `act -j ${ jobName }`;
+
+		const terminal = (<any>vscode.window).createTerminal('localci test');
+		terminal.sendText(`echo "Running the CircleCI job ${ jobName }"`);
+		terminal.sendText(command);
+		terminal.show();
+	});
+
+	context.subscriptions.push(runActionDisposable);
 }
 
-// this method is called when your extension is deactivated
+// called when your extension is deactivated
 export function deactivate() {}
