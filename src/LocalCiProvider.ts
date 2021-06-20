@@ -16,33 +16,22 @@ export class LocalCiProvider implements vscode.TreeDataProvider<Job> {
     return element;
   }
 
-  async getChildren(element?: Job): Promise<Job[]> {
+  async getChildren(): Promise<Job[]> {
     const ymlFiles = await this.workspace.findFiles('.circleci/config.yml');
-    const jobs = ymlFiles.reduce(
-      ( accumulator, ymlFile ) => [
-        ...accumulator,
-        ...Object.keys(yaml.load(fs.readFileSync(ymlFile.fsPath, 'utf8'))?.jobs ?? {})
-      ],
-      []
-    );
+    console.log( ymlFiles );
 
-    jobs.push(
-      new Job(
-        'all',
-        vscode.TreeItemCollapsibleState.None
-      )
-    );
+    type ConfigFile = { jobs: Record<string, unknown> };
+    const configFile = yaml.load(fs.readFileSync(ymlFiles[0].fsPath, 'utf8'));
+    const jobs = typeof configFile === 'object'
+      ? Object.keys((configFile as ConfigFile)?.jobs ?? {})
+      : [];
 
     return Promise.resolve(
-      jobs.reduce(
-        ( accumulator, jobName ) => [
-          ...accumulator,
-          new Job(
-            jobName,
-            vscode.TreeItemCollapsibleState.None
-          )
-        ],
-        []
+      jobs.map(
+        jobName => new Job(
+          jobName,
+          vscode.TreeItemCollapsibleState.None
+        )
       )
     );
   }
