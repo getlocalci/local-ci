@@ -7,7 +7,7 @@ export class Job extends vscode.TreeItem {
     public readonly collapsibleState: vscode.TreeItemCollapsibleState
   ) {
     super(label, collapsibleState);
-    const tooltip = `Runs the CircleCI job ${ this.label }`;
+    const tooltip = `Runs the CircleCI job ${this.label}`;
 
     this.tooltip = tooltip;
     this.description = label;
@@ -15,12 +15,19 @@ export class Job extends vscode.TreeItem {
       title: label,
       command: 'localci.runAction',
       tooltip,
-      arguments: [ label ],
+      arguments: [label],
     };
   }
 
   iconPath = {
-    light: path.join(__filename, '..', '..', 'resources', 'light', 'folder.svg'),
-    dark: path.join(__filename, '..', '..', 'resources', 'dark', 'folder.svg')
+    light: path.join(
+      __filename,
+      '..',
+      '..',
+      'resources',
+      'light',
+      'folder.svg'
+    ),
+    dark: path.join(__filename, '..', '..', 'resources', 'dark', 'folder.svg'),
   };
 }
