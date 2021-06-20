@@ -19,15 +19,8 @@ This extension contributes the following settings:
 * `myExtension.enable`: enable/disable this extension
 * `myExtension.thing`: set to `blah` to do something
 
-## Known Issues
-
-Please see the [issues](https://github.com/kienstra/localci/issues)
-
-## Release Notes
-
-### 1.0.0
-
-Initial release of Local CI
+## License
+[GPL v2](LICENSE) or later
 
 -----------------------------------------------------------------------------------------------------------
 ## Following extension guidelines
