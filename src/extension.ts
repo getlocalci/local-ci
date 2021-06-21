@@ -24,7 +24,7 @@ export function activate(context: vscode.ExtensionContext): void {
   const runActionDisposable = vscode.commands.registerCommand(
     'localci.runAction',
     async (jobName) => {
-      const command = `circleci local execute --job ${jobName} || exit 1`;
+      const command = `circleci local execute --job ${jobName}`;
 
       const terminal = vscode.window.createTerminal({
         name: 'localci test',
@@ -40,18 +40,16 @@ export function activate(context: vscode.ExtensionContext): void {
         name: 'localci debugging',
         message: 'This is inside the running container',
       });
-      const dockerDebugCommand = 'docker exec -it $(docker ps -lq) bash';
+      const dockerDebugCommand =
+        'docker exec -it $(docker ps -lq) bash || exit 1';
 
       debuggingTerminal.show();
       debuggingTerminal.sendText(dockerDebugCommand);
 
       const finalTerminal = vscode.window.createTerminal({
-        name: 'localci final state',
-        message:
-          'This is the final state inside the container before it exited',
-        hideFromUser: true,
+        name: 'localci commit image',
+        message: 'Debug the final state of the container',
       });
-      finalTerminal.show();
 
       const interval = setInterval(() => {
         finalTerminal.sendText(
@@ -61,11 +59,14 @@ export function activate(context: vscode.ExtensionContext): void {
 
       vscode.window.onDidCloseTerminal((t) => {
         clearTimeout(interval);
+
         if (t.exitStatus && t.exitStatus.code) {
+          // @todo: handle if debuggingTerminal exits because terminal hasn't started the container.
           vscode.window.showInformationMessage(
-            `The job ${jobName} failed, opening debugger shell`
+            `The job ${jobName} exited, opening a debugging shell`
           );
           finalTerminal.sendText(`docker run -it local-ci-${jobName}`);
+          finalTerminal.sendText(`cd ~/passwords-evolved`);
           finalTerminal.show();
         }
       });

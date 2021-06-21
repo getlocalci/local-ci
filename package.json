@@ -2,7 +2,8 @@
 	"name": "localci",
 	"displayName": "LocalCi",
 	"description": "Debug CircleCI builds locally, no more waiting and hoping.",
-	"version": "0.0.1",
+	"version": "0.1.0",
+	"license": "GPL-2.0-or-later",
 	"engines": {
 		"vscode": "^1.57.0"
 	},
