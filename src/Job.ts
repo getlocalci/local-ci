@@ -10,7 +10,6 @@ export class Job extends vscode.TreeItem {
     const tooltip = `Runs the CircleCI job ${this.label}`;
 
     this.tooltip = tooltip;
-    this.description = label;
     this.command = {
       title: label,
       command: 'localci.runAction',
