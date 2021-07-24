@@ -105,7 +105,7 @@ export async function changeCheckoutJob(processFile: string): Promise<void> {
 
 export function getRootPath(): string {
   return vscode.workspace?.workspaceFolders?.length
-    ? vscode.workspace.workspaceFolders[0].name
+    ? vscode.workspace.workspaceFolders[0]?.uri?.path
     : '';
 }
 
@@ -210,7 +210,10 @@ export async function runJob(jobName: string): Promise<void> {
       finalTerminal.show();
     }
 
-    if (closedTerminal.name === finalTerminalName) {
+    if (
+      closedTerminal.name === finalTerminalName ||
+      closedTerminal.name === debuggingTerminalName
+    ) {
       // Remove the image that was a copy of the running CircleCI job container.
       closedTerminal.sendText(`docker rmi ${committedContainerBase}${jobName}`);
       return;
