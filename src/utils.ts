@@ -6,7 +6,10 @@ import * as vscode from 'vscode';
 
 type ConfigFile = { jobs: Array<Record<string, unknown>> };
 
-export async function getConfigFile(configFilePath = ''): Promise<ConfigFile> {
+export async function getConfigFile(
+  configFilePath = ''
+  // eslint-disable-next-line @typescript-eslint/ban-types
+): Promise<ConfigFile | string | number | object | null | undefined> {
   return yaml.load(fs.readFileSync(configFilePath, 'utf8'));
 }
 
@@ -25,7 +28,8 @@ export async function getCheckoutJobs(inputFile = ''): Promise<string[]> {
 
   return Object.keys(configFile.jobs).filter((jobName: string) => {
     return configFile.jobs[jobName]?.steps.some(
-      (step: { checkout: unknown }) => 'checkout' === step || step.checkout
+      (step: { checkout: Record<string, unknown> | string }) =>
+        'checkout' === step || step.checkout
     );
   });
 }
@@ -66,7 +70,7 @@ export async function changeCheckoutJob(processFile: string): Promise<T> {
   fs.writeFileSync(processFile, yaml.dump(configFile));
 }
 
-export async function runJob(jobName: string) {
+export async function runJob(jobName: string): Promise<void> {
   const processFile = 'process.yml';
 
   const terminal = vscode.window.createTerminal({
@@ -80,15 +84,11 @@ export async function runJob(jobName: string) {
       `circleci config process ${vscode.workspace.rootPath}/.circleci/config.yml > /tmp/circleci/${processFile}`
     );
   } catch (e) {
-    terminal.sendText(
-      `echo "Error when processing the config: ${e.message}"`
-    );
+    terminal.sendText(`echo "Error when processing the config: ${e.message}"`);
   }
 
   await changeCheckoutJob(`/tmp/circleci/${processFile}`);
-  const checkoutJobs = await getCheckoutJobs(
-    `/tmp/circleci/${processFile}`
-  );
+  const checkoutJobs = await getCheckoutJobs(`/tmp/circleci/${processFile}`);
   const directoryMatches = vscode.workspace.workspaceFolders.length
     ? vscode.workspace.workspaceFolders[0].name.match(/[^/]+$/)
     : '';
@@ -171,9 +171,7 @@ export async function runJob(jobName: string) {
 
     if (closedTerminal.name === finalTerminalName) {
       // Remove the image that was a copy of the running CircleCI job container.
-      closedTerminal.sendText(
-        `docker rmi ${committedContainerBase}${jobName}`
-      );
+      closedTerminal.sendText(`docker rmi ${committedContainerBase}${jobName}`);
       return;
     }
   });
