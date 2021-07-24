@@ -4,34 +4,41 @@ import * as yaml from 'js-yaml';
 import { promisify } from 'util';
 import * as vscode from 'vscode';
 
-type ConfigFile = { jobs: Array<Record<string, unknown>> };
+type Steps = Array<{
+  checkout?: Record<string, unknown> | string;
+  attach_workspace?: string; // eslint-disable-line @typescript-eslint/naming-convention
+}>;
+
+interface ConfigFile {
+  jobs: Record<string, { steps?: Steps }>;
+}
 
 export async function getConfigFile(
   configFilePath = ''
-  // eslint-disable-next-line @typescript-eslint/ban-types
-): Promise<ConfigFile | string | number | object | null | undefined> {
-  return yaml.load(fs.readFileSync(configFilePath, 'utf8'));
+): Promise<ConfigFile | undefined> {
+  const configFile = yaml.load(fs.readFileSync(configFilePath, 'utf8'));
+  if (typeof configFile !== 'object' || !(configFile as ConfigFile)?.jobs) {
+    throw new Error('No jobs found in config file');
+  }
+
+  return configFile as ConfigFile;
 }
 
 export async function getJobs(configFilePath = ''): Promise<string[] | []> {
   const configFile = await getConfigFile(configFilePath);
-  return typeof configFile === 'object'
-    ? Object.keys(configFile?.jobs ?? {})
-    : [];
+  return configFile?.jobs ? Object.keys(configFile?.jobs) : [];
 }
 
 export async function getCheckoutJobs(inputFile = ''): Promise<string[]> {
   const configFile = await getConfigFile(inputFile);
-  if (typeof configFile !== 'object') {
-    return [];
-  }
 
-  return Object.keys(configFile.jobs).filter((jobName: string) => {
-    return configFile.jobs[jobName]?.steps.some(
-      (step: { checkout: Record<string, unknown> | string }) =>
-        'checkout' === step || step.checkout
-    );
-  });
+  return configFile?.jobs
+    ? Object.keys(configFile?.jobs).filter((jobName) => {
+        return configFile.jobs[jobName]?.steps?.some(
+          (step) => 'checkout' === step || step.checkout
+        );
+      })
+    : [];
 }
 
 export async function changeCheckoutJob(processFile: string): Promise<T> {
@@ -89,15 +96,20 @@ export async function runJob(jobName: string): Promise<void> {
 
   await changeCheckoutJob(`/tmp/circleci/${processFile}`);
   const checkoutJobs = await getCheckoutJobs(`/tmp/circleci/${processFile}`);
-  const directoryMatches = vscode.workspace.workspaceFolders.length
-    ? vscode.workspace.workspaceFolders[0].name.match(/[^/]+$/)
-    : '';
+  const directoryMatches =
+    vscode.workspace.workspaceFolders &&
+    vscode.workspace.workspaceFolders.length
+      ? vscode.workspace.workspaceFolders[0].name.match(/[^/]+$/)
+      : '';
   const directory = directoryMatches ? directoryMatches[0] : '';
 
   const configFile = await getConfigFile(`/tmp/circleci/${processFile}`);
-  const attachWorkspaceSteps = configFile?.jobs[jobName]?.steps.filter(
-    (step: { attach_workspace: string }) => Boolean(step.attach_workspace) // eslint-disable-line @typescript-eslint/naming-convention
-  );
+  const attachWorkspaceSteps = configFile?.jobs[jobName]?.steps
+    ? (configFile?.jobs[jobName]?.steps as Steps).filter((step) =>
+        Boolean(step.attach_workspace)
+      )
+    : [];
+
   const defaultWorkspace = '/home/circleci/project';
   const initialAttachWorkspace = attachWorkspaceSteps.length
     ? attachWorkspaceSteps[0].attach_workspace.at
