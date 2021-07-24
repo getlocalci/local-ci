@@ -4,18 +4,34 @@ import * as yaml from 'js-yaml';
 import { promisify } from 'util';
 import * as vscode from 'vscode';
 
-type Steps = Array<{
+interface Step {
   checkout?: Record<string, unknown> | string;
-  attach_workspace?: string; // eslint-disable-line @typescript-eslint/naming-convention
-}>;
-
-interface ConfigFile {
-  jobs: Record<string, { steps?: Steps }>;
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  attach_workspace?: {
+    at?: string;
+  };
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  persist_to_workspace?: {
+    root?: string;
+    paths?: Array<string>;
+  };
+  run?: {
+    command?: string;
+  };
 }
 
-export async function getConfigFile(
-  configFilePath = ''
-): Promise<ConfigFile | undefined> {
+interface ConfigFile {
+  jobs: Record<
+    string,
+    {
+      steps?: Array<Step>;
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      working_directory?: string;
+    }
+  >;
+}
+
+export async function getConfigFile(configFilePath = ''): Promise<ConfigFile> {
   const configFile = yaml.load(fs.readFileSync(configFilePath, 'utf8'));
   if (typeof configFile !== 'object' || !(configFile as ConfigFile)?.jobs) {
     throw new Error('No jobs found in config file');
@@ -41,9 +57,13 @@ export async function getCheckoutJobs(inputFile = ''): Promise<string[]> {
     : [];
 }
 
-export async function changeCheckoutJob(processFile: string): Promise<T> {
+export async function changeCheckoutJob(processFile: string): Promise<void> {
   const checkoutJobs = await getCheckoutJobs(processFile);
   const configFile = await getConfigFile(processFile);
+
+  if (!configFile) {
+    return;
+  }
 
   if (!checkoutJobs.length) {
     fs.writeFileSync(processFile, yaml.dump(configFile));
@@ -51,30 +71,44 @@ export async function changeCheckoutJob(processFile: string): Promise<T> {
   }
 
   checkoutJobs.forEach((checkoutJob: string) => {
-    configFile.jobs[checkoutJob].steps = configFile.jobs[checkoutJob].steps.map(
-      (step) => {
-        if (!step?.persist_to_workspace) {
-          return step;
-        }
+    if (!configFile || !configFile.jobs[checkoutJob]?.steps) {
+      return;
+    }
 
-        const fullPath =
-          !step?.persist_to_workspace?.root ||
-          '.' === step.persist_to_workspace.root
-            ? `${configFile.jobs[checkoutJob].working_directory}/${step.persist_to_workspace.paths[0]}`
-            : `${step.persist_to_workspace.root}/${step.persist_to_workspace.paths[0]}`;
-
-        return step.persist_to_workspace
-          ? {
-              run: {
-                command: `cp -ruv ${fullPath} /tmp/checkout`,
-              },
-            }
-          : step;
+    configFile.jobs[checkoutJob].steps = configFile?.jobs[
+      checkoutJob
+    ]?.steps?.map((step) => {
+      if (!step?.persist_to_workspace) {
+        return step;
       }
-    );
+
+      const persistToWorkspacePath = step?.persist_to_workspace?.paths?.length
+        ? step.persist_to_workspace.paths[0]
+        : '';
+
+      const fullPath =
+        !step?.persist_to_workspace?.root ||
+        '.' === step.persist_to_workspace.root
+          ? `${configFile.jobs[checkoutJob].working_directory}/${persistToWorkspacePath}`
+          : `${step.persist_to_workspace.root}/${persistToWorkspacePath}`;
+
+      return step.persist_to_workspace
+        ? {
+            run: {
+              command: `cp -ruv ${fullPath} /tmp/checkout`,
+            },
+          }
+        : step;
+    });
   });
 
   fs.writeFileSync(processFile, yaml.dump(configFile));
+}
+
+export function getRootPath(): string {
+  return vscode.workspace?.workspaceFolders?.length
+    ? vscode.workspace.workspaceFolders[0].name
+    : '';
 }
 
 export async function runJob(jobName: string): Promise<void> {
@@ -88,7 +122,7 @@ export async function runJob(jobName: string): Promise<void> {
   const runCommand = promisify(exec);
   try {
     await runCommand(
-      `circleci config process ${vscode.workspace.rootPath}/.circleci/config.yml > /tmp/circleci/${processFile}`
+      `circleci config process ${getRootPath()}/.circleci/config.yml > /tmp/circleci/${processFile}`
     );
   } catch (e) {
     terminal.sendText(`echo "Error when processing the config: ${e.message}"`);
@@ -96,24 +130,21 @@ export async function runJob(jobName: string): Promise<void> {
 
   await changeCheckoutJob(`/tmp/circleci/${processFile}`);
   const checkoutJobs = await getCheckoutJobs(`/tmp/circleci/${processFile}`);
-  const directoryMatches =
-    vscode.workspace.workspaceFolders &&
-    vscode.workspace.workspaceFolders.length
-      ? vscode.workspace.workspaceFolders[0].name.match(/[^/]+$/)
-      : '';
+  const directoryMatches = getRootPath().match(/[^/]+$/);
   const directory = directoryMatches ? directoryMatches[0] : '';
 
   const configFile = await getConfigFile(`/tmp/circleci/${processFile}`);
   const attachWorkspaceSteps = configFile?.jobs[jobName]?.steps
-    ? (configFile?.jobs[jobName]?.steps as Steps).filter((step) =>
+    ? (configFile?.jobs[jobName]?.steps as Array<Step>).filter((step) =>
         Boolean(step.attach_workspace)
       )
     : [];
 
   const defaultWorkspace = '/home/circleci/project';
-  const initialAttachWorkspace = attachWorkspaceSteps.length
-    ? attachWorkspaceSteps[0].attach_workspace.at
-    : '';
+  const initialAttachWorkspace =
+    attachWorkspaceSteps.length && attachWorkspaceSteps[0]?.attach_workspace?.at
+      ? attachWorkspaceSteps[0].attach_workspace.at
+      : '';
   const attachWorkspace =
     '.' === initialAttachWorkspace || !initialAttachWorkspace
       ? defaultWorkspace
