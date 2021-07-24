@@ -33,7 +33,7 @@ interface ConfigFile {
 
 export async function getConfigFile(configFilePath = ''): Promise<ConfigFile> {
   const configFile = yaml.load(fs.readFileSync(configFilePath, 'utf8'));
-  if (typeof configFile !== 'object' || !(configFile as ConfigFile)?.jobs) {
+  if (!(configFile as ConfigFile)?.jobs) {
     throw new Error('No jobs found in config file');
   }
 
@@ -48,13 +48,11 @@ export async function getJobs(configFilePath = ''): Promise<string[] | []> {
 export async function getCheckoutJobs(inputFile = ''): Promise<string[]> {
   const configFile = await getConfigFile(inputFile);
 
-  return configFile?.jobs
-    ? Object.keys(configFile?.jobs).filter((jobName) => {
-        return configFile.jobs[jobName]?.steps?.some(
-          (step) => 'checkout' === step || step.checkout
-        );
-      })
-    : [];
+  return Object.keys(configFile?.jobs ?? []).filter((jobName) =>
+    configFile.jobs[jobName]?.steps?.some(
+      (step) => 'checkout' === step || step.checkout
+    )
+  );
 }
 
 export async function changeCheckoutJob(processFile: string): Promise<void> {

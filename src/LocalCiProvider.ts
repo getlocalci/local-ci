@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { Job } from './Job';
-import { getJobs } from './utils';
+import { getJobs, getRootPath } from './utils';
 
 export class LocalCiProvider implements vscode.TreeDataProvider<Job> {
   private _onDidChangeTreeData: vscode.EventEmitter<Job | undefined | void> =
@@ -16,7 +16,7 @@ export class LocalCiProvider implements vscode.TreeDataProvider<Job> {
 
   async getChildren(): Promise<Job[]> {
     return Promise.resolve(
-      (await getJobs(`${vscode.workspace.rootPath}/.circleci/config.yml`)).map(
+      (await getJobs(`${getRootPath()}/.circleci/config.yml`)).map(
         (jobName) => new Job(jobName, vscode.TreeItemCollapsibleState.None)
       )
     );
