@@ -112,7 +112,7 @@ export async function runJob(jobName: string): Promise<void> {
   const processFile = 'process.yml';
 
   const terminal = vscode.window.createTerminal({
-    name: 'localci test',
+    name: 'local-ci test',
     message: `Running the CircleCI job ${jobName}`,
   });
 
@@ -134,7 +134,7 @@ export async function runJob(jobName: string): Promise<void> {
   const directory = directoryMatches ? directoryMatches[0] : '';
 
   const configFile = await getConfigFile(`${tmpPath}/${processFile}`);
-  const attachWorkspaceSteps = configFile?.jobs[jobName]?.steps
+  const attachWorkspaceSteps = configFile?.jobs[jobName]?.steps?.length
     ? (configFile?.jobs[jobName]?.steps as Array<Step>).filter((step) =>
         Boolean(step.attach_workspace)
       )
@@ -154,8 +154,8 @@ export async function runJob(jobName: string): Promise<void> {
   const volume = checkoutJobs.includes(jobName)
     ? `${localVolume}:/tmp/checkout`
     : `${localVolume}:${attachWorkspace}`;
-  const debuggingTerminalName = 'localci debugging';
-  const finalTerminalName = 'localci final terminal';
+  const debuggingTerminalName = 'local-ci debugging';
+  const finalTerminalName = 'local-ci final terminal';
 
   const command = `circleci local execute --job ${jobName} --config ${tmpPath}/${processFile} --debug -v ${volume}`;
   terminal.sendText(`mkdir -p ${localVolume}`);

@@ -1,5 +1,5 @@
 {
-	"name": "localci",
+	"name": "local-ci",
 	"displayName": "LocalCi",
 	"description": "Debug CircleCI builds locally, no more waiting and hoping.",
 	"version": "0.1.0",
@@ -17,7 +17,7 @@
 	"contributes": {
 		"commands": [
 			{
-				"command": "localci.helloWorld",
+				"command": "local-ci.helloWorld",
 				"title": "Hello World"
 			}
 		],
