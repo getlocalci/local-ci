@@ -120,7 +120,7 @@ export async function runJob(jobName: string): Promise<void> {
   const tmpPath = '/tmp/circleci';
   try {
     await runCommand(
-      `circleci config process ${getRootPath()}/.circleci/config.yml > ${tmpPath}/${processFile}`
+      `mkdir -p ${tmpPath} && circleci config process ${getRootPath()}/.circleci/config.yml > ${tmpPath}/${processFile}`
     );
   } catch (e) {
     vscode.window.showErrorMessage(
