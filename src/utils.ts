@@ -41,8 +41,7 @@ export async function getConfigFile(configFilePath = ''): Promise<ConfigFile> {
 }
 
 export async function getJobs(configFilePath = ''): Promise<string[] | []> {
-  const configFile = await getConfigFile(configFilePath);
-  return configFile?.jobs ? Object.keys(configFile?.jobs) : [];
+  return Object.keys((await getConfigFile(configFilePath))?.jobs ?? {});
 }
 
 export async function getCheckoutJobs(inputFile = ''): Promise<string[]> {
@@ -118,20 +117,23 @@ export async function runJob(jobName: string): Promise<void> {
   });
 
   const runCommand = promisify(exec);
+  const tmpPath = '/tmp/circleci';
   try {
     await runCommand(
-      `circleci config process ${getRootPath()}/.circleci/config.yml > /tmp/circleci/${processFile}`
+      `circleci config process ${getRootPath()}/.circleci/config.yml > ${tmpPath}/${processFile}`
     );
   } catch (e) {
-    terminal.sendText(`echo "Error when processing the config: ${e.message}"`);
+    vscode.window.showErrorMessage(
+      `Error when processing the CircleCI config: ${e.message}`
+    );
   }
 
-  await changeCheckoutJob(`/tmp/circleci/${processFile}`);
-  const checkoutJobs = await getCheckoutJobs(`/tmp/circleci/${processFile}`);
+  await changeCheckoutJob(`${tmpPath}/${processFile}`);
+  const checkoutJobs = await getCheckoutJobs(`${tmpPath}/${processFile}`);
   const directoryMatches = getRootPath().match(/[^/]+$/);
   const directory = directoryMatches ? directoryMatches[0] : '';
 
-  const configFile = await getConfigFile(`/tmp/circleci/${processFile}`);
+  const configFile = await getConfigFile(`${tmpPath}/${processFile}`);
   const attachWorkspaceSteps = configFile?.jobs[jobName]?.steps
     ? (configFile?.jobs[jobName]?.steps as Array<Step>).filter((step) =>
         Boolean(step.attach_workspace)
@@ -148,14 +150,14 @@ export async function runJob(jobName: string): Promise<void> {
       ? defaultWorkspace
       : initialAttachWorkspace;
 
-  const localVolume = `/tmp/circleci/${directory}`;
+  const localVolume = `${tmpPath}/${directory}`;
   const volume = checkoutJobs.includes(jobName)
     ? `${localVolume}:/tmp/checkout`
     : `${localVolume}:${attachWorkspace}`;
   const debuggingTerminalName = 'localci debugging';
   const finalTerminalName = 'localci final terminal';
 
-  const command = `circleci local execute --job ${jobName} --config /tmp/circleci/${processFile} --debug -v ${volume}`;
+  const command = `circleci local execute --job ${jobName} --config ${tmpPath}/${processFile} --debug -v ${volume}`;
   terminal.sendText(`mkdir -p ${localVolume}`);
   terminal.sendText(command);
   terminal.show();
