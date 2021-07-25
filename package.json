@@ -1,6 +1,6 @@
 {
 	"name": "local-ci",
-	"displayName": "LocalCi",
+	"displayName": "Local Ci",
 	"description": "Debug CircleCI builds locally, no more waiting and hoping.",
 	"version": "0.1.0",
 	"license": "GPL-2.0-or-later",
@@ -15,12 +15,6 @@
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
-		"commands": [
-			{
-				"command": "local-ci.helloWorld",
-				"title": "Hello World"
-			}
-		],
 		"viewsContainers": {
 			"activitybar": [
 				{
