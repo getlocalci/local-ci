@@ -124,7 +124,7 @@ export async function runJob(jobName: string): Promise<void> {
     );
   } catch (e) {
     vscode.window.showErrorMessage(
-      `Error when processing the CircleCI config: ${e.message}`
+      `There was an error processing the CircleCI config: ${e.message}`
     );
   }
 
