@@ -164,7 +164,7 @@ export async function runJob(jobName: string): Promise<void> {
 
   const setDelay = (milliseconds: number) =>
     new Promise((resolve) => setTimeout(resolve, milliseconds));
-  await setDelay(12000);
+  await setDelay(5000);
   const debuggingTerminal = vscode.window.createTerminal({
     name: debuggingTerminalName,
     message: 'This is inside the running container',
