@@ -86,7 +86,10 @@ export async function changeCheckoutJob(processFile: string): Promise<void> {
       const fullPath =
         !step?.persist_to_workspace?.root ||
         '.' === step.persist_to_workspace.root
-          ? `${configFile.jobs[checkoutJob].working_directory}/${persistToWorkspacePath}`
+          ? `${
+              configFile.jobs[checkoutJob]?.working_directory ??
+              '/home/circleci/project'
+            }/${persistToWorkspacePath}`
           : `${step.persist_to_workspace.root}/${persistToWorkspacePath}`;
 
       return step.persist_to_workspace
@@ -157,14 +160,15 @@ export async function runJob(jobName: string): Promise<void> {
   const debuggingTerminalName = 'local-ci debugging';
   const finalTerminalName = 'local-ci final terminal';
 
-  const command = `circleci local execute --job ${jobName} --config ${tmpPath}/${processFile} --debug -v ${volume}`;
   terminal.sendText(`mkdir -p ${localVolume}`);
-  terminal.sendText(command);
+  terminal.sendText(
+    `circleci local execute --job ${jobName} --config ${tmpPath}/${processFile} --debug -v ${volume}`
+  );
   terminal.show();
 
-  const setDelay = (milliseconds: number) =>
+  const delay = (milliseconds: number) =>
     new Promise((resolve) => setTimeout(resolve, milliseconds));
-  await setDelay(5000);
+  await delay(5000);
   const debuggingTerminal = vscode.window.createTerminal({
     name: debuggingTerminalName,
     message: 'This is inside the running container',
@@ -182,7 +186,7 @@ export async function runJob(jobName: string): Promise<void> {
     do
       sleep 5
     done
-    docker exec -it ${latestContainer} /bin/sh`);
+    docker exec -it ${latestContainer} /bin/sh || exit 1`);
 
   const finalTerminal = vscode.window.createTerminal({
     name: finalTerminalName,
@@ -190,16 +194,19 @@ export async function runJob(jobName: string): Promise<void> {
     hideFromUser: true,
   });
 
-  // Commit the latest container so that this can open an interactive session when it finishes.
-  // Contianers exit when they finish.
-  // So this creates an alternative container for shell access.
-  const interval = setInterval(() => {
+  function commitContainer(): void {
     finalTerminal.sendText(
       `docker commit ${latestContainer} ${committedContainerBase}${jobName}`
     );
-  }, 5000);
+  }
 
-  vscode.window.onDidCloseTerminal((closedTerminal) => {
+  // Commit the latest container so that this can open an interactive session when it finishes.
+  // Contianers exit when they finish.
+  // So this creates an alternative container for shell access.
+  commitContainer();
+  const interval = setInterval(commitContainer, 5000);
+
+  vscode.window.onDidCloseTerminal(async (closedTerminal) => {
     clearTimeout(interval);
     if (
       closedTerminal.name === debuggingTerminalName &&
@@ -212,13 +219,10 @@ export async function runJob(jobName: string): Promise<void> {
       finalTerminal.show();
     }
 
-    if (
-      closedTerminal.name === finalTerminalName ||
-      closedTerminal.name === debuggingTerminalName
-    ) {
+    if (closedTerminal.name === finalTerminalName) {
       // Remove the image that was a copy of the running CircleCI job container.
-      closedTerminal.sendText(`docker rmi ${committedContainerBase}${jobName}`);
-      return;
+      const removeCommand = promisify(exec);
+      await removeCommand(`docker rmi -f ${committedContainerBase}${jobName}`);
     }
   });
 }
