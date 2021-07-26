@@ -182,7 +182,7 @@ export async function runJob(jobName: string): Promise<void> {
     do
       sleep 5
     done
-    docker exec -it ${latestContainer} bash || exit 1`);
+    docker exec -it ${latestContainer} /bin/sh`);
 
   const finalTerminal = vscode.window.createTerminal({
     name: finalTerminalName,
