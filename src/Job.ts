@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
+import { RUN_JOB_COMMAND } from './constants';
 
 export class Job extends vscode.TreeItem {
   constructor(
@@ -10,10 +11,9 @@ export class Job extends vscode.TreeItem {
     const tooltip = `Runs the CircleCI job ${this.label}`;
 
     this.tooltip = tooltip;
-    this.description = label;
     this.command = {
       title: label,
-      command: 'localci.runAction',
+      command: RUN_JOB_COMMAND,
       tooltip,
       arguments: [label],
     };

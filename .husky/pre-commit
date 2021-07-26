@@ -1,0 +1,9 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+ts_files=$( git diff --diff-filter=d --staged --name-only | grep -E '^src\/\S*\.ts$' )
+if [ ! -z "$ts_files" ]; then
+    npm run lint $ts_files
+    if [ $? != 0 ]; then
+        exit 1
+    fi
+fi
