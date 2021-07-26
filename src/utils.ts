@@ -122,8 +122,9 @@ export async function runJob(jobName: string): Promise<void> {
   const runCommand = promisify(exec);
   const tmpPath = '/tmp/circleci';
   try {
+    await runCommand(`mkdir -p ${tmpPath}`);
     await runCommand(
-      `mkdir -p ${tmpPath} && circleci config process ${getRootPath()}/.circleci/config.yml > ${tmpPath}/${processFile}`
+      `circleci config process ${getRootPath()}/.circleci/config.yml > ${tmpPath}/${processFile}`
     );
   } catch (e) {
     vscode.window.showErrorMessage(
@@ -220,9 +221,17 @@ export async function runJob(jobName: string): Promise<void> {
     }
 
     if (closedTerminal.name === finalTerminalName) {
-      // Remove the image that was a copy of the running CircleCI job container.
+      // Remove the container and image that were copies of the running CircleCI job container.
+      const imageName = `${committedContainerBase}${jobName}`;
       const removeCommand = promisify(exec);
-      await removeCommand(`docker rmi -f ${committedContainerBase}${jobName}`);
+      await removeCommand(`
+        for container in $(docker ps -aq)
+        do
+        if [[ $(docker inspect --format='{{.Config.Image}}' $container) == ${imageName} ]]; then
+            docker rm -f $container
+          fi
+        done
+        docker rmi -f ${imageName}`);
     }
   });
 }
