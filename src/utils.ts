@@ -24,6 +24,7 @@ interface ConfigFile {
   jobs: Record<
     string,
     {
+      docker: Array<Record<string, string>>;
       steps?: Array<Step>;
       // eslint-disable-next-line @typescript-eslint/naming-convention
       working_directory?: string;
@@ -144,6 +145,10 @@ export async function runJob(jobName: string): Promise<void> {
       )
     : [];
 
+  const dockerImage = configFile?.jobs[jobName]?.docker.length
+    ? configFile?.jobs[jobName]?.docker[0]?.image
+    : '';
+
   const defaultWorkspace = '/home/circleci/project';
   const initialAttachWorkspace =
     attachWorkspaceSteps.length && attachWorkspaceSteps[0]?.attach_workspace?.at
@@ -177,8 +182,6 @@ export async function runJob(jobName: string): Promise<void> {
   const latestContainer = '$(docker ps -lq)';
   const committedContainerBase = 'local-ci-';
 
-  debuggingTerminal.show();
-
   // Ensure the latest container is not circleci/picard, which is the container that runs jobs.
   // If it is, keep waiting.
   // Then, start an interactive bash session within the container.
@@ -187,7 +190,15 @@ export async function runJob(jobName: string): Promise<void> {
     do
       sleep 5
     done
-    docker exec -it ${latestContainer} /bin/sh || exit 1`);
+    for container in $(docker ps -aq)
+      do
+        if [[ $(docker inspect --format='{{.Config.Image}}' $container) == ${dockerImage} ]]; then
+          docker exec -it $container /bin/sh || exit 1
+          break
+        fi
+      done`);
+
+  debuggingTerminal.show();
 
   const finalTerminal = vscode.window.createTerminal({
     name: finalTerminalName,
