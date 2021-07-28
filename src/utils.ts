@@ -190,7 +190,7 @@ export async function runJob(jobName: string): Promise<void> {
     do
       sleep 5
     done
-    for container in $(docker ps -aq)
+    for container in $(docker ps -q)
       do
         if [[ $(docker inspect --format='{{.Config.Image}}' $container) == ${dockerImage} ]]; then
           docker exec -it $container /bin/sh || exit 1
@@ -236,7 +236,7 @@ export async function runJob(jobName: string): Promise<void> {
       const imageName = `${committedContainerBase}${jobName}`;
       const removeCommand = promisify(exec);
       await removeCommand(`
-        for container in $(docker ps -aq)
+        for container in $(docker ps -q)
         do
         if [[ $(docker inspect --format='{{.Config.Image}}' $container) == ${imageName} ]]; then
             docker rm -f $container
