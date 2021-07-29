@@ -101,7 +101,7 @@ export function changeCheckoutJob(processFile: string): void {
       return step.persist_to_workspace
         ? {
             run: {
-              command: `cp -ruv ${fullPath} /tmp/checkout`,
+              command: `cp -r ${fullPath} /tmp/checkout/project`,
             },
           }
         : step;
