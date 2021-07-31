@@ -62,39 +62,36 @@ export function getCheckoutDirectoryBasename(processFile: string): string {
     return '';
   }
 
-  const baseNames = checkoutJobs.reduce(
-    (accumulator: string[], checkoutJob: string) => {
-      if (!configFile.jobs[checkoutJob]?.steps) {
-        return accumulator;
-      }
+  const checkoutJob = checkoutJobs[0];
+  if (!configFile.jobs[checkoutJob]?.steps) {
+    return '';
+  }
 
-      const defaultWorkspace = getDefaultWorkspace(
-        configFile.jobs[checkoutJob]?.docker[0]?.image
-      );
-
-      const stepWithPersist = configFile?.jobs[checkoutJob]?.steps?.find(
-        (step) => step?.persist_to_workspace
-      );
-
-      const persistToWorkspacePath = stepWithPersist?.persist_to_workspace
-        ?.paths?.length
-        ? stepWithPersist.persist_to_workspace.paths[0]
-        : '';
-
-      const pathBase =
-        !stepWithPersist?.persist_to_workspace?.root ||
-        '.' === stepWithPersist.persist_to_workspace.root
-          ? configFile.jobs[checkoutJob]?.working_directory ?? defaultWorkspace
-          : stepWithPersist.persist_to_workspace.root;
-
-      return !persistToWorkspacePath || persistToWorkspacePath === '.'
-        ? [...accumulator, pathBase]
-        : [...accumulator, persistToWorkspacePath];
-    },
-    []
+  const defaultWorkspace = getDefaultWorkspace(
+    configFile.jobs[checkoutJob]?.docker[0]?.image
   );
 
-  return baseNames.length ? baseNames[0] : '';
+  const stepWithPersist = configFile?.jobs[checkoutJob]?.steps?.find(
+    (step) => step?.persist_to_workspace
+  );
+
+  const persistToWorkspacePath = stepWithPersist?.persist_to_workspace?.paths
+    ?.length
+    ? stepWithPersist.persist_to_workspace.paths[0]
+    : '';
+
+  const pathBase =
+    !stepWithPersist?.persist_to_workspace?.root ||
+    '.' === stepWithPersist.persist_to_workspace.root
+      ? configFile.jobs[checkoutJob]?.working_directory ?? defaultWorkspace
+      : stepWithPersist.persist_to_workspace.root;
+
+  const pathMatches =
+    !persistToWorkspacePath || persistToWorkspacePath === '.'
+      ? pathBase.match(/[^/]+$/)
+      : persistToWorkspacePath.match(/[^/]+$/);
+
+  return pathMatches ? pathMatches[0] : '';
 }
 
 export function changeCheckoutJob(processFile: string): void {
@@ -170,8 +167,8 @@ export async function runJob(jobName: string): Promise<void> {
 
   const tmpPath = '/tmp/circleci';
   try {
-    execSync(`mkdir -p ${tmpPath}`);
-    execSync(
+    terminal.sendText(`mkdir -p ${tmpPath}`);
+    terminal.sendText(
       `circleci config process ${getRootPath()}/.circleci/config.yml > ${tmpPath}/${processFile}`
     );
   } catch (e) {
@@ -211,10 +208,15 @@ export async function runJob(jobName: string): Promise<void> {
   const volume = checkoutJobs.includes(jobName)
     ? `${localVolume}:/tmp`
     : `${localVolume}/${getCheckoutDirectoryBasename(
-        processFile
+        `${tmpPath}/${processFile}`
       )}:${attachWorkspace}`;
   const debuggingTerminalName = 'local-ci debugging';
   const finalTerminalName = 'local-ci final terminal';
+
+  // Clear the directory for checkout, as it will write to this.
+  if (checkoutJobs.includes(jobName)) {
+    terminal.sendText(`rm -rf ${localVolume}`);
+  }
 
   terminal.sendText(`mkdir -p ${localVolume}`);
   terminal.sendText(
@@ -284,14 +286,15 @@ export async function runJob(jobName: string): Promise<void> {
     if (closedTerminal.name === finalTerminalName) {
       // Remove the container and image that were copies of the running CircleCI job container.
       const imageName = `${committedContainerBase}${jobName}`;
-      execSync(`
-        for container in $(docker ps -q)
+      execSync(
+        `for container in $(docker ps -q)
         do
         if [[ $(docker inspect --format='{{.Config.Image}}' $container) == ${imageName} ]]; then
             docker rm -f $container
           fi
         done
-        docker rmi -f ${imageName}`);
+        docker rmi -f ${imageName}`
+      );
     }
   });
 }
@@ -299,10 +302,10 @@ export async function runJob(jobName: string): Promise<void> {
 export function getDefaultWorkspace(imageName: string): string {
   try {
     const stdout = execSync(
-      `docker run -d ${imageName} | xargs docker inspect --format='{{.Config.WorkingDir}}'`
+      `docker run -d ${imageName} | xargs docker inspect --format='{{.Config.User}}'`
     );
 
-    return stdout.toString().trim() || '/home/circleci/project';
+    return `/home/${stdout.toString().trim() || 'circleci'}/project`;
   } catch (e) {
     vscode.window.showErrorMessage(
       `There was an error getting the default workspace: ${e.message}`
