@@ -101,7 +101,7 @@ export function changeCheckoutJob(processFile: string): void {
       return step.persist_to_workspace
         ? {
             run: {
-              command: `cp -r ${fullPath} /tmp/checkout/project`,
+              command: `cp -r ${fullPath} /tmp`,
             },
           }
         : step;
@@ -166,8 +166,8 @@ export async function runJob(jobName: string): Promise<void> {
 
   const localVolume = `${tmpPath}/${directory}`;
   const volume = checkoutJobs.includes(jobName)
-    ? `${localVolume}:/tmp/checkout`
-    : `${localVolume}:${attachWorkspace}`;
+    ? `${localVolume}:/tmp`
+    : `${localVolume}/project:${attachWorkspace}`;
   const debuggingTerminalName = 'local-ci debugging';
   const finalTerminalName = 'local-ci final terminal';
 
@@ -191,7 +191,7 @@ export async function runJob(jobName: string): Promise<void> {
   // If it is, keep waiting.
   // Then, start an interactive bash session within the container.
   debuggingTerminal.sendText(`
-    until [[ $(docker ps -q) && $(docker inspect -f '{{ .Config.Image}}' $(docker ps -q) | grep ${dockerImage}) ]]
+    until [[ -n $(docker ps -q) && $(docker inspect -f '{{ .Config.Image}}' $(docker ps -q) | grep ${dockerImage}) ]]
     do
       sleep 5
     done
