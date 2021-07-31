@@ -54,6 +54,49 @@ export function getCheckoutJobs(inputFile = ''): string[] {
   );
 }
 
+export function getCheckoutDirectoryBasename(processFile: string): string {
+  const checkoutJobs = getCheckoutJobs(processFile);
+  const configFile = getConfigFile(processFile);
+
+  if (!configFile || !checkoutJobs.length) {
+    return '';
+  }
+
+  const baseNames = checkoutJobs.reduce(
+    (accumulator: string[], checkoutJob: string) => {
+      if (!configFile.jobs[checkoutJob]?.steps) {
+        return accumulator;
+      }
+
+      const defaultWorkspace = getDefaultWorkspace(
+        configFile.jobs[checkoutJob]?.docker[0]?.image
+      );
+
+      const stepWithPersist = configFile?.jobs[checkoutJob]?.steps?.find(
+        (step) => step?.persist_to_workspace
+      );
+
+      const persistToWorkspacePath = stepWithPersist?.persist_to_workspace
+        ?.paths?.length
+        ? stepWithPersist.persist_to_workspace.paths[0]
+        : '';
+
+      const pathBase =
+        !stepWithPersist?.persist_to_workspace?.root ||
+        '.' === stepWithPersist.persist_to_workspace.root
+          ? configFile.jobs[checkoutJob]?.working_directory ?? defaultWorkspace
+          : stepWithPersist.persist_to_workspace.root;
+
+      return !persistToWorkspacePath || persistToWorkspacePath === '.'
+        ? [...accumulator, pathBase]
+        : [...accumulator, persistToWorkspacePath];
+    },
+    []
+  );
+
+  return baseNames.length ? baseNames[0] : '';
+}
+
 export function changeCheckoutJob(processFile: string): void {
   const checkoutJobs = getCheckoutJobs(processFile);
   const configFile = getConfigFile(processFile);
@@ -167,7 +210,9 @@ export async function runJob(jobName: string): Promise<void> {
   const localVolume = `${tmpPath}/${directory}`;
   const volume = checkoutJobs.includes(jobName)
     ? `${localVolume}:/tmp`
-    : `${localVolume}/project:${attachWorkspace}`;
+    : `${localVolume}/${getCheckoutDirectoryBasename(
+        processFile
+      )}:${attachWorkspace}`;
   const debuggingTerminalName = 'local-ci debugging';
   const finalTerminalName = 'local-ci final terminal';
 
