@@ -203,7 +203,7 @@ export async function runJob(jobName: string): Promise<void> {
     : `${localVolume}/${getCheckoutDirectoryBasename(
         `${tmpPath}/${processFile}`
       )}:${attachWorkspace}`;
-  const debuggingTerminalName = 'local-ci debugging';
+  const debuggingTerminalName = `local-ci debugging ${jobName}`;
   const finalTerminalName = 'local-ci final terminal';
 
   terminal.sendText(`mkdir -p ${localVolume}`);
