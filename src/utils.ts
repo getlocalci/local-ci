@@ -155,7 +155,7 @@ export async function runJob(jobName: string): Promise<void> {
   const processFile = 'process.yml';
 
   const terminal = vscode.window.createTerminal({
-    name: 'local-ci test',
+    name: `local-ci ${jobName}`,
     message: `Running the CircleCI job ${jobName}`,
   });
 
@@ -222,13 +222,11 @@ export async function runJob(jobName: string): Promise<void> {
   const latestContainer = '$(docker ps -lq)';
   const committedContainerBase = 'local-ci-';
 
-  // Ensure the latest container is not circleci/picard, which is the container that runs jobs.
-  // If it is, keep waiting.
-  // Then, start an interactive bash session within the container.
+  // Once the container is available, start an interactive bash session within the container.
   debuggingTerminal.sendText(`
     until [[ -n $(docker ps -q) && $(docker inspect -f '{{ .Config.Image}}' $(docker ps -q) | grep ${dockerImage}) ]]
     do
-      sleep 5
+      sleep 2
     done
     for container in $(docker ps -q)
       do
