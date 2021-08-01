@@ -138,7 +138,7 @@ export function changeCheckoutJob(processFile: string): void {
           ? pathBase
           : `${pathBase}/${persistToWorkspacePath}`;
 
-      return step.persist_to_workspace
+      return step.persist_to_workspace && !fullPath.match(/\/tmp\/[^/]+$/)
         ? {
             run: {
               command: `cp -r ${fullPath} /tmp`,
@@ -168,6 +168,7 @@ export async function runJob(jobName: string): Promise<void> {
   const tmpPath = '/tmp/circleci';
   try {
     terminal.sendText(`mkdir -p ${tmpPath}`);
+    terminal.sendText(`rm -f ${tmpPath}/${processFile}`);
     terminal.sendText(
       `circleci config process ${getRootPath()}/.circleci/config.yml > ${tmpPath}/${processFile}`
     );
@@ -278,7 +279,7 @@ export async function runJob(jobName: string): Promise<void> {
     ) {
       // @todo: handle if debuggingTerminal exits because terminal hasn't started the container.
       finalTerminal.sendText(
-        `docker run -it ${committedContainerBase}${jobName}`
+        `docker run -it --rm ${committedContainerBase}${jobName}`
       );
       finalTerminal.show();
     }
@@ -302,7 +303,7 @@ export async function runJob(jobName: string): Promise<void> {
 export function getDefaultWorkspace(imageName: string): string {
   try {
     const stdout = execSync(
-      `docker run -d ${imageName} | xargs docker inspect --format='{{.Config.User}}'`
+      `docker run -d ${imageName} --rm | xargs docker inspect --format='{{.Config.User}}'`
     );
 
     return `/home/${stdout.toString().trim() || 'circleci'}/project`;
