@@ -263,10 +263,15 @@ export async function runJob(jobName: string): Promise<void> {
       closedTerminal.name === debuggingTerminalName &&
       closedTerminal?.exitStatus?.code
     ) {
+      finalTerminal.sendText(
+        `echo "Inside a similar container after the job's container exited:"`
+      );
+
       // @todo: handle if debuggingTerminal exits because terminal hasn't started the container.
       finalTerminal.sendText(
         `docker run -it --rm ${committedContainerBase}${jobName}`
       );
+
       finalTerminal.show();
     }
 
