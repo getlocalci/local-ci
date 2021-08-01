@@ -1,7 +1,6 @@
-import { exec } from 'child_process';
+import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';
-import { promisify } from 'util';
 import * as vscode from 'vscode';
 
 interface Step {
@@ -24,6 +23,7 @@ interface ConfigFile {
   jobs: Record<
     string,
     {
+      docker: Array<Record<string, string>>;
       steps?: Array<Step>;
       // eslint-disable-next-line @typescript-eslint/naming-convention
       working_directory?: string;
@@ -31,7 +31,7 @@ interface ConfigFile {
   >;
 }
 
-export async function getConfigFile(configFilePath = ''): Promise<ConfigFile> {
+export function getConfigFile(configFilePath = ''): ConfigFile {
   const configFile = yaml.load(fs.readFileSync(configFilePath, 'utf8'));
   if (!(configFile as ConfigFile)?.jobs) {
     throw new Error('No jobs found in config file');
@@ -40,12 +40,12 @@ export async function getConfigFile(configFilePath = ''): Promise<ConfigFile> {
   return configFile as ConfigFile;
 }
 
-export async function getJobs(configFilePath = ''): Promise<string[] | []> {
-  return Object.keys((await getConfigFile(configFilePath))?.jobs ?? {});
+export function getJobs(configFilePath = ''): string[] | [] {
+  return Object.keys(getConfigFile(configFilePath)?.jobs ?? {});
 }
 
-export async function getCheckoutJobs(inputFile = ''): Promise<string[]> {
-  const configFile = await getConfigFile(inputFile);
+export function getCheckoutJobs(inputFile = ''): string[] {
+  const configFile = getConfigFile(inputFile);
 
   return Object.keys(configFile?.jobs ?? []).filter((jobName) =>
     configFile.jobs[jobName]?.steps?.some(
@@ -54,9 +54,46 @@ export async function getCheckoutJobs(inputFile = ''): Promise<string[]> {
   );
 }
 
-export async function changeCheckoutJob(processFile: string): Promise<void> {
-  const checkoutJobs = await getCheckoutJobs(processFile);
-  const configFile = await getConfigFile(processFile);
+export function getCheckoutDirectoryBasename(processFile: string): string {
+  const checkoutJobs = getCheckoutJobs(processFile);
+  const configFile = getConfigFile(processFile);
+
+  if (!configFile || !checkoutJobs.length) {
+    return '';
+  }
+
+  const checkoutJob = checkoutJobs[0];
+  if (!configFile.jobs[checkoutJob]?.steps) {
+    return '';
+  }
+
+  const stepWithPersist = configFile?.jobs[checkoutJob]?.steps?.find(
+    (step) => step?.persist_to_workspace
+  );
+
+  const persistToWorkspacePath = stepWithPersist?.persist_to_workspace?.paths
+    ?.length
+    ? stepWithPersist.persist_to_workspace.paths[0]
+    : '';
+
+  const pathBase =
+    !stepWithPersist?.persist_to_workspace?.root ||
+    '.' === stepWithPersist.persist_to_workspace.root
+      ? configFile.jobs[checkoutJob]?.working_directory ??
+        getDefaultWorkspace(configFile.jobs[checkoutJob]?.docker[0]?.image)
+      : stepWithPersist.persist_to_workspace.root;
+
+  const pathMatches =
+    !persistToWorkspacePath || persistToWorkspacePath === '.'
+      ? pathBase.match(/[^/]+$/)
+      : persistToWorkspacePath.match(/[^/]+$/);
+
+  return pathMatches ? pathMatches[0] : '';
+}
+
+export function changeCheckoutJob(processFile: string): void {
+  const checkoutJobs = getCheckoutJobs(processFile);
+  const configFile = getConfigFile(processFile);
 
   if (!configFile) {
     return;
@@ -83,19 +120,22 @@ export async function changeCheckoutJob(processFile: string): Promise<void> {
         ? step.persist_to_workspace.paths[0]
         : '';
 
-      const fullPath =
+      const pathBase =
         !step?.persist_to_workspace?.root ||
         '.' === step.persist_to_workspace.root
-          ? `${
-              configFile.jobs[checkoutJob]?.working_directory ??
-              '/home/circleci/project'
-            }/${persistToWorkspacePath}`
-          : `${step.persist_to_workspace.root}/${persistToWorkspacePath}`;
+          ? configFile.jobs[checkoutJob]?.working_directory ??
+            getDefaultWorkspace(configFile.jobs[checkoutJob]?.docker[0]?.image)
+          : step.persist_to_workspace.root;
 
-      return step.persist_to_workspace
+      const fullPath =
+        !persistToWorkspacePath || persistToWorkspacePath === '.'
+          ? pathBase
+          : `${pathBase}/${persistToWorkspacePath}`;
+
+      return step.persist_to_workspace && !fullPath.match(/\/tmp\/[^/]+$/)
         ? {
             run: {
-              command: `cp -ruv ${fullPath} /tmp/checkout`,
+              command: `cp -r ${fullPath} /tmp`,
             },
           }
         : step;
@@ -115,50 +155,55 @@ export async function runJob(jobName: string): Promise<void> {
   const processFile = 'process.yml';
 
   const terminal = vscode.window.createTerminal({
-    name: 'local-ci test',
+    name: `local-ci ${jobName}`,
     message: `Running the CircleCI job ${jobName}`,
   });
 
-  const runCommand = promisify(exec);
   const tmpPath = '/tmp/circleci';
   try {
-    await runCommand(`mkdir -p ${tmpPath}`);
-    await runCommand(
+    execSync(`mkdir -p ${tmpPath}`);
+    execSync(`rm -f ${tmpPath}/${processFile}`);
+    execSync(
       `circleci config process ${getRootPath()}/.circleci/config.yml > ${tmpPath}/${processFile}`
     );
+    changeCheckoutJob(`${tmpPath}/${processFile}`);
   } catch (e) {
     vscode.window.showErrorMessage(
       `There was an error processing the CircleCI config: ${e.message}`
     );
   }
 
-  await changeCheckoutJob(`${tmpPath}/${processFile}`);
-  const checkoutJobs = await getCheckoutJobs(`${tmpPath}/${processFile}`);
+  const checkoutJobs = getCheckoutJobs(`${tmpPath}/${processFile}`);
   const directoryMatches = getRootPath().match(/[^/]+$/);
   const directory = directoryMatches ? directoryMatches[0] : '';
 
-  const configFile = await getConfigFile(`${tmpPath}/${processFile}`);
+  const configFile = getConfigFile(`${tmpPath}/${processFile}`);
   const attachWorkspaceSteps = configFile?.jobs[jobName]?.steps?.length
     ? (configFile?.jobs[jobName]?.steps as Array<Step>).filter((step) =>
         Boolean(step.attach_workspace)
       )
     : [];
 
-  const defaultWorkspace = '/home/circleci/project';
+  const dockerImage = configFile?.jobs[jobName]?.docker.length
+    ? configFile?.jobs[jobName]?.docker[0]?.image
+    : '';
+
   const initialAttachWorkspace =
     attachWorkspaceSteps.length && attachWorkspaceSteps[0]?.attach_workspace?.at
       ? attachWorkspaceSteps[0].attach_workspace.at
       : '';
   const attachWorkspace =
     '.' === initialAttachWorkspace || !initialAttachWorkspace
-      ? defaultWorkspace
+      ? getDefaultWorkspace(dockerImage)
       : initialAttachWorkspace;
 
   const localVolume = `${tmpPath}/${directory}`;
   const volume = checkoutJobs.includes(jobName)
-    ? `${localVolume}:/tmp/checkout`
-    : `${localVolume}:${attachWorkspace}`;
-  const debuggingTerminalName = 'local-ci debugging';
+    ? `${localVolume}:/tmp`
+    : `${localVolume}/${getCheckoutDirectoryBasename(
+        `${tmpPath}/${processFile}`
+      )}:${attachWorkspace}`;
+  const debuggingTerminalName = `local-ci debugging ${jobName}`;
   const finalTerminalName = 'local-ci final terminal';
 
   terminal.sendText(`mkdir -p ${localVolume}`);
@@ -177,17 +222,22 @@ export async function runJob(jobName: string): Promise<void> {
   const latestContainer = '$(docker ps -lq)';
   const committedContainerBase = 'local-ci-';
 
-  debuggingTerminal.show();
-
-  // Ensure the latest container is not circleci/picard, which is the container that runs jobs.
-  // If it is, keep waiting.
-  // Then, start an interactive bash session within the container.
+  // Once the container is available, start an interactive bash session within the container.
   debuggingTerminal.sendText(`
-    until [[ -n ${latestContainer} && "circleci/picard" != $(docker inspect --format='{{.Config.Image}}' ${latestContainer}) ]]
+    until [[ -n $(docker ps -q) && $(docker inspect -f '{{ .Config.Image}}' $(docker ps -q) | grep ${dockerImage}) ]]
     do
-      sleep 5
+      sleep 2
     done
-    docker exec -it ${latestContainer} /bin/sh || exit 1`);
+    for container in $(docker ps -q)
+      do
+        if [[ $(docker inspect --format='{{.Config.Image}}' $container) == ${dockerImage} ]]; then
+          echo "Inside the job's container:"
+          docker exec -it $container /bin/sh || exit 1
+          break
+        fi
+      done`);
+
+  debuggingTerminal.show();
 
   const finalTerminal = vscode.window.createTerminal({
     name: finalTerminalName,
@@ -207,31 +257,52 @@ export async function runJob(jobName: string): Promise<void> {
   commitContainer();
   const interval = setInterval(commitContainer, 5000);
 
-  vscode.window.onDidCloseTerminal(async (closedTerminal) => {
+  vscode.window.onDidCloseTerminal((closedTerminal) => {
     clearTimeout(interval);
     if (
       closedTerminal.name === debuggingTerminalName &&
       closedTerminal?.exitStatus?.code
     ) {
+      finalTerminal.sendText(
+        `echo "Inside a similar container after the job's container exited:"`
+      );
+
       // @todo: handle if debuggingTerminal exits because terminal hasn't started the container.
       finalTerminal.sendText(
-        `docker run -it ${committedContainerBase}${jobName}`
+        `docker run -it --rm ${committedContainerBase}${jobName}`
       );
+
       finalTerminal.show();
     }
 
     if (closedTerminal.name === finalTerminalName) {
       // Remove the container and image that were copies of the running CircleCI job container.
       const imageName = `${committedContainerBase}${jobName}`;
-      const removeCommand = promisify(exec);
-      await removeCommand(`
-        for container in $(docker ps -aq)
+      execSync(
+        `for container in $(docker ps -q)
         do
         if [[ $(docker inspect --format='{{.Config.Image}}' $container) == ${imageName} ]]; then
             docker rm -f $container
           fi
         done
-        docker rmi -f ${imageName}`);
+        docker rmi -f ${imageName}`
+      );
     }
   });
+}
+
+export function getDefaultWorkspace(imageName: string): string {
+  try {
+    const stdout = execSync(
+      `docker image inspect ${imageName} --format='{{.Config.User}}'`
+    );
+
+    return `/home/${stdout.toString().trim() || 'circleci'}/project`;
+  } catch (e) {
+    vscode.window.showErrorMessage(
+      `There was an error getting the default workspace: ${e.message}`
+    );
+
+    return '';
+  }
 }
