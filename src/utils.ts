@@ -159,7 +159,16 @@ export async function runJob(jobName: string): Promise<void> {
     message: `Running the CircleCI job ${jobName}`,
   });
 
-  const tmpPath = '/tmp/circleci';
+  const tmpPath = '/tmp/local-ci';
+  const checkoutJobs = getCheckoutJobs(`${tmpPath}/${processFile}`);
+
+  // If this is the only job with a checkout, rm the tmp/ directory for this repo.
+  // If there are files there from another run, they will probably cause an error
+  // When attempting to overwrite them.
+  if (checkoutJobs.includes(jobName) && checkoutJobs.length === 1) {
+    execSync(`rm -rf ${tmpPath}/${getDirectory()}`);
+  }
+
   try {
     execSync(`mkdir -p ${tmpPath}`);
     execSync(`rm -f ${tmpPath}/${processFile}`);
@@ -173,9 +182,7 @@ export async function runJob(jobName: string): Promise<void> {
     );
   }
 
-  const checkoutJobs = getCheckoutJobs(`${tmpPath}/${processFile}`);
-  const directoryMatches = getRootPath().match(/[^/]+$/);
-  const directory = directoryMatches ? directoryMatches[0] : '';
+  const directory = getDirectory();
 
   const configFile = getConfigFile(`${tmpPath}/${processFile}`);
   const attachWorkspaceSteps = configFile?.jobs[jobName]?.steps?.length
@@ -219,7 +226,6 @@ export async function runJob(jobName: string): Promise<void> {
     name: debuggingTerminalName,
     message: 'This is inside the running container',
   });
-  const latestContainer = '$(docker ps -lq)';
   const committedContainerBase = 'local-ci-';
 
   // Once the container is available, start an interactive bash session within the container.
@@ -246,9 +252,15 @@ export async function runJob(jobName: string): Promise<void> {
   });
 
   function commitContainer(): void {
-    finalTerminal.sendText(
-      `docker commit ${latestContainer} ${committedContainerBase}${jobName}`
-    );
+    finalTerminal.sendText(`
+      for container in $(docker ps -q)
+        do
+          if [[ $(docker inspect --format='{{.Config.Image}}' $container) == ${dockerImage} ]]; then
+            echo "Inside the job's container:"
+            docker commit $container ${committedContainerBase}${jobName}
+            break
+          fi
+        done`);
   }
 
   // Commit the latest container so that this can open an interactive session when it finishes.
@@ -289,6 +301,11 @@ export async function runJob(jobName: string): Promise<void> {
       );
     }
   });
+}
+
+export function getDirectory(): string {
+  const directoryMatches = getRootPath().match(/[^/]+$/);
+  return directoryMatches ? directoryMatches[0] : '';
 }
 
 export function getDefaultWorkspace(imageName: string): string {
