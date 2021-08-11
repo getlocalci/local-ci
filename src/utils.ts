@@ -166,7 +166,7 @@ export async function runJob(jobName: string): Promise<void> {
   // If there are files there from another run, they will probably cause an error
   // When attempting to overwrite them.
   if (checkoutJobs.includes(jobName) && checkoutJobs.length === 1) {
-    execSync(`rm -rf ${tmpPath}/${getDirectory()}`);
+    execSync(`rm -rf ${tmpPath}/${getDirectoryBasename()}`);
   }
 
   try {
@@ -182,7 +182,7 @@ export async function runJob(jobName: string): Promise<void> {
     );
   }
 
-  const directory = getDirectory();
+  const directory = getDirectoryBasename();
 
   const configFile = getConfigFile(`${tmpPath}/${processFile}`);
   const attachWorkspaceSteps = configFile?.jobs[jobName]?.steps?.length
@@ -235,19 +235,18 @@ export async function runJob(jobName: string): Promise<void> {
       for container in $(docker ps -q)
       do
         if [[ $(docker inspect --format='{{.Config.Image}}' $container) == $IMAGE ]]; then
-          echo "Inside the job's container:"
-          docker exec -it $container /bin/sh || exit 1
-          break
+          return $container
         fi
       done
     }
 
+    # @todo: this might be wrong. It might only be doing docker inspect for one image.
     until [[ -n $(docker ps -q) && $(docker inspect -f '{{ .Config.Image}}' $(docker ps -q) | grep ${dockerImage}) ]]
     do
       sleep 2
     done
     echo "Inside the job's container:"
-    # Todo: check to see there is a container
+    # @todo: check to see there is a container
     docker exec -it get_container(${dockerImage}) /bin/sh || exit 1
   `);
 
@@ -260,12 +259,13 @@ export async function runJob(jobName: string): Promise<void> {
   });
 
   function commitContainer(): void {
-    finalTerminal.sendText(`
-      docker commit get_container(${dockerImage}) ${committedContainerBase}${jobName}`);
+    finalTerminal.sendText(
+      `docker commit get_container(${dockerImage}) ${committedContainerBase}${jobName}`
+    );
   }
 
   // Commit the latest container so that this can open an interactive session when it finishes.
-  // Contianers exit when they finish.
+  // Containers exit when they finish.
   // So this creates an alternative container for shell access.
   commitContainer();
   const interval = setInterval(commitContainer, 5000);
@@ -286,25 +286,26 @@ export async function runJob(jobName: string): Promise<void> {
       );
 
       finalTerminal.show();
-    }
-
-    if (closedTerminal.name === finalTerminalName) {
+    } else if (closedTerminal.name === finalTerminalName) {
       // Remove the container and image that were copies of the running CircleCI job container.
       const imageName = `${committedContainerBase}${jobName}`;
       execSync(
-        `for container in $(docker ps -q)
-        do
-        if [[ $(docker inspect --format='{{.Config.Image}}' $container) == ${imageName} ]]; then
-            docker rm -f $container
-          fi
-        done
+        `docker rm -f get_container(${imageName})
         docker rmi -f ${imageName}`
       );
     }
   });
 }
 
-export function getDirectory(): string {
+/**
+ * Gets the basename of the directory.
+ *
+ * If the directory is 'example/foo/bar/',
+ * The basename will be 'bar'.
+ *
+ * @returns {string} The basename of the directory.
+ */
+export function getDirectoryBasename(): string {
   const directoryMatches = getRootPath().match(/[^/]+$/);
   return directoryMatches ? directoryMatches[0] : '';
 }
