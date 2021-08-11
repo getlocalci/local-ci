@@ -230,18 +230,26 @@ export async function runJob(jobName: string): Promise<void> {
 
   // Once the container is available, start an interactive bash session within the container.
   debuggingTerminal.sendText(`
-    until [[ -n $(docker ps -q) && $(docker inspect -f '{{ .Config.Image}}' $(docker ps -q) | grep ${dockerImage}) ]]
-    do
-      sleep 2
-    done
-    for container in $(docker ps -q)
+    get_container() {
+      IMAGE=$1
+      for container in $(docker ps -q)
       do
-        if [[ $(docker inspect --format='{{.Config.Image}}' $container) == ${dockerImage} ]]; then
+        if [[ $(docker inspect --format='{{.Config.Image}}' $container) == $IMAGE ]]; then
           echo "Inside the job's container:"
           docker exec -it $container /bin/sh || exit 1
           break
         fi
-      done`);
+      done
+    }
+
+    until [[ -n $(docker ps -q) && $(docker inspect -f '{{ .Config.Image}}' $(docker ps -q) | grep ${dockerImage}) ]]
+    do
+      sleep 2
+    done
+    echo "Inside the job's container:"
+    # Todo: check to see there is a container
+    docker exec -it get_container(${dockerImage}) /bin/sh || exit 1
+  `);
 
   debuggingTerminal.show();
 
@@ -253,14 +261,7 @@ export async function runJob(jobName: string): Promise<void> {
 
   function commitContainer(): void {
     finalTerminal.sendText(`
-      for container in $(docker ps -q)
-        do
-          if [[ $(docker inspect --format='{{.Config.Image}}' $container) == ${dockerImage} ]]; then
-            echo "Inside the job's container:"
-            docker commit $container ${committedContainerBase}${jobName}
-            break
-          fi
-        done`);
+      docker commit get_container(${dockerImage}) ${committedContainerBase}${jobName}`);
   }
 
   // Commit the latest container so that this can open an interactive session when it finishes.
