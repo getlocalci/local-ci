@@ -152,6 +152,11 @@ export function getRootPath(): string {
 }
 
 export async function runJob(jobName: string): Promise<void> {
+  if (!isDockerDaemonAvailable()) {
+    vscode.window.showErrorMessage(`Please open Docker Desktop`);
+    return;
+  }
+
   const processFile = 'process.yml';
 
   const terminal = vscode.window.createTerminal({
@@ -160,7 +165,8 @@ export async function runJob(jobName: string): Promise<void> {
   });
 
   const tmpPath = '/tmp/local-ci';
-  const checkoutJobs = getCheckoutJobs(`${tmpPath}/${processFile}`);
+  const configFileName = '.circleci/config.yml';
+  const checkoutJobs = getCheckoutJobs(`${getRootPath()}/${configFileName}`);
 
   // If this is the only job with a checkout, rm the tmp/ directory for this repo.
   // If there are files there from another run, they will probably cause an error
@@ -173,7 +179,7 @@ export async function runJob(jobName: string): Promise<void> {
     execSync(`mkdir -p ${tmpPath}`);
     execSync(`rm -f ${tmpPath}/${processFile}`);
     execSync(
-      `circleci config process ${getRootPath()}/.circleci/config.yml > ${tmpPath}/${processFile}`
+      `circleci config process ${getRootPath()}/${configFileName} > ${tmpPath}/${processFile}`
     );
     changeCheckoutJob(`${tmpPath}/${processFile}`);
   } catch (e) {
@@ -259,6 +265,7 @@ export async function runJob(jobName: string): Promise<void> {
   });
 
   function commitContainer(): void {
+    // @todo: only commit this if get_container() returns an image.
     finalTerminal.sendText(
       `docker commit get_container(${dockerImage}) ${committedContainerBase}${jobName}`
     );
@@ -272,6 +279,7 @@ export async function runJob(jobName: string): Promise<void> {
 
   vscode.window.onDidCloseTerminal((closedTerminal) => {
     clearTimeout(interval);
+
     if (
       closedTerminal.name === debuggingTerminalName &&
       closedTerminal?.exitStatus?.code
@@ -315,13 +323,23 @@ export function getDefaultWorkspace(imageName: string): string {
     const stdout = execSync(
       `docker image inspect ${imageName} --format='{{.Config.User}}'`
     );
+    const userName = stdout.toString().trim() || 'circleci';
 
-    return `/home/${stdout.toString().trim() || 'circleci'}/project`;
+    return `/home/${userName}/project`;
   } catch (e) {
     vscode.window.showErrorMessage(
       `There was an error getting the default workspace: ${e.message}`
     );
 
     return '';
+  }
+}
+
+export function isDockerDaemonAvailable(): boolean {
+  try {
+    execSync(`docker ps`);
+    return true;
+  } catch (e) {
+    return false;
   }
 }
