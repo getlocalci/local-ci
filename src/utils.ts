@@ -232,27 +232,27 @@ export async function runJob(jobName: string): Promise<void> {
     message: 'This is inside the running container',
   });
   const committedContainerBase = 'local-ci-';
+  const getContainerDefinition = `get_container() {
+    IMAGE=$1
+    for container in $(docker ps -q)
+    do
+    if [[ $(docker inspect --format='{{.Config.Image}}' "$container") == $IMAGE ]]; then
+      echo $container
+    fi
+    done
+  }`;
 
   // Once the container is available, start an interactive bash session within the container.
   debuggingTerminal.sendText(`
-    get_container() {
-      IMAGE=$1
-      for container in $(docker ps -q)
-      do
-        if [[ $(docker inspect --format='{{.Config.Image}}' $container) == $IMAGE ]]; then
-          return $container
-        fi
-      done
-    }
-
-    # @todo: this might be wrong. It might only be doing docker inspect for one image.
-    until [[ -n $(docker ps -q) && $(docker inspect -f '{{ .Config.Image}}' $(docker ps -q) | grep ${dockerImage}) ]]
+    ${getContainerDefinition}
+    until [[ ! -z $(docker ps -q) && ! -z $(docker inspect -f '{{ .Config.Image}}' $(docker ps -q) | grep ${dockerImage}) ]]
     do
       sleep 2
     done
     echo "Inside the job's container:"
-    # @todo: check to see there is a container
-    docker exec -it get_container(${dockerImage}) /bin/sh || exit 1
+    CONTAINER=$(get_container ${dockerImage})
+    echo "The container is $CONTAINER"
+    docker exec -it $CONTAINER /bin/sh || exit 1
   `);
 
   debuggingTerminal.show();
@@ -266,7 +266,8 @@ export async function runJob(jobName: string): Promise<void> {
   function commitContainer(): void {
     // @todo: only commit this if get_container() returns an image.
     finalTerminal.sendText(
-      `docker commit $(get_container ${dockerImage}) ${committedContainerBase}${jobName})`
+      `${getContainerDefinition}
+      docker commit $(get_container ${dockerImage}) ${committedContainerBase}${jobName}`
     );
   }
 
@@ -297,7 +298,7 @@ export async function runJob(jobName: string): Promise<void> {
       // Remove the container and image that were copies of the running CircleCI job container.
       const imageName = `${committedContainerBase}${jobName}`;
       execSync(
-        `docker rm -f get_container(${imageName})
+        `docker rm -f $(get_container ${imageName})
         docker rmi -f ${imageName}`
       );
     }
