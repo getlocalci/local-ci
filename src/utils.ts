@@ -324,14 +324,14 @@ export function getCheckoutJobDirectory(
   configFile: ConfigFile
 ): string {
   if (!configFile || !configFile.jobs[jobName]?.steps) {
-    return '';
+    return '/tmp';
   }
 
   const imageName = configFile.jobs[jobName]?.docker[0]?.image;
 
   return doesPersistEntireWorkspace(configFile, jobName)
     ? getDefaultWorkspace(imageName)
-    : `/tmp`;
+    : '/tmp';
 }
 
 export function doesPersistEntireWorkspace(
