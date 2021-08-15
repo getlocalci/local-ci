@@ -176,7 +176,6 @@ export async function runJob(jobName: string): Promise<void> {
   }
 
   try {
-    execSync(`mkdir -p ${tmpPath}`);
     execSync(`rm -f ${tmpPath}/${processFile}`);
     execSync(
       `circleci config process ${getRootPath()}/${configFileName} > ${tmpPath}/${processFile}`
@@ -212,14 +211,14 @@ export async function runJob(jobName: string): Promise<void> {
 
   const localVolume = `${tmpPath}/${directory}`;
   const volume = checkoutJobs.includes(jobName)
-    ? `${localVolume}:/tmp`
+    ? `${localVolume}:/${getHomeDirectory(dockerImage)}`
     : `${localVolume}/${getCheckoutDirectoryBasename(
         `${tmpPath}/${processFile}`
       )}:${attachWorkspace}`;
   const debuggingTerminalName = `local-ci debugging ${jobName}`;
   const finalTerminalName = 'local-ci final terminal';
 
-  terminal.sendText(`mkdir -p ${localVolume}`);
+  execSync(`mkdir -p ${localVolume}`);
   terminal.sendText(
     `circleci local execute --job ${jobName} --config ${tmpPath}/${processFile} --debug -v ${volume}`
   );
@@ -267,7 +266,7 @@ export async function runJob(jobName: string): Promise<void> {
   function commitContainer(): void {
     // @todo: only commit this if get_container() returns an image.
     finalTerminal.sendText(
-      `docker commit get_container(${dockerImage}) ${committedContainerBase}${jobName}`
+      `docker commit $(get_container ${dockerImage}) ${committedContainerBase}${jobName})`
     );
   }
 
@@ -318,14 +317,21 @@ export function getDirectoryBasename(): string {
   return directoryMatches ? directoryMatches[0] : '';
 }
 
-export function getDefaultWorkspace(imageName: string): string {
+/** Gets the directory in /home/ that the job uses, like /home/circleci/. */
+export function getHomeDirectory(imageName: string): string {
   try {
+    execSync(
+      `if [[ -z $(docker image ls | grep ${imageName}) ]]; then
+        docker image pull ${imageName}
+      fi`
+    );
+
     const stdout = execSync(
       `docker image inspect ${imageName} --format='{{.Config.User}}'`
     );
     const userName = stdout.toString().trim() || 'circleci';
 
-    return `/home/${userName}/project`;
+    return `/home/${userName}`;
   } catch (e) {
     vscode.window.showErrorMessage(
       `There was an error getting the default workspace: ${e.message}`
@@ -333,6 +339,11 @@ export function getDefaultWorkspace(imageName: string): string {
 
     return '';
   }
+}
+
+export function getDefaultWorkspace(imageName: string): string {
+  const homeDirectory = getHomeDirectory(imageName);
+  return homeDirectory ? `${homeDirectory}/project` : '';
 }
 
 export function isDockerDaemonAvailable(): boolean {
