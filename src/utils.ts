@@ -112,7 +112,10 @@ export function changeCheckoutJob(processFile: string): void {
     configFile.jobs[checkoutJob].steps = configFile?.jobs[
       checkoutJob
     ]?.steps?.map((step) => {
-      if (!step?.persist_to_workspace) {
+      if (
+        !step?.persist_to_workspace ||
+        doesPersistEntireWorkspace(configFile, checkoutJob)
+      ) {
         return step;
       }
 
@@ -211,7 +214,7 @@ export async function runJob(jobName: string): Promise<void> {
 
   const localVolume = `${tmpPath}/${directory}`;
   const volume = checkoutJobs.includes(jobName)
-    ? `${localVolume}:/${getHomeDirectory(dockerImage)}`
+    ? `${localVolume}:${getCheckoutJobDirectory(jobName, configFile)}`
     : `${localVolume}/${getCheckoutDirectoryBasename(
         `${tmpPath}/${processFile}`
       )}:${attachWorkspace}`;
@@ -250,9 +253,7 @@ export async function runJob(jobName: string): Promise<void> {
       sleep 2
     done
     echo "Inside the job's container:"
-    CONTAINER=$(get_container ${dockerImage})
-    echo "The container is $CONTAINER"
-    docker exec -it $CONTAINER /bin/sh || exit 1
+    docker exec -it $(get_container ${dockerImage}) /bin/sh || exit 1
   `);
 
   debuggingTerminal.show();
@@ -316,6 +317,40 @@ export async function runJob(jobName: string): Promise<void> {
 export function getDirectoryBasename(): string {
   const directoryMatches = getRootPath().match(/[^/]+$/);
   return directoryMatches ? directoryMatches[0] : '';
+}
+
+export function getCheckoutJobDirectory(
+  jobName: string,
+  configFile: ConfigFile
+): string {
+  if (!configFile || !configFile.jobs[jobName]?.steps) {
+    return '';
+  }
+
+  const imageName = configFile.jobs[jobName]?.docker[0]?.image;
+
+  return doesPersistEntireWorkspace(configFile, jobName)
+    ? getDefaultWorkspace(imageName)
+    : `/tmp`;
+}
+
+export function doesPersistEntireWorkspace(
+  configFile: ConfigFile,
+  jobName: string
+): boolean | undefined {
+  const persistToWorkspaceSteps = configFile?.jobs[jobName]?.steps?.filter(
+    (step) => step?.persist_to_workspace
+  );
+
+  if (!persistToWorkspaceSteps?.length) {
+    return false;
+  }
+
+  return persistToWorkspaceSteps.every(
+    (step) =>
+      '.' === step?.persist_to_workspace?.root &&
+      step.persist_to_workspace?.paths?.every((path) => '.' === path)
+  );
 }
 
 /** Gets the directory in /home/ that the job uses, like /home/circleci/. */
