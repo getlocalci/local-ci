@@ -54,43 +54,6 @@ export function getCheckoutJobs(inputFile = ''): string[] {
   );
 }
 
-export function getCheckoutDirectoryBasename(processFile: string): string {
-  const checkoutJobs = getCheckoutJobs(processFile);
-  const configFile = getConfigFile(processFile);
-
-  if (!configFile || !checkoutJobs.length) {
-    return '';
-  }
-
-  const checkoutJob = checkoutJobs[0];
-  if (!configFile.jobs[checkoutJob]?.steps) {
-    return '';
-  }
-
-  const stepWithPersist = configFile?.jobs[checkoutJob]?.steps?.find(
-    (step) => step?.persist_to_workspace
-  );
-
-  const persistToWorkspacePath = stepWithPersist?.persist_to_workspace?.paths
-    ?.length
-    ? stepWithPersist.persist_to_workspace.paths[0]
-    : '';
-
-  const pathBase =
-    !stepWithPersist?.persist_to_workspace?.root ||
-    '.' === stepWithPersist.persist_to_workspace.root
-      ? configFile.jobs[checkoutJob]?.working_directory ??
-        getDefaultWorkspace(configFile.jobs[checkoutJob]?.docker[0]?.image)
-      : stepWithPersist.persist_to_workspace.root;
-
-  const pathMatches =
-    !persistToWorkspacePath || persistToWorkspacePath === '.'
-      ? pathBase.match(/[^/]+$/)
-      : persistToWorkspacePath.match(/[^/]+$/);
-
-  return pathMatches ? pathMatches[0] : '';
-}
-
 export function changeCheckoutJob(processFile: string): void {
   const checkoutJobs = getCheckoutJobs(processFile);
   const configFile = getConfigFile(processFile);
@@ -215,9 +178,7 @@ export async function runJob(jobName: string): Promise<void> {
   const localVolume = `${tmpPath}/${directory}`;
   const volume = checkoutJobs.includes(jobName)
     ? `${localVolume}:${getCheckoutJobDirectory(jobName, configFile)}`
-    : `${localVolume}/${getCheckoutDirectoryBasename(
-        `${tmpPath}/${processFile}`
-      )}:${attachWorkspace}`;
+    : `${localVolume}:${attachWorkspace}`;
   const debuggingTerminalName = `local-ci debugging ${jobName}`;
   const finalTerminalName = 'local-ci final terminal';
 
