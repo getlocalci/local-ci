@@ -232,21 +232,26 @@ export async function runJob(jobName: string): Promise<void> {
   });
   const latestContainer = '$(docker ps -lq)';
   const committedContainerBase = 'local-ci-';
+  const getContainerDefinition = `get_container() {
+    IMAGE=$1
+    for container in $(docker ps -q)
+    do
+    if [[ $(docker inspect --format='{{.Config.Image}}' "$container") == $IMAGE ]]; then
+      echo $container
+    fi
+    done
+  }`;
 
   // Once the container is available, start an interactive bash session within the container.
   debuggingTerminal.sendText(`
+    getContainerDefinition
     until [[ -n $(docker ps -q) && $(docker inspect -f '{{ .Config.Image}}' $(docker ps -q) | grep ${dockerImage}) ]]
     do
       sleep 2
     done
-    for container in $(docker ps -q)
-      do
-        if [[ $(docker inspect --format='{{.Config.Image}}' $container) == ${dockerImage} ]]; then
-          echo "Inside the job's container:"
-          docker exec -it $container /bin/sh || exit 1
-          break
-        fi
-      done`);
+    echo "Inside the job's container:"
+    docker exec -it $(get_container ${dockerImage}) /bin/sh || exit 1
+  `);
 
   debuggingTerminal.show();
 
@@ -258,7 +263,7 @@ export async function runJob(jobName: string): Promise<void> {
 
   function commitContainer(): void {
     finalTerminal.sendText(
-      `docker commit ${latestContainer} ${committedContainerBase}${jobName}`
+      `docker commit $(get_container ${dockerImage}) ${committedContainerBase}${jobName}`
     );
   }
 
@@ -289,15 +294,7 @@ export async function runJob(jobName: string): Promise<void> {
     if (closedTerminal.name === finalTerminalName) {
       // Remove the container and image that were copies of the running CircleCI job container.
       const imageName = `${committedContainerBase}${jobName}`;
-      execSync(
-        `for container in $(docker ps -q)
-        do
-        if [[ $(docker inspect --format='{{.Config.Image}}' $container) == ${imageName} ]]; then
-            docker rm -f $container
-          fi
-        done
-        docker rmi -f ${imageName}`
-      );
+      execSync(`docker rm -f $(get_container ${imageName}`);
     }
   });
 }
