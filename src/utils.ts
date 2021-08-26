@@ -230,7 +230,6 @@ export async function runJob(jobName: string): Promise<void> {
     name: debuggingTerminalName,
     message: 'This is inside the running container',
   });
-  const latestContainer = '$(docker ps -lq)';
   const committedContainerBase = 'local-ci-';
   const getContainerDefinition = `get_container() {
     IMAGE=$1
@@ -244,7 +243,7 @@ export async function runJob(jobName: string): Promise<void> {
 
   // Once the container is available, start an interactive bash session within the container.
   debuggingTerminal.sendText(`
-    getContainerDefinition
+    ${getContainerDefinition}
     until [[ -n $(docker ps -q) && $(docker inspect -f '{{ .Config.Image}}' $(docker ps -q) | grep ${dockerImage}) ]]
     do
       sleep 2
