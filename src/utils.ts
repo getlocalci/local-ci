@@ -300,7 +300,16 @@ export async function runJob(jobName: string): Promise<void> {
 }
 
 export function getDefaultWorkspace(imageName: string): string {
+  if (!imageName) {
+    return '/home/circleci/project';
+  }
+
   try {
+    execSync(
+      `if [[ -z $(docker image ls | grep ${imageName}) ]]; then
+        docker image pull ${imageName}
+      fi`
+    );
     const stdout = execSync(
       `docker image inspect ${imageName} --format='{{.Config.User}}'`
     );
