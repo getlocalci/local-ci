@@ -167,9 +167,11 @@ export async function runJob(jobName: string): Promise<void> {
   });
 
   try {
-    execSync(`mkdir -p ${tmpPath}
+    execSync(
+      `mkdir -p ${tmpPath}
       rm -f ${processFilePath}
-      circleci config process ${getRootPath()}/.circleci/config.yml > ${processFilePath}`);
+      circleci config process ${getRootPath()}/.circleci/config.yml > ${processFilePath}`
+    );
     writeProcessFile(processFilePath);
   } catch (e) {
     vscode.window.showErrorMessage(
@@ -260,9 +262,15 @@ export async function runJob(jobName: string): Promise<void> {
     hideFromUser: true,
   });
 
+  finalTerminal.sendText(getContainerDefinition);
+
+  finalTerminal.show();
+
   function commitContainer(): void {
     finalTerminal.sendText(
-      `docker commit $(get_container ${dockerImage}) ${committedContainerBase}${jobName}`
+      `if [[ -z $(get_container ${dockerImage}) ]]; then
+        docker commit $(get_container ${dockerImage}) ${committedContainerBase}${jobName}
+      fi`
     );
   }
 
@@ -286,8 +294,6 @@ export async function runJob(jobName: string): Promise<void> {
       finalTerminal.sendText(
         `docker run -it --rm ${committedContainerBase}${jobName}`
       );
-
-      finalTerminal.show();
     }
 
     if (closedTerminal.name === finalTerminalName) {
@@ -302,10 +308,11 @@ export function getDefaultWorkspace(imageName: string): string {
   if (!imageName) {
     return '/home/circleci/project';
   }
+  const imageWithoutTag = getImageWithoutTag(imageName);
 
   try {
     execSync(
-      `if [[ -z $(docker image ls | grep ${imageName}) ]]; then
+      `if [[ -z $(docker image ls | grep ${imageWithoutTag}) ]]; then
         docker image pull ${imageName}
       fi`
     );
@@ -321,4 +328,11 @@ export function getDefaultWorkspace(imageName: string): string {
 
     return '';
   }
+}
+
+function getImageWithoutTag(image: string): string {
+  const pattern = /([^:]+):[^\s]+$/;
+  return image.match(pattern)
+    ? (image.match(pattern) as Array<string>)[1]
+    : image;
 }
