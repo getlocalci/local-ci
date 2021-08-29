@@ -268,7 +268,7 @@ export async function runJob(jobName: string): Promise<void> {
 
   function commitContainer(): void {
     finalTerminal.sendText(
-      `if [[ -z $(get_container ${dockerImage}) ]]; then
+      `if [[ -n $(get_container ${dockerImage}) ]]; then
         docker commit $(get_container ${dockerImage}) ${committedContainerBase}${jobName}
       fi`
     );
@@ -312,7 +312,7 @@ export function getDefaultWorkspace(imageName: string): string {
 
   try {
     execSync(
-      `if [[ -z $(docker image ls | grep ${imageWithoutTag}) ]]; then
+      `if [[ -z $(docker images -f reference=${imageWithoutTag}) ]]; then
         docker image pull ${imageName}
       fi`
     );
