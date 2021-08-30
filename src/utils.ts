@@ -1,4 +1,4 @@
-import { execSync } from 'child_process';
+import * as cp from 'child_process';
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';
 import * as vscode from 'vscode';
@@ -168,7 +168,7 @@ export async function runJob(jobName: string): Promise<void> {
   });
 
   try {
-    execSync(
+    cp.execSync(
       `${getBinaryPath()} config process ${getRootPath()}/.circleci/config.yml > ${processFilePath}`
     );
     writeProcessFile(processFilePath);
@@ -188,7 +188,7 @@ export async function runJob(jobName: string): Promise<void> {
   // if it attempts to cp to it and the files exist.
   // @todo: fix ocasional permisison denied error for deleting this file.
   if (checkoutJobs.includes(jobName) && 1 === checkoutJobs.length) {
-    // execSync(`rm -rf ${localVolume}`);
+    cp.spawnSync(`rm -rf ${localVolume}`);
   }
 
   const configFile = getConfigFile(processFilePath);
@@ -219,7 +219,7 @@ export async function runJob(jobName: string): Promise<void> {
   const debuggingTerminalName = `local-ci debugging ${jobName}`;
   const finalTerminalName = 'local-ci final terminal';
 
-  execSync(`mkdir -p ${localVolume}`);
+  cp.spawnSync(`mkdir -p ${localVolume}`);
   terminal.sendText(
     `${getBinaryPath()} local execute --job ${jobName} --config ${processFilePath} --debug -v ${volume}`
   );
@@ -298,7 +298,7 @@ export async function runJob(jobName: string): Promise<void> {
     if (closedTerminal.name === finalTerminalName) {
       // Remove the container and image that were copies of the running CircleCI job container.
       const imageName = `${committedContainerBase}${jobName}`;
-      execSync(`docker rm -f $(get_container ${imageName}`);
+      cp.execSync(`docker rm -f $(get_container ${imageName}`);
     }
   });
 }
@@ -310,12 +310,12 @@ export function getDefaultWorkspace(imageName: string): string {
   const imageWithoutTag = getImageWithoutTag(imageName);
 
   try {
-    execSync(
+    cp.execSync(
       `if [[ -z $(docker images -f reference=${imageWithoutTag}) ]]; then
         docker image pull ${imageName}
       fi`
     );
-    const stdout = execSync(
+    const stdout = cp.execSync(
       `docker image inspect ${imageName} --format='{{.Config.User}}'`
     );
 
