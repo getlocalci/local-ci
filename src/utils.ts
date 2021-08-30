@@ -168,9 +168,13 @@ export async function runJob(jobName: string): Promise<void> {
   });
 
   try {
-    cp.execSync(
-      `${getBinaryPath()} config process ${getRootPath()}/.circleci/config.yml > ${processFilePath}`
-    );
+    cp.spawnSync(getBinaryPath(), [
+      'config',
+      'process',
+      `${getRootPath()}/.circleci/config.yml`,
+      '>',
+      processFilePath,
+    ]);
     writeProcessFile(processFilePath);
   } catch (e) {
     vscode.window.showErrorMessage(
@@ -188,7 +192,7 @@ export async function runJob(jobName: string): Promise<void> {
   // if it attempts to cp to it and the files exist.
   // @todo: fix ocasional permisison denied error for deleting this file.
   if (checkoutJobs.includes(jobName) && 1 === checkoutJobs.length) {
-    cp.spawnSync(`rm -rf ${localVolume}`);
+    cp.spawnSync('rm', ['-rf', localVolume]);
   }
 
   const configFile = getConfigFile(processFilePath);
@@ -219,7 +223,7 @@ export async function runJob(jobName: string): Promise<void> {
   const debuggingTerminalName = `local-ci debugging ${jobName}`;
   const finalTerminalName = 'local-ci final terminal';
 
-  cp.spawnSync(`mkdir -p ${localVolume}`);
+  cp.spawnSync('mkdir', ['-p', localVolume]);
   terminal.sendText(
     `${getBinaryPath()} local execute --job ${jobName} --config ${processFilePath} --debug -v ${volume}`
   );
@@ -298,7 +302,9 @@ export async function runJob(jobName: string): Promise<void> {
     if (closedTerminal.name === finalTerminalName) {
       // Remove the container and image that were copies of the running CircleCI job container.
       const imageName = `${committedContainerBase}${jobName}`;
-      cp.execSync(`docker rm -f $(get_container ${imageName}`);
+      cp.spawnSync(
+        `${getContainerDefinition} docker rm -f $(get_container ${imageName})`
+      );
     }
   });
 }
@@ -310,14 +316,17 @@ export function getDefaultWorkspace(imageName: string): string {
   const imageWithoutTag = getImageWithoutTag(imageName);
 
   try {
-    cp.execSync(
+    cp.spawnSync(
       `if [[ -z $(docker images -f reference=${imageWithoutTag}) ]]; then
         docker image pull ${imageName}
       fi`
     );
-    const stdout = cp.execSync(
-      `docker image inspect ${imageName} --format='{{.Config.User}}'`
-    );
+    const stdout = cp.spawnSync('docker', [
+      'image',
+      'inspect',
+      imageName,
+      `--format='{{.Config.User}}`,
+    ]);
 
     return `/home/${stdout.toString().trim() || 'circleci'}/project`;
   } catch (e) {
