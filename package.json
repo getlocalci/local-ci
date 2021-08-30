@@ -1,11 +1,11 @@
 {
 	"name": "local-ci",
 	"displayName": "Local Ci",
-	"description": "Debug CircleCI builds locally, no more waiting and hoping.",
+	"description": "Debug CircleCI™ builds locally, no more waiting and hoping.",
 	"version": "0.1.0",
 	"license": "GPL-2.0-or-later",
 	"engines": {
-		"vscode": "^1.57.0"
+		"vscode": "^1.59.0"
 	},
 	"categories": [
 		"Other"
@@ -58,7 +58,7 @@
 		"@types/js-yaml": "^4.0.1",
 		"@types/mocha": "^8.2.2",
 		"@types/node": "14.x",
-		"@types/vscode": "^1.57.0",
+		"@types/vscode": "^1.59.0",
 		"@typescript-eslint/eslint-plugin": "^4.26.0",
 		"@typescript-eslint/parser": "^4.26.0",
 		"console.table": "^0.10.0",
