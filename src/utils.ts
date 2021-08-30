@@ -186,8 +186,9 @@ export async function runJob(jobName: string): Promise<void> {
   // If this is the only checkout job, rm the entire local volume directory.
   // This job will checkout to that volume, and there could be an error
   // if it attempts to cp to it and the files exist.
+  // @todo: fix ocasional permisison denied error for deleting this file.
   if (checkoutJobs.includes(jobName) && 1 === checkoutJobs.length) {
-    execSync(`rm -rf ${localVolume}`);
+    // execSync(`rm -rf ${localVolume}`);
   }
 
   const configFile = getConfigFile(processFilePath);
@@ -218,9 +219,9 @@ export async function runJob(jobName: string): Promise<void> {
   const debuggingTerminalName = `local-ci debugging ${jobName}`;
   const finalTerminalName = 'local-ci final terminal';
 
-  terminal.sendText(`mkdir -p ${localVolume}`);
+  execSync(`mkdir -p ${localVolume}`);
   terminal.sendText(
-    `circleci local execute --job ${jobName} --config ${processFilePath} --debug -v ${volume}`
+    `${getBinaryPath()} local execute --job ${jobName} --config ${processFilePath} --debug -v ${volume}`
   );
   terminal.show();
 
@@ -263,8 +264,6 @@ export async function runJob(jobName: string): Promise<void> {
 
   finalTerminal.sendText(getContainerDefinition);
 
-  finalTerminal.show();
-
   function commitContainer(): void {
     finalTerminal.sendText(
       `if [[ -n $(get_container ${dockerImage}) ]]; then
@@ -285,6 +284,7 @@ export async function runJob(jobName: string): Promise<void> {
       closedTerminal.name === debuggingTerminalName &&
       closedTerminal?.exitStatus?.code
     ) {
+      finalTerminal.show();
       finalTerminal.sendText(
         `echo "Inside a similar container after the job's container exited:"`
       );
