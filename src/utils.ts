@@ -2,6 +2,7 @@ import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';
 import * as vscode from 'vscode';
+import runBinary from './runBinary';
 
 interface Step {
   checkout?: Record<string, unknown> | string;
@@ -167,11 +168,10 @@ export async function runJob(jobName: string): Promise<void> {
   });
 
   try {
-    execSync(
-      `mkdir -p ${tmpPath}
-      rm -f ${processFilePath}
-      circleci config process ${getRootPath()}/.circleci/config.yml > ${processFilePath}`
+    runBinary(
+      `config process ${getRootPath()}/.circleci/config.yml > ${processFilePath}`
     );
+    // `> ${processFilePath}`
     writeProcessFile(processFilePath);
   } catch (e) {
     vscode.window.showErrorMessage(

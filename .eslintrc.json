@@ -24,6 +24,7 @@
         "semi": "off"
     },
     "ignorePatterns": [
+        "setup",
         "out",
         "dist",
         "**/*.d.ts"
