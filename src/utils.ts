@@ -51,6 +51,16 @@ export function getCheckoutJobs(inputFile: string): string[] {
   );
 }
 
+export function getSpawnOptions(): Record<string, unknown> {
+  return {
+    cwd: getRootPath(),
+    env: {
+      ...process.env,
+      PATH: '/usr/local/bin', // eslint-disable-line @typescript-eslint/naming-convention
+    },
+  };
+}
+
 export function getCheckoutDirectoryBasename(processFile: string): string {
   const checkoutJobs = getCheckoutJobs(processFile);
   const configFile = getConfigFile(processFile);
@@ -168,13 +178,12 @@ export async function runJob(jobName: string): Promise<void> {
   });
 
   try {
-    cp.spawnSync(getBinaryPath(), [
-      'config',
-      'process',
-      `${getRootPath()}/.circleci/config.yml`,
-      '>',
-      processFilePath,
-    ]);
+    const { stdout } = cp.spawnSync(
+      getBinaryPath(),
+      ['config', 'process', `${getRootPath()}/.circleci/config.yml`],
+      getSpawnOptions()
+    );
+    fs.writeFileSync(processFilePath, stdout.toString().trim());
     writeProcessFile(processFilePath);
   } catch (e) {
     vscode.window.showErrorMessage(
@@ -192,7 +201,7 @@ export async function runJob(jobName: string): Promise<void> {
   // if it attempts to cp to it and the files exist.
   // @todo: fix ocasional permisison denied error for deleting this file.
   if (checkoutJobs.includes(jobName) && 1 === checkoutJobs.length) {
-    cp.spawnSync('rm', ['-rf', localVolume]);
+    cp.spawnSync('rm', ['-rf', localVolume], getSpawnOptions());
   }
 
   const configFile = getConfigFile(processFilePath);
@@ -223,7 +232,7 @@ export async function runJob(jobName: string): Promise<void> {
   const debuggingTerminalName = `local-ci debugging ${jobName}`;
   const finalTerminalName = 'local-ci final terminal';
 
-  cp.spawnSync('mkdir', ['-p', localVolume]);
+  cp.spawnSync('mkdir', ['-p', localVolume], getSpawnOptions());
   terminal.sendText(
     `${getBinaryPath()} local execute --job ${jobName} --config ${processFilePath} --debug -v ${volume}`
   );
@@ -303,7 +312,9 @@ export async function runJob(jobName: string): Promise<void> {
       // Remove the container and image that were copies of the running CircleCI job container.
       const imageName = `${committedContainerBase}${jobName}`;
       cp.spawnSync(
-        `${getContainerDefinition} docker rm -f $(get_container ${imageName})`
+        `${getContainerDefinition} docker rm -f $(get_container ${imageName})`,
+        [],
+        getSpawnOptions()
       );
     }
   });
@@ -313,22 +324,25 @@ export function getDefaultWorkspace(imageName: string): string {
   if (!imageName) {
     return '/home/circleci/project';
   }
-  const imageWithoutTag = getImageWithoutTag(imageName);
 
   try {
     cp.spawnSync(
-      `if [[ -z $(docker images -f reference=${imageWithoutTag}) ]]; then
+      `if [[ -z $(docker images -f reference=${getImageWithoutTag(
+        imageName
+      )}) ]]; then
         docker image pull ${imageName}
-      fi`
+      fi`,
+      [],
+      getSpawnOptions()
     );
-    const stdout = cp.spawnSync('docker', [
-      'image',
-      'inspect',
-      imageName,
-      `--format='{{.Config.User}}`,
-    ]);
 
-    return `/home/${stdout.toString().trim() || 'circleci'}/project`;
+    const response = cp.spawnSync(
+      'docker',
+      ['image', 'inspect', imageName, '--format', '{{.Config.User}}'],
+      getSpawnOptions()
+    );
+
+    return `/home/${response?.stdout.toString().trim() || 'circleci'}/project`;
   } catch (e) {
     vscode.window.showErrorMessage(
       `There was an error getting the default workspace: ${e.message}`
