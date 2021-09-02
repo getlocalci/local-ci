@@ -201,7 +201,7 @@ export async function runJob(jobName: string): Promise<void> {
   // if it attempts to cp to it and the files exist.
   // @todo: fix ocasional permisison denied error for deleting this file.
   if (checkoutJobs.includes(jobName) && 1 === checkoutJobs.length) {
-    cp.spawnSync('rm', ['-rf', localVolume], getSpawnOptions());
+    fs.rmSync(localVolume, { recursive: true, force: true });
   }
 
   const configFile = getConfigFile(processFilePath);
@@ -232,7 +232,9 @@ export async function runJob(jobName: string): Promise<void> {
   const debuggingTerminalName = `local-ci debugging ${jobName}`;
   const finalTerminalName = 'local-ci final terminal';
 
-  cp.spawnSync('mkdir', ['-p', localVolume], getSpawnOptions());
+  if (!fs.existsSync(localVolume)) {
+    fs.mkdirSync(localVolume);
+  }
   terminal.sendText(
     `${getBinaryPath()} local execute --job ${jobName} --config ${processFilePath} --debug -v ${volume}`
   );
