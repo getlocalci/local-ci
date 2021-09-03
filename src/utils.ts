@@ -1,7 +1,8 @@
 import * as cp from 'child_process';
 import * as fs from 'fs';
-import * as os from 'os';
 import * as yaml from 'js-yaml';
+import * as os from 'os';
+import * as path from 'path';
 import * as vscode from 'vscode';
 import { getBinaryPath } from '../setup/binary.js';
 
@@ -65,7 +66,7 @@ export function getSpawnOptions(): Record<string, unknown> {
 // Mainly copied from https://github.com/microsoft/vscode-docker/blob/1aa4d6050020ba5c13f249af3ed4022e9b671534/src/utils/spawnAsync.ts#L254
 // Looks for `/usr/local/bin` in the PATH.
 // Must be whole, i.e. the left side must be the beginning of the string or :, and the right side must be the end of the string or :
-// Case-insensitive, because Mac is
+// Case-insensitive, because Mac is.
 export function getPath(): string | undefined {
   return isMac() &&
     !/(?<=^|:)\/usr\/local\/bin(?=$|:)/i.test(process.env.PATH || '')
@@ -122,6 +123,9 @@ export function getCheckoutDirectoryBasename(processFile: string): string {
   return pathMatches ? pathMatches[0] : '';
 }
 
+// Rewrites the process.yml file.
+// When there's a persist_to_workspace value, this copies
+// the files to the volume so they can persist between jobs.
 export function writeProcessFile(processFile: string): void {
   const checkoutJobs = getCheckoutJobs(processFile);
   const configFile = getConfigFile(processFile);
@@ -199,6 +203,7 @@ export async function runJob(jobName: string): Promise<void> {
       ['config', 'process', `${getRootPath()}/.circleci/config.yml`],
       getSpawnOptions()
     );
+
     fs.writeFileSync(processFilePath, stdout.toString().trim());
     writeProcessFile(processFilePath);
   } catch (e) {
@@ -208,9 +213,7 @@ export async function runJob(jobName: string): Promise<void> {
   }
 
   const checkoutJobs = getCheckoutJobs(processFilePath);
-  const directoryMatches = getRootPath().match(/[^/]+$/);
-  const directory = directoryMatches ? directoryMatches[0] : '';
-  const localVolume = `${tmpPath}/${directory}`;
+  const localVolume = `${tmpPath}/${path.basename(getRootPath())}`;
 
   // If this is the only checkout job, rm the entire local volume directory.
   // This job will checkout to that volume, and there could be an error
