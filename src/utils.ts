@@ -114,13 +114,9 @@ export function getCheckoutDirectoryBasename(processFile: string): string {
     return '';
   }
 
-  const pattern = /[^/]+$/;
-  const pathMatches =
-    !persistToWorkspacePath || persistToWorkspacePath === '.'
-      ? pathBase.match(pattern)
-      : persistToWorkspacePath.match(pattern);
-
-  return pathMatches ? pathMatches[0] : '';
+  return !persistToWorkspacePath || persistToWorkspacePath === '.'
+    ? path.basename(pathBase)
+    : path.basename(persistToWorkspacePath);
 }
 
 // Rewrites the process.yml file.
