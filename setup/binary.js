@@ -40,7 +40,7 @@ function getSupportedPlatform() {
 function getBinaryPath() {
   return path.join(
     __dirname,
-    `../node_modules/circleci/${getSupportedPlatform()?.type}/bin/circleci`
+    `../node_modules/circleci/${getSupportedPlatform().type}/bin/circleci`
   );
 }
 
