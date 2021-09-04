@@ -3,11 +3,11 @@ import * as os from 'os';
 import * as sinon from 'sinon';
 import getSpawnOptions from '../../../utils/getSpawnOptions';
 
-sinon.mock(os).expects('platform').twice().returns('darwin');
-
 suite('getSpawnOptions', () => {
+  sinon.mock(os).expects('platform').twice().returns('darwin');
+
   test('Has working directory', () => {
-    assert.ok(getSpawnOptions().cwd.includes('local-ci'));
+    assert.ok(getSpawnOptions().cwd);
   });
 
   test('Has bin directory', () => {
