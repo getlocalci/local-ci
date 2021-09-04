@@ -1,12 +1,12 @@
-/// <reference path="binary.d.ts"/>
-const { Binary } = require("@cloudflare/binary-install");
-const { type, arch } = require("os");
-const path = require("path");
+/// <reference path='binary.d.ts'/>
+const { Binary } = require('@cloudflare/binary-install');
+const { type, arch } = require('os');
+const path = require('path');
 
-const { cTable } = require("console.table");
+const { cTable } = require('console.table');
 
-// Mainly copied from https://github.com/cloudflare/binary-install/blob/a1dc431b2c9b318d21d7f0b2f1abfb27526a2384/packages/binary-install-example/binary.js
-const error = (msg) => {
+// File mainly copied from https://github.com/cloudflare/binary-install/blob/a1dc431b2c9b318d21d7f0b2f1abfb27526a2384/packages/binary-install-example/binary.js
+function error(msg) {
   console.error(msg);
   process.exit(1);
 };
@@ -30,13 +30,10 @@ const supportedPlatforms = [
 ];
 
 function getSupportedPlatform() {
-  const platformType = type();
-  const architecture = arch();
-
   return supportedPlatforms.find(
     (supportedPlatform) =>
-      platformType === supportedPlatform.type &&
-      architecture === supportedPlatform.architecture
+      type() === supportedPlatform.type &&
+      arch() === supportedPlatform.architecture
   );
 }
 
@@ -47,7 +44,7 @@ function getBinaryPath() {
   );
 }
 
-const getBinaryUrl = () => {
+function getBinaryUrl() {
   const supportedPlatform = getSupportedPlatform();
 
   if (supportedPlatform) {
@@ -59,9 +56,9 @@ const getBinaryUrl = () => {
       supportedPlatforms
     )}`
   );
-};
+}
 
-const getBinary = (platform) => {
+function getBinary(platform) {
   const url = getBinaryUrl();
   return new Binary(url, {
     name: "cirlceci",
@@ -70,18 +67,18 @@ const getBinary = (platform) => {
       `../node_modules/circleci/${platform}`
     ),
   });
-};
+}
 
-const install = () =>
+function install() {
   supportedPlatforms.forEach((platform) => getBinary(platform.type).install());
+}
 
-const uninstall = () => {
-  const binary = getBinary();
-  binary.uninstall();
-};
+function uninstall() {
+  getBinary().uninstall();
+}
 
 module.exports = {
+  getBinaryPath,
   install,
   uninstall,
-  getBinaryPath,
 };
