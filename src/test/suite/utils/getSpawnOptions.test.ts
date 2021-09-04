@@ -9,13 +9,13 @@ mocha.afterEach(() => {
 });
 
 suite('getSpawnOptions', () => {
-  sinon.mock(os).expects('platform').twice().returns('darwin');
-
   test('Has working directory', () => {
+    sinon.mock(os).expects('platform').once().returns('darwin');
     assert.ok(getSpawnOptions().cwd);
   });
 
   test('Has bin directory', () => {
+    sinon.mock(os).expects('platform').once().returns('darwin');
     assert.ok(getSpawnOptions().env.PATH.includes('/usr/local/bin'));
   });
 });
