@@ -1,7 +1,7 @@
 import getRootPath from './getRootPath';
 import getPath from './getPath';
 
-export default function getSpawnOptions(): Record<string, unknown> {
+export default function getSpawnOptions(): SpawnOptions {
   return {
     cwd: getRootPath(),
     env: {

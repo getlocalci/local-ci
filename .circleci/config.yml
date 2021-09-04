@@ -4,15 +4,15 @@ orbs:
   node: circleci/node@4.1
 
 jobs:
-  lint:
+  test:
     executor: node/default
     steps:
       - checkout
       - node/install-npm
       - node/install-packages
-      - run: npm run lint
+      - run: npm test
 
 workflows:
-  lint-test:
+  test-lint:
     jobs:
-      - lint
+      - test

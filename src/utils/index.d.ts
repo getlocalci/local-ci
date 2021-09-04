@@ -25,3 +25,11 @@ interface ConfigFile {
     }
   >;
 }
+
+interface SpawnOptions {
+  cwd: string;
+  env: {
+    PATH: string;
+    [key: string]: any;
+  };
+}

@@ -8,9 +8,10 @@ export function isMac(): boolean {
 // Looks for `/usr/local/bin` in the PATH.
 // Must be whole, i.e. the left side must be the beginning of the string or :, and the right side must be the end of the string or :
 // Case-insensitive, because Mac is.
-export default function getPath(): string | undefined {
-  return isMac() &&
-    !/(?<=^|:)\/usr\/local\/bin(?=$|:)/i.test(process.env.PATH || '')
-    ? `${process.env.PATH}:/usr/local/bin`
-    : process.env.PATH;
+export default function getPath(): string {
+  const path = process.env.PATH || '';
+
+  return isMac() && !/(?<=^|:)\/usr\/local\/bin(?=$|:)/i.test(path)
+    ? `${path}:/usr/local/bin`
+    : path;
 }
