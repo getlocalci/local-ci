@@ -1,7 +1,7 @@
 import * as assert from 'assert';
-import getSpawnOptions from '../../utils/getSpawnOptions';
-import * as sinon from 'sinon';
 import * as os from 'os';
+import * as sinon from 'sinon';
+import getSpawnOptions from '../../../utils/getSpawnOptions';
 
 sinon.mock(os).expects('platform').twice().returns('darwin');
 
