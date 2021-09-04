@@ -10,7 +10,7 @@ jobs:
       - checkout
       - node/install-npm
       - node/install-packages
-      - run: npm test
+      - run: sudo apt-get install libxshmfence && npm test
 
 workflows:
   test-lint:
