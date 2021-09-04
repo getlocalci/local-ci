@@ -6,7 +6,8 @@ orbs:
 
 jobs:
   test:
-    executor: cimg/node:15.0.1-browsers
+    docker:
+      - image: cimg/node:15.0.1-browsers
     steps:
       - browser-tools/install-browser-tools
       - node/install-npm
