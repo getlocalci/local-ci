@@ -20,4 +20,10 @@ suite('getPath', () => {
     sinon.stub(process, 'env').value({ PATH: 'Users/Foo/' }); // eslint-disable-line @typescript-eslint/naming-convention
     assert.strictEqual('Users/Foo/:/usr/local/bin', getPath());
   });
+
+  test('On Mac with the bin path', () => {
+    sinon.mock(os).expects('platform').once().returns('darwin');
+    sinon.stub(process, 'env').value({ PATH: 'Users/Foo/:/usr/local/bin' }); // eslint-disable-line @typescript-eslint/naming-convention
+    assert.strictEqual('Users/Foo/:/usr/local/bin', getPath());
+  });
 });

@@ -1,6 +1,6 @@
 import getConfigFile from './getConfigFile';
 
-/** Gets the names of the jobs that have a 'checkout' step. */
+// Gets the names of the jobs that have a 'checkout' step.
 export default function getCheckoutJobs(inputFile: string): string[] {
   const configFile = getConfigFile(inputFile);
 
