@@ -8,7 +8,7 @@ export class Job extends vscode.TreeItem {
     public readonly collapsibleState: vscode.TreeItemCollapsibleState
   ) {
     super(label, collapsibleState);
-    const tooltip = `Runs the CircleCI job ${this.label}`;
+    const tooltip = `Runs the CircleCI® job ${this.label}`;
 
     this.tooltip = tooltip;
     this.command = {

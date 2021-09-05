@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { LocalCiProvider } from './LocalCiProvider';
 import { RUN_JOB_COMMAND } from './constants';
-import { runJob } from './utils';
+import runJob from './utils/runJob';
 
 export function activate(context: vscode.ExtensionContext): void {
   const ciProvider = new LocalCiProvider();

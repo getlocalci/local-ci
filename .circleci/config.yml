@@ -2,17 +2,20 @@ version: 2.1
 
 orbs:
   node: circleci/node@4.1
+  browser-tools: circleci/browser-tools@1.1.0
 
 jobs:
-  lint:
-    executor: node/default
+  test:
+    docker:
+      - image: cimg/node:16.8.0-browsers
     steps:
-      - checkout
+      - browser-tools/install-browser-tools
       - node/install-npm
+      - checkout
       - node/install-packages
-      - run: npm run lint
+      - run: npm test
 
 workflows:
-  lint-test:
+  test-lint:
     jobs:
-      - lint
+      - test
