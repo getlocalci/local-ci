@@ -11,7 +11,7 @@ mocha.afterEach(() => {
 suite('getRootPath', () => {
   test('With no workspaceFolders', () => {
     sinon.stub(vscode, 'workspace').value({});
-    assert.strictEqual('', getRootPath());
+    assert.strictEqual(getRootPath(), '');
   });
 
   test('With workspaceFolders', () => {
@@ -24,6 +24,6 @@ suite('getRootPath', () => {
       ],
     });
 
-    assert.strictEqual(path, getRootPath());
+    assert.strictEqual(getRootPath(), path);
   });
 });

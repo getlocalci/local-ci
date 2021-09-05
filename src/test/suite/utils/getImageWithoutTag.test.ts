@@ -4,14 +4,14 @@ import getImageWithoutTag from '../../../utils/getImageWithoutTag';
 suite('getImageWithoutTag', () => {
   test('Image with no tag', () => {
     const imageWithNoTag = 'example-image';
-    assert.strictEqual(imageWithNoTag, getImageWithoutTag(imageWithNoTag));
+    assert.strictEqual(getImageWithoutTag(imageWithNoTag), imageWithNoTag);
   });
 
   test('Image with tag', () => {
-    assert.strictEqual('image-name', getImageWithoutTag('image-name:tag'));
+    assert.strictEqual(getImageWithoutTag('image-name:tag'), 'image-name');
   });
 
   test('Image with tag and spaces', () => {
-    assert.strictEqual('image-name', getImageWithoutTag(' image-name:tag '));
+    assert.strictEqual(getImageWithoutTag(' image-name:tag '), 'image-name');
   });
 });

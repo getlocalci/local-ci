@@ -20,7 +20,7 @@ suite('getSpawnOptions', () => {
         },
       ],
     });
-    assert.strictEqual(path, getSpawnOptions().cwd);
+    assert.strictEqual(getSpawnOptions().cwd, path);
   });
 
   test('Has bin directory', () => {
