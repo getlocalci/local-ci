@@ -17,7 +17,7 @@ export default async function runJob(jobName: string): Promise<void> {
 
   const terminal = vscode.window.createTerminal({
     name: `local-ci ${jobName}`,
-    message: `Running the CircleCI job ${jobName}`,
+    message: `Running the CircleCI® job ${jobName}`,
   });
 
   try {
@@ -154,7 +154,7 @@ export default async function runJob(jobName: string): Promise<void> {
     }
 
     if (closedTerminal.name === finalTerminalName) {
-      // Remove the container and image that were copies of the running CircleCI job container.
+      // Remove the container and image that were copies of the running CircleCI® job container.
       const imageName = `${committedContainerBase}${jobName}`;
       cp.spawnSync(
         `${getContainerDefinition} docker rm -f $(get_container ${imageName})`,

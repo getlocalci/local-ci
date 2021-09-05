@@ -28,7 +28,7 @@
 			"localCiDebugger": [
 				{
 					"id": "localCi",
-					"name": "Circle CI Jobs"
+					"name": "CircleCI® Jobs"
 				},
 				{
 					"id": "results",
