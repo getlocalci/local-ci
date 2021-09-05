@@ -3,14 +3,14 @@ import * as fs from 'fs';
 import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as yaml from 'js-yaml';
-import getCheckoutJobs from '../../../utils/getCheckoutJobs';
+import getJobs from '../../../utils/getJobs';
 
 mocha.afterEach(() => {
   sinon.restore();
 });
 
-suite('getCheckoutJobs', () => {
-  test('No checkout job', () => {
+suite('getJobs', () => {
+  test('Single job', () => {
     sinon.mock(fs).expects('readFileSync').once().returns('');
     sinon
       .mock(yaml)
@@ -20,10 +20,10 @@ suite('getCheckoutJobs', () => {
         jobs: { test: { docker: [{ image: 'cimg/node:16.8.0-browsers' }] } },
       });
 
-    assert.deepStrictEqual(getCheckoutJobs('foo'), []);
+    assert.deepStrictEqual(getJobs('example-path'), ['test']);
   });
 
-  test('With string checkout job', () => {
+  test('Multipls jobs', () => {
     sinon.mock(fs).expects('readFileSync').once().returns('');
     sinon
       .mock(yaml)
@@ -31,13 +31,12 @@ suite('getCheckoutJobs', () => {
       .once()
       .returns({
         jobs: {
-          test: {
-            docker: [{ image: 'cimg/node:16.8.0-browsers' }],
-            steps: ['node/install-npm', 'checkout'],
-          },
+          lint: { docker: [{ image: 'cimg/node:16.8.0' }] },
+          test: { docker: [{ image: 'cimg/node:16.8.0-browsers' }] },
+          deploy: { docker: [{ image: 'cimg/node:16.8.0-browsers' }] },
         },
       });
 
-    assert.deepStrictEqual(getCheckoutJobs('foo'), ['test']);
+    assert.deepStrictEqual(getJobs('example-path'), ['lint', 'test', 'deploy']);
   });
 });
