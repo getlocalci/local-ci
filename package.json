@@ -1,7 +1,7 @@
 {
 	"name": "local-ci",
 	"displayName": "Local Ci",
-	"description": "Debug CircleCI™ builds locally, no more waiting and hoping.",
+	"description": "Debug CircleCI® builds locally, no more waiting and hoping.",
 	"version": "0.1.0",
 	"license": "GPL-2.0-or-later",
 	"engines": {

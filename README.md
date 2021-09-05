@@ -2,7 +2,7 @@
 
 ## Features
 
-Get shell access to your CircleCI builds. No more pushing, waiting 5 minutes, and pushing something else.
+Get shell access to your CircleCI® builds as they run. No more pushing, waiting 5 minutes, and pushing again.
 
 ## Requirements
 
