@@ -13,7 +13,7 @@ jobs:
       - node/install-npm
       - checkout
       - node/install-packages
-      - run: sudo apt-get update && sudo apt-get install libxshmfence1 libnss3 && npm test
+      - run: npm test
 
 workflows:
   test-lint:
