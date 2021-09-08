@@ -15,7 +15,7 @@ interface Step {
 }
 
 interface Job {
-  docker: Array<Record<string, string>>;
+  docker?: Array<Record<string, string>>;
   steps?: Array<Step>;
   // eslint-disable-next-line @typescript-eslint/naming-convention
   working_directory?: string;

@@ -3,6 +3,7 @@ import * as yaml from 'js-yaml';
 import getCheckoutJobs from './getCheckoutJobs';
 import getConfigFile from './getConfigFile';
 import getDefaultWorkspace from './getDefaultWorkspace';
+import getImageFromJob from './getImageFromJob';
 
 // Rewrites the process.yml file.
 // When there's a persist_to_workspace value, this copies
@@ -41,7 +42,7 @@ export default function writeProcessFile(processFile: string): void {
         !step?.persist_to_workspace?.root ||
         '.' === step.persist_to_workspace.root
           ? configFile.jobs[checkoutJob]?.working_directory ??
-            getDefaultWorkspace(configFile.jobs[checkoutJob]?.docker[0]?.image)
+            getDefaultWorkspace(getImageFromJob(configFile.jobs[checkoutJob]))
           : step.persist_to_workspace.root;
 
       const fullPath =

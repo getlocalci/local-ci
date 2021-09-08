@@ -7,6 +7,7 @@ import getConfigFile from './getConfigFile';
 import getDefaultWorkspace from './getDefaultWorkspace';
 import getCheckoutDirectoryBasename from './getCheckoutDirectoryBasename';
 import getCheckoutJobs from './getCheckoutJobs';
+import getImageFromJob from './getImageFromJob';
 import getRootPath from './getRootPath';
 import getSpawnOptions from './getSpawnOptions';
 import writeProcessFile from './writeProcessFile';
@@ -55,10 +56,7 @@ export default async function runJob(jobName: string): Promise<void> {
       )
     : [];
 
-  const dockerImage = configFile?.jobs[jobName]?.docker.length
-    ? configFile?.jobs[jobName]?.docker[0]?.image
-    : '';
-
+  const dockerImage = getImageFromJob(configFile?.jobs[jobName]);
   const initialAttachWorkspace =
     attachWorkspaceSteps.length && attachWorkspaceSteps[0]?.attach_workspace?.at
       ? attachWorkspaceSteps[0].attach_workspace.at
