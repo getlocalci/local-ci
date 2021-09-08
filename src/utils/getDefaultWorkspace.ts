@@ -10,7 +10,7 @@ export default function getDefaultWorkspace(imageName: string): string {
 
   try {
     cp.spawnSync(
-      `if [[ -z $(docker images -f reference=${getImageWithoutTag(
+      `if [[ -z $(docker images -q -f reference=${getImageWithoutTag(
         imageName
       )}) ]]; then
         docker image pull ${imageName}
