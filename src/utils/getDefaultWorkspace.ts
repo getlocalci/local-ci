@@ -9,26 +9,28 @@ export default function getDefaultWorkspace(imageName: string): string {
   }
 
   try {
-    cp.spawnSync(
-      `if [[ -z $(docker images -q -f reference=${getImageWithoutTag(
-        imageName
-      )}) ]]; then
-        docker image pull ${imageName}
-      fi`,
-      [],
+    const { stdout: imageQuery } = cp.spawnSync(
+      'docker',
+      ['images', '-q', '-f', `reference=${getImageWithoutTag(imageName)}`],
       getSpawnOptions()
     );
 
-    const user = cp.spawnSync(
+    if (!imageQuery.toString()) {
+      cp.spawnSync('docker', ['image', 'pull', imageName], getSpawnOptions());
+    }
+
+    const { stdout: user } = cp.spawnSync(
       'docker',
       ['image', 'inspect', imageName, '--format', '{{.Config.User}}'],
       getSpawnOptions()
     );
 
-    return `/home/${user?.stdout.toString().trim() || 'circleci'}/project`;
+    return `/home/${user?.toString().trim() || 'circleci'}/project`;
   } catch (e) {
     vscode.window.showErrorMessage(
-      `There was an error getting the default workspace: ${e.message}`
+      `There was an error getting the default workspace: ${
+        (e as ErrorWithMessage)?.message
+      }`
     );
 
     return '';

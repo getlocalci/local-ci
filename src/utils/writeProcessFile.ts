@@ -28,7 +28,7 @@ export default function writeProcessFile(processFile: string): void {
     // Simulate persist_to_workspace by copying the persisted files to the volume.
     configFile.jobs[checkoutJob].steps = configFile?.jobs[
       checkoutJob
-    ]?.steps?.map((step) => {
+    ]?.steps?.map((step: Step) => {
       if (!step?.persist_to_workspace) {
         return step;
       }

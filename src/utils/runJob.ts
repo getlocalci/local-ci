@@ -31,7 +31,9 @@ export default async function runJob(jobName: string): Promise<void> {
     writeProcessFile(processFilePath);
   } catch (e) {
     vscode.window.showErrorMessage(
-      `There was an error processing the CircleCI config: ${e.message}`
+      `There was an error processing the CircleCI config: ${
+        (e as ErrorWithMessage)?.message
+      }`
     );
   }
 

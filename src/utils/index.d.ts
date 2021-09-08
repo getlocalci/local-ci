@@ -14,15 +14,17 @@ interface Step {
   };
 }
 
+interface Job {
+  docker: Array<Record<string, string>>;
+  steps?: Array<Step>;
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  working_directory?: string;
+}
+
 interface ConfigFile {
   jobs: Record<
     string,
-    {
-      docker: Array<Record<string, string>>;
-      steps?: Array<Step>;
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      working_directory?: string;
-    }
+    Job
   >;
 }
 
@@ -32,4 +34,8 @@ interface SpawnOptions {
     PATH: string;
     [key: string]: any;
   };
+}
+
+interface ErrorWithMessage {
+  message: string;
 }

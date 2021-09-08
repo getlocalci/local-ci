@@ -3,6 +3,10 @@ import getCheckoutJobs from './getCheckoutJobs';
 import getConfigFile from './getConfigFile';
 import getDefaultWorkspace from './getDefaultWorkspace';
 
+function getImageForJob(job: Job) {
+  return job?.docker && job?.docker?.length ? job.docker[0]?.image : '';
+}
+
 export default function getCheckoutDirectoryBasename(
   processFile: string
 ): string {
@@ -31,7 +35,7 @@ export default function getCheckoutDirectoryBasename(
     !stepWithPersist?.persist_to_workspace?.root ||
     '.' === stepWithPersist.persist_to_workspace.root
       ? configFile.jobs[checkoutJob]?.working_directory ??
-        getDefaultWorkspace(configFile.jobs[checkoutJob]?.docker[0]?.image)
+        getDefaultWorkspace(getImageForJob(configFile.jobs[checkoutJob]))
       : stepWithPersist.persist_to_workspace.root;
 
   // If the checkout job has a persist_to_workspace of /tmp,
