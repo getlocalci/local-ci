@@ -1,6 +1,5 @@
-import * as cp from 'child_process';
+import getDockerError from './getDockerError';
 
 export default function isDockerRunning(): boolean {
-  const { stderr } = cp.spawnSync('docker', ['ps']);
-  return !stderr?.length;
+  return !getDockerError()?.length;
 }

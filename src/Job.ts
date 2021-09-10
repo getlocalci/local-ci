@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import * as path from 'path';
 import { RUN_JOB_COMMAND } from './constants';
 
 export class Job extends vscode.TreeItem {
@@ -10,7 +9,7 @@ export class Job extends vscode.TreeItem {
     super(label, collapsibleState);
     const tooltip = `Runs the CircleCI® job ${this.label}`;
 
-    this.tooltip = tooltip;
+    this.tooltip = `Runs the CircleCI® job ${this.label}`;
     this.command = {
       title: label,
       command: RUN_JOB_COMMAND,
@@ -19,15 +18,5 @@ export class Job extends vscode.TreeItem {
     };
   }
 
-  iconPath = {
-    light: path.join(
-      __filename,
-      '..',
-      '..',
-      'resources',
-      'light',
-      'folder.svg'
-    ),
-    dark: path.join(__filename, '..', '..', 'resources', 'dark', 'folder.svg'),
-  };
+  iconPath = new vscode.ThemeIcon('debug-start');
 }
