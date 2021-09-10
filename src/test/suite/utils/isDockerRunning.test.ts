@@ -14,7 +14,7 @@ suite('isDockerRunning', () => {
       .mock(cp)
       .expects('spawnSync')
       .once()
-      .returns({ stderror: 'Cannot connect to the Docker daemon' });
+      .returns({ stderr: 'Cannot connect to the Docker daemon' });
     assert.strictEqual(isDockerRunning(), false);
   });
 
