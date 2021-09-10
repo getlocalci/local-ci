@@ -10,36 +10,18 @@ import getCheckoutJobs from './getCheckoutJobs';
 import getImageFromJob from './getImageFromJob';
 import getRootPath from './getRootPath';
 import getSpawnOptions from './getSpawnOptions';
-import writeProcessFile from './writeProcessFile';
+import processConfig from './processConfig';
+import { PROCESS_FILE_PATH, TMP_PATH } from '../constants';
 
 export default async function runJob(jobName: string): Promise<void> {
-  const tmpPath = '/tmp/local-ci';
-  const processFilePath = `${tmpPath}/process.yml`;
-
   const terminal = vscode.window.createTerminal({
     name: `local-ci ${jobName}`,
     message: `Running the CircleCI® job ${jobName}`,
   });
 
-  try {
-    const { stdout } = cp.spawnSync(
-      getBinaryPath(),
-      ['config', 'process', `${getRootPath()}/.circleci/config.yml`],
-      getSpawnOptions()
-    );
-
-    fs.writeFileSync(processFilePath, stdout.toString().trim());
-    writeProcessFile(processFilePath);
-  } catch (e) {
-    vscode.window.showErrorMessage(
-      `There was an error processing the CircleCI config: ${
-        (e as ErrorWithMessage)?.message
-      }`
-    );
-  }
-
-  const checkoutJobs = getCheckoutJobs(processFilePath);
-  const localVolume = `${tmpPath}/${path.basename(getRootPath())}`;
+  processConfig();
+  const checkoutJobs = getCheckoutJobs(PROCESS_FILE_PATH);
+  const localVolume = `${TMP_PATH}/${path.basename(getRootPath())}`;
 
   // If this is the only checkout job, rm the entire local volume directory.
   // This job will checkout to that volume, and there could be an error
@@ -49,7 +31,7 @@ export default async function runJob(jobName: string): Promise<void> {
     fs.rmSync(localVolume, { recursive: true, force: true });
   }
 
-  const configFile = getConfigFile(processFilePath);
+  const configFile = getConfigFile(PROCESS_FILE_PATH);
   const attachWorkspaceSteps = configFile?.jobs[jobName]?.steps?.length
     ? (configFile?.jobs[jobName]?.steps as Array<Step>).filter((step) =>
         Boolean(step.attach_workspace)
@@ -69,7 +51,7 @@ export default async function runJob(jobName: string): Promise<void> {
   const volume = checkoutJobs.includes(jobName)
     ? `${localVolume}:/tmp`
     : `${localVolume}/${getCheckoutDirectoryBasename(
-        processFilePath
+        PROCESS_FILE_PATH
       )}:${attachWorkspace}`;
   const debuggingTerminalName = `local-ci debugging ${jobName}`;
   const finalTerminalName = 'local-ci final terminal';
@@ -79,7 +61,7 @@ export default async function runJob(jobName: string): Promise<void> {
   }
 
   terminal.sendText(
-    `${getBinaryPath()} local execute --job ${jobName} --config ${processFilePath} --debug -v ${volume}`
+    `${getBinaryPath()} local execute --job ${jobName} --config ${PROCESS_FILE_PATH} --debug -v ${volume}`
   );
   terminal.show();
 
