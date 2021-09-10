@@ -79,6 +79,7 @@ export default async function runJob(jobName: string): Promise<void> {
     do
     if [[ $(docker inspect --format='{{.Config.Image}}' "$container") == $IMAGE ]]; then
       echo $container
+      break
     fi
     done
   }`;
