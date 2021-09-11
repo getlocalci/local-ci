@@ -87,7 +87,7 @@ export default async function runJob(jobName: string): Promise<void> {
   // Once the container is available, start an interactive bash session within the container.
   debuggingTerminal.sendText(`
     ${getContainerDefinition}
-    until [[ -n $(docker ps -q) && $(docker inspect -f '{{ .Config.Image}}' $(docker ps -q) | grep ${dockerImage}) ]]
+    until [[ -n get_container ${dockerImage}) ]]
     do
       sleep 2
     done
