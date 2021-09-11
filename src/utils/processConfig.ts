@@ -5,15 +5,23 @@ import { getBinaryPath } from '../../setup/binary.js';
 import getSpawnOptions from './getSpawnOptions';
 import getRootPath from './getRootPath';
 import writeProcessFile from './writeProcessFile';
-import { PROCESS_FILE_PATH } from '../constants';
+import { PROCESS_FILE_PATH, TMP_PATH } from '../constants';
 
 export default function processConfig(): void {
+  fs.mkdirSync(TMP_PATH);
+
   try {
-    const { stdout } = cp.spawnSync(
+    const { stdout, stderr } = cp.spawnSync(
       getBinaryPath(),
       ['config', 'process', `${getRootPath()}/.circleci/config.yml`],
       getSpawnOptions()
     );
+
+    if (!stdout.length) {
+      throw new Error(
+        stderr.length ? stderr.toString() : 'Failed to process the config'
+      );
+    }
 
     fs.writeFileSync(PROCESS_FILE_PATH, stdout.toString().trim());
     writeProcessFile();
