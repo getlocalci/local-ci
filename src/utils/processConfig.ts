@@ -8,7 +8,9 @@ import writeProcessFile from './writeProcessFile';
 import { PROCESS_FILE_PATH, TMP_PATH } from '../constants';
 
 export default function processConfig(): void {
-  fs.mkdirSync(TMP_PATH);
+  if (!fs.existsSync(TMP_PATH)) {
+    fs.mkdirSync(TMP_PATH);
+  }
 
   try {
     const { stdout, stderr } = cp.spawnSync(
