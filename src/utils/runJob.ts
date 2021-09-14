@@ -73,15 +73,12 @@ export default async function runJob(jobName: string): Promise<void> {
     message: 'This is inside the running container',
   });
   const committedContainerBase = 'local-ci-';
+  // @todo: makes this more robust.
+  // Ideally, it'd use docker inspect to get the image.
+  // But that hangs sometimes: https://github.com/docker/for-linux/issues/397
   const getContainerDefinition = `get_container() {
     IMAGE=$1
-    for container in $(docker ps -q)
-    do
-    if [[ $(docker inspect --format='{{.Config.Image}}' "$container") == $IMAGE ]]; then
-      echo $container
-      break
-    fi
-    done
+    docker ps --filter ancestor=$IMAGE --filter status=running -lq
   }`;
 
   // Once the container is available, start an interactive bash session within the container.
