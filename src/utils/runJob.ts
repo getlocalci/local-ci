@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import { getBinaryPath } from '../../setup/binary.js';
-import areAllTerminalsClosed from './areAllTerminalsClosed.js';
+import areAllTerminalsClosed from './areAllTerminalsClosed';
 import cleanUpCommittedImage from './cleanUpCommittedImage';
 import commitContainer from './commitContainer';
 import getConfigFile from './getConfigFile';
