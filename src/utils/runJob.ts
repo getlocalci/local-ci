@@ -75,7 +75,6 @@ export default async function runJob(jobName: string): Promise<void> {
     name: `local-ci debugging ${jobName}`,
     message: 'This is inside the running container',
   });
-  const committedContainerBase = 'local-ci-';
 
   // Once the container is available, start an interactive bash session within the container.
   debuggingTerminal.sendText(`
@@ -89,12 +88,12 @@ export default async function runJob(jobName: string): Promise<void> {
   `);
 
   debuggingTerminal.show();
-  commitContainer(dockerImage, `${committedContainerBase}${jobName}`);
+  const committedImageName = `local-ci/${jobName}`;
+  commitContainer(dockerImage, committedImageName);
   const interval = setInterval(
-    () => commitContainer(dockerImage, `${committedContainerBase}${jobName}`),
+    () => commitContainer(dockerImage, committedImageName),
     2000
   );
-  const committedImageName = `${committedContainerBase}${jobName}`;
 
   let finalTerminal: vscode.Terminal | undefined;
   vscode.window.onDidCloseTerminal((closedTerminal) => {
