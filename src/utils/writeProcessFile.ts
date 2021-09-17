@@ -3,20 +3,22 @@ import * as yaml from 'js-yaml';
 import getCheckoutJobs from './getCheckoutJobs';
 import getConfigFile from './getConfigFile';
 import getDefaultWorkspace from './getDefaultWorkspace';
+import getImageFromJob from './getImageFromJob';
+import { PROCESS_FILE_PATH } from '../constants';
 
 // Rewrites the process.yml file.
 // When there's a persist_to_workspace value, this copies
 // the files to the volume so they can persist between jobs.
-export default function writeProcessFile(processFile: string): void {
-  const checkoutJobs = getCheckoutJobs(processFile);
-  const configFile = getConfigFile(processFile);
+export default function writeProcessFile(): void {
+  const checkoutJobs = getCheckoutJobs(PROCESS_FILE_PATH);
+  const configFile = getConfigFile(PROCESS_FILE_PATH);
 
   if (!configFile) {
     return;
   }
 
   if (!checkoutJobs.length) {
-    fs.writeFileSync(processFile, yaml.dump(configFile));
+    fs.writeFileSync(PROCESS_FILE_PATH, yaml.dump(configFile));
     return;
   }
 
@@ -28,7 +30,7 @@ export default function writeProcessFile(processFile: string): void {
     // Simulate persist_to_workspace by copying the persisted files to the volume.
     configFile.jobs[checkoutJob].steps = configFile?.jobs[
       checkoutJob
-    ]?.steps?.map((step) => {
+    ]?.steps?.map((step: Step) => {
       if (!step?.persist_to_workspace) {
         return step;
       }
@@ -41,7 +43,7 @@ export default function writeProcessFile(processFile: string): void {
         !step?.persist_to_workspace?.root ||
         '.' === step.persist_to_workspace.root
           ? configFile.jobs[checkoutJob]?.working_directory ??
-            getDefaultWorkspace(configFile.jobs[checkoutJob]?.docker[0]?.image)
+            getDefaultWorkspace(getImageFromJob(configFile.jobs[checkoutJob]))
           : step.persist_to_workspace.root;
 
       const fullPath =
@@ -59,5 +61,5 @@ export default function writeProcessFile(processFile: string): void {
     });
   });
 
-  fs.writeFileSync(processFile, yaml.dump(configFile));
+  fs.writeFileSync(PROCESS_FILE_PATH, yaml.dump(configFile));
 }

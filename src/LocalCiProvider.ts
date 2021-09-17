@@ -1,9 +1,15 @@
 import * as vscode from 'vscode';
 import { Job } from './Job';
 import getJobs from './utils/getJobs';
-import getRootPath from './utils/getRootPath';
+import processConfig from './utils/processConfig';
+import { PROCESS_FILE_PATH } from './constants';
+import getDockerError from './utils/getDockerError';
+import isDockerRunning from './utils/isDockerRunning';
+import { Warning } from './Warning';
 
-export class LocalCiProvider implements vscode.TreeDataProvider<Job> {
+export class LocalCiProvider
+  implements vscode.TreeDataProvider<vscode.TreeItem>
+{
   private _onDidChangeTreeData: vscode.EventEmitter<Job | undefined | void> =
     new vscode.EventEmitter<Job | undefined | void>();
 
@@ -15,11 +21,23 @@ export class LocalCiProvider implements vscode.TreeDataProvider<Job> {
     return element;
   }
 
-  async getChildren(): Promise<Job[]> {
+  async getChildren(): Promise<vscode.TreeItem[]> {
+    processConfig();
     return Promise.resolve(
-      getJobs(`${getRootPath()}/.circleci/config.yml`).map(
-        (jobName) => new Job(jobName, vscode.TreeItemCollapsibleState.None)
-      )
+      isDockerRunning()
+        ? getJobs(PROCESS_FILE_PATH).map(
+            (jobName) => new Job(jobName, vscode.TreeItemCollapsibleState.None)
+          )
+        : [
+            new Warning(
+              'Error: is Docker running?',
+              vscode.TreeItemCollapsibleState.None
+            ),
+            new vscode.TreeItem(
+              ` ${getDockerError()}`,
+              vscode.TreeItemCollapsibleState.None
+            ),
+          ]
     );
   }
 }
