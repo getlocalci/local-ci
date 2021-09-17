@@ -10,7 +10,6 @@ mocha.afterEach(() => {
 suite('cleanUpCommittedImage', () => {
   test('No error', () => {
     sinon.mock(cp).expects('spawnSync').twice();
-
     cleanUpCommittedImage('local-ci-lint');
   });
 });
