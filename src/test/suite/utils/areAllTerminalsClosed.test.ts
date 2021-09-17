@@ -38,4 +38,14 @@ suite('areAllTerminalsClosed', () => {
       )
     );
   });
+
+  test('One undefined, one closed', () => {
+    assert.strictEqual(
+      true,
+      areAllTerminalsClosed(
+        { ...baseTerminal, exitStatus: { code: 0 } },
+        undefined
+      )
+    );
+  });
 });
