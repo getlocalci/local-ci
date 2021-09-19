@@ -1,11 +1,15 @@
-// @todo: makes this more robust.
-// Ideally, it'd use docker inspect to get the image.
-// But that hangs sometimes: https://github.com/docker/for-linux/issues/397
+// @todo: Look at alternative, as docker inspect hangs sometimes: https://github.com/docker/for-linux/issues/397
 export const GET_CONTAINER_FUNCTION = `get_container() {
-    IMAGE=$1
-    docker ps --filter ancestor=$IMAGE -lq
-  }`;
-export const GET_ALL_CONTAINERS_FUNCTION = `get_container() {
+  IMAGE=$1
+  for container in $(docker ps -q)
+    do
+      if [[ $IMAGE == $(docker inspect --format '{{.Config.Image}}' $container) ]]; then
+        echo $container
+        break
+      fi
+    done
+}`;
+export const GET_ALL_CONTAINERS_FUNCTION = `get_all_containers() {
   IMAGE=$1
   docker ps --filter ancestor=$IMAGE -q
 }`;

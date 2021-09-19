@@ -10,17 +10,16 @@ export default function cleanUpCommittedImage(
     [
       '-c',
       `${GET_ALL_CONTAINERS_FUNCTION}
-      docker stop $(get_all_containers $(docker images -q --filter reference=${committedImageName}))
-      docker rm $(get_all_containers $(docker images -q --filter reference=${committedImageName}))`,
-    ],
-    getSpawnOptions()
-  );
-
-  cp.spawnSync(
-    '/bin/sh',
-    [
-      '-c',
-      `docker rmi $(docker images -q --filter reference=${committedImageName})`,
+      LOCAL_CI_IMAGES=$(docker images -q --filter reference=${committedImageName})
+      for image in $LOCAL_CI_IMAGES
+        do
+          LOCAL_CI_CONTAINERS=$(get_all_containers $image)
+          if [[ -n $LOCAL_CI_CONTAINERS ]]; then
+            docker stop $LOCAL_CI_CONTAINERS
+            docker rm $LOCAL_CI_CONTAINERS
+          fi
+        done
+      docker rmi $LOCAL_CI_IMAGES`,
     ],
     getSpawnOptions()
   );
