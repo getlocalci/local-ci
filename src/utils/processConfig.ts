@@ -13,15 +13,13 @@ export default function processConfig(): void {
   }
 
   try {
-    const processed = cp.spawnSync(
+    const { stdout, stderr } = cp.spawnSync(
       getBinaryPath(),
       ['config', 'process', `${getRootPath()}/.circleci/config.yml`],
       getSpawnOptions()
     );
 
-    const { stdout, stderr } = processed;
-
-    if (!stdout?.length) {
+    if (!stdout.length) {
       throw new Error(
         stderr.length ? stderr.toString() : 'Failed to process the config'
       );
