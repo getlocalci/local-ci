@@ -105,6 +105,10 @@ export default async function runJob(jobName: string): Promise<void> {
     }
 
     clearTimeout(interval);
+    if (finalTerminal) {
+      return;
+    }
+
     finalTerminal = vscode.window.createTerminal({
       name: `local-ci final debugging ${jobName}`,
       message: 'Debug the final state of the container',
