@@ -86,14 +86,14 @@ export default async function runJob(jobName: string): Promise<void> {
     echo "Inside the job's container:"
     docker exec -it $(get_container ${dockerImage}) /bin/sh || exit 1
   `);
-
   debuggingTerminal.show();
+
   const committedImageName = `local-ci/${jobName}`;
   commitContainer(dockerImage, committedImageName);
-  const interval = setInterval(
-    () => commitContainer(dockerImage, committedImageName),
-    2000
-  );
+
+  const interval = setInterval(() => {
+    commitContainer(dockerImage, committedImageName);
+  }, 2000);
 
   let finalTerminal: vscode.Terminal | undefined;
   vscode.window.onDidCloseTerminal((closedTerminal) => {
@@ -114,7 +114,9 @@ export default async function runJob(jobName: string): Promise<void> {
     );
 
     // @todo: handle if debuggingTerminal exits because terminal hasn't started the container.
-    finalTerminal.sendText(`docker run -it --rm ${committedImageName}`);
+    finalTerminal.sendText(
+      `docker run -it --rm $(docker images --filter reference=${committedImageName} -q | head -1)`
+    );
   });
 
   vscode.window.onDidCloseTerminal(() => {
