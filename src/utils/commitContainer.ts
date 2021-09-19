@@ -15,7 +15,7 @@ export default function commitContainer(
       '-c',
       `${GET_CONTAINER_FUNCTION}
       if [[ -n $(get_container ${dockerImage}) ]]; then
-        docker commit $(get_container ${dockerImage}) ${newImageName}:${new Date().getTime()}
+        docker commit --pause=false $(get_container ${dockerImage}) ${newImageName}:${new Date().getTime()}
       fi`,
     ],
     getSpawnOptions()

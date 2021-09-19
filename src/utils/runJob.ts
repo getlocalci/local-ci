@@ -13,7 +13,7 @@ import getImageFromJob from './getImageFromJob';
 import getRootPath from './getRootPath';
 import processConfig from './processConfig';
 import {
-  GET_CONTAINER_FUNCTION,
+  GET_RUNNING_CONTAINER_FUNCTION,
   PROCESS_FILE_PATH,
   TMP_PATH,
 } from '../constants';
@@ -78,13 +78,13 @@ export default async function runJob(jobName: string): Promise<void> {
 
   // Once the container is available, start an interactive bash session within the container.
   debuggingTerminal.sendText(`
-    ${GET_CONTAINER_FUNCTION}
-    until [[ -n $(get_container ${dockerImage}) ]]
+    ${GET_RUNNING_CONTAINER_FUNCTION}
+    until [[ -n $(get_running_container ${dockerImage}) ]]
     do
       sleep 2
     done
     echo "Inside the job's container:"
-    docker exec -it $(get_container ${dockerImage}) /bin/sh || exit 1
+    docker exec -it $(get_running_container ${dockerImage}) /bin/sh || exit 1
   `);
   debuggingTerminal.show();
 
