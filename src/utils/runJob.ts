@@ -20,7 +20,7 @@ import {
 
 export default async function runJob(jobName: string): Promise<void> {
   const terminal = vscode.window.createTerminal({
-    name: `local-ci ${jobName}`,
+    name: `Local CI ${jobName}`,
     message: `Running the CircleCI® job ${jobName}`,
   });
 
@@ -72,7 +72,7 @@ export default async function runJob(jobName: string): Promise<void> {
     new Promise((resolve) => setTimeout(resolve, milliseconds));
   await delay(5000);
   const debuggingTerminal = vscode.window.createTerminal({
-    name: `local-ci debugging ${jobName}`,
+    name: `Local CI debugging ${jobName}`,
     message: 'This is inside the running container',
   });
 
@@ -110,7 +110,7 @@ export default async function runJob(jobName: string): Promise<void> {
     }
 
     finalTerminal = vscode.window.createTerminal({
-      name: `local-ci final debugging ${jobName}`,
+      name: `Local CI final debugging ${jobName}`,
       message: 'Debug the final state of the container',
     });
     finalTerminal.sendText(
