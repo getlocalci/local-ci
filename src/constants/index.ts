@@ -3,7 +3,7 @@
 // But that hangs sometimes: https://github.com/docker/for-linux/issues/397
 export const GET_CONTAINER_FUNCTION = `get_container() {
     IMAGE=$1
-    docker ps --filter ancestor=$IMAGE --filter status=running -lq
+    docker ps --filter ancestor=$IMAGE -lq
   }`;
 export const GET_ALL_CONTAINERS_FUNCTION = `get_container() {
   IMAGE=$1
