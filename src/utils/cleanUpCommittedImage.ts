@@ -1,14 +1,26 @@
 import * as cp from 'child_process';
+import { GET_ALL_CONTAINERS_FUNCTION } from '../constants';
 import getSpawnOptions from './getSpawnOptions';
-import { GET_CONTAINER_FUNCTION } from '../constants';
 
 export default function cleanUpCommittedImage(
   committedImageName: string
 ): void {
-  cp.spawnSync(`docker`, ['rmi', committedImageName], getSpawnOptions());
   cp.spawnSync(
-    `${GET_CONTAINER_FUNCTION} docker rm $(get_container ${committedImageName})`,
-    [],
+    '/bin/sh',
+    [
+      '-c',
+      `${GET_ALL_CONTAINERS_FUNCTION}
+      LOCAL_CI_IMAGES=$(docker images -q --filter reference=${committedImageName})
+      for image in $LOCAL_CI_IMAGES
+        do
+          LOCAL_CI_CONTAINERS=$(get_all_containers $image)
+          if [[ -n $LOCAL_CI_CONTAINERS ]]; then
+            docker stop $LOCAL_CI_CONTAINERS
+            docker rm $LOCAL_CI_CONTAINERS
+          fi
+        done
+      docker rmi $LOCAL_CI_IMAGES`,
+    ],
     getSpawnOptions()
   );
 }
