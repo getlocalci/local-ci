@@ -29,10 +29,6 @@
 				{
 					"id": "localCi",
 					"name": "CircleCI® Jobs"
-				},
-				{
-					"id": "results",
-					"name": "Job Results"
 				}
 			]
 		}
