@@ -13,14 +13,14 @@ import getImageFromJob from './getImageFromJob';
 import getRootPath from './getRootPath';
 import processConfig from './processConfig';
 import {
-  GET_CONTAINER_FUNCTION,
+  GET_RUNNING_CONTAINER_FUNCTION,
   PROCESS_FILE_PATH,
   TMP_PATH,
 } from '../constants';
 
 export default async function runJob(jobName: string): Promise<void> {
   const terminal = vscode.window.createTerminal({
-    name: `local-ci ${jobName}`,
+    name: `Local CI ${jobName}`,
     message: `Running the CircleCI® job ${jobName}`,
   });
 
@@ -72,29 +72,28 @@ export default async function runJob(jobName: string): Promise<void> {
     new Promise((resolve) => setTimeout(resolve, milliseconds));
   await delay(5000);
   const debuggingTerminal = vscode.window.createTerminal({
-    name: `local-ci debugging ${jobName}`,
+    name: `Local CI debugging ${jobName}`,
     message: 'This is inside the running container',
   });
-  const committedContainerBase = 'local-ci-';
 
   // Once the container is available, start an interactive bash session within the container.
   debuggingTerminal.sendText(`
-    ${GET_CONTAINER_FUNCTION}
-    until [[ -n $(get_container ${dockerImage}) ]]
+    ${GET_RUNNING_CONTAINER_FUNCTION}
+    until [[ -n $(get_running_container ${dockerImage}) ]]
     do
       sleep 2
     done
     echo "Inside the job's container:"
-    docker exec -it $(get_container ${dockerImage}) /bin/sh || exit 1
+    docker exec -it $(get_running_container ${dockerImage}) /bin/sh || exit 1
   `);
-
   debuggingTerminal.show();
-  commitContainer(dockerImage, `${committedContainerBase}${jobName}`);
-  const interval = setInterval(
-    () => commitContainer(dockerImage, `${committedContainerBase}${jobName}`),
-    2000
-  );
-  const committedImageName = `${committedContainerBase}${jobName}`;
+
+  const committedImageName = `local-ci/${jobName}`;
+  commitContainer(dockerImage, committedImageName);
+
+  const interval = setInterval(() => {
+    commitContainer(dockerImage, committedImageName);
+  }, 2000);
 
   let finalTerminal: vscode.Terminal | undefined;
   vscode.window.onDidCloseTerminal((closedTerminal) => {
@@ -106,8 +105,12 @@ export default async function runJob(jobName: string): Promise<void> {
     }
 
     clearTimeout(interval);
+    if (finalTerminal) {
+      return;
+    }
+
     finalTerminal = vscode.window.createTerminal({
-      name: `local-ci final debugging ${jobName}`,
+      name: `Local CI final debugging ${jobName}`,
       message: 'Debug the final state of the container',
     });
     finalTerminal.sendText(
@@ -115,7 +118,9 @@ export default async function runJob(jobName: string): Promise<void> {
     );
 
     // @todo: handle if debuggingTerminal exits because terminal hasn't started the container.
-    finalTerminal.sendText(`docker run -it --rm ${committedImageName}`);
+    finalTerminal.sendText(
+      `docker run -it --rm $(docker images --filter reference=${committedImageName} -q | head -1)`
+    );
   });
 
   vscode.window.onDidCloseTerminal(() => {
