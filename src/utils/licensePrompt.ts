@@ -4,7 +4,7 @@ import isPreviewExpired from './isPreviewExpired';
 import showLicenseInput from './showLicenseInput';
 import { LICENSE_KEY_STATE } from '../constants';
 
-const getLicense = 'Get License';
+const getLicense = 'Buy License';
 const enterLicense = 'Enter License';
 const whenPreviewStarted = 'localCi:license:whenPreviewStarted';
 
