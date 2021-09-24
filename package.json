@@ -21,7 +21,7 @@
 				{
 					"id": "localCiDebugger",
 					"title": "Local CI Debugger",
-					"icon": "resources/folder.svg"
+					"icon": "resources/house.svg"
 				}
 			]
 		},

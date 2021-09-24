@@ -1,6 +1,6 @@
 const previewLengthInMilliseconds = 172800000; // 2 days.
 
-export default function isPreviewOver(
+export default function isPreviewExpired(
   trialStartedTimeStamp: number | unknown
 ): boolean {
   return (
