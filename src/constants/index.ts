@@ -23,6 +23,8 @@ export const GET_RUNNING_CONTAINER_FUNCTION = `get_running_container() {
       fi
     done
 }`;
+export const LICENSE_KEY_STATE = 'localCi:license:key';
+export const PREVIEW_LENGTH_IN_MILLISECONDS = 172800000; // 2 days.
 export const TMP_PATH = '/tmp/local-ci';
 export const PROCESS_FILE_PATH = `${TMP_PATH}/process.yml`;
 export const RUN_JOB_COMMAND = 'local-ci.runJob';
