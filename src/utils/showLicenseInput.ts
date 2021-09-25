@@ -15,5 +15,9 @@ export default async function showLicenseInput(
     await vscode.window.showInformationMessage(
       'Thank you, your Local CI license key is activated!'
     );
+  } else {
+    await vscode.window.showWarningMessage(
+      'Sorry, there was a probably activating Local CI license key.'
+    );
   }
 }
