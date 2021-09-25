@@ -8,7 +8,7 @@
 
 ## Features
 
-Get shell access to your CircleCI® builds as they run. No more pushing, waiting 5 minutes, and pushing again.
+Debug CircleCI® jobs locally with Bash access and persistence between jobs, no more pushing and waiting.
 
 ![Local CI Demo](https://user-images.githubusercontent.com/4063887/132140183-e2b34f96-7e44-4f51-be33-59603c994a18.gif)
 
