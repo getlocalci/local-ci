@@ -19,7 +19,7 @@ export default function processConfig(): void {
       getSpawnOptions()
     );
 
-    if (!stdout.length) {
+    if (!stdout?.length) {
       throw new Error(
         stderr.length ? stderr.toString() : 'Failed to process the config'
       );
