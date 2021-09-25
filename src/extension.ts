@@ -24,9 +24,9 @@ export async function activate(
   // Entering this URI in the browser will show the license key input:
   // vscode://local-ci.local-ci/enterLicense
   vscode.window.registerUriHandler({
-    handleUri(uri: vscode.Uri) {
+    handleUri: async (uri: vscode.Uri) => {
       if (uri.path === '/enterLicense') {
-        showLicenseInput(context);
+        await showLicenseInput(context);
       }
     },
   });
