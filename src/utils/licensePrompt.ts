@@ -61,7 +61,10 @@ export default async function licensePrompt(
   }
 
   if (!isPreviewExpired(previewStartedTimeStamp)) {
-    const timeRemaining = getHoursRemainingInPreview(previewStartedTimeStamp);
+    const timeRemaining = getHoursRemainingInPreview(
+      new Date().getTime(),
+      previewStartedTimeStamp
+    );
     const userSelection = await vscode.window.showWarningMessage(
       getTextForNumber(
         `Thanks for previewing Local CI! There is ${timeRemaining} hour remaining in your free preview.`,
