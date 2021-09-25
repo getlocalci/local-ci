@@ -11,7 +11,7 @@ export default async function showLicenseInput(
   });
 
   if (isLicenseValid(enteredLicenseKey)) {
-    context.globalState.update(LICENSE_KEY_STATE, enteredLicenseKey);
+    await context.globalState.update(LICENSE_KEY_STATE, enteredLicenseKey);
     await vscode.window.showInformationMessage(
       'Thank you, your Local CI license key is activated!'
     );
