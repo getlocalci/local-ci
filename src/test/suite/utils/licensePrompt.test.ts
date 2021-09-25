@@ -12,6 +12,7 @@ suite('licensePrompt', () => {
   test('no license key', async () => {
     sinon.stub(vscode, 'window').value({
       showInputBox: async () => '',
+      showWarningMessage: async () => '',
     });
 
     const mockedContext = Substitute.for<vscode.ExtensionContext>();
