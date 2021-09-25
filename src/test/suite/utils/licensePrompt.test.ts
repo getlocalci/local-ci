@@ -2,19 +2,19 @@ import { Substitute } from '@fluffy-spoon/substitute';
 import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as vscode from 'vscode';
-import showLicenseInput from '../../../utils/showLicenseInput';
+import licensePrompt from '../../../utils/showLicenseInput';
 
 mocha.afterEach(() => {
   sinon.restore();
 });
 
-suite('showLicenseInput', () => {
-  test('license not valid', async () => {
+suite('licensePrompt', () => {
+  test('no license key', async () => {
     sinon.stub(vscode, 'window').value({
       showInputBox: async () => '',
     });
 
     const mockedContext = Substitute.for<vscode.ExtensionContext>();
-    await showLicenseInput(mockedContext);
+    await licensePrompt(mockedContext);
   });
 });
