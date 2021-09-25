@@ -4,7 +4,12 @@
 	"description": "Debug CircleCI® jobs locally with Bash access and persistence between jobs, no more pushing and waiting.",
 	"version": "0.1.0",
 	"publisher": "local-ci",
+	"preview": true,
 	"license": "GPL-2.0-or-later",
+	"galleryBanner": {
+		"color": "#eff1f3",
+		"theme": "light"
+	},
 	"engines": {
 		"vscode": "^1.59.0"
 	},
@@ -34,6 +39,33 @@
 			]
 		}
 	},
+	"badges": [
+		{
+			"url": "https://badgen.net/badge/trial/2%20day/red",
+			"href": "https://getlocalci.com",
+			"description": "2 day free preview"
+		},
+		{
+			"url": "https://badgen.net/badge/$/paid/yellow",
+			"href": "https://getlocalci.com",
+			"description": "Buy License Key"
+		},
+		{
+			"url": "https://badgen.net/badge/platform/MacOS/green",
+			"href": "https://getlocalci.come",
+			"description": "Platform: macOS"
+		},
+		{
+			"url": "https://badgen.net/badge/requires/CircleCI%C2%AE/green",
+			"href": "https://circleci.com",
+			"description": "Requires CircleCI®"
+		},
+		{
+			"url": "https://badgen.net/github/status/getlocalci/local-ci/develop/CircleCI",
+			"href": "https://circleci.com/gh/getlocalci/local-ci",
+			"description": "CircleCI® status"
+		}
+	],
 	"scripts": {
 		"vscode:prepublish": "npm run package",
 		"compile": "webpack",
