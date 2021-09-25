@@ -7,7 +7,7 @@ export default async function showLicenseInput(
 ): Promise<void> {
   const enteredLicenseKey = await vscode.window.showInputBox({
     title: 'Local CI license key',
-    prompt: 'Please enter your license key',
+    prompt: 'Please enter your Local CI license key',
   });
 
   if (isLicenseValid(enteredLicenseKey)) {
@@ -17,7 +17,7 @@ export default async function showLicenseInput(
     );
   } else {
     await vscode.window.showWarningMessage(
-      'Sorry, there was a probably activating Local CI license key.'
+      'Sorry, there was a problem activating the Local CI license key.'
     );
   }
 }
