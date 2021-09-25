@@ -8,7 +8,7 @@
 
 ## Features
 
-Debug CircleCI® jobs locally with Bash access and persistence between jobs, no more pushing and waiting.
+Debug CircleCI® jobs locally with Bash access and persistence between jobs. All in your local, without pushing commits and waiting.
 
 ![Local CI Demo](https://user-images.githubusercontent.com/4063887/132140183-e2b34f96-7e44-4f51-be33-59603c994a18.gif)
 
