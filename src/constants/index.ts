@@ -1,3 +1,4 @@
+export const ENTER_LICENSE_COMMAND = 'localCi/enterLicense';
 export const GET_ALL_CONTAINERS_FUNCTION = `get_all_containers() {
   IMAGE=$1
   docker ps --filter ancestor=$IMAGE -q

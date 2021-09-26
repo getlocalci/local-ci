@@ -14,10 +14,12 @@
 		"vscode": "^1.59.0"
 	},
 	"categories": [
-		"Debuggers"
+		"Debuggers",
+		"Programming Languages",
+		"Other"
 	],
 	"activationEvents": [
-		"onView:localCi"
+		"onView:localCiJobs"
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
@@ -33,8 +35,14 @@
 		"views": {
 			"localCiDebugger": [
 				{
-					"id": "localCi",
+					"id": "localCiJobs",
 					"name": "CircleCI® Jobs"
+				},
+				{
+					"id": "localCiLicense",
+					"name": "License key",
+					"type": "webview",
+					"visibility": "collapsed"
 				}
 			]
 		}

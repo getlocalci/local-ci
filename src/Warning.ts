@@ -1,13 +1,18 @@
 import * as vscode from 'vscode';
 
-export class Warning extends vscode.TreeItem {
-  constructor(
-    public readonly label: string,
-    public readonly collapsibleState: vscode.TreeItemCollapsibleState
-  ) {
-    super(label, collapsibleState);
+export default class Warning extends vscode.TreeItem {
+  constructor(public readonly label: string, icon = '', command = '') {
+    super(label, vscode.TreeItemCollapsibleState.None);
     this.tooltip = label;
-  }
+    if (icon) {
+      this.iconPath = new vscode.ThemeIcon(icon);
+    }
 
-  iconPath = new vscode.ThemeIcon('warning');
+    if (command) {
+      this.command = {
+        command,
+        title: label,
+      };
+    }
+  }
 }
