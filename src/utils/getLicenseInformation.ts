@@ -15,7 +15,7 @@ export default function getLicenseInformation(
 ): string {
   const previewStartedTimeStamp = context.globalState.get(whenPreviewStarted);
   const licenseKey = context.globalState.get(LICENSE_KEY_STATE);
-  const getLicenseLink = `<a class="button" href="${GET_LICENSE_KEY_URL}" target="_blank" rel="noopener noreferrer">Get license</a>`;
+  const getLicenseLink = `<a class="button" href="${GET_LICENSE_KEY_URL}" target="_blank" rel="noopener noreferrer">Buy license</a>`;
   const enterLicenseButton = `<button class="secondary" id="enter-license">Enter license</button>`;
 
   if (isLicenseValid(licenseKey)) {
@@ -48,7 +48,7 @@ export default function getLicenseInformation(
 
   if (isPreviewExpired(previewStartedTimeStamp) && !licenseKey) {
     return `<p>Thanks for previewing Local CI!</p>
-      <p>Please enter a Local CI license key</p>
+      <p>Please enter a Local CI license key to keep using this.</p>
       <p>${getLicenseLink}</p>
       <p>${enterLicenseButton}</p>`;
   }

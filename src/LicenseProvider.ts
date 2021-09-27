@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import licensePrompt from './utils/getLicenseInformation';
+import getLicenseInformation from './utils/getLicenseInformation';
 import showLicenseInput from './utils/showLicenseInput';
 
 function getNonce() {
@@ -14,6 +14,7 @@ function getNonce() {
   );
 }
 
+// Mainly taken from https://github.com/microsoft/vscode-extension-samples/blob/57bcea06b04b0f602c9e702147c831dccd0eee4f/webview-view-sample/src/extension.ts
 export default class LicenseProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = 'localCiLicense';
   private _view?: vscode.WebviewView;
@@ -23,10 +24,7 @@ export default class LicenseProvider implements vscode.WebviewViewProvider {
     private readonly _extensionUri: vscode.Uri
   ) {}
 
-  // eslint-disable-next-line prettier/prettier
-  resolveWebviewView(
-    webviewView: vscode.WebviewView
-  ): void | Thenable<void> {
+  resolveWebviewView(webviewView: vscode.WebviewView): void | Thenable<void> {
     this._view = webviewView;
     webviewView.webview.options = {
       // Allow scripts in the webview
@@ -46,22 +44,10 @@ export default class LicenseProvider implements vscode.WebviewViewProvider {
     });
   }
 
-  // Mainly taken from https://github.com/microsoft/vscode-extension-samples/blob/57bcea06b04b0f602c9e702147c831dccd0eee4f/webview-view-sample/src/extension.ts#L73
   private _getHtmlForWebview(webview: vscode.Webview) {
     const webviewDirname = 'webview';
-    // Get the local path to main script run in the webview, then convert it to a uri we can use in the webview.
     const scriptUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, 'src', webviewDirname, 'index.js')
-    );
-
-    // Do the same for the stylesheet.
-    const styleResetUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(
-        this._extensionUri,
-        'src',
-        webviewDirname,
-        'reset.css'
-      )
     );
     const styleVSCodeUri = webview.asWebviewUri(
       vscode.Uri.joinPath(
@@ -69,14 +55,6 @@ export default class LicenseProvider implements vscode.WebviewViewProvider {
         'src',
         webviewDirname,
         'vscode.css'
-      )
-    );
-    const mainStyleUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(
-        this._extensionUri,
-        'src',
-        webviewDirname,
-        'style.css'
       )
     );
 
@@ -96,14 +74,11 @@ export default class LicenseProvider implements vscode.WebviewViewProvider {
         webview.cspSource
       }; script-src 'nonce-${nonce}';">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <link href="${styleResetUri}" rel="stylesheet">
       <link href="${styleVSCodeUri}" rel="stylesheet">
-      <link href="${mainStyleUri}" rel="stylesheet">
-
-      <title>License Key</title>
+      <title>Local CI License Key</title>
     </head>
     <body>
-      ${licensePrompt(this.context)}
+      ${getLicenseInformation(this.context)}
       <script nonce="${nonce}" src="${scriptUri}"></script>
     </body>
     </html>`;

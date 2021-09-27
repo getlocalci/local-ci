@@ -29,7 +29,7 @@ export default class JobProvider
             (jobName) => new Job(jobName, vscode.TreeItemCollapsibleState.None)
           )
         : [
-            new Warning('Error: is Docker running?', 'warning'),
+            new Warning('Error: is Docker running?'),
             new vscode.TreeItem(` ${getDockerError()}`),
           ]
     );

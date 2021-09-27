@@ -28,7 +28,6 @@ export async function activate(
   vscode.commands.registerCommand(`${licenseTreeViewId}.refresh`, () =>
     jobProvider.refresh()
   );
-
   context.subscriptions.push(
     vscode.commands.registerCommand(ENTER_LICENSE_COMMAND, async () => {
       await showLicenseInput(context);
