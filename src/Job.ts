@@ -18,5 +18,5 @@ export default class Job extends vscode.TreeItem {
     };
   }
 
-  iconPath = new vscode.ThemeIcon('debug-start');
+  iconPath = new vscode.ThemeIcon('debug-start~spin');
 }

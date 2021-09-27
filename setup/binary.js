@@ -13,19 +13,14 @@ function error(msg) {
 
 const supportedPlatforms = [
   {
-    type: "Windows_NT",
-    architecture: "x64",
-    url: "https://github.com/CircleCI-Public/circleci-cli/releases/download/v0.1.15932/circleci-cli_0.1.15932_windows_amd64.zip",
-  },
-  {
     type: "Linux",
     architecture: "x64",
-    url: "https://github.com/CircleCI-Public/circleci-cli/releases/download/v0.1.15932/circleci-cli_0.1.15932_linux_amd64.tar.gz",
+    url: "https://github.com/CircleCI-Public/circleci-cli/releases/download/v0.1.15973/circleci-cli_0.1.15973_linux_amd64.tar.gz",
   },
   {
     type: "Darwin",
     architecture: "x64",
-    url: "https://github.com/CircleCI-Public/circleci-cli/releases/download/v0.1.15932/circleci-cli_0.1.15932_darwin_amd64.tar.gz",
+    url: "https://github.com/CircleCI-Public/circleci-cli/releases/download/v0.1.15973/circleci-cli_0.1.15973_darwin_amd64.tar.gz",
   },
 ];
 
