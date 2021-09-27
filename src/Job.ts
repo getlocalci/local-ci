@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { RUN_JOB_COMMAND } from './constants';
 
-export class Job extends vscode.TreeItem {
+export default class Job extends vscode.TreeItem {
   constructor(
     public readonly label: string,
     public readonly collapsibleState: vscode.TreeItemCollapsibleState

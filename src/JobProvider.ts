@@ -1,13 +1,13 @@
 import * as vscode from 'vscode';
-import { Job } from './Job';
+import Job from './Job';
+import Warning from './Warning';
 import getJobs from './utils/getJobs';
 import processConfig from './utils/processConfig';
 import { PROCESS_FILE_PATH } from './constants';
 import getDockerError from './utils/getDockerError';
 import isDockerRunning from './utils/isDockerRunning';
-import { Warning } from './Warning';
 
-export class LocalCiProvider
+export default class JobProvider
   implements vscode.TreeDataProvider<vscode.TreeItem>
 {
   private _onDidChangeTreeData: vscode.EventEmitter<Job | undefined | void> =
@@ -29,14 +29,8 @@ export class LocalCiProvider
             (jobName) => new Job(jobName, vscode.TreeItemCollapsibleState.None)
           )
         : [
-            new Warning(
-              'Error: is Docker running?',
-              vscode.TreeItemCollapsibleState.None
-            ),
-            new vscode.TreeItem(
-              ` ${getDockerError()}`,
-              vscode.TreeItemCollapsibleState.None
-            ),
+            new Warning('Error: is Docker running?'),
+            new vscode.TreeItem(` ${getDockerError()}`),
           ]
     );
   }

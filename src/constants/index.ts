@@ -1,3 +1,4 @@
+export const ENTER_LICENSE_COMMAND = 'localCi/enterLicense';
 export const GET_ALL_CONTAINERS_FUNCTION = `get_all_containers() {
   IMAGE=$1
   docker ps --filter ancestor=$IMAGE -q
@@ -23,6 +24,7 @@ export const GET_RUNNING_CONTAINER_FUNCTION = `get_running_container() {
       fi
     done
 }`;
+export const GET_LICENSE_KEY_URL = 'https://getlocalci.com';
 export const LICENSE_KEY_STATE = 'localCi:license:key';
 export const PREVIEW_LENGTH_IN_MILLISECONDS = 172800000; // 2 days.
 export const TMP_PATH = '/tmp/local-ci';

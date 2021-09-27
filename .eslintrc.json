@@ -27,7 +27,8 @@
         "setup",
         "out",
         "dist",
-        "**/*.d.ts"
+        "**/*.d.ts",
+        "webpack.config.js"
     ],
     "extends": [
         "eslint:recommended",
