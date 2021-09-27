@@ -1,5 +1,3 @@
-export default function isLicenseValid(
-  licenseKey: string | undefined
-): boolean {
+export default function isLicenseValid(licenseKey: string | unknown): boolean {
   return !!licenseKey;
 }

@@ -2,15 +2,15 @@ import * as vscode from 'vscode';
 import JobProvider from './JobProvider';
 import LicenseProvider from './LicenseProvider';
 import { ENTER_LICENSE_COMMAND, RUN_JOB_COMMAND } from './constants';
-import licensePrompt from './utils/licensePrompt';
+import licensePrompt from './utils/getLicenseInformation';
 import runJob from './utils/runJob';
 import showLicenseInput from './utils/showLicenseInput';
 
 export async function activate(
   context: vscode.ExtensionContext
 ): Promise<void> {
-  const jobProvider = new JobProvider();
   const jobTreeViewId = 'localCiJobs';
+  const jobProvider = new JobProvider();
   vscode.window.registerTreeDataProvider(jobTreeViewId, jobProvider);
   vscode.commands.registerCommand(`${jobTreeViewId}.refresh`, () =>
     jobProvider.refresh()
@@ -22,8 +22,8 @@ export async function activate(
     vscode.commands.registerCommand(RUN_JOB_COMMAND, runJob)
   );
 
-  const licenseProvider = new LicenseProvider(context, context.extensionUri);
   const licenseTreeViewId = 'localCiLicense';
+  const licenseProvider = new LicenseProvider(context, context.extensionUri);
   vscode.window.registerWebviewViewProvider(licenseTreeViewId, licenseProvider);
   vscode.commands.registerCommand(`${licenseTreeViewId}.refresh`, () =>
     jobProvider.refresh()
@@ -45,5 +45,5 @@ export async function activate(
     },
   });
 
-  await licensePrompt(context);
+  licensePrompt(context);
 }

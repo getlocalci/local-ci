@@ -1,3 +1,4 @@
+export const GET_LICENSE_KEY_URL = 'https://getlocalci.com';
 export const ENTER_LICENSE_COMMAND = 'localCi/enterLicense';
 export const GET_ALL_CONTAINERS_FUNCTION = `get_all_containers() {
   IMAGE=$1
