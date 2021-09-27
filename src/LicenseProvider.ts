@@ -27,19 +27,14 @@ export default class LicenseProvider implements vscode.WebviewViewProvider {
   resolveWebviewView(webviewView: vscode.WebviewView): void | Thenable<void> {
     this._view = webviewView;
     webviewView.webview.options = {
-      // Allow scripts in the webview
       enableScripts: true,
-
       localResourceRoots: [this._extensionUri],
     };
 
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
     webviewView.webview.onDidReceiveMessage(async (data) => {
-      switch (data.type) {
-        case 'enterLicense': {
-          await showLicenseInput(this.context);
-          break;
-        }
+      if (data.type === 'enterLicense') {
+        await showLicenseInput(this.context);
       }
     });
   }
@@ -61,7 +56,6 @@ export default class LicenseProvider implements vscode.WebviewViewProvider {
     // Use a nonce to only allow a specific script to be run.
     const nonce = getNonce();
 
-    // Use a nonce to only allow a specific script to be run.
     return `<!DOCTYPE html>
     <html lang="en">
     <head>
