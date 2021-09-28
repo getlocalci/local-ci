@@ -10,16 +10,20 @@ function getTextForNumber(singular: string, plural: string, count: number) {
   return count === 1 ? singular : plural;
 }
 
-export default function getLicenseInformation(
+export default async function getLicenseInformation(
   context: vscode.ExtensionContext
-): string {
+): Promise<string> {
   const previewStartedTimeStamp = context.globalState.get(whenPreviewStarted);
-  const licenseKey = context.globalState.get(LICENSE_KEY_STATE);
+  const licenseKey = await context.secrets.get(LICENSE_KEY_STATE);
   const getLicenseLink = `<a class="button" href="${GET_LICENSE_KEY_URL}" target="_blank" rel="noopener noreferrer">Buy license</a>`;
-  const enterLicenseButton = `<button class="secondary" id="enter-license">Enter license</button>`;
+  const enterLicenseButton = `<button class="secondary" id="enter-license">Enter license key</button>`;
+  const changeLicenseButton = `<button class="secondary" id="enter-license">Change license key</button>`;
 
-  if (isLicenseValid(licenseKey)) {
-    return `<p>Your Local CI license key is valid!</p>`;
+  const isValid = await isLicenseValid(licenseKey, context);
+
+  if (isValid) {
+    return `<p>Your Local CI license key is valid!</p>
+      ${changeLicenseButton}`;
   }
 
   if (!previewStartedTimeStamp && !licenseKey) {
@@ -47,7 +51,7 @@ export default function getLicenseInformation(
   }
 
   if (isPreviewExpired(previewStartedTimeStamp) && !licenseKey) {
-    return `<p>Thanks for previewing Local CI!</p>
+    return `<p>Thanks for previewing Local CI! The free trial is over.</p>
       <p>Please enter a Local CI license key to keep using this.</p>
       <p>${getLicenseLink}</p>
       <p>${enterLicenseButton}</p>`;

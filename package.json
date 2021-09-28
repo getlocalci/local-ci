@@ -19,7 +19,8 @@
     "Other"
   ],
   "activationEvents": [
-    "onView:localCiJobs"
+    "onView:localCiJobs",
+    "onView:localCiLicense"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -32,8 +33,7 @@
         {
           "id": "localCiLicense",
           "name": "Local CI License Key",
-          "type": "webview",
-          "visibility": "collapsed"
+          "type": "webview"
         }
       ]
     },
@@ -118,5 +118,8 @@
     "vscode-test": "^1.5.2",
     "webpack": "^5.38.1",
     "webpack-cli": "^4.7.0"
+  },
+  "dependencies": {
+    "axios": "^0.21.4"
   }
 }

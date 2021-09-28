@@ -1,8 +1,13 @@
 import * as vscode from 'vscode';
 import JobProvider from './JobProvider';
 import LicenseProvider from './LicenseProvider';
-import { ENTER_LICENSE_COMMAND, RUN_JOB_COMMAND } from './constants';
-import licensePrompt from './utils/getLicenseInformation';
+import {
+  GET_LICENSE_COMMAND,
+  GET_LICENSE_KEY_URL,
+  ENTER_LICENSE_COMMAND,
+  RUN_JOB_COMMAND,
+} from './constants';
+import getLicenseInformation from './utils/getLicenseInformation';
 import runJob from './utils/runJob';
 import showLicenseInput from './utils/showLicenseInput';
 
@@ -10,7 +15,7 @@ export async function activate(
   context: vscode.ExtensionContext
 ): Promise<void> {
   const jobTreeViewId = 'localCiJobs';
-  const jobProvider = new JobProvider();
+  const jobProvider = new JobProvider(context);
   vscode.window.registerTreeDataProvider(jobTreeViewId, jobProvider);
   vscode.commands.registerCommand(`${jobTreeViewId}.refresh`, () =>
     jobProvider.refresh()
@@ -23,11 +28,15 @@ export async function activate(
   );
 
   const licenseTreeViewId = 'localCiLicense';
-  const licenseProvider = new LicenseProvider(context, context.extensionUri);
+  const licenseProvider = new LicenseProvider(context);
   vscode.window.registerWebviewViewProvider(licenseTreeViewId, licenseProvider);
-  vscode.commands.registerCommand(`${licenseTreeViewId}.refresh`, () =>
-    jobProvider.refresh()
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(GET_LICENSE_COMMAND, () => {
+      vscode.env.openExternal(vscode.Uri.parse(GET_LICENSE_KEY_URL));
+    })
   );
+
   context.subscriptions.push(
     vscode.commands.registerCommand(ENTER_LICENSE_COMMAND, async () => {
       await showLicenseInput(context);
@@ -44,5 +53,5 @@ export async function activate(
     },
   });
 
-  licensePrompt(context);
+  await getLicenseInformation(context);
 }
