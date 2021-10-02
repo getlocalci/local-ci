@@ -32,6 +32,11 @@
   "contributes": {
     "commands": [
       {
+        "command": "local-ci.runJob",
+        "title": "Run Local CI job",
+        "icon": "$(refresh)"
+      },
+      {
         "command": "localCiJobs.refresh",
         "title": "Refresh Job List",
         "icon": "$(refresh)"

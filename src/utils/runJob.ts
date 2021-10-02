@@ -21,7 +21,7 @@ import {
 export default async function runJob(
   jobName: string,
   extensionUri: vscode.Uri
-): Promise<(number | undefined)[]> {
+): Promise<number | undefined> {
   const terminal = vscode.window.createTerminal({
     name: `Local CI ${jobName}`,
     message: `Running the CircleCI® job ${jobName}`,
@@ -144,9 +144,5 @@ export default async function runJob(
     }
   });
 
-  return [
-    await terminal.processId,
-    await debuggingTerminal.processId,
-    await finalTerminal?.processId,
-  ];
+  return await terminal.processId;
 }

@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { EXIT_JOB_COMMAND, RUN_JOB_COMMAND } from './constants';
 
 export default class Job extends vscode.TreeItem {
-  private runningTerminals: (number | undefined)[] = [];
+  private runningTerminal: number | undefined;
   constructor(public readonly label: string) {
     super(label);
     const tooltip = `Runs the CircleCI® job ${this.label}`;
@@ -28,16 +28,16 @@ export default class Job extends vscode.TreeItem {
     this.iconPath = new vscode.ThemeIcon('trash');
   }
 
-  getRunningTerminals(): (number | undefined)[] {
-    return this.runningTerminals;
+  getRunningTerminal(): number | undefined {
+    return this.runningTerminal;
   }
 
-  setRunningTerminals(runningTerminals: (number | undefined)[]): void {
-    this.runningTerminals = runningTerminals;
+  setRunningTerminal(runningTerminal: number | undefined): void {
+    this.runningTerminal = runningTerminal;
   }
 
-  resetRunningTerminals(): void {
-    this.runningTerminals = [];
+  resetRunningTerminal(): void {
+    this.runningTerminal = undefined;
   }
 
   setWasExited(): void {

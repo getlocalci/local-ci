@@ -57,20 +57,21 @@ export async function activate(
       async (jobName: string, job: Job) => {
         job.setIsRunning();
         jobProvider.refresh(job);
-        job.setRunningTerminals(await runJob(jobName, context.extensionUri));
+
+        job.setRunningTerminal(await runJob(jobName, context.extensionUri));
+        jobProvider.refresh(job);
       }
     ),
     vscode.commands.registerCommand(EXIT_JOB_COMMAND, async (job: Job) => {
       job.setWasExited();
-      jobProvider.refresh(job);
-      const runningTerminals = job.getRunningTerminals();
+      const runningTerminal = job.getRunningTerminal();
       vscode.window.terminals.forEach(async (terminalCandidate) => {
-        if (runningTerminals.includes(await terminalCandidate.processId)) {
+        if (runningTerminal === (await terminalCandidate.processId)) {
           terminalCandidate.dispose();
         }
       });
 
-      job.resetRunningTerminals();
+      job.resetRunningTerminal();
       jobProvider.refresh(job);
     })
   );
