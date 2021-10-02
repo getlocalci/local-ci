@@ -1,7 +1,7 @@
 import * as cp from 'child_process';
 import * as fs from 'fs';
 import * as vscode from 'vscode';
-import { getBinaryPath } from '../../setup/binary.js';
+import { getBinaryPath } from '../../node/binary.js';
 import getSpawnOptions from './getSpawnOptions';
 import getRootPath from './getRootPath';
 import writeProcessFile from './writeProcessFile';

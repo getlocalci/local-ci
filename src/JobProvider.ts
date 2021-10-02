@@ -9,21 +9,25 @@ import {
   ENTER_LICENSE_COMMAND,
   LICENSE_KEY_STATE,
   PROCESS_FILE_PATH,
+  PREVIEW_STARTED_TIMESTAMP,
 } from './constants';
 import getDockerError from './utils/getDockerError';
 import isDockerRunning from './utils/isDockerRunning';
 import isLicenseValid from './utils/isLicenseValid';
+import isPreviewExpired from './utils/isPreviewExpired';
 
 export default class JobProvider
   implements vscode.TreeDataProvider<vscode.TreeItem>
 {
+  public runningJobs: string[] = [];
+  public _onDidChangeTreeData: vscode.EventEmitter<Job | undefined> =
+    new vscode.EventEmitter<Job | undefined>();
+  readonly onDidChangeTreeData: vscode.Event<Job | undefined> =
+    this._onDidChangeTreeData.event;
   constructor(private readonly context: vscode.ExtensionContext) {}
 
-  private _onDidChangeTreeData: vscode.EventEmitter<Job | undefined | void> =
-    new vscode.EventEmitter<Job | undefined | void>();
-
-  refresh(): void {
-    this._onDidChangeTreeData.fire();
+  refresh(job?: Job): void {
+    this._onDidChangeTreeData.fire(job);
   }
 
   getTreeItem(element: Job): vscode.TreeItem {
@@ -32,25 +36,27 @@ export default class JobProvider
 
   async getChildren(): Promise<vscode.TreeItem[]> {
     processConfig();
-    return Promise.resolve(
+
+    const shouldEnableExtension =
       (await isLicenseValid(
         await this.context.secrets.get(LICENSE_KEY_STATE),
         this.context
-      ))
-        ? isDockerRunning()
-          ? getJobs(PROCESS_FILE_PATH).map(
-              (jobName) =>
-                new Job(jobName, vscode.TreeItemCollapsibleState.None)
-            )
-          : [
-              new Warning('Error: is Docker running?'),
-              new vscode.TreeItem(` ${getDockerError()}`),
-            ]
+      )) ||
+      !isPreviewExpired(
+        this.context.globalState.get(PREVIEW_STARTED_TIMESTAMP)
+      );
+
+    return shouldEnableExtension
+      ? isDockerRunning()
+        ? getJobs(PROCESS_FILE_PATH).map((jobName) => new Job(jobName))
         : [
-            new Warning('Please enter a Local CI license key.'),
-            new Command('Get License', GET_LICENSE_COMMAND),
-            new Command('Enter License', ENTER_LICENSE_COMMAND),
+            new Warning('Error: is Docker running?'),
+            new vscode.TreeItem(` ${getDockerError()}`),
           ]
-    );
+      : [
+          new Warning('Please enter a Local CI license key.'),
+          new Command('Get License', GET_LICENSE_COMMAND),
+          new Command('Enter License', ENTER_LICENSE_COMMAND),
+        ];
   }
 }

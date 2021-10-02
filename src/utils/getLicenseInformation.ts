@@ -1,10 +1,13 @@
 import * as vscode from 'vscode';
 import getHoursRemainingInPreview from './getHoursRemainingInPreview';
 import isPreviewExpired from './isPreviewExpired';
-import { GET_LICENSE_KEY_URL, LICENSE_KEY_STATE } from '../constants';
+import {
+  CACHED_LICENSE_VALIDITY,
+  GET_LICENSE_KEY_URL,
+  LICENSE_KEY_STATE,
+  PREVIEW_STARTED_TIMESTAMP,
+} from '../constants';
 import isLicenseValid from './isLicenseValid';
-
-const whenPreviewStarted = 'localCi:license:whenPreviewStarted';
 
 function getTextForNumber(singular: string, plural: string, count: number) {
   return count === 1 ? singular : plural;
@@ -13,7 +16,10 @@ function getTextForNumber(singular: string, plural: string, count: number) {
 export default async function getLicenseInformation(
   context: vscode.ExtensionContext
 ): Promise<string> {
-  const previewStartedTimeStamp = context.globalState.get(whenPreviewStarted);
+  context.secrets.delete(CACHED_LICENSE_VALIDITY);
+  const previewStartedTimeStamp = context.globalState.get(
+    PREVIEW_STARTED_TIMESTAMP
+  );
   const licenseKey = await context.secrets.get(LICENSE_KEY_STATE);
   const getLicenseLink = `<a class="button" href="${GET_LICENSE_KEY_URL}" target="_blank" rel="noopener noreferrer">Buy license</a>`;
   const enterLicenseButton = `<button class="secondary" id="enter-license">Enter license key</button>`;
@@ -27,7 +33,7 @@ export default async function getLicenseInformation(
   }
 
   if (!previewStartedTimeStamp && !licenseKey) {
-    context.globalState.update(whenPreviewStarted, new Date().getTime());
+    context.globalState.update(PREVIEW_STARTED_TIMESTAMP, new Date().getTime());
     return `<p>Thanks for previewing Local CI!</p>
       <p>This free trial will last for 2 days, then it will require a purchased license key.</p>
       <p>${getLicenseLink}</p>

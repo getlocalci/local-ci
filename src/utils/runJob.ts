@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import { getBinaryPath } from '../../setup/binary.js';
+import { getBinaryPath } from '../../node/binary.js';
 import areAllTerminalsClosed from './areAllTerminalsClosed';
 import cleanUpCommittedImage from './cleanUpCommittedImage';
 import commitContainer from './commitContainer';
@@ -18,10 +18,22 @@ import {
   TMP_PATH,
 } from '../constants';
 
-export default async function runJob(jobName: string): Promise<void> {
+export default async function runJob(
+  jobName: string,
+  extensionUri: vscode.Uri
+): Promise<(number | undefined)[]> {
   const terminal = vscode.window.createTerminal({
     name: `Local CI ${jobName}`,
     message: `Running the CircleCI® job ${jobName}`,
+    iconPath: {
+      light: vscode.Uri.joinPath(
+        extensionUri,
+        'resources',
+        'light',
+        'logo.svg'
+      ),
+      dark: vscode.Uri.joinPath(extensionUri, 'resources', 'dark', 'logo.svg'),
+    },
   });
 
   processConfig();
@@ -74,6 +86,7 @@ export default async function runJob(jobName: string): Promise<void> {
   const debuggingTerminal = vscode.window.createTerminal({
     name: `Local CI debugging ${jobName}`,
     message: 'This is inside the running container',
+    iconPath: new vscode.ThemeIcon('testing-debug-icon'),
   });
 
   // Once the container is available, start an interactive bash session within the container.
@@ -112,6 +125,7 @@ export default async function runJob(jobName: string): Promise<void> {
     finalTerminal = vscode.window.createTerminal({
       name: `Local CI final debugging ${jobName}`,
       message: 'Debug the final state of the container',
+      iconPath: new vscode.ThemeIcon('testing-debug-icon'),
     });
     finalTerminal.sendText(
       `echo "Inside a similar container after the job's container exited:"`
@@ -129,4 +143,10 @@ export default async function runJob(jobName: string): Promise<void> {
       cleanUpCommittedImage(committedImageName);
     }
   });
+
+  return [
+    await terminal.processId,
+    await debuggingTerminal.processId,
+    await finalTerminal?.processId,
+  ];
 }

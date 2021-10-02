@@ -3,7 +3,7 @@
   "displayName": "Local CI",
   "description": "Debug CircleCI® jobs locally with Bash access and persistence between jobs. All in your local, without pushing commits and waiting.",
   "version": "0.1.0",
-  "publisher": "local-ci",
+  "publisher": "LocalCi",
   "preview": true,
   "license": "GPL-2.0-or-later",
   "galleryBanner": {
@@ -18,12 +18,49 @@
     "Programming Languages",
     "Other"
   ],
+  "tags": [
+    "debug",
+    "debuggers",
+    "ci",
+    "cicd"
+  ],
   "activationEvents": [
     "onView:localCiJobs",
     "onView:localCiLicense"
   ],
   "main": "./dist/extension.js",
   "contributes": {
+    "commands": [
+      {
+        "command": "localCiJobs.refresh",
+        "title": "Refresh Job List",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "localCiJobs.help",
+        "title": "Help",
+        "icon": "$(question)"
+      },
+      {
+        "command": "localCiJobs.exitAllJobs",
+        "title": "Exit All Jobs",
+        "icon": "$(notebook-delete-cell)"
+      },
+      {
+        "command": "localCi.exitJob",
+        "title": "Exit Job",
+        "icon": "$(notebook-delete-cell)"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "localCiDebugger",
+          "title": "Local CI",
+          "icon": "resources/light/logo.svg"
+        }
+      ]
+    },
     "views": {
       "localCiDebugger": [
         {
@@ -37,12 +74,22 @@
         }
       ]
     },
-    "viewsContainers": {
-      "activitybar": [
+    "menus": {
+      "view/title": [
         {
-          "id": "localCiDebugger",
-          "title": "Local CI",
-          "icon": "resources/house.svg"
+          "command": "localCiJobs.refresh",
+          "when": "view == localCiJobs",
+          "group": "navigation"
+        },
+        {
+          "command": "localCiJobs.help",
+          "when": "view == localCiJobs",
+          "group": "navigation"
+        },
+        {
+          "command": "localCiJobs.exitAllJobs",
+          "when": "view == localCiJobs",
+          "group": "navigation"
         }
       ]
     }
@@ -87,7 +134,8 @@
     "pretest": "npm run test-compile && npm run lint",
     "lint": "eslint src --ext ts",
     "lint:fix": "eslint src --ext ts --fix",
-    "test": "node ./out/test/runTest.js"
+    "test": "node ./out/test/runTest.js",
+    "vscode:uninstall": "node ./node/uninstall"
   },
   "devDependencies": {
     "@cloudflare/binary-install": "^0.2.0",

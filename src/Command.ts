@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-export default class Job extends vscode.TreeItem {
+export default class Command extends vscode.TreeItem {
   constructor(public readonly label: string, command: string) {
     super(label);
     this.collapsibleState = vscode.TreeItemCollapsibleState.None;
