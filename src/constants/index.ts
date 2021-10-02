@@ -1,4 +1,8 @@
+export const CACHED_LICENSE_ERROR = 'localCiLicenseKeyError';
+export const CACHED_LICENSE_VALIDITY = 'localCi/cachedLicenseValidity';
+export const GET_LICENSE_COMMAND = 'localCi/getLicense';
 export const ENTER_LICENSE_COMMAND = 'localCi/enterLicense';
+export const EXIT_JOB_COMMAND = 'localCi/exitJob';
 export const GET_ALL_CONTAINERS_FUNCTION = `get_all_containers() {
   IMAGE=$1
   docker ps --filter ancestor=$IMAGE -q
@@ -25,8 +29,11 @@ export const GET_RUNNING_CONTAINER_FUNCTION = `get_running_container() {
     done
 }`;
 export const GET_LICENSE_KEY_URL = 'https://getlocalci.com';
+export const HELP_URL = 'https://getlocalci.com';
 export const LICENSE_KEY_STATE = 'localCi:license:key';
+export const LICENSE_VALIDITY_CACHED_TIME = 'localCi:license:cachedTime';
 export const PREVIEW_LENGTH_IN_MILLISECONDS = 172800000; // 2 days.
-export const TMP_PATH = '/tmp/local-ci';
+export const PREVIEW_STARTED_TIMESTAMP = 'localCi:license:whenPreviewStarted';
+export const TMP_PATH = '/tmp/local-ci'; // Also hard-coded in node/uninstall.js, change that if this changes.
 export const PROCESS_FILE_PATH = `${TMP_PATH}/process.yml`;
 export const RUN_JOB_COMMAND = 'local-ci.runJob';

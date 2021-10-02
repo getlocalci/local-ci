@@ -17,29 +17,32 @@ function getNonce() {
 // Mainly taken from https://github.com/microsoft/vscode-extension-samples/blob/57bcea06b04b0f602c9e702147c831dccd0eee4f/webview-view-sample/src/extension.ts
 export default class LicenseProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = 'localCiLicense';
-  private _view?: vscode.WebviewView;
+  private _extensionUri;
 
-  constructor(
-    private readonly context: vscode.ExtensionContext,
-    private readonly _extensionUri: vscode.Uri
-  ) {}
+  constructor(private readonly context: vscode.ExtensionContext) {
+    this._extensionUri = context.extensionUri;
+  }
 
-  resolveWebviewView(webviewView: vscode.WebviewView): void | Thenable<void> {
-    this._view = webviewView;
+  async resolveWebviewView(webviewView: vscode.WebviewView): Promise<void> {
     webviewView.webview.options = {
       enableScripts: true,
       localResourceRoots: [this._extensionUri],
     };
 
-    webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
+    webviewView.webview.html = await this._getHtmlForWebview(
+      webviewView.webview
+    );
     webviewView.webview.onDidReceiveMessage(async (data) => {
       if (data.type === 'enterLicense') {
         await showLicenseInput(this.context);
+        webviewView.webview.html = await this._getHtmlForWebview(
+          webviewView.webview
+        );
       }
     });
   }
 
-  private _getHtmlForWebview(webview: vscode.Webview) {
+  private async _getHtmlForWebview(webview: vscode.Webview): Promise<string> {
     const webviewDirname = 'webview';
     const scriptUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, 'src', webviewDirname, 'index.js')
@@ -72,7 +75,7 @@ export default class LicenseProvider implements vscode.WebviewViewProvider {
       <title>Local CI License Key</title>
     </head>
     <body>
-      ${getLicenseInformation(this.context)}
+      ${await getLicenseInformation(this.context)}
       <script nonce="${nonce}" src="${scriptUri}"></script>
     </body>
     </html>`;
