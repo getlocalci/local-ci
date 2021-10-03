@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import getLicenseInformation from './utils/getLicenseInformation';
-import showLicenseInput from './utils/showLicenseInput';
+import getLicenseInformation from '../utils/getLicenseInformation';
+import showLicenseInput from '../utils/showLicenseInput';
 
 function getNonce() {
   const possible =

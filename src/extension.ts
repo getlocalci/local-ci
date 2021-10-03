@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
-import Job from './Job';
-import JobProvider from './JobProvider';
-import LicenseProvider from './LicenseProvider';
+import Job from './classes/Job';
+import JobProvider from './classes/JobProvider';
+import LicenseProvider from './classes/LicenseProvider';
 import {
   GET_LICENSE_COMMAND,
   GET_LICENSE_KEY_URL,

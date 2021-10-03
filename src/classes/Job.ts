@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { EXIT_JOB_COMMAND, RUN_JOB_COMMAND } from './constants';
+import { EXIT_JOB_COMMAND, RUN_JOB_COMMAND } from '../constants';
 
 export default class Job extends vscode.TreeItem {
   private jobName: string;

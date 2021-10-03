@@ -2,19 +2,19 @@ import * as vscode from 'vscode';
 import Command from './Command';
 import Job from './Job';
 import Warning from './Warning';
-import getJobs from './utils/getJobs';
-import processConfig from './utils/processConfig';
+import getJobs from '../utils/getJobs';
+import processConfig from '../utils/processConfig';
 import {
   GET_LICENSE_COMMAND,
   ENTER_LICENSE_COMMAND,
   LICENSE_KEY_STATE,
   PROCESS_FILE_PATH,
   PREVIEW_STARTED_TIMESTAMP,
-} from './constants';
-import getDockerError from './utils/getDockerError';
-import isDockerRunning from './utils/isDockerRunning';
-import isLicenseValid from './utils/isLicenseValid';
-import isPreviewExpired from './utils/isPreviewExpired';
+} from '../constants';
+import getDockerError from '../utils/getDockerError';
+import isDockerRunning from '../utils/isDockerRunning';
+import isLicenseValid from '../utils/isLicenseValid';
+import isPreviewExpired from '../utils/isPreviewExpired';
 
 export default class JobProvider
   implements vscode.TreeDataProvider<vscode.TreeItem>
