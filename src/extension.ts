@@ -11,12 +11,13 @@ import {
   RUN_JOB_COMMAND,
 } from './constants';
 import getLicenseInformation from './utils/getLicenseInformation';
+import disposeTerminalsForJob from './utils/disposeTerminalsForJob';
 import runJob from './utils/runJob';
 import showLicenseInput from './utils/showLicenseInput';
 
-export async function activate(
-  context: vscode.ExtensionContext
-): Promise<void> {
+const runningTerminals: RunningTerminals = {};
+
+export function activate(context: vscode.ExtensionContext): void {
   const jobTreeViewId = 'localCiJobs';
   const jobProvider = new JobProvider(context);
 
@@ -28,51 +29,70 @@ export async function activate(
     vscode.commands.registerCommand(`${jobTreeViewId}.help`, () =>
       vscode.env.openExternal(vscode.Uri.parse(HELP_URL))
     ),
-    vscode.commands.registerCommand(
-      `${jobTreeViewId}.exitAllJobs`,
-      async () => {
-        const confirmText = 'Yes';
-        const selection = await vscode.window.showWarningMessage(
+    vscode.commands.registerCommand(`${jobTreeViewId}.exitAllJobs`, () => {
+      const confirmText = 'Yes';
+      vscode.window
+        .showWarningMessage(
           'Are you sure you want to exit all jobs?',
           { modal: true },
           { title: confirmText }
-        );
+        )
+        .then((selection) => {
+          if (selection?.title === confirmText) {
+            const flattenedTerminals = Object.values(runningTerminals).reduce(
+              (accumulator, terminals) => [...accumulator, ...terminals],
+              []
+            );
 
-        if (selection?.title === confirmText) {
-          vscode.window.terminals.forEach((terminal) => {
-            if (terminal.name.match(/^Local CI/)) {
-              terminal.dispose();
-            }
-          });
-        }
-      }
-    )
+            vscode.window.terminals.forEach((terminal) => {
+              terminal.processId.then((id) => {
+                if (flattenedTerminals.includes(id)) {
+                  terminal.dispose();
+                }
+              });
+            });
+          }
+        });
+    })
   );
+
   vscode.window.createTreeView(jobTreeViewId, {
     treeDataProvider: jobProvider,
   });
   context.subscriptions.push(
     vscode.commands.registerCommand(
       RUN_JOB_COMMAND,
-      async (jobName: string, job: Job) => {
+      (jobName: string, job: Job) => {
         job.setIsRunning();
         jobProvider.refresh(job);
 
-        job.setRunningTerminal(await runJob(jobName, context.extensionUri));
-        jobProvider.refresh(job);
+        runJob(jobName, context.extensionUri).then(
+          (terminalsForJob: RunningTerminal[]) => {
+            runningTerminals[jobName] = terminalsForJob;
+          }
+        );
       }
     ),
-    vscode.commands.registerCommand(EXIT_JOB_COMMAND, async (job: Job) => {
+    vscode.commands.registerCommand(EXIT_JOB_COMMAND, (job: Job) => {
       job.setWasExited();
-      const runningTerminal = job.getRunningTerminal();
-      vscode.window.terminals.forEach(async (terminalCandidate) => {
-        if (runningTerminal === (await terminalCandidate.processId)) {
-          terminalCandidate.dispose();
-        }
-      });
-
-      job.resetRunningTerminal();
+      const jobName = job.getJobName();
       jobProvider.refresh(job);
+
+      disposeTerminalsForJob(runningTerminals, jobName).then(() => {
+        delete runningTerminals[jobName];
+      });
+    }),
+    vscode.commands.registerCommand('localCi.job.rerun', (job: Job) => {
+      job.setIsRunning();
+      jobProvider.refresh(job);
+      const jobName = job.getJobName();
+      disposeTerminalsForJob(runningTerminals, jobName).then(() => {
+        runJob(jobName, context.extensionUri).then(
+          (terminalsForJob: RunningTerminal[]) => {
+            runningTerminals[jobName] = terminalsForJob;
+          }
+        );
+      });
     })
   );
 
@@ -87,20 +107,20 @@ export async function activate(
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand(ENTER_LICENSE_COMMAND, async () => {
-      await showLicenseInput(context);
+    vscode.commands.registerCommand(ENTER_LICENSE_COMMAND, () => {
+      showLicenseInput(context);
     })
   );
 
   // Entering this URI in the browser will show the license key input:
   // vscode://local-ci.local-ci/enterLicense
   vscode.window.registerUriHandler({
-    handleUri: async (uri: vscode.Uri) => {
+    handleUri: (uri: vscode.Uri) => {
       if (uri.path === '/enterLicense') {
-        await showLicenseInput(context);
+        showLicenseInput(context);
       }
     },
   });
 
-  await getLicenseInformation(context);
+  getLicenseInformation(context);
 }

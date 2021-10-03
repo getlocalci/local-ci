@@ -45,7 +45,6 @@ export default class JobProvider
       !isPreviewExpired(
         this.context.globalState.get(PREVIEW_STARTED_TIMESTAMP)
       );
-
     return shouldEnableExtension
       ? isDockerRunning()
         ? getJobs(PROCESS_FILE_PATH).map((jobName) => new Job(jobName))

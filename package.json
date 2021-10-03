@@ -55,6 +55,11 @@
         "command": "localCi.exitJob",
         "title": "Exit Job",
         "icon": "$(notebook-delete-cell)"
+      },
+      {
+        "command": "localCi.job.rerun",
+        "title": "Rerun Job",
+        "icon": "$(extensions-refresh)"
       }
     ],
     "viewsContainers": {
@@ -95,6 +100,13 @@
           "command": "localCiJobs.exitAllJobs",
           "when": "view == localCiJobs",
           "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "localCi.job.rerun",
+          "when": "view == localCiJobs && viewItem == isRunning",
+          "group": "inline"
         }
       ]
     }
