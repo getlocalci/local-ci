@@ -11,7 +11,6 @@ import getCheckoutDirectoryBasename from './getCheckoutDirectoryBasename';
 import getCheckoutJobs from './getCheckoutJobs';
 import getImageFromJob from './getImageFromJob';
 import getRootPath from './getRootPath';
-import processConfig from './processConfig';
 import {
   GET_RUNNING_CONTAINER_FUNCTION,
   PROCESS_FILE_PATH,
@@ -36,7 +35,6 @@ export default async function runJob(
     },
   });
 
-  processConfig();
   const checkoutJobs = getCheckoutJobs(PROCESS_FILE_PATH);
   const localVolume = `${TMP_PATH}/${path.basename(getRootPath())}`;
 
