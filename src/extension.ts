@@ -74,7 +74,7 @@ export function activate(context: vscode.ExtensionContext): void {
       }
     ),
     vscode.commands.registerCommand(EXIT_JOB_COMMAND, (job: Job) => {
-      job.setWasExited();
+      job.setIsNotRunning();
       const jobName = job.getJobName();
       jobProvider.refresh(job);
 

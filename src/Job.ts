@@ -35,7 +35,7 @@ export default class Job extends vscode.TreeItem {
     this.iconPath = new vscode.ThemeIcon('trash');
   }
 
-  setWasExited(): void {
+  setIsNotRunning(): void {
     this.contextValue = undefined;
     this.command = {
       title: this.label,
