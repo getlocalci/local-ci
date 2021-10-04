@@ -25,7 +25,7 @@ export default async function getLicenseInformation(
   const enterLicenseButton = `<button class="secondary" id="enter-license">Enter license key</button>`;
   const changeLicenseButton = `<button class="secondary" id="enter-license">Change license key</button>`;
 
-  const isValid = await isLicenseValid(licenseKey, context);
+  const isValid = await isLicenseValid(context);
 
   if (isValid) {
     return `<p>Your Local CI license key is valid!</p>
@@ -56,7 +56,7 @@ export default async function getLicenseInformation(
       <p>${enterLicenseButton}</p>`;
   }
 
-  if (isPreviewExpired(previewStartedTimeStamp) && !licenseKey) {
+  if (isPreviewExpired(previewStartedTimeStamp)) {
     return `<p>Thanks for previewing Local CI! The free trial is over.</p>
       <p>Please enter a Local CI license key to keep using this.</p>
       <p>${getLicenseLink}</p>

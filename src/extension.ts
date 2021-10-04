@@ -110,7 +110,7 @@ export function activate(context: vscode.ExtensionContext): void {
       vscode.env.openExternal(vscode.Uri.parse(GET_LICENSE_KEY_URL));
     }),
     vscode.commands.registerCommand(ENTER_LICENSE_COMMAND, () => {
-      showLicenseInput(context);
+      showLicenseInput(context, () => licenseProvider.load());
     })
   );
 
@@ -119,7 +119,7 @@ export function activate(context: vscode.ExtensionContext): void {
   vscode.window.registerUriHandler({
     handleUri: (uri: vscode.Uri) => {
       if (uri.path === '/enterLicense') {
-        showLicenseInput(context);
+        showLicenseInput(context, () => licenseProvider.load());
       }
     },
   });

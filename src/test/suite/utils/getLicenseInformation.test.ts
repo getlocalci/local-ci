@@ -14,7 +14,7 @@ mocha.afterEach(() => {
   sinon.restore();
 });
 
-function getMockContext(licenseKey: string) {
+function getMockContext(licenseKey: string, cachedValidity: boolean) {
   const initialContext = Substitute.for<vscode.ExtensionContext>();
 
   return {
@@ -23,7 +23,7 @@ function getMockContext(licenseKey: string) {
       ...initialContext.globalState,
       get: (stateKey: string) => {
         if (stateKey === CACHED_LICENSE_VALIDITY) {
-          return true;
+          return cachedValidity;
         }
         if (stateKey === LICENSE_VALIDITY_CACHED_TIME) {
           return new Date().getTime();
@@ -37,6 +37,7 @@ function getMockContext(licenseKey: string) {
       ...initialContext.secrets,
       delete: async () => {},
       get: async () => licenseKey,
+      store: sinon.mock(),
     },
   };
 }
@@ -44,13 +45,15 @@ function getMockContext(licenseKey: string) {
 suite('getLicenseInformation', () => {
   test('no license', async () => {
     assert.ok(
-      (await getLicenseInformation(getMockContext(''))).includes(
+      (await getLicenseInformation(getMockContext('', false))).includes(
         'Enter license key'
       )
     );
   });
-  test('valid license', async () => {
-    const actual = await getLicenseInformation(getMockContext('123456789'));
+  test('cached valid license', async () => {
+    const actual = await getLicenseInformation(
+      getMockContext('123456789', true)
+    );
     assert.strictEqual(actual.includes('Enter license key'), false);
     assert.ok(actual.includes('Your Local CI license key is valid'));
   });

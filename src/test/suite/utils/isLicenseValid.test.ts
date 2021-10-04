@@ -16,14 +16,14 @@ const getMockContext = () => Substitute.for<vscode.ExtensionContext>();
 
 suite('isLicenseValid', () => {
   test('no license key', async () => {
-    assert.strictEqual(await isLicenseValid('', getMockContext()), false);
+    assert.strictEqual(await isLicenseValid(getMockContext(), ''), false);
   });
 
   test('cached license validation', async () => {
     const mockContext = getMockContext();
 
     assert.strictEqual(
-      await isLicenseValid('12345', {
+      await isLicenseValid({
         ...mockContext,
         globalState: {
           ...mockContext.globalState,
@@ -38,6 +38,12 @@ suite('isLicenseValid', () => {
           keys: () => ['foo'],
           update: async () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
           setKeysForSync: sinon.mock(),
+        },
+        secrets: {
+          ...mockContext.secrets,
+          delete: async () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+          get: async () => '',
+          store: sinon.mock(),
         },
       }),
       true

@@ -35,8 +35,7 @@ export default class LicenseProvider implements vscode.WebviewViewProvider {
 
     webviewView.webview.onDidReceiveMessage(async (data) => {
       if (data.type === 'enterLicense') {
-        await showLicenseInput(this.context);
-        await this.load();
+        await showLicenseInput(this.context, () => this.load());
       }
     });
   }
@@ -46,19 +45,19 @@ export default class LicenseProvider implements vscode.WebviewViewProvider {
       return;
     }
 
-    this._getHtmlForWebview(this.webviewView.webview).then((newHtml) => {
-      if (this.webviewView?.webview?.html) {
+    this._getHtmlForWebview().then((newHtml) => {
+      if (this.webviewView) {
         this.webviewView.webview.html = newHtml;
       }
     });
   }
 
-  private async _getHtmlForWebview(webview: vscode.Webview): Promise<string> {
+  private async _getHtmlForWebview(): Promise<string> {
     const webviewDirname = 'webview';
-    const scriptUri = webview.asWebviewUri(
+    const scriptUri = this.webviewView?.webview.asWebviewUri(
       vscode.Uri.joinPath(this.extensionUri, 'src', webviewDirname, 'index.js')
     );
-    const styleVSCodeUri = webview.asWebviewUri(
+    const styleVSCodeUri = this.webviewView?.webview.asWebviewUri(
       vscode.Uri.joinPath(
         this.extensionUri,
         'src',
@@ -79,7 +78,7 @@ export default class LicenseProvider implements vscode.WebviewViewProvider {
         and only allow scripts that have a specific nonce.
       -->
       <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${
-        webview.cspSource
+        this.webviewView?.webview.cspSource
       }; script-src 'nonce-${nonce}';">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <link href="${styleVSCodeUri}" rel="stylesheet">

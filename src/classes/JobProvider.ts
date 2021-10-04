@@ -7,7 +7,6 @@ import processConfig from '../utils/processConfig';
 import {
   GET_LICENSE_COMMAND,
   ENTER_LICENSE_COMMAND,
-  LICENSE_KEY_STATE,
   PROCESS_FILE_PATH,
   PREVIEW_STARTED_TIMESTAMP,
 } from '../constants';
@@ -38,10 +37,7 @@ export default class JobProvider
     processConfig();
 
     const shouldEnableExtension =
-      (await isLicenseValid(
-        await this.context.secrets.get(LICENSE_KEY_STATE),
-        this.context
-      )) ||
+      (await isLicenseValid(this.context)) ||
       !isPreviewExpired(
         this.context.globalState.get(PREVIEW_STARTED_TIMESTAMP)
       );

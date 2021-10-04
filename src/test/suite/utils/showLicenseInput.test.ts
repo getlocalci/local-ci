@@ -1,4 +1,5 @@
 import { Substitute } from '@fluffy-spoon/substitute';
+import * as assert from 'assert';
 import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as vscode from 'vscode';
@@ -16,6 +17,8 @@ suite('showLicenseInput', () => {
     });
 
     const mockedContext = Substitute.for<vscode.ExtensionContext>();
-    await showLicenseInput(mockedContext);
+    const callbackSpy = sinon.spy();
+    await showLicenseInput(mockedContext, callbackSpy);
+    assert.ok(callbackSpy.called);
   });
 });
