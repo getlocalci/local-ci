@@ -30,6 +30,8 @@ export function activate(context: vscode.ExtensionContext): void {
       vscode.env.openExternal(vscode.Uri.parse(HELP_URL))
     ),
     vscode.commands.registerCommand(`${jobTreeViewId}.exitAllJobs`, () => {
+      jobProvider.refresh();
+
       const confirmText = 'Yes';
       vscode.window
         .showWarningMessage(
@@ -101,12 +103,12 @@ export function activate(context: vscode.ExtensionContext): void {
   vscode.window.registerWebviewViewProvider(licenseTreeViewId, licenseProvider);
 
   context.subscriptions.push(
+    vscode.commands.registerCommand(`${licenseTreeViewId}.refresh`, () => {
+      licenseProvider.load();
+    }),
     vscode.commands.registerCommand(GET_LICENSE_COMMAND, () => {
       vscode.env.openExternal(vscode.Uri.parse(GET_LICENSE_KEY_URL));
-    })
-  );
-
-  context.subscriptions.push(
+    }),
     vscode.commands.registerCommand(ENTER_LICENSE_COMMAND, () => {
       showLicenseInput(context);
     })

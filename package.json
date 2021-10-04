@@ -60,6 +60,11 @@
         "command": "localCi.job.rerun",
         "title": "Rerun Job",
         "icon": "$(extensions-refresh)"
+      },
+      {
+        "command": "localCiLicense.refresh",
+        "title": "Refresh License Information",
+        "icon": "$(refresh)"
       }
     ],
     "viewsContainers": {
@@ -99,6 +104,11 @@
         {
           "command": "localCiJobs.exitAllJobs",
           "when": "view == localCiJobs",
+          "group": "navigation"
+        },
+        {
+          "command": "localCiLicense.refresh",
+          "when": "view == localCiLicense",
           "group": "navigation"
         }
       ],

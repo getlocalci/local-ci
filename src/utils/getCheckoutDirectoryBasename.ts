@@ -20,7 +20,7 @@ export default function getCheckoutDirectoryBasename(
   }
 
   const stepWithPersist = configFile?.jobs[checkoutJob]?.steps?.find(
-    (step) => step?.persist_to_workspace
+    (step: Step) => step?.persist_to_workspace
   );
 
   const persistToWorkspacePath = stepWithPersist?.persist_to_workspace?.paths

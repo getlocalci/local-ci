@@ -17,27 +17,38 @@ function getNonce() {
 // Mainly taken from https://github.com/microsoft/vscode-extension-samples/blob/57bcea06b04b0f602c9e702147c831dccd0eee4f/webview-view-sample/src/extension.ts
 export default class LicenseProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = 'localCiLicense';
-  private _extensionUri;
+  private extensionUri: vscode.Uri;
+  private webviewView?: vscode.WebviewView;
 
   constructor(private readonly context: vscode.ExtensionContext) {
-    this._extensionUri = context.extensionUri;
+    this.extensionUri = context.extensionUri;
   }
 
   async resolveWebviewView(webviewView: vscode.WebviewView): Promise<void> {
+    this.webviewView = webviewView;
     webviewView.webview.options = {
       enableScripts: true,
-      localResourceRoots: [this._extensionUri],
+      localResourceRoots: [this.extensionUri],
     };
 
-    webviewView.webview.html = await this._getHtmlForWebview(
-      webviewView.webview
-    );
+    await this.load();
+
     webviewView.webview.onDidReceiveMessage(async (data) => {
       if (data.type === 'enterLicense') {
         await showLicenseInput(this.context);
-        webviewView.webview.html = await this._getHtmlForWebview(
-          webviewView.webview
-        );
+        await this.load();
+      }
+    });
+  }
+
+  async load(): Promise<void> {
+    if (!this.webviewView) {
+      return;
+    }
+
+    this._getHtmlForWebview(this.webviewView.webview).then((newHtml) => {
+      if (this.webviewView?.webview?.html) {
+        this.webviewView.webview.html = newHtml;
       }
     });
   }
@@ -45,11 +56,11 @@ export default class LicenseProvider implements vscode.WebviewViewProvider {
   private async _getHtmlForWebview(webview: vscode.Webview): Promise<string> {
     const webviewDirname = 'webview';
     const scriptUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, 'src', webviewDirname, 'index.js')
+      vscode.Uri.joinPath(this.extensionUri, 'src', webviewDirname, 'index.js')
     );
     const styleVSCodeUri = webview.asWebviewUri(
       vscode.Uri.joinPath(
-        this._extensionUri,
+        this.extensionUri,
         'src',
         webviewDirname,
         'vscode.css'
