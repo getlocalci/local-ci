@@ -1,11 +1,13 @@
 import * as vscode from 'vscode';
-import { EXIT_JOB_COMMAND, RUN_JOB_COMMAND } from './constants';
+import { EXIT_JOB_COMMAND, RUN_JOB_COMMAND } from '../constants';
 
 export default class Job extends vscode.TreeItem {
-  private runningTerminal: number | undefined;
+  private jobName: string;
+
   constructor(public readonly label: string) {
     super(label);
     const tooltip = `Runs the CircleCI® job ${this.label}`;
+    this.jobName = label;
     this.collapsibleState = vscode.TreeItemCollapsibleState.None;
 
     this.iconPath = new vscode.ThemeIcon('debug-start');
@@ -18,7 +20,12 @@ export default class Job extends vscode.TreeItem {
     };
   }
 
+  getJobName(): string {
+    return this.jobName;
+  }
+
   setIsRunning(): void {
+    this.contextValue = 'isRunning';
     this.command = {
       title: this.label,
       command: EXIT_JOB_COMMAND,
@@ -28,19 +35,8 @@ export default class Job extends vscode.TreeItem {
     this.iconPath = new vscode.ThemeIcon('trash');
   }
 
-  getRunningTerminal(): number | undefined {
-    return this.runningTerminal;
-  }
-
-  setRunningTerminal(runningTerminal: number | undefined): void {
-    this.runningTerminal = runningTerminal;
-  }
-
-  resetRunningTerminal(): void {
-    this.runningTerminal = undefined;
-  }
-
-  setWasExited(): void {
+  setIsNotRunning(): void {
+    this.contextValue = undefined;
     this.command = {
       title: this.label,
       command: RUN_JOB_COMMAND,

@@ -4,10 +4,13 @@ import {
   GET_LICENSE_KEY_URL,
   LICENSE_KEY_STATE,
 } from '../constants';
+import getLicenseErrorMessage from './getLicenseErrorMessage';
 import isLicenseValid from './isLicenseValid';
 
 export default async function showLicenseInput(
-  context: vscode.ExtensionContext
+  context: vscode.ExtensionContext,
+  completedCallback: () => void,
+  successCallback: () => void
 ): Promise<void> {
   const enteredLicenseKey = await vscode.window.showInputBox({
     title: 'Local CI license key',
@@ -21,17 +24,20 @@ export default async function showLicenseInput(
     return; // They pressed Escape or exited the input box.
   }
 
-  const isValid = await isLicenseValid(enteredLicenseKey, context);
+  const isValid = await isLicenseValid(context, enteredLicenseKey);
 
   if (isValid) {
-    await context.secrets.store(LICENSE_KEY_STATE, enteredLicenseKey);
-    await vscode.window.showInformationMessage(
+    context.secrets.store(LICENSE_KEY_STATE, enteredLicenseKey);
+    vscode.window.showInformationMessage(
       'Thank you, your Local CI license key is valid and was activated!'
     );
+    completedCallback();
+    successCallback();
   } else {
+    completedCallback();
     const warningMessage = enteredLicenseKey
-      ? `Sorry, there was a problem activating the Local CI license key: ${await context.secrets.get(
-          CACHED_LICENSE_ERROR
+      ? `Sorry, there was a problem activating the Local CI license key: ${getLicenseErrorMessage(
+          String(await context.secrets.get(CACHED_LICENSE_ERROR))
         )}`
       : 'Please enter a Local CI license key';
     const clicked = await vscode.window.showWarningMessage(
@@ -42,7 +48,7 @@ export default async function showLicenseInput(
     );
 
     if (clicked === enterKeyText || clicked === enterKeyAgainText) {
-      await showLicenseInput(context);
+      await showLicenseInput(context, completedCallback, successCallback);
       return;
     }
 

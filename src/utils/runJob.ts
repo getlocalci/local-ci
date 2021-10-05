@@ -11,7 +11,6 @@ import getCheckoutDirectoryBasename from './getCheckoutDirectoryBasename';
 import getCheckoutJobs from './getCheckoutJobs';
 import getImageFromJob from './getImageFromJob';
 import getRootPath from './getRootPath';
-import processConfig from './processConfig';
 import {
   GET_RUNNING_CONTAINER_FUNCTION,
   PROCESS_FILE_PATH,
@@ -21,7 +20,7 @@ import {
 export default async function runJob(
   jobName: string,
   extensionUri: vscode.Uri
-): Promise<number | undefined> {
+): Promise<RunningTerminal[]> {
   const terminal = vscode.window.createTerminal({
     name: `Local CI ${jobName}`,
     message: `Running the CircleCI® job ${jobName}`,
@@ -36,7 +35,6 @@ export default async function runJob(
     },
   });
 
-  processConfig();
   const checkoutJobs = getCheckoutJobs(PROCESS_FILE_PATH);
   const localVolume = `${TMP_PATH}/${path.basename(getRootPath())}`;
 
@@ -80,9 +78,6 @@ export default async function runJob(
   );
   terminal.show();
 
-  const delay = (milliseconds: number) =>
-    new Promise((resolve) => setTimeout(resolve, milliseconds));
-  await delay(5000);
   const debuggingTerminal = vscode.window.createTerminal({
     name: `Local CI debugging ${jobName}`,
     message: 'This is inside the running container',
@@ -144,5 +139,9 @@ export default async function runJob(
     }
   });
 
-  return await terminal.processId;
+  return [
+    await terminal.processId,
+    await debuggingTerminal.processId,
+    finalTerminal ? await finalTerminal?.processId : finalTerminal,
+  ];
 }

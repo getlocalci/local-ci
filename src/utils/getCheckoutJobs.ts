@@ -6,7 +6,7 @@ export default function getCheckoutJobs(inputFile: string): string[] {
 
   return Object.keys(configFile?.jobs ?? []).filter((jobName) =>
     configFile.jobs[jobName]?.steps?.some(
-      (step) => 'checkout' === step || step.checkout
+      (step: Step) => 'checkout' === step || step.checkout
     )
   );
 }

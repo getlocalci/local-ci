@@ -8,13 +8,15 @@
 
 ## Features
 
-Debug CircleCI® jobs locally with Bash access and persistence between jobs. All in your local, without pushing commits and waiting.
+Debug CircleCI® jobs locally with Bash access and persistence between jobs. All in your local, without pushing commits and waiting. Not affiliated with CircleCI®.
 
 ![Local CI Demo](https://user-images.githubusercontent.com/4063887/132140183-e2b34f96-7e44-4f51-be33-59603c994a18.gif)
 
 Thanks to [CirleCI-Public/cirlceci-cli](https://github.com/circleci-public/circleci-cli), which this uses.
 
 This extension allows shell access to the jobs, and persists the workspace between jobs.
+
+CircleCI® is a registered trademark of Circle Internet Services, Inc.
 
 ## Requirements
 

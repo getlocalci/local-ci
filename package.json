@@ -1,11 +1,17 @@
 {
   "name": "local-ci",
   "displayName": "Local CI",
-  "description": "Debug CircleCI® jobs locally with Bash access and persistence between jobs. All in your local, without pushing commits and waiting.",
+  "description": "Debug CircleCI® jobs locally with Bash access and persistence between jobs. All in your local, without pushing commits and waiting. Not affiliated with CircleCI®.",
   "version": "0.1.0",
-  "publisher": "LocalCi",
+  "publisher": "LocalCI",
   "preview": true,
   "license": "GPL-2.0-or-later",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/getlocalci/local-ci"
+  },
+  "bugs": "https://github.com/getlocalci/local-ci/issues",
+  "icon": "resources/light/logo.png",
   "galleryBanner": {
     "color": "#eff1f3",
     "theme": "light"
@@ -21,6 +27,7 @@
   "tags": [
     "debug",
     "debuggers",
+    "CircleCI",
     "ci",
     "cicd"
   ],
@@ -55,6 +62,16 @@
         "command": "localCi.exitJob",
         "title": "Exit Job",
         "icon": "$(notebook-delete-cell)"
+      },
+      {
+        "command": "localCi.job.rerun",
+        "title": "Rerun Job",
+        "icon": "$(extensions-refresh)"
+      },
+      {
+        "command": "localCiLicense.refresh",
+        "title": "Refresh License Information",
+        "icon": "$(refresh)"
       }
     ],
     "viewsContainers": {
@@ -95,6 +112,18 @@
           "command": "localCiJobs.exitAllJobs",
           "when": "view == localCiJobs",
           "group": "navigation"
+        },
+        {
+          "command": "localCiLicense.refresh",
+          "when": "view == localCiLicense",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "localCi.job.rerun",
+          "when": "view == localCiJobs && viewItem == isRunning",
+          "group": "inline"
         }
       ]
     }
