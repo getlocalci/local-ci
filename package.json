@@ -6,6 +6,12 @@
   "publisher": "LocalCi",
   "preview": true,
   "license": "GPL-2.0-or-later",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/getlocalci/local-ci"
+  },
+  "bugs": "https://github.com/getlocalci/local-ci/issues",
+  "icon": "resources/light/logo.png",
   "galleryBanner": {
     "color": "#eff1f3",
     "theme": "light"
@@ -21,6 +27,7 @@
   "tags": [
     "debug",
     "debuggers",
+    "CircleCI",
     "ci",
     "cicd"
   ],
