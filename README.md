@@ -16,6 +16,8 @@ Thanks to [CirleCI-Public/cirlceci-cli](https://github.com/circleci-public/circl
 
 This extension allows shell access to the jobs, and persists the workspace between jobs.
 
+CircleCI® is a registered trademark of Circle Internet Services, Inc.
+
 ## Requirements
 
 Docker
