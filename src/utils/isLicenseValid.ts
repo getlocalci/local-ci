@@ -3,18 +3,16 @@ import axios from 'axios';
 import {
   CACHED_LICENSE_ERROR,
   CACHED_LICENSE_VALIDITY,
-  LICENSE_VALIDITY_CACHED_TIME,
+  LICENSE_VALIDITY_CACHE_EXPIRATION,
 } from '../constants';
 
 const licenseValidationEndpoint = 'https://getlocalci.com';
+const fiveMinutesInMilliseconds = 300000;
 const dayInMilliseconds = 86400000;
 
-function isCachedLicenseExpired(context: vscode.ExtensionContext): boolean {
-  const cachedTimeStamp = context.globalState.get(LICENSE_VALIDITY_CACHED_TIME);
-  return (
-    !cachedTimeStamp ||
-    new Date().getTime() - Number(cachedTimeStamp) > dayInMilliseconds
-  );
+function isCachedValidityExpired(context: vscode.ExtensionContext): boolean {
+  const expiration = context.globalState.get(LICENSE_VALIDITY_CACHE_EXPIRATION);
+  return typeof expiration === 'number' && new Date().getTime() > expiration;
 }
 
 export default async function isLicenseValid(
@@ -25,25 +23,18 @@ export default async function isLicenseValid(
     context.secrets.store(CACHED_LICENSE_ERROR, 'Empty license key');
     return false;
   }
+  const trimmedLicenseKey = licenseKey ? String(licenseKey).trim() : '';
 
-  const isLicenseCacheExpired = isCachedLicenseExpired(context);
-  if (
-    !licenseKey &&
-    true === context.globalState.get(CACHED_LICENSE_VALIDITY) &&
-    !isLicenseCacheExpired
-  ) {
-    return true;
-  }
-
-  if (isLicenseCacheExpired) {
-    await context.globalState.update(CACHED_LICENSE_VALIDITY, null);
+  const isLicenseCacheExpired = isCachedValidityExpired(context);
+  if (!trimmedLicenseKey && !isLicenseCacheExpired) {
+    return !!context.globalState.get(CACHED_LICENSE_VALIDITY);
   }
 
   let response = null;
   try {
     response = await axios.get(licenseValidationEndpoint, {
       params: {
-        license: encodeURI(String(licenseKey)),
+        license: encodeURI(String(trimmedLicenseKey)),
         edd_action: 'activate_license', // eslint-disable-line @typescript-eslint/naming-convention
         item_id: 43, // eslint-disable-line @typescript-eslint/naming-convention
         url: 'https://example.com',
@@ -59,8 +50,9 @@ export default async function isLicenseValid(
   const isValid = !!response?.data?.success;
   context.globalState.update(CACHED_LICENSE_VALIDITY, isValid);
   context.globalState.update(
-    LICENSE_VALIDITY_CACHED_TIME,
-    new Date().getTime()
+    LICENSE_VALIDITY_CACHE_EXPIRATION,
+    new Date().getTime() +
+      (isValid ? dayInMilliseconds : fiveMinutesInMilliseconds)
   );
 
   if (!isValid && response?.data?.error) {

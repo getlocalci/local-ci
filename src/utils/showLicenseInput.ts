@@ -9,7 +9,8 @@ import isLicenseValid from './isLicenseValid';
 
 export default async function showLicenseInput(
   context: vscode.ExtensionContext,
-  completedCallback: () => void
+  completedCallback: () => void,
+  successCallback: () => void
 ): Promise<void> {
   const enteredLicenseKey = await vscode.window.showInputBox({
     title: 'Local CI license key',
@@ -31,7 +32,9 @@ export default async function showLicenseInput(
       'Thank you, your Local CI license key is valid and was activated!'
     );
     completedCallback();
+    successCallback();
   } else {
+    completedCallback();
     const warningMessage = enteredLicenseKey
       ? `Sorry, there was a problem activating the Local CI license key: ${getLicenseErrorMessage(
           String(await context.secrets.get(CACHED_LICENSE_ERROR))
@@ -43,10 +46,9 @@ export default async function showLicenseInput(
       enteredLicenseKey ? enterKeyAgainText : enterKeyText,
       getKeyText
     );
-    completedCallback();
 
     if (clicked === enterKeyText || clicked === enterKeyAgainText) {
-      await showLicenseInput(context, completedCallback);
+      await showLicenseInput(context, completedCallback, successCallback);
       return;
     }
 

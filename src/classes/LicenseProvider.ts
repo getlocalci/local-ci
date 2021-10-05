@@ -20,7 +20,10 @@ export default class LicenseProvider implements vscode.WebviewViewProvider {
   private extensionUri: vscode.Uri;
   private webviewView?: vscode.WebviewView;
 
-  constructor(private readonly context: vscode.ExtensionContext) {
+  constructor(
+    private readonly context: vscode.ExtensionContext,
+    private licenseSuccessCallback: () => void
+  ) {
     this.extensionUri = context.extensionUri;
   }
 
@@ -35,7 +38,11 @@ export default class LicenseProvider implements vscode.WebviewViewProvider {
 
     webviewView.webview.onDidReceiveMessage(async (data) => {
       if (data.type === 'enterLicense') {
-        await showLicenseInput(this.context, () => this.load());
+        await showLicenseInput(
+          this.context,
+          () => this.load(),
+          () => this.licenseSuccessCallback()
+        );
       }
     });
   }

@@ -5,7 +5,7 @@ import * as sinon from 'sinon';
 import * as vscode from 'vscode';
 import {
   CACHED_LICENSE_VALIDITY,
-  LICENSE_VALIDITY_CACHED_TIME,
+  LICENSE_VALIDITY_CACHE_EXPIRATION,
 } from '../../../constants';
 import { Substitute } from '@fluffy-spoon/substitute';
 import getLicenseInformation from '../../../utils/getLicenseInformation';
@@ -25,8 +25,8 @@ function getMockContext(licenseKey: string, cachedValidity: boolean) {
         if (stateKey === CACHED_LICENSE_VALIDITY) {
           return cachedValidity;
         }
-        if (stateKey === LICENSE_VALIDITY_CACHED_TIME) {
-          return new Date().getTime();
+        if (stateKey === LICENSE_VALIDITY_CACHE_EXPIRATION) {
+          return { cachedTime: new Date().getTime() };
         }
       },
       keys: () => ['foo'],

@@ -98,8 +98,9 @@ export function activate(context: vscode.ExtensionContext): void {
     })
   );
 
+  const licenseSuccessCallback = () => jobProvider.refresh();
   const licenseTreeViewId = 'localCiLicense';
-  const licenseProvider = new LicenseProvider(context);
+  const licenseProvider = new LicenseProvider(context, licenseSuccessCallback);
   vscode.window.registerWebviewViewProvider(licenseTreeViewId, licenseProvider);
 
   context.subscriptions.push(
@@ -110,16 +111,24 @@ export function activate(context: vscode.ExtensionContext): void {
       vscode.env.openExternal(vscode.Uri.parse(GET_LICENSE_KEY_URL));
     }),
     vscode.commands.registerCommand(ENTER_LICENSE_COMMAND, () => {
-      showLicenseInput(context, () => licenseProvider.load());
+      showLicenseInput(
+        context,
+        () => licenseProvider.load(),
+        licenseSuccessCallback
+      );
     })
   );
 
   // Entering this URI in the browser will show the license key input:
-  // vscode://local-ci.local-ci/enterLicense
+  // vscode://LocalCi.local-ci/enterLicense
   vscode.window.registerUriHandler({
     handleUri: (uri: vscode.Uri) => {
       if (uri.path === '/enterLicense') {
-        showLicenseInput(context, () => licenseProvider.load());
+        showLicenseInput(
+          context,
+          () => licenseProvider.load(),
+          licenseSuccessCallback
+        );
       }
     },
   });

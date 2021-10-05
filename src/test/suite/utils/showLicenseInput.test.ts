@@ -17,8 +17,14 @@ suite('showLicenseInput', () => {
     });
 
     const mockedContext = Substitute.for<vscode.ExtensionContext>();
-    const callbackSpy = sinon.spy();
-    await showLicenseInput(mockedContext, callbackSpy);
-    assert.ok(callbackSpy.called);
+    const completedCallbackSpy = sinon.spy();
+    const successCallbackSpy = sinon.spy();
+    await showLicenseInput(
+      mockedContext,
+      completedCallbackSpy,
+      successCallbackSpy
+    );
+    assert.ok(completedCallbackSpy.called);
+    assert.strictEqual(successCallbackSpy.called, false);
   });
 });

@@ -4,7 +4,7 @@ import * as sinon from 'sinon';
 import * as vscode from 'vscode';
 import {
   CACHED_LICENSE_VALIDITY,
-  LICENSE_VALIDITY_CACHED_TIME,
+  LICENSE_VALIDITY_CACHE_EXPIRATION,
 } from '../../../constants';
 import { Substitute } from '@fluffy-spoon/substitute';
 import isLicenseValid from '../../../utils/isLicenseValid';
@@ -31,7 +31,7 @@ suite('isLicenseValid', () => {
             if (stateKey === CACHED_LICENSE_VALIDITY) {
               return true;
             }
-            if (stateKey === LICENSE_VALIDITY_CACHED_TIME) {
+            if (stateKey === LICENSE_VALIDITY_CACHE_EXPIRATION) {
               return new Date().getTime();
             }
           },
