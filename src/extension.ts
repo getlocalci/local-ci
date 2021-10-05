@@ -120,7 +120,7 @@ export function activate(context: vscode.ExtensionContext): void {
   );
 
   // Entering this URI in the browser will show the license key input:
-  // vscode://LocalCi.local-ci/enterLicense
+  // vscode://LocalCI.local-ci/enterLicense
   vscode.window.registerUriHandler({
     handleUri: (uri: vscode.Uri) => {
       if (uri.path === '/enterLicense') {

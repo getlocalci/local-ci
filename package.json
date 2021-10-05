@@ -3,7 +3,7 @@
   "displayName": "Local CI",
   "description": "Debug CircleCI® jobs locally with Bash access and persistence between jobs. All in your local, without pushing commits and waiting.",
   "version": "0.1.0",
-  "publisher": "LocalCi",
+  "publisher": "LocalCI",
   "preview": true,
   "license": "GPL-2.0-or-later",
   "repository": {
