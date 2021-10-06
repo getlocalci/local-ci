@@ -40,22 +40,6 @@ export default async function getLicenseInformation(
       <p>${enterLicenseButton}</p>`;
   }
 
-  if (!isPreviewExpired(previewStartedTimeStamp)) {
-    const timeRemaining = getHoursRemainingInPreview(
-      new Date().getTime(),
-      previewStartedTimeStamp
-    );
-
-    return `<p>Thanks for previewing Local CI!</p>
-      <p>${getTextForNumber(
-        `Your free trial has ${timeRemaining} hour left.`,
-        `Your free trial has ${timeRemaining} hours left.`,
-        timeRemaining
-      )}</p>
-      <p>${getLicenseLink}</p>
-      <p>${enterLicenseButton}</p>`;
-  }
-
   if (isPreviewExpired(previewStartedTimeStamp)) {
     return `<p>Thanks for previewing Local CI! The free trial is over.</p>
       <p>Please enter a Local CI license key to keep using this.</p>
@@ -63,5 +47,17 @@ export default async function getLicenseInformation(
       <p>${enterLicenseButton}</p>`;
   }
 
-  return '';
+  const timeRemaining = getHoursRemainingInPreview(
+    new Date().getTime(),
+    previewStartedTimeStamp
+  );
+
+  return `<p>Thanks for previewing Local CI!</p>
+    <p>${getTextForNumber(
+      `Your free trial has ${timeRemaining} hour left.`,
+      `Your free trial has ${timeRemaining} hours left.`,
+      timeRemaining
+    )}</p>
+    <p>${getLicenseLink}</p>
+    <p>${enterLicenseButton}</p>`;
 }

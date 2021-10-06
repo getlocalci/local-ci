@@ -1,3 +1,4 @@
+import * as cp from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
@@ -6,11 +7,14 @@ import areAllTerminalsClosed from './areAllTerminalsClosed';
 import cleanUpCommittedImage from './cleanUpCommittedImage';
 import commitContainer from './commitContainer';
 import getConfigFile from './getConfigFile';
-import getDefaultWorkspace from './getDefaultWorkspace';
+import getProjectDirectory from './getProjectDirectory';
 import getCheckoutDirectoryBasename from './getCheckoutDirectoryBasename';
 import getCheckoutJobs from './getCheckoutJobs';
+import getHomeDirectory from './getHomeDirectory';
 import getImageFromJob from './getImageFromJob';
+import getImageId from './getImageId';
 import getRootPath from './getRootPath';
+import getSpawnOptions from './getSpawnOptions';
 import {
   GET_RUNNING_CONTAINER_FUNCTION,
   PROCESS_FILE_PATH,
@@ -58,13 +62,22 @@ export default async function runJob(
     attachWorkspaceSteps.length && attachWorkspaceSteps[0]?.attach_workspace?.at
       ? attachWorkspaceSteps[0].attach_workspace.at
       : '';
+
+  let imageId = getImageId(dockerImage);
+
+  if (!imageId) {
+    cp.spawnSync('docker', ['image', 'pull', dockerImage], getSpawnOptions());
+    imageId = getImageId(dockerImage);
+  }
+
+  const projectDirectory = getProjectDirectory(dockerImage);
   const attachWorkspace =
     '.' === initialAttachWorkspace || !initialAttachWorkspace
-      ? getDefaultWorkspace(dockerImage)
+      ? projectDirectory
       : initialAttachWorkspace;
 
   const volume = checkoutJobs.includes(jobName)
-    ? `${localVolume}:/tmp`
+    ? `${localVolume}:${getHomeDirectory(imageId)}`
     : `${localVolume}/${getCheckoutDirectoryBasename(
         PROCESS_FILE_PATH
       )}:${attachWorkspace}`;
@@ -92,7 +105,7 @@ export default async function runJob(
       sleep 2
     done
     echo "Inside the job's container:"
-    docker exec -it $(get_running_container ${dockerImage}) /bin/sh || exit 1
+    docker exec -it --workdir ${projectDirectory} $(get_running_container ${dockerImage}) /bin/sh || exit 1
   `);
   debuggingTerminal.show();
 
@@ -128,7 +141,7 @@ export default async function runJob(
 
     // @todo: handle if debuggingTerminal exits because terminal hasn't started the container.
     finalTerminal.sendText(
-      `docker run -it --rm $(docker images --filter reference=${committedImageName} -q | head -1)`
+      `docker run -it --rm --workdir ${projectDirectory} $(docker images --filter reference=${committedImageName} -q | head -1)`
     );
   });
 

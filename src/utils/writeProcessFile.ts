@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as yaml from 'js-yaml';
 import getCheckoutJobs from './getCheckoutJobs';
 import getConfigFile from './getConfigFile';
-import getDefaultWorkspace from './getDefaultWorkspace';
+import getDefaultWorkspace from './getProjectDirectory';
 import getImageFromJob from './getImageFromJob';
 import { PROCESS_FILE_PATH } from '../constants';
 

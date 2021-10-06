@@ -2,22 +2,19 @@ import * as assert from 'assert';
 import * as cp from 'child_process';
 import * as mocha from 'mocha';
 import * as sinon from 'sinon';
-import getDefaultWorkspace from '../../../utils/getDefaultWorkspace';
+import getProjectDirectory from '../../../utils/getProjectDirectory';
 
 mocha.afterEach(() => {
   sinon.restore();
 });
 
-suite('getDefaultWorkspace', () => {
+suite('getProjectDirectory', () => {
   test('Without an image name', () => {
-    assert.strictEqual(getDefaultWorkspace(''), '/home/circleci/project');
+    assert.strictEqual(getProjectDirectory(''), '/home/circleci/project');
   });
 
   test('With an image name', () => {
     sinon.mock(cp).expects('spawnSync').twice().returns({ stdout: 'somename' });
-    assert.strictEqual(
-      getDefaultWorkspace('something'),
-      '/home/somename/project'
-    );
+    assert.strictEqual(getProjectDirectory('something'), '/somename/project');
   });
 });

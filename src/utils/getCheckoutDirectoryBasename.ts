@@ -1,7 +1,7 @@
 import * as path from 'path';
 import getCheckoutJobs from './getCheckoutJobs';
 import getConfigFile from './getConfigFile';
-import getDefaultWorkspace from './getDefaultWorkspace';
+import getDefaultWorkspace from './getProjectDirectory';
 import getImageFromJob from './getImageFromJob';
 
 export default function getCheckoutDirectoryBasename(

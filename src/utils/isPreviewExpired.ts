@@ -4,7 +4,7 @@ export default function isPreviewExpired(
   trialStartedTimeStamp: number | unknown
 ): boolean {
   return (
-    !!trialStartedTimeStamp &&
+    !trialStartedTimeStamp ||
     new Date().getTime() - Number(trialStartedTimeStamp) >
       PREVIEW_LENGTH_IN_MILLISECONDS
   );
