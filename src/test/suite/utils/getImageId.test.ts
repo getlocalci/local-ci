@@ -21,7 +21,7 @@ suite('getImageId', () => {
     assert.strictEqual(getImageId('foo'), '12345');
   });
 
-  test('Has image id wit extra whitespace', () => {
+  test('Has image id with extra whitespace', () => {
     sinon.mock(cp).expects('spawnSync').once().returns({
       stdout: `  12345\n`,
     });
