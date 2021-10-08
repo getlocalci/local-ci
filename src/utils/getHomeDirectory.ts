@@ -5,7 +5,17 @@ import getSpawnOptions from './getSpawnOptions';
 export default function getHomeDirectory(imageId: string): string {
   const { stdout: homeDir } = cp.spawnSync(
     'docker',
-    ['run', imageId, '/bin/sh', '-c', 'getent passwd $(id -un) | cut -d: -f6'],
+    [
+      'run',
+      imageId,
+      '/bin/sh',
+      '-c',
+      `if [ "$HOME" = "/" ]; then
+        getent passwd $(id -un) | cut -d: -f6
+      else
+        echo $HOME
+      fi`,
+    ],
     getSpawnOptions()
   );
 
