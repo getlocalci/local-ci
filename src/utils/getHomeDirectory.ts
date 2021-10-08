@@ -16,7 +16,10 @@ export default function getHomeDirectory(imageId: string): string {
         echo $HOME
       fi`,
     ],
-    getSpawnOptions()
+    {
+      ...getSpawnOptions(),
+      timeout: 5000,
+    }
   );
 
   return homeDir?.toString ? homeDir.toString().trim() : '/home/circleci';

@@ -5,7 +5,7 @@ import getSpawnOptions from './getSpawnOptions';
 export default function cleanUpCommittedImage(
   committedImageName: string
 ): void {
-  cp.spawnSync(
+  cp.spawn(
     '/bin/sh',
     [
       '-c',

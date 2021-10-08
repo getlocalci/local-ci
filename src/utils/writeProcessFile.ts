@@ -2,8 +2,10 @@ import * as fs from 'fs';
 import * as yaml from 'js-yaml';
 import getCheckoutJobs from './getCheckoutJobs';
 import getConfigFile from './getConfigFile';
-import getDefaultWorkspace from './getProjectDirectory';
+import getProjectDirectory from './getProjectDirectory';
 import getImageFromJob from './getImageFromJob';
+import getImageId from './getImageId';
+import getStorageDirectory from './getStorageDirectory';
 import { PROCESS_FILE_PATH } from '../constants';
 
 // Rewrites the process.yml file.
@@ -43,7 +45,7 @@ export default function writeProcessFile(): void {
         !step?.persist_to_workspace?.root ||
         '.' === step.persist_to_workspace.root
           ? configFile.jobs[checkoutJob]?.working_directory ??
-            getDefaultWorkspace(getImageFromJob(configFile.jobs[checkoutJob]))
+            getProjectDirectory(getImageFromJob(configFile.jobs[checkoutJob]))
           : step.persist_to_workspace.root;
 
       const fullPath =
@@ -54,7 +56,9 @@ export default function writeProcessFile(): void {
       return step.persist_to_workspace && !fullPath.match(/\/tmp\/[^/]+$/)
         ? {
             run: {
-              command: `cp -r ${fullPath} /tmp`,
+              command: `cp -r ${fullPath} ${getStorageDirectory(
+                getImageId(getImageFromJob(configFile?.jobs[checkoutJob]))
+              )}`,
             },
           }
         : step;

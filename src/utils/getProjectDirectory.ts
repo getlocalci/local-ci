@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import addTrailingSlash from './addTrailingSlash';
 import getHomeDirectory from './getHomeDirectory';
 
 export default function getProjectDirectory(imageId: string): string {
@@ -7,7 +8,7 @@ export default function getProjectDirectory(imageId: string): string {
   }
 
   try {
-    return `${getHomeDirectory(imageId)}/project`;
+    return `${addTrailingSlash(getHomeDirectory(imageId))}project`;
   } catch (e) {
     vscode.window.showErrorMessage(
       `There was an error getting the default workspace: ${

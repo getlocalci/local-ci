@@ -1,4 +1,3 @@
-import * as cp from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
@@ -10,11 +9,10 @@ import getConfigFile from './getConfigFile';
 import getProjectDirectory from './getProjectDirectory';
 import getCheckoutDirectoryBasename from './getCheckoutDirectoryBasename';
 import getCheckoutJobs from './getCheckoutJobs';
-import getHomeDirectory from './getHomeDirectory';
+import getStorageDirectory from './getStorageDirectory';
 import getImageFromJob from './getImageFromJob';
 import getImageId from './getImageId';
 import getRootPath from './getRootPath';
-import getSpawnOptions from './getSpawnOptions';
 import {
   GET_RUNNING_CONTAINER_FUNCTION,
   PROCESS_FILE_PATH,
@@ -63,12 +61,7 @@ export default async function runJob(
       ? attachWorkspaceSteps[0].attach_workspace.at
       : '';
 
-  let imageId = getImageId(dockerImage);
-
-  if (!imageId) {
-    cp.spawnSync('docker', ['image', 'pull', dockerImage], getSpawnOptions());
-    imageId = getImageId(dockerImage);
-  }
+  const imageId = getImageId(dockerImage);
 
   const projectDirectory = getProjectDirectory(dockerImage);
   const attachWorkspace =
@@ -77,7 +70,7 @@ export default async function runJob(
       : initialAttachWorkspace;
 
   const volume = checkoutJobs.includes(jobName)
-    ? `${localVolume}:${getHomeDirectory(imageId)}`
+    ? `${localVolume}:${getStorageDirectory(imageId)}`
     : `${localVolume}/${getCheckoutDirectoryBasename(
         PROCESS_FILE_PATH
       )}:${attachWorkspace}`;
