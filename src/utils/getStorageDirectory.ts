@@ -1,6 +1,3 @@
-import addTrailingSlash from './addTrailingSlash';
-import getHomeDirectory from './getHomeDirectory';
-
-export default function getStorageDirectory(imageId: string): string {
-  return `${addTrailingSlash(getHomeDirectory(imageId))}local-ci`;
+export default function getStorageDirectory(): string {
+  return `/tmp/local-ci/`;
 }

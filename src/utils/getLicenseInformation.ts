@@ -4,7 +4,7 @@ import isPreviewExpired from './isPreviewExpired';
 import {
   CACHED_LICENSE_VALIDITY,
   GET_LICENSE_KEY_URL,
-  LICENSE_KEY_STATE,
+  LICENSE_KEY,
   PREVIEW_STARTED_TIMESTAMP,
 } from '../constants';
 import isLicenseValid from './isLicenseValid';
@@ -20,7 +20,7 @@ export default async function getLicenseInformation(
   const previewStartedTimeStamp = context.globalState.get(
     PREVIEW_STARTED_TIMESTAMP
   );
-  const licenseKey = await context.secrets.get(LICENSE_KEY_STATE);
+  const licenseKey = await context.secrets.get(LICENSE_KEY);
   const getLicenseLink = `<a class="button" href="${GET_LICENSE_KEY_URL}" target="_blank" rel="noopener noreferrer">Buy license</a>`;
   const enterLicenseButton = `<button class="secondary" id="enter-license">Enter license key</button>`;
   const changeLicenseButton = `<button class="secondary" id="enter-license">Change license key</button>`;

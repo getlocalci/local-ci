@@ -9,7 +9,7 @@ export default function commitContainer(
   dockerImage: string,
   newImageName: string
 ): void {
-  cp.spawnSync(
+  cp.spawn(
     '/bin/sh',
     [
       '-c',

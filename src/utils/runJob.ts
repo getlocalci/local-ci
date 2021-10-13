@@ -11,7 +11,6 @@ import getCheckoutDirectoryBasename from './getCheckoutDirectoryBasename';
 import getCheckoutJobs from './getCheckoutJobs';
 import getStorageDirectory from './getStorageDirectory';
 import getImageFromJob from './getImageFromJob';
-import getImageId from './getImageId';
 import getRootPath from './getRootPath';
 import {
   GET_RUNNING_CONTAINER_FUNCTION,
@@ -61,8 +60,6 @@ export default async function runJob(
       ? attachWorkspaceSteps[0].attach_workspace.at
       : '';
 
-  const imageId = getImageId(dockerImage);
-
   const projectDirectory = getProjectDirectory(dockerImage);
   const attachWorkspace =
     '.' === initialAttachWorkspace || !initialAttachWorkspace
@@ -70,7 +67,7 @@ export default async function runJob(
       : initialAttachWorkspace;
 
   const volume = checkoutJobs.includes(jobName)
-    ? `${localVolume}:${getStorageDirectory(imageId)}`
+    ? `${localVolume}:${getStorageDirectory()}`
     : `${localVolume}/${getCheckoutDirectoryBasename(
         PROCESS_FILE_PATH
       )}:${attachWorkspace}`;

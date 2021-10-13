@@ -4,7 +4,6 @@ import getCheckoutJobs from './getCheckoutJobs';
 import getConfigFile from './getConfigFile';
 import getProjectDirectory from './getProjectDirectory';
 import getImageFromJob from './getImageFromJob';
-import getImageId from './getImageId';
 import getStorageDirectory from './getStorageDirectory';
 import { PROCESS_FILE_PATH } from '../constants';
 
@@ -56,9 +55,7 @@ export default function writeProcessFile(): void {
       return step.persist_to_workspace && !fullPath.match(/\/tmp\/[^/]+$/)
         ? {
             run: {
-              command: `cp -r ${fullPath} ${getStorageDirectory(
-                getImageId(getImageFromJob(configFile?.jobs[checkoutJob]))
-              )}`,
+              command: `cp -r ${fullPath} ${getStorageDirectory()}`,
             },
           }
         : step;

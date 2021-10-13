@@ -18,7 +18,7 @@ export default function getHomeDirectory(imageId: string): string {
     ],
     {
       ...getSpawnOptions(),
-      timeout: 5000,
+      timeout: 4000,
     }
   );
 

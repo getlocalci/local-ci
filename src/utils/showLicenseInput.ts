@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import {
   CACHED_LICENSE_ERROR,
   GET_LICENSE_KEY_URL,
-  LICENSE_KEY_STATE,
+  LICENSE_KEY,
 } from '../constants';
 import getLicenseErrorMessage from './getLicenseErrorMessage';
 import isLicenseValid from './isLicenseValid';
@@ -27,7 +27,7 @@ export default async function showLicenseInput(
   const isValid = await isLicenseValid(context, enteredLicenseKey);
 
   if (isValid) {
-    context.secrets.store(LICENSE_KEY_STATE, enteredLicenseKey);
+    context.secrets.store(LICENSE_KEY, enteredLicenseKey);
     vscode.window.showInformationMessage(
       'Thank you, your Local CI license key is valid and was activated!'
     );

@@ -30,7 +30,7 @@ export default async function isLicenseValid(
     return !!context.globalState.get(CACHED_LICENSE_VALIDITY);
   }
 
-  let response = null;
+  let response;
   try {
     response = await axios.get(licenseValidationEndpoint, {
       params: {
