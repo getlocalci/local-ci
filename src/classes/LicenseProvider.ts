@@ -58,7 +58,7 @@ export default class LicenseProvider implements vscode.WebviewViewProvider {
           this.load();
           this.licenseSuccessCallback();
         } else {
-          const warningMessage = `Sorry, validation didn't work: ${getLicenseErrorMessage(
+          const warningMessage = `Sorry, validation didn't work. ${getLicenseErrorMessage(
             String(await this.context.secrets.get(LICENSE_ERROR))
           )}`;
           vscode.window.showWarningMessage(warningMessage, {

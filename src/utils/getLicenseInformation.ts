@@ -9,6 +9,7 @@ import {
   PREVIEW_STARTED_TIMESTAMP,
 } from '../constants';
 import isLicenseValid from './isLicenseValid';
+import getLicenseErrorMessage from './getLicenseErrorMessage';
 
 function getTextForNumber(singular: string, plural: string, count: number) {
   return count === 1 ? singular : plural;
@@ -44,8 +45,10 @@ export default async function getLicenseInformation(
   }
 
   if (previewExpired && !!licenseKey && !isValid) {
-    return `<p>There was an error validating the license key:</p>
-    <p>${await context.secrets.get(LICENSE_ERROR)}</p>
+    return `<p>There was an error validating the license key.</p>
+    <p>${getLicenseErrorMessage(
+      String(await context.secrets.get(LICENSE_ERROR))
+    )}</p>
     <p>${getLicenseLink}</p>
     <p>${enterLicenseButton}</p>
     <p>${retryValidationButton}</p>`;
