@@ -2,9 +2,10 @@ import * as vscode from 'vscode';
 import getHoursRemainingInPreview from './getHoursRemainingInPreview';
 import isPreviewExpired from './isPreviewExpired';
 import {
-  CACHED_LICENSE_VALIDITY,
   GET_LICENSE_KEY_URL,
+  LICENSE_ERROR,
   LICENSE_KEY,
+  LICENSE_VALIDITY,
   PREVIEW_STARTED_TIMESTAMP,
 } from '../constants';
 import isLicenseValid from './isLicenseValid';
@@ -16,7 +17,7 @@ function getTextForNumber(singular: string, plural: string, count: number) {
 export default async function getLicenseInformation(
   context: vscode.ExtensionContext
 ): Promise<string> {
-  context.secrets.delete(CACHED_LICENSE_VALIDITY);
+  context.secrets.delete(LICENSE_VALIDITY);
   const previewStartedTimeStamp = context.globalState.get(
     PREVIEW_STARTED_TIMESTAMP
   );
@@ -24,8 +25,10 @@ export default async function getLicenseInformation(
   const getLicenseLink = `<a class="button" href="${GET_LICENSE_KEY_URL}" target="_blank" rel="noopener noreferrer">Buy license</a>`;
   const enterLicenseButton = `<button class="secondary" id="enter-license">Enter license key</button>`;
   const changeLicenseButton = `<button class="secondary" id="enter-license">Change license key</button>`;
+  const retryValidationButton = `<button class="secondary" id="retry-license-validation">Retry license validation</button>`;
 
   const isValid = await isLicenseValid(context);
+  const previewExpired = isPreviewExpired(previewStartedTimeStamp);
 
   if (isValid) {
     return `<p>Your Local CI license key is valid!</p>
@@ -40,7 +43,15 @@ export default async function getLicenseInformation(
       <p>${enterLicenseButton}</p>`;
   }
 
-  if (isPreviewExpired(previewStartedTimeStamp)) {
+  if (previewExpired && !!licenseKey && !isValid) {
+    return `<p>There was an error validating the license key:</p>
+    <p>${await context.secrets.get(LICENSE_ERROR)}</p>
+    <p>${getLicenseLink}</p>
+    <p>${enterLicenseButton}</p>
+    <p>${retryValidationButton}</p>`;
+  }
+
+  if (previewExpired) {
     return `<p>Thanks for previewing Local CI! The free trial is over.</p>
       <p>Please enter a Local CI license key to keep using this.</p>
       <p>${getLicenseLink}</p>

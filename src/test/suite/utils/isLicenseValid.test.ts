@@ -3,7 +3,7 @@ import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as vscode from 'vscode';
 import {
-  CACHED_LICENSE_VALIDITY,
+  LICENSE_VALIDITY,
   LICENSE_VALIDITY_CACHE_EXPIRATION,
 } from '../../../constants';
 import { Substitute } from '@fluffy-spoon/substitute';
@@ -16,7 +16,7 @@ const getMockContext = () => Substitute.for<vscode.ExtensionContext>();
 
 suite('isLicenseValid', () => {
   test('no license key', async () => {
-    assert.strictEqual(await isLicenseValid(getMockContext(), ''), false);
+    assert.strictEqual(await isLicenseValid(getMockContext(), true, ''), false);
   });
 
   test('cached license validation', async () => {
@@ -28,7 +28,7 @@ suite('isLicenseValid', () => {
         globalState: {
           ...mockContext.globalState,
           get: (stateKey: string) => {
-            if (stateKey === CACHED_LICENSE_VALIDITY) {
+            if (stateKey === LICENSE_VALIDITY) {
               return true;
             }
             if (stateKey === LICENSE_VALIDITY_CACHE_EXPIRATION) {

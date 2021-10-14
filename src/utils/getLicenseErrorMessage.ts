@@ -14,5 +14,5 @@ const errors = {
 type ErrorCode = keyof typeof errors;
 
 export default function getLicenseErrorMessage(errorCode: string): string {
-  return errors[errorCode as ErrorCode] ?? 'Unknown error';
+  return errors[errorCode as ErrorCode] ?? errorCode;
 }

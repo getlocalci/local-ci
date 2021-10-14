@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
 import axios from 'axios';
 import {
-  CACHED_LICENSE_ERROR,
-  CACHED_LICENSE_VALIDITY,
+  LICENSE_ERROR,
+  LICENSE_VALIDITY,
   LICENSE_VALIDITY_CACHE_EXPIRATION,
 } from '../constants';
 
@@ -17,17 +17,17 @@ function isCachedValidityExpired(context: vscode.ExtensionContext): boolean {
 
 export default async function isLicenseValid(
   context: vscode.ExtensionContext,
+  forceRecheck?: boolean,
   licenseKey?: string | unknown
 ): Promise<boolean> {
   if ('' === licenseKey) {
-    context.secrets.store(CACHED_LICENSE_ERROR, 'Empty license key');
+    context.secrets.store(LICENSE_ERROR, 'Empty license key');
     return false;
   }
   const trimmedLicenseKey = licenseKey ? String(licenseKey).trim() : '';
 
-  const isLicenseCacheExpired = isCachedValidityExpired(context);
-  if (!trimmedLicenseKey && !isLicenseCacheExpired) {
-    return !!context.globalState.get(CACHED_LICENSE_VALIDITY);
+  if (!forceRecheck && !isCachedValidityExpired(context)) {
+    return !!context.globalState.get(LICENSE_VALIDITY);
   }
 
   let response;
@@ -41,14 +41,11 @@ export default async function isLicenseValid(
       },
     });
   } catch (e) {
-    context.secrets.store(
-      CACHED_LICENSE_ERROR,
-      (e as ErrorWithMessage)?.message
-    );
+    context.secrets.store(LICENSE_ERROR, (e as ErrorWithMessage)?.message);
   }
 
   const isValid = !!response?.data?.success;
-  context.globalState.update(CACHED_LICENSE_VALIDITY, isValid);
+  context.globalState.update(LICENSE_VALIDITY, isValid);
   context.globalState.update(
     LICENSE_VALIDITY_CACHE_EXPIRATION,
     new Date().getTime() +
@@ -56,7 +53,11 @@ export default async function isLicenseValid(
   );
 
   if (!isValid && response?.data?.error) {
-    context.secrets.store(CACHED_LICENSE_ERROR, response.data.error);
+    context.secrets.store(LICENSE_ERROR, response.data.error);
+  }
+
+  if (isValid) {
+    context.secrets.delete(LICENSE_ERROR);
   }
 
   return isValid;

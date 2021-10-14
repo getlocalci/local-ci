@@ -1,5 +1,8 @@
 import * as vscode from 'vscode';
+import { LICENSE_ERROR } from '../constants';
+import getLicenseErrorMessage from '../utils/getLicenseErrorMessage';
 import getLicenseInformation from '../utils/getLicenseInformation';
+import isLicenseValid from '../utils/isLicenseValid';
 import showLicenseInput from '../utils/showLicenseInput';
 
 function getNonce() {
@@ -43,6 +46,25 @@ export default class LicenseProvider implements vscode.WebviewViewProvider {
           () => this.load(),
           () => this.licenseSuccessCallback()
         );
+      }
+
+      if (data.type === 'retryLicenseValidation') {
+        const isValid = await isLicenseValid(this.context, true);
+
+        if (isValid) {
+          vscode.window.showInformationMessage(
+            'Validation worked, your Local CI license key is valid and was activated!'
+          );
+          this.load();
+          this.licenseSuccessCallback();
+        } else {
+          const warningMessage = `Sorry, validation didn't work: ${getLicenseErrorMessage(
+            String(await this.context.secrets.get(LICENSE_ERROR))
+          )}`;
+          vscode.window.showWarningMessage(warningMessage, {
+            detail: 'The license key is invalid',
+          });
+        }
       }
     });
   }
