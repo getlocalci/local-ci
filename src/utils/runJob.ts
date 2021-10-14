@@ -95,8 +95,8 @@ export default async function runJob(
       sleep 2
     done
     echo "Inside the job's container:"
-    docker exec -it --workdir ${
-      projectDirectory !== 'project' ? projectDirectory : ''
+    docker exec -it ${
+      projectDirectory !== 'project' ? '--workdir ' + projectDirectory : ''
     } $(get_running_container ${dockerImage}) /bin/sh || exit 1
   `);
   debuggingTerminal.show();
@@ -133,8 +133,8 @@ export default async function runJob(
 
     // @todo: handle if debuggingTerminal exits because terminal hasn't started the container.
     finalTerminal.sendText(
-      `docker run -it --rm --workdir ${
-        projectDirectory !== 'project' ? projectDirectory : ''
+      `docker run -it --rm ${
+        projectDirectory !== 'project' ? '--workdir ' + projectDirectory : ''
       } $(docker images --filter reference=${committedImageName} -q | head -1)`
     );
   });
