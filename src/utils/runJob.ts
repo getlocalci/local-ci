@@ -15,7 +15,7 @@ import getRootPath from './getRootPath';
 import {
   GET_RUNNING_CONTAINER_FUNCTION,
   PROCESS_FILE_PATH,
-  TMP_PATH,
+  HOST_TMP_PATH,
 } from '../constants';
 
 export default async function runJob(
@@ -37,7 +37,7 @@ export default async function runJob(
   });
 
   const checkoutJobs = getCheckoutJobs(PROCESS_FILE_PATH);
-  const localVolume = `${TMP_PATH}/${path.basename(getRootPath())}`;
+  const localVolume = `${HOST_TMP_PATH}/${path.basename(getRootPath())}`;
 
   // If this is the only checkout job, rm the entire local volume directory.
   // This job will checkout to that volume, and there could be an error

@@ -5,11 +5,11 @@ import { getBinaryPath } from '../../node/binary.js';
 import getSpawnOptions from './getSpawnOptions';
 import getRootPath from './getRootPath';
 import writeProcessFile from './writeProcessFile';
-import { PROCESS_FILE_PATH, TMP_PATH } from '../constants';
+import { PROCESS_FILE_PATH, HOST_TMP_PATH } from '../constants';
 
 export default function processConfig(): void {
-  if (!fs.existsSync(TMP_PATH)) {
-    fs.mkdirSync(TMP_PATH);
+  if (!fs.existsSync(HOST_TMP_PATH)) {
+    fs.mkdirSync(HOST_TMP_PATH);
   }
 
   try {
