@@ -17,10 +17,7 @@ export default function getHomeDirectory(imageId: string): string {
         echo $HOME
       fi`,
     ],
-    {
-      ...getSpawnOptions(),
-      timeout: 15000,
-    }
+    getSpawnOptions()
   );
 
   if (stderr?.toString && !!homeDir?.toString && !homeDir.toString()) {
