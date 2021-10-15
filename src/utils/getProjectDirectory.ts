@@ -2,13 +2,18 @@ import * as vscode from 'vscode';
 import addTrailingSlash from './addTrailingSlash';
 import getHomeDirectory from './getHomeDirectory';
 
-export default function getProjectDirectory(imageId: string): string {
+export default async function getProjectDirectory(
+  imageId: string,
+  terminal?: vscode.Terminal
+): Promise<string> {
   if (!imageId) {
     return '/home/circleci/project';
   }
 
   try {
-    return `${addTrailingSlash(getHomeDirectory(imageId))}project`;
+    return `${addTrailingSlash(
+      await getHomeDirectory(imageId, terminal)
+    )}project`;
   } catch (e) {
     vscode.window.showErrorMessage(
       `There was an error getting the default workspace: ${

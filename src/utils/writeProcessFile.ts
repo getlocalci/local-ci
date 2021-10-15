@@ -19,7 +19,7 @@ export default function writeProcessFile(): void {
   }
 
   if (!checkoutJobs.length) {
-    fs.writeFileSync(PROCESS_FILE_PATH, yaml.dump(configFile));
+    fs.writeFile(PROCESS_FILE_PATH, yaml.dump(configFile), () => '');
     return;
   }
 
@@ -28,6 +28,10 @@ export default function writeProcessFile(): void {
       if (!configFile || !configFile.jobs[checkoutJob]?.steps) {
         return;
       }
+
+      const projectDirectory = await getProjectDirectory(
+        getImageFromJob(configFile.jobs[checkoutJob])
+      );
 
       // Simulate persist_to_workspace by copying the persisted files to the volume.
       // @todo: handle other jobs that persist_to_workspace, like https://github.com/kefranabg/bento-starter/blob/c5ec78a033d3915d700bd6463594508098d46448/.circleci/config.yml#L81
@@ -46,7 +50,7 @@ export default function writeProcessFile(): void {
           !step?.persist_to_workspace?.root ||
           '.' === step.persist_to_workspace.root
             ? configFile.jobs[checkoutJob]?.working_directory ??
-              getProjectDirectory(getImageFromJob(configFile.jobs[checkoutJob]))
+              projectDirectory
             : step.persist_to_workspace.root;
 
         const fullPath =
@@ -63,5 +67,7 @@ export default function writeProcessFile(): void {
           : step;
       });
     })
-  ).then(() => fs.writeFileSync(PROCESS_FILE_PATH, yaml.dump(configFile)));
+  ).then(() =>
+    fs.writeFile(PROCESS_FILE_PATH, yaml.dump(configFile), () => '')
+  );
 }

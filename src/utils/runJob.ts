@@ -24,7 +24,7 @@ export default async function runJob(
 ): Promise<RunningTerminal[]> {
   const terminal = vscode.window.createTerminal({
     name: `Local CI ${jobName}`,
-    message: `Running the CircleCI® job ${jobName}`,
+    message: `About to run the CircleCI® job ${jobName}…`,
     iconPath: {
       light: vscode.Uri.joinPath(
         extensionUri,
@@ -60,7 +60,7 @@ export default async function runJob(
       ? attachWorkspaceSteps[0].attach_workspace.at
       : '';
 
-  const projectDirectory = getProjectDirectory(dockerImage);
+  const projectDirectory = await getProjectDirectory(dockerImage, terminal);
   const attachWorkspace =
     '.' === initialAttachWorkspace || !initialAttachWorkspace
       ? projectDirectory
@@ -68,8 +68,9 @@ export default async function runJob(
 
   const volume = checkoutJobs.includes(jobName)
     ? `${localVolume}:${getStorageDirectory()}`
-    : `${localVolume}/${getCheckoutDirectoryBasename(
-        PROCESS_FILE_PATH
+    : `${localVolume}/${await getCheckoutDirectoryBasename(
+        PROCESS_FILE_PATH,
+        terminal
       )}:${attachWorkspace}`;
 
   if (!fs.existsSync(localVolume)) {

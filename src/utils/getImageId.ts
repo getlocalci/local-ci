@@ -16,7 +16,7 @@ export default function getImageId(imageName: string): string {
   let imageId = imageQuery(imageName);
 
   if (!imageId) {
-    cp.spawnSync('docker', ['image', 'pull', imageName], getSpawnOptions());
+    cp.spawn('docker', ['image', 'pull', imageName], getSpawnOptions());
     imageId = imageQuery(imageName);
   }
 

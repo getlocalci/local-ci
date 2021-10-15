@@ -3,8 +3,11 @@ import * as vscode from 'vscode';
 import getSpawnOptions from './getSpawnOptions';
 
 // The same way the CircleCI® checkout step gets the HOME directory.
-export default function getHomeDirectory(imageId: string): string {
-  const { stdout: homeDir, stderr } = cp.spawnSync(
+export default function getHomeDirectory(
+  imageId: string,
+  terminal?: vscode.Terminal
+): Promise<string> {
+  const { stdout: homeDir, stderr } = cp.spawn(
     'docker',
     [
       'run',
@@ -20,14 +23,28 @@ export default function getHomeDirectory(imageId: string): string {
     getSpawnOptions()
   );
 
-  if (stderr?.toString && !!homeDir?.toString && !homeDir.toString()) {
-    vscode.window.showWarningMessage(
-      `Could not find the home directory of the image ${imageId}`,
-      {
-        detail: 'The license key is invalid',
-      }
-    );
-  }
+  return new Promise((resolve, reject) => {
+    homeDir.on('data', (data) => {
+      resolve(data?.toString ? data.toString().trim() : '/home/circleci');
+    });
 
-  return homeDir?.toString ? homeDir.toString().trim() : '/home/circleci';
+    stderr.on('data', (data) => {
+      if (data?.toString && terminal) {
+        terminal.sendText(`echo "${data.toString()}"`);
+      }
+    });
+
+    stderr.on('error', (error) => {
+      if (error.message) {
+        vscode.window.showWarningMessage(
+          `Could not find the home directory of the image ${imageId}: ${error.message}`,
+          {
+            detail: 'The license key is invalid',
+          }
+        );
+      }
+
+      reject();
+    });
+  });
 }

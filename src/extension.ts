@@ -41,17 +41,10 @@ export function activate(context: vscode.ExtensionContext): void {
         )
         .then((selection) => {
           if (selection?.title === confirmText) {
-            const flattenedTerminals = Object.values(runningTerminals).reduce(
-              (accumulator, terminals) => [...accumulator, ...terminals],
-              []
-            );
-
             vscode.window.terminals.forEach((terminal) => {
-              terminal.processId.then((id) => {
-                if (flattenedTerminals.includes(id)) {
-                  terminal.dispose();
-                }
-              });
+              if (terminal.name.startsWith('Local CI')) {
+                terminal.dispose();
+              }
             });
           }
         });
