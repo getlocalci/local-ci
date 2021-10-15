@@ -10,21 +10,27 @@ mocha.afterEach(() => {
 
 suite('getImageId', () => {
   test('No image id', () => {
-    sinon.mock(cp).expects('spawnSync').once().returns({});
+    sinon.mock(cp).expects('spawnSync').atLeast(3).returns({});
     assert.strictEqual(getImageId('foo'), '');
   });
 
   test('Has image id', () => {
-    sinon.mock(cp).expects('spawnSync').once().returns({
-      stdout: '12345',
-    });
+    sinon
+      .mock(cp)
+      .expects('spawnSync')
+      .returns({
+        stdout: { toString: () => '12345' },
+      });
     assert.strictEqual(getImageId('foo'), '12345');
   });
 
   test('Has image id with extra whitespace', () => {
-    sinon.mock(cp).expects('spawnSync').once().returns({
-      stdout: `  12345\n`,
-    });
+    sinon
+      .mock(cp)
+      .expects('spawnSync')
+      .returns({
+        stdout: { toString: () => `  12345\n` },
+      });
     assert.strictEqual(getImageId('foo'), '12345');
   });
 });

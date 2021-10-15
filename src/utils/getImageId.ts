@@ -17,7 +17,7 @@ export default function getImageId(imageName: string): string {
 
   if (!imageId) {
     cp.spawnSync('docker', ['image', 'pull', imageName], getSpawnOptions());
-    imageId = getImageId(imageName);
+    imageId = imageQuery(imageName);
   }
 
   return imageId ? imageId.trim() : '';
