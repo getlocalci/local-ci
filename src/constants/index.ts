@@ -29,6 +29,7 @@ export const GET_RUNNING_CONTAINER_FUNCTION = `get_running_container() {
 }`;
 export const GET_LICENSE_KEY_URL = 'https://getlocalci.com';
 export const HELP_URL = 'https://getlocalci.com';
+export const LICENSE_ITEM_ID = 43;
 export const LICENSE_KEY = 'localCi:license:key';
 export const LICENSE_VALIDITY = 'localCi/cachedLicenseValidity';
 export const LICENSE_VALIDITY_CACHE_EXPIRATION = 'localCi:license:cachedTime';

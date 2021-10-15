@@ -1,7 +1,9 @@
+import * as md5 from 'js-md5';
 import * as vscode from 'vscode';
 import axios from 'axios';
 import {
   LICENSE_ERROR,
+  LICENSE_ITEM_ID,
   LICENSE_VALIDITY,
   LICENSE_VALIDITY_CACHE_EXPIRATION,
 } from '../constants';
@@ -36,8 +38,8 @@ export default async function isLicenseValid(
       params: {
         license: encodeURI(String(trimmedLicenseKey)),
         edd_action: 'activate_license', // eslint-disable-line @typescript-eslint/naming-convention
-        item_id: 43, // eslint-disable-line @typescript-eslint/naming-convention
-        url: 'https://example.com',
+        item_id: LICENSE_ITEM_ID, // eslint-disable-line @typescript-eslint/naming-convention
+        url: md5(vscode.env.machineId),
       },
     });
   } catch (e) {
