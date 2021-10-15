@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-export default function areAllTerminalsClosed(
+export default function areTerminalsClosed(
   ...terminals: (vscode.Terminal | undefined)[]
 ): boolean {
   return terminals.every(

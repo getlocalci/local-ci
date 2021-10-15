@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import { getBinaryPath } from '../../node/binary.js';
-import areAllTerminalsClosed from './areAllTerminalsClosed';
+import areTerminalsClosed from './areTerminalsClosed';
 import cleanUpCommittedImage from './cleanUpCommittedImage';
 import commitContainer from './commitContainer';
 import getConfigFile from './getConfigFile';
@@ -90,6 +90,7 @@ export default async function runJob(
   // Once the container is available, start an interactive bash session within the container.
   debuggingTerminal.sendText(`
     ${GET_RUNNING_CONTAINER_FUNCTION}
+    echo "Waiting for bash access to the running container…"
     until [[ -n $(get_running_container ${dockerImage}) ]]
     do
       sleep 2
@@ -118,7 +119,7 @@ export default async function runJob(
     }
 
     clearTimeout(interval);
-    if (finalTerminal) {
+    if (finalTerminal || areTerminalsClosed(terminal, debuggingTerminal)) {
       return;
     }
 
@@ -140,7 +141,7 @@ export default async function runJob(
   });
 
   vscode.window.onDidCloseTerminal(() => {
-    if (areAllTerminalsClosed(terminal, debuggingTerminal, finalTerminal)) {
+    if (areTerminalsClosed(terminal, debuggingTerminal, finalTerminal)) {
       clearTimeout(interval);
       cleanUpCommittedImage(committedImageName);
     }
