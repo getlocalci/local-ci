@@ -82,6 +82,13 @@ export default async function runJob(
     `${getBinaryPath()} local execute --job ${jobName} --config ${PROCESS_FILE_PATH} --debug -v ${volume}`
   );
 
+  const committedImageName = `local-ci/${jobName}`;
+  commitContainer(dockerImage, committedImageName);
+
+  const interval = setInterval(() => {
+    commitContainer(dockerImage, committedImageName);
+  }, 2000);
+
   const debuggingTerminal = vscode.window.createTerminal({
     name: `Local CI debugging ${jobName}`,
     message: 'This is inside the running container',
@@ -94,21 +101,13 @@ export default async function runJob(
     echo "Waiting for bash access to the running container…"
     until [[ -n $(get_running_container ${dockerImage}) ]]
     do
-      sleep 2
+      sleep 1
     done
     echo "Inside the job's container:"
     docker exec -it ${
       projectDirectory !== 'project' ? '--workdir ' + projectDirectory : ''
     } $(get_running_container ${dockerImage}) /bin/sh || exit 1
   `);
-  debuggingTerminal.show();
-
-  const committedImageName = `local-ci/${jobName}`;
-  commitContainer(dockerImage, committedImageName);
-
-  const interval = setInterval(() => {
-    commitContainer(dockerImage, committedImageName);
-  }, 2000);
 
   let finalTerminal: vscode.Terminal | undefined;
   vscode.window.onDidCloseTerminal((closedTerminal) => {
@@ -139,6 +138,7 @@ export default async function runJob(
         projectDirectory !== 'project' ? '--workdir ' + projectDirectory : ''
       } $(docker images --filter reference=${committedImageName} -q | head -1)`
     );
+    finalTerminal.show();
   });
 
   vscode.window.onDidCloseTerminal(() => {

@@ -18,11 +18,12 @@ import isPreviewExpired from '../utils/isPreviewExpired';
 export default class JobProvider
   implements vscode.TreeDataProvider<vscode.TreeItem>
 {
-  public runningJobs: string[] = [];
-  public _onDidChangeTreeData: vscode.EventEmitter<Job | undefined> =
+  private _onDidChangeTreeData: vscode.EventEmitter<Job | undefined> =
     new vscode.EventEmitter<Job | undefined>();
   readonly onDidChangeTreeData: vscode.Event<Job | undefined> =
     this._onDidChangeTreeData.event;
+  private jobs: vscode.TreeItem[] | [] = [];
+
   constructor(private readonly context: vscode.ExtensionContext) {}
 
   refresh(job?: Job): void {
@@ -41,10 +42,15 @@ export default class JobProvider
       !isPreviewExpired(
         this.context.globalState.get(PREVIEW_STARTED_TIMESTAMP)
       );
+    const dockerRunning = isDockerRunning();
+
+    if (shouldEnableExtension && dockerRunning) {
+      this.jobs = getJobs(PROCESS_FILE_PATH);
+    }
 
     return shouldEnableExtension
-      ? isDockerRunning()
-        ? getJobs(PROCESS_FILE_PATH)
+      ? dockerRunning
+        ? this.jobs
         : [
             new Warning('Error: is Docker running?'),
             new vscode.TreeItem(` ${getDockerError()}`),
@@ -54,5 +60,9 @@ export default class JobProvider
           new Command('Get License', GET_LICENSE_COMMAND),
           new Command('Enter License', ENTER_LICENSE_COMMAND),
         ];
+  }
+
+  getJob(jobName: string): vscode.TreeItem | undefined {
+    return this.jobs.find((job) => jobName === (job as Job)?.getJobName());
   }
 }

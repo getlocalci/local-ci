@@ -37,6 +37,29 @@
   ],
   "main": "./dist/extension.js",
   "contributes": {
+    "walkthroughs": [
+      {
+        "id": "localCi",
+        "title": "Local CI",
+        "description": "Running your first job with Local CI",
+        "steps": [
+          {
+            "id": "runJob",
+            "title": "Run A CircleCI® Job",
+            "description": "This will run a job \n[Run A Job](command:local-ci.runWalkthroughJob)",
+            "media": { "image": "media/image.png", "altText": "Empty image" },
+            "completionEvents": ["onCommand:local-ci.runWalkthroughJob"]
+          },
+          {
+            "id": "debugJob",
+            "title": "Debug The CircleCI® Job",
+            "description": "This will open a bash shell to the running job once it's available \n[Debug The Job](command:local-ci.runFirstJob)",
+            "media": { "image": "media/image.png", "altText": "Empty image" },
+            "completionEvents": ["onCommand:getting-started-sample.runCommand"]
+          }
+        ]
+      }
+    ],
     "commands": [
       {
         "command": "local-ci.runJob",

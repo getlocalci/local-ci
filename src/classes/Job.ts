@@ -16,7 +16,7 @@ export default class Job extends vscode.TreeItem {
       title: label,
       command: RUN_JOB_COMMAND,
       tooltip,
-      arguments: [label, this],
+      arguments: [this.jobName, this],
     };
   }
 

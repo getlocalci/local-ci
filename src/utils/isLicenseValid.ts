@@ -4,6 +4,7 @@ import axios from 'axios';
 import {
   LICENSE_ERROR,
   LICENSE_ITEM_ID,
+  LICENSE_KEY,
   LICENSE_VALIDITY,
   LICENSE_VALIDITY_CACHE_EXPIRATION,
 } from '../constants';
@@ -26,7 +27,10 @@ export default async function isLicenseValid(
     context.secrets.store(LICENSE_ERROR, 'Empty license key');
     return false;
   }
-  const trimmedLicenseKey = licenseKey ? String(licenseKey).trim() : '';
+
+  const trimmedLicenseKey = licenseKey
+    ? String(licenseKey).trim()
+    : (await context.secrets.get(LICENSE_KEY))?.trim();
 
   if (!forceRecheck && !isCachedValidityExpired(context)) {
     return !!context.globalState.get(LICENSE_VALIDITY);

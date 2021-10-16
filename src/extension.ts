@@ -3,17 +3,20 @@ import Job from './classes/Job';
 import JobProvider from './classes/JobProvider';
 import LicenseProvider from './classes/LicenseProvider';
 import {
+  ENTER_LICENSE_COMMAND,
+  EXIT_JOB_COMMAND,
   GET_LICENSE_COMMAND,
   GET_LICENSE_KEY_URL,
   HELP_URL,
-  ENTER_LICENSE_COMMAND,
-  EXIT_JOB_COMMAND,
+  PROCESS_FILE_PATH,
   RUN_JOB_COMMAND,
 } from './constants';
 import getLicenseInformation from './utils/getLicenseInformation';
 import disposeTerminalsForJob from './utils/disposeTerminalsForJob';
 import runJob from './utils/runJob';
 import showLicenseInput from './utils/showLicenseInput';
+import cleanUpCommittedImage from './utils/cleanUpCommittedImage';
+import getCheckoutJobs from './utils/getCheckoutJobs';
 
 const runningTerminals: RunningTerminals = {};
 
@@ -46,6 +49,7 @@ export function activate(context: vscode.ExtensionContext): void {
                 terminal.dispose();
               }
             });
+            cleanUpCommittedImage('local-ci');
           }
         });
     })
@@ -88,6 +92,19 @@ export function activate(context: vscode.ExtensionContext): void {
           }
         );
       });
+    }),
+    vscode.commands.registerCommand('local-ci.runWalkthroughJob', () => {
+      const checkoutJobs = getCheckoutJobs(PROCESS_FILE_PATH);
+      if (!checkoutJobs.length) {
+        return;
+      }
+
+      const jobName = checkoutJobs[0];
+      vscode.commands.executeCommand(
+        RUN_JOB_COMMAND,
+        jobName,
+        jobProvider.getJob(jobName)
+      );
     })
   );
 
