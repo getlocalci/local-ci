@@ -33,29 +33,38 @@
   ],
   "activationEvents": [
     "onView:localCiJobs",
-    "onView:localCiLicense"
+    "onView:localCiLicense",
+    "onCommand:local-ci.runWalkthroughJob",
+    "onCommand:local-ci.debugWalkthroughJob"
   ],
   "main": "./dist/extension.js",
   "contributes": {
     "walkthroughs": [
       {
-        "id": "localCi",
+        "id": "local-ci",
         "title": "Local CI",
         "description": "Running your first job with Local CI",
         "steps": [
           {
-            "id": "runJob",
+            "id": "runFirstWalkthroughJob",
             "title": "Run A CircleCI® Job",
             "description": "This will run a job \n[Run A Job](command:local-ci.runWalkthroughJob)",
-            "media": { "image": "media/image.png", "altText": "Empty image" },
+            "media": { "image": "https://user-images.githubusercontent.com/4063887/132140183-e2b34f96-7e44-4f51-be33-59603c994a18.gif", "altText": "Demo of Local CI" },
             "completionEvents": ["onCommand:local-ci.runWalkthroughJob"]
           },
           {
-            "id": "debugJob",
-            "title": "Debug The CircleCI® Job",
-            "description": "Opens a bash shell to the running job once it's available. Type in `whoami` or any command. \n[Debug The Job](command:local-ci.debugWalkthroughJob)",
-            "media": { "image": "media/image.png", "altText": "Empty image" },
-            "completionEvents": ["onCommand:getting-started-sample.runCommand"]
+            "id": "runSecondWalkthroughJob",
+            "title": "Run another job",
+            "description": "Click one of the green 'play' icons on the left to run another job. The second green arrow is a good one to start with.",
+            "media": { "image": "https://user-images.githubusercontent.com/4063887/132140183-e2b34f96-7e44-4f51-be33-59603c994a18.gif", "altText": "Click on another job" },
+            "completionEvents": ["onCommand:local-ci.debugWalkthroughJob"]
+          },
+          {
+            "id": "exitSecondWalkthroughJob",
+            "title": "Exit that job",
+            "description": "Click that same job, which now has a 'trash' icon. This will exit it.",
+            "media": { "image": "https://user-images.githubusercontent.com/4063887/132140183-e2b34f96-7e44-4f51-be33-59603c994a18.gif", "altText": "Click on another job" },
+            "completionEvents": ["onCommand:local-ci.debugWalkthroughJob"]
           }
         ]
       }

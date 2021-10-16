@@ -17,8 +17,9 @@ import runJob from './utils/runJob';
 import showLicenseInput from './utils/showLicenseInput';
 import cleanUpCommittedImage from './utils/cleanUpCommittedImage';
 import getCheckoutJobs from './utils/getCheckoutJobs';
-
-const runningTerminals: RunningTerminals = {};
+import processConfig from './utils/processConfig';
+import getDebuggingTerminalName from './utils/getDebuggingTerminalName';
+import getFinalTerminalName from './utils/getFinalTerminalName';
 
 export function activate(context: vscode.ExtensionContext): void {
   const jobTreeViewId = 'localCiJobs';
@@ -61,65 +62,60 @@ export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
     vscode.commands.registerCommand(
       RUN_JOB_COMMAND,
-      (jobName: string, job: Job) => {
-        job.setIsRunning();
-        jobProvider.refresh(job);
+      (jobName: string, job?: Job) => {
+        if (job instanceof Job) {
+          job.setIsRunning();
+          jobProvider.refresh(job);
+        }
 
-        runJob(jobName, context.extensionUri).then(
-          (terminalsForJob: RunningTerminal[]) => {
-            runningTerminals[jobName] = terminalsForJob;
-          }
-        );
+        runJob(jobName, context.extensionUri);
       }
     ),
     vscode.commands.registerCommand(EXIT_JOB_COMMAND, (job: Job) => {
       job.setIsNotRunning();
       const jobName = job.getJobName();
       jobProvider.refresh(job);
-
-      disposeTerminalsForJob(runningTerminals, jobName).then(() => {
-        delete runningTerminals[jobName];
-      });
+      disposeTerminalsForJob(jobName);
     }),
     vscode.commands.registerCommand('localCi.job.rerun', (job: Job) => {
       job.setIsRunning();
       jobProvider.refresh(job);
       const jobName = job.getJobName();
-      disposeTerminalsForJob(runningTerminals, jobName).then(() => {
-        runJob(jobName, context.extensionUri).then(
-          (terminalsForJob: RunningTerminal[]) => {
-            runningTerminals[jobName] = terminalsForJob;
-          }
-        );
-      });
+      disposeTerminalsForJob(jobName);
+      runJob(jobName, context.extensionUri);
     }),
-    vscode.commands.registerCommand('local-ci.runWalkthroughJob', () => {
+    vscode.commands.registerCommand('local-ci.runWalkthroughJob', async () => {
+      processConfig();
       const checkoutJobs = getCheckoutJobs(PROCESS_FILE_PATH);
       if (!checkoutJobs.length) {
         return;
       }
 
       const jobName = checkoutJobs[0];
+      jobProvider.setRunningJob(jobName);
+
       vscode.commands.executeCommand(
-        RUN_JOB_COMMAND,
-        jobName,
-        jobProvider.getJob(jobName)
+        'workbench.view.extension.localCiDebugger'
       );
-    }),
-    vscode.commands.registerCommand('local-ci.debugWalkthroughJob', () => {
-      const checkoutJobs = getCheckoutJobs(PROCESS_FILE_PATH);
-      if (!checkoutJobs.length) {
-        return;
-      }
+      vscode.commands.executeCommand(RUN_JOB_COMMAND, jobName);
+      vscode.window.showInformationMessage(
+        `Soon you'll see an interactive bash shell to debug it`
+      );
+      vscode.window.showInformationMessage(
+        `< The job ${jobName} is now running`
+      );
 
-      const jobName = checkoutJobs[0];
-      if (!runningTerminals[jobName]?.length) {
-        return;
-      }
-
-      vscode.window.terminals.forEach(async (terminal) => {
-        if ((await terminal.processId) === runningTerminals[jobName][1]) {
+      vscode.window.onDidOpenTerminal(async (terminal) => {
+        if (terminal.name === getDebuggingTerminalName(jobName)) {
           terminal.show();
+          vscode.window.showInformationMessage(
+            `< Here's an interactive bash shell of the job`
+          );
+        } else if (terminal.name === getFinalTerminalName(jobName)) {
+          terminal.show();
+          vscode.window.showInformationMessage(
+            `< Here's another bash shell now that the job exited`
+          );
         }
       });
     })

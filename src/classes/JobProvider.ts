@@ -14,6 +14,7 @@ import getDockerError from '../utils/getDockerError';
 import isDockerRunning from '../utils/isDockerRunning';
 import isLicenseValid from '../utils/isLicenseValid';
 import isPreviewExpired from '../utils/isPreviewExpired';
+import writeProcessFile from '../utils/writeProcessFile';
 
 export default class JobProvider
   implements vscode.TreeDataProvider<vscode.TreeItem>
@@ -23,6 +24,7 @@ export default class JobProvider
   readonly onDidChangeTreeData: vscode.Event<Job | undefined> =
     this._onDidChangeTreeData.event;
   private jobs: vscode.TreeItem[] | [] = [];
+  private runningJob: string | undefined;
 
   constructor(private readonly context: vscode.ExtensionContext) {}
 
@@ -36,6 +38,7 @@ export default class JobProvider
 
   async getChildren(): Promise<vscode.TreeItem[]> {
     processConfig();
+    writeProcessFile();
 
     const shouldEnableExtension =
       (await isLicenseValid(this.context)) ||
@@ -45,7 +48,8 @@ export default class JobProvider
     const dockerRunning = isDockerRunning();
 
     if (shouldEnableExtension && dockerRunning) {
-      this.jobs = getJobs(PROCESS_FILE_PATH);
+      this.jobs = getJobs(PROCESS_FILE_PATH, this.runningJob);
+      this.runningJob = undefined;
     }
 
     return shouldEnableExtension
@@ -64,5 +68,9 @@ export default class JobProvider
 
   getJob(jobName: string): vscode.TreeItem | undefined {
     return this.jobs.find((job) => jobName === (job as Job)?.getJobName());
+  }
+
+  setRunningJob(jobName: string): void {
+    this.runningJob = jobName;
   }
 }

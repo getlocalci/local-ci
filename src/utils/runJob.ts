@@ -9,6 +9,7 @@ import getConfigFile from './getConfigFile';
 import getProjectDirectory from './getProjectDirectory';
 import getCheckoutDirectoryBasename from './getCheckoutDirectoryBasename';
 import getCheckoutJobs from './getCheckoutJobs';
+import getDebuggingTerminalName from './getDebuggingTerminalName';
 import getStorageDirectory from './getStorageDirectory';
 import getImageFromJob from './getImageFromJob';
 import getRootPath from './getRootPath';
@@ -17,13 +18,15 @@ import {
   PROCESS_FILE_PATH,
   HOST_TMP_PATH,
 } from '../constants';
+import getFinalDebuggingTerminalName from './getFinalTerminalName';
+import getTerminalName from './getTerminalName';
 
 export default async function runJob(
   jobName: string,
   extensionUri: vscode.Uri
 ): Promise<RunningTerminal[]> {
   const terminal = vscode.window.createTerminal({
-    name: `Local CI ${jobName}`,
+    name: getTerminalName(jobName),
     message: `About to run the CircleCI® job ${jobName}…`,
     iconPath: {
       light: vscode.Uri.joinPath(
@@ -87,10 +90,10 @@ export default async function runJob(
 
   const interval = setInterval(() => {
     commitContainer(dockerImage, committedImageName);
-  }, 2000);
+  }, 1000);
 
   const debuggingTerminal = vscode.window.createTerminal({
-    name: `Local CI debugging ${jobName}`,
+    name: getDebuggingTerminalName(jobName),
     message: 'This is inside the running container',
     iconPath: new vscode.ThemeIcon('testing-debug-icon'),
   });
@@ -124,7 +127,7 @@ export default async function runJob(
     }
 
     finalTerminal = vscode.window.createTerminal({
-      name: `Local CI final debugging ${jobName}`,
+      name: getFinalDebuggingTerminalName(jobName),
       message: 'Debug the final state of the container',
       iconPath: new vscode.ThemeIcon('testing-debug-icon'),
     });

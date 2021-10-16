@@ -7,11 +7,12 @@ import Warning from '../classes/Warning';
 import Command from '../classes/Command';
 
 export default function getJobs(
-  configFilePath: string
+  configFilePath: string,
+  runningJob?: string
 ): vscode.TreeItem[] | [] {
   const jobs = Object.keys(getConfigFile(configFilePath)?.jobs ?? {});
   return jobs.length
-    ? jobs.map((jobName) => new Job(jobName))
+    ? jobs.map((jobName) => new Job(jobName, jobName === runningJob))
     : [
         new Warning('Error: No jobs found'),
         new vscode.TreeItem(

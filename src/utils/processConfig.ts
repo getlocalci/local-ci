@@ -4,7 +4,6 @@ import * as vscode from 'vscode';
 import { getBinaryPath } from '../../node/binary.js';
 import getSpawnOptions from './getSpawnOptions';
 import getRootPath from './getRootPath';
-import writeProcessFile from './writeProcessFile';
 import { PROCESS_FILE_PATH, HOST_TMP_PATH } from '../constants';
 
 export default function processConfig(): void {
@@ -26,7 +25,6 @@ export default function processConfig(): void {
     }
 
     fs.writeFileSync(PROCESS_FILE_PATH, stdout.toString().trim());
-    writeProcessFile();
   } catch (e) {
     vscode.window.showErrorMessage(
       `There was an error processing the CircleCI config: ${
