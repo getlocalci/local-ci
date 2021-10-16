@@ -9,18 +9,18 @@ mocha.afterEach(() => {
 });
 
 suite('getProjectDirectory', () => {
-  test('No image id', () => {
+  test('No image id', async () => {
     sinon.mock(cp).expects('spawnSync').once().returns({
       stdout: '/root',
     });
-    assert.strictEqual(getProjectDirectory(''), '/home/circleci/project');
+    assert.strictEqual(await getProjectDirectory(''), '/home/circleci/project');
   });
 
-  test('With image id', () => {
+  test('With image id', async () => {
     sinon.mock(cp).expects('spawnSync').once().returns({
       stdout: '/root',
     });
 
-    assert.strictEqual(getProjectDirectory('98765'), '/root/project');
+    assert.strictEqual(await getProjectDirectory('98765'), '/root/project');
   });
 });

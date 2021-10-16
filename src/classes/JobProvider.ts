@@ -44,7 +44,7 @@ export default class JobProvider
 
     return shouldEnableExtension
       ? isDockerRunning()
-        ? getJobs(PROCESS_FILE_PATH).map((jobName) => new Job(jobName))
+        ? getJobs(PROCESS_FILE_PATH)
         : [
             new Warning('Error: is Docker running?'),
             new vscode.TreeItem(` ${getDockerError()}`),

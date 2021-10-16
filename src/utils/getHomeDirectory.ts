@@ -39,7 +39,7 @@ export default function getHomeDirectory(
         vscode.window.showWarningMessage(
           `Could not find the home directory of the image ${imageId}: ${error.message}`,
           {
-            detail: 'The license key is invalid',
+            detail: 'Could not find the home directory',
           }
         );
       }

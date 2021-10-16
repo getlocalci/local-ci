@@ -35,6 +35,7 @@ export default async function runJob(
       dark: vscode.Uri.joinPath(extensionUri, 'resources', 'dark', 'logo.svg'),
     },
   });
+  terminal.show();
 
   const checkoutJobs = getCheckoutJobs(PROCESS_FILE_PATH);
   const localVolume = `${HOST_TMP_PATH}/${path.basename(getRootPath())}`;
@@ -80,7 +81,6 @@ export default async function runJob(
   terminal.sendText(
     `${getBinaryPath()} local execute --job ${jobName} --config ${PROCESS_FILE_PATH} --debug -v ${volume}`
   );
-  terminal.show();
 
   const debuggingTerminal = vscode.window.createTerminal({
     name: `Local CI debugging ${jobName}`,

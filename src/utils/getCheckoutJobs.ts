@@ -5,7 +5,7 @@ export default function getCheckoutJobs(inputFile: string): string[] {
   const configFile = getConfigFile(inputFile);
 
   return Object.keys(configFile?.jobs ?? []).filter((jobName) =>
-    configFile.jobs[jobName]?.steps?.some(
+    configFile?.jobs[jobName]?.steps?.some(
       (step: Step) => 'checkout' === step || step.checkout
     )
   );
