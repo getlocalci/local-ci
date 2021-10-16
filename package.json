@@ -53,7 +53,7 @@
           {
             "id": "debugJob",
             "title": "Debug The CircleCI® Job",
-            "description": "This will open a bash shell to the running job once it's available \n[Debug The Job](command:local-ci.runFirstJob)",
+            "description": "Opens a bash shell to the running job once it's available. Type in `whoami` or any command. \n[Debug The Job](command:local-ci.debugWalkthroughJob)",
             "media": { "image": "media/image.png", "altText": "Empty image" },
             "completionEvents": ["onCommand:getting-started-sample.runCommand"]
           }

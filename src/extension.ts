@@ -105,6 +105,23 @@ export function activate(context: vscode.ExtensionContext): void {
         jobName,
         jobProvider.getJob(jobName)
       );
+    }),
+    vscode.commands.registerCommand('local-ci.debugWalkthroughJob', () => {
+      const checkoutJobs = getCheckoutJobs(PROCESS_FILE_PATH);
+      if (!checkoutJobs.length) {
+        return;
+      }
+
+      const jobName = checkoutJobs[0];
+      if (!runningTerminals[jobName]?.length) {
+        return;
+      }
+
+      vscode.window.terminals.forEach(async (terminal) => {
+        if ((await terminal.processId) === runningTerminals[jobName][1]) {
+          terminal.show();
+        }
+      });
     })
   );
 
