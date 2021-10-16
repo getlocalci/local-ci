@@ -10,16 +10,30 @@ mocha.afterEach(() => {
 
 suite('getProjectDirectory', () => {
   test('No image id', async () => {
-    sinon.mock(cp).expects('spawnSync').once().returns({
-      stdout: '/root',
-    });
+    const data = { toString: () => '' };
+    sinon
+      .mock(cp)
+      .expects('spawn')
+      .once()
+      .returns({
+        stdout: {
+          on: (event: unknown, callback: CallableFunction) => callback(data),
+        },
+      });
     assert.strictEqual(await getProjectDirectory(''), '/home/circleci/project');
   });
 
   test('With image id', async () => {
-    sinon.mock(cp).expects('spawnSync').once().returns({
-      stdout: '/root',
-    });
+    const data = { toString: () => '/root' };
+    sinon
+      .mock(cp)
+      .expects('spawn')
+      .once()
+      .returns({
+        stdout: {
+          on: (event: unknown, callback: CallableFunction) => callback(data),
+        },
+      });
 
     assert.strictEqual(await getProjectDirectory('98765'), '/root/project');
   });

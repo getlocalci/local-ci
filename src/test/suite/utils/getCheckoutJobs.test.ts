@@ -11,7 +11,9 @@ mocha.afterEach(() => {
 
 suite('getCheckoutJobs', () => {
   test('No checkout job', () => {
+    sinon.mock(fs).expects('existsSync').once().returns(true);
     sinon.mock(fs).expects('readFileSync').once().returns('');
+
     sinon
       .mock(yaml)
       .expects('load')
@@ -24,6 +26,7 @@ suite('getCheckoutJobs', () => {
   });
 
   test('With string checkout job', () => {
+    sinon.mock(fs).expects('existsSync').once().returns(true);
     sinon.mock(fs).expects('readFileSync').once().returns('');
     sinon
       .mock(yaml)
