@@ -40,6 +40,8 @@ This is to verify that the license is only being used on 1 machine.
 
 Here's an example [machineId](https://code.visualstudio.com/api/references/vscode-api#3251): `b068aef3da6acff9c9bf4f129135ffd56adbfa294aeb8117c7264164c1a277d4`
 
+And that [machineId](https://code.visualstudio.com/api/references/vscode-api#3251) is hashed with `md5` before sending it in the `GET` request.
+
 Feel free to look at the [source code](https://github.com/getlocalci/local-ci/tree/develop/src) for how Local CI works.
 
 ## Use case
