@@ -2,7 +2,7 @@
   "name": "local-ci",
   "displayName": "Local CI",
   "description": "Debug CircleCI® jobs locally with Bash access and workspace persistence between jobs. All in your local, without pushing commits and waiting. Not affiliated with CircleCI®.",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "publisher": "LocalCI",
   "contributors": [
     "Ryan Kienstra"

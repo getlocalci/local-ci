@@ -48,7 +48,7 @@ Feel free to look at the [source code](https://github.com/getlocalci/local-ci/tr
 
 Local CI won't replace the CircleCI® service, it's a tool to use alongside it.
 
-When CI is passing, it'll be faster to simply push commits and let CI run.
+If you think CI will pass, it'll probably be faster to simply push a commit and let CI run.
 
 Local CI is intended for debugging jobs locally, not deploying.
 
