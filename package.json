@@ -4,6 +4,9 @@
   "description": "Debug CircleCI® jobs locally with Bash access and persistence between jobs. All in your local, without pushing commits and waiting. Not affiliated with CircleCI®.",
   "version": "0.1.0",
   "publisher": "LocalCI",
+  "contributors": [
+    "Ryan Kienstra"
+  ],
   "preview": true,
   "license": "GPL-2.0-or-later",
   "repository": {
@@ -48,21 +51,14 @@
           {
             "id": "runFirstWalkthroughJob",
             "title": "Run A CircleCI® Job",
-            "description": "This will run a job \n[Run A Job](command:local-ci.runWalkthroughJob)",
+            "description": "This will run a job for you, using Local CI \n[Run A Job](command:local-ci.runWalkthroughJob)",
             "media": { "image": "https://user-images.githubusercontent.com/4063887/132140183-e2b34f96-7e44-4f51-be33-59603c994a18.gif", "altText": "Demo of Local CI" },
             "completionEvents": ["onCommand:local-ci.runWalkthroughJob"]
           },
           {
             "id": "runSecondWalkthroughJob",
-            "title": "Run another job",
-            "description": "Click one of the green 'play' icons on the left to run another job. The second green arrow is a good one to start with.",
-            "media": { "image": "https://user-images.githubusercontent.com/4063887/132140183-e2b34f96-7e44-4f51-be33-59603c994a18.gif", "altText": "Click on another job" },
-            "completionEvents": ["onCommand:local-ci.debugWalkthroughJob"]
-          },
-          {
-            "id": "exitSecondWalkthroughJob",
-            "title": "Exit that job",
-            "description": "Click that same job, which now has a 'trash' icon. This will exit it.",
+            "title": "Run Another Job",
+            "description": "Click one of the green 'play' icons on the left, like the second 'play' icon.\n Local CI applies a job's [persist_to_workspace](https://circleci.com/blog/deep-diving-into-circleci-workspaces/) and `attach_workspace` values, so you can run an entire workflow with these persisted files.\n Your debugging can be much faster, because you don't have to push a commit, wait for CI to fail, push another commit, etc…",
             "media": { "image": "https://user-images.githubusercontent.com/4063887/132140183-e2b34f96-7e44-4f51-be33-59603c994a18.gif", "altText": "Click on another job" },
             "completionEvents": ["onCommand:local-ci.debugWalkthroughJob"]
           }
