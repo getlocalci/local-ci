@@ -102,19 +102,19 @@ export function activate(context: vscode.ExtensionContext): void {
         `Soon you'll get an interactive bash shell to debug it`
       );
       vscode.window.showInformationMessage(
-        `< The job ${jobName} is now running`
+        `👈 The job ${jobName} is now running`
       );
 
       vscode.window.onDidOpenTerminal(async (terminal) => {
         if (terminal.name === getDebuggingTerminalName(jobName)) {
           terminal.show();
           vscode.window.showInformationMessage(
-            `< Here's an interactive bash shell of the job`
+            `👈 Here's an interactive bash shell of the job`
           );
         } else if (terminal.name === getFinalTerminalName(jobName)) {
           terminal.show();
           vscode.window.showInformationMessage(
-            `< Here's another bash shell now that the job exited`
+            `👈 Here's another bash shell now that the job exited`
           );
         }
       });

@@ -18,6 +18,8 @@ This extension allows shell access to the jobs, and persists the workspace betwe
 
 CircleCI® is a registered trademark of Circle Internet Services, Inc.
 
+A paid extension with a 2 day free trial.
+
 ## Requirements
 
 Docker
@@ -32,13 +34,23 @@ But the jobs still only run locally.
 
 Local CI has no server that runs jobs, and has no knowledge of the jobs or any data from them.
 
-If you have entered a license key, it only sends to the Local CI site a GET request with an md5 hash of your VS Code [machineId](https://code.visualstudio.com/api/references/vscode-api#3251).
+If you have entered a license key, it only sends to the Local CI site a `GET` request with an `md5` hash of your VS Code [machineId](https://code.visualstudio.com/api/references/vscode-api#3251).
 
 This is to verify that the license is only being used on 1 machine.
 
 Here's an example [machineId](https://code.visualstudio.com/api/references/vscode-api#3251): `b068aef3da6acff9c9bf4f129135ffd56adbfa294aeb8117c7264164c1a277d4`
 
 Feel free to look at the [source code](https://github.com/getlocalci/local-ci/tree/develop/src) for how Local CI works.
+
+## Use case
+
+Local CI is intended for debugging jobs locally, not deploying.
+
+In many cases, it won't be possible to deploy.
+
+Local CI won't replace the CircleCI® service, it's a tool to use alongside it.
+
+And it's not affiliated with CircleCI®.
 
 ## License
 [GPL v2](LICENSE) or later
