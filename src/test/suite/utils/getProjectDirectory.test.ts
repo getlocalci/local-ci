@@ -37,4 +37,22 @@ suite('getProjectDirectory', () => {
 
     assert.strictEqual(await getProjectDirectory('98765'), '/root/project');
   });
+
+  test('Error when getting directory', async () => {
+    sinon
+      .mock(cp)
+      .expects('spawn')
+      .once()
+      .returns({
+        stderr: {
+          on: (event: unknown, callback: CallableFunction) =>
+            callback({ message: 'There was an error' }),
+        },
+      });
+
+    assert.strictEqual(
+      await getProjectDirectory('98765'),
+      '/home/circleci/project'
+    );
+  });
 });

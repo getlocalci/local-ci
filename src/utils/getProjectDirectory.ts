@@ -6,8 +6,9 @@ export default async function getProjectDirectory(
   imageId: string,
   terminal?: vscode.Terminal
 ): Promise<string> {
+  const defaultDirectory = '/home/circleci/project';
   if (!imageId) {
-    return '/home/circleci/project';
+    return defaultDirectory;
   }
 
   try {
@@ -16,11 +17,11 @@ export default async function getProjectDirectory(
     )}project`;
   } catch (e) {
     vscode.window.showErrorMessage(
-      `There was an error getting the default workspace: ${
+      `There was an error getting the project directory: ${
         (e as ErrorWithMessage)?.message
       }`
     );
 
-    return '';
+    return defaultDirectory;
   }
 }

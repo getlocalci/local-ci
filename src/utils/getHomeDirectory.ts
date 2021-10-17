@@ -44,7 +44,7 @@ export default function getHomeDirectory(
         );
       }
 
-      reject();
+      reject('/home');
     });
   });
 }
