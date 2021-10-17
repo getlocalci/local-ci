@@ -1,8 +1,4 @@
-import * as os from 'os';
-
-export function isMac(): boolean {
-  return os.platform() === 'darwin';
-}
+import isMac from './isMac';
 
 // Mainly copied from https://github.com/microsoft/vscode-docker/blob/1aa4d6050020ba5c13f249af3ed4022e9b671534/src/utils/spawnAsync.ts#L254
 // Looks for `/usr/local/bin` in the PATH.

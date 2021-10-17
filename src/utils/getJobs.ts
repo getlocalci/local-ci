@@ -5,11 +5,16 @@ import getRootPath from './getRootPath';
 import Job from '../classes/Job';
 import Warning from '../classes/Warning';
 import Command from '../classes/Command';
+import isWindows from './isWindows';
 
 export default function getJobs(
   configFilePath: string,
   runningJob?: string
 ): vscode.TreeItem[] | [] {
+  if (isWindows()) {
+    return [new Warning(`Sorry, this doesn't work on Windows`)];
+  }
+
   const jobs = Object.keys(getConfigFile(configFilePath)?.jobs ?? {});
   return jobs.length
     ? jobs.map((jobName) => new Job(jobName, jobName === runningJob))
