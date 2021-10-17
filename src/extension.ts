@@ -77,7 +77,7 @@ export function activate(context: vscode.ExtensionContext): void {
       jobProvider.refresh(job);
       disposeTerminalsForJob(jobName);
     }),
-    vscode.commands.registerCommand('localCi.job.rerun', (job: Job) => {
+    vscode.commands.registerCommand('local-ci.job.rerun', (job: Job) => {
       job.setIsRunning();
       jobProvider.refresh(job);
       const jobName = job.getJobName();

@@ -8,7 +8,7 @@ import {
   GET_LICENSE_COMMAND,
   ENTER_LICENSE_COMMAND,
   PROCESS_FILE_PATH,
-  PREVIEW_STARTED_TIMESTAMP,
+  TRIAL_STARTED_TIMESTAMP,
 } from '../constants';
 import getDockerError from '../utils/getDockerError';
 import isDockerRunning from '../utils/isDockerRunning';
@@ -42,9 +42,7 @@ export default class JobProvider
 
     const shouldEnableExtension =
       (await isLicenseValid(this.context)) ||
-      !isPreviewExpired(
-        this.context.globalState.get(PREVIEW_STARTED_TIMESTAMP)
-      );
+      !isPreviewExpired(this.context.globalState.get(TRIAL_STARTED_TIMESTAMP));
     const dockerRunning = isDockerRunning();
 
     if (shouldEnableExtension && dockerRunning) {

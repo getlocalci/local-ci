@@ -6,7 +6,7 @@ import {
   LICENSE_ERROR,
   LICENSE_KEY,
   LICENSE_VALIDITY,
-  PREVIEW_STARTED_TIMESTAMP,
+  TRIAL_STARTED_TIMESTAMP,
 } from '../constants';
 import isLicenseValid from './isLicenseValid';
 import getLicenseErrorMessage from './getLicenseErrorMessage';
@@ -20,7 +20,7 @@ export default async function getLicenseInformation(
 ): Promise<string> {
   context.secrets.delete(LICENSE_VALIDITY);
   const previewStartedTimeStamp = context.globalState.get(
-    PREVIEW_STARTED_TIMESTAMP
+    TRIAL_STARTED_TIMESTAMP
   );
   const licenseKey = await context.secrets.get(LICENSE_KEY);
   const getLicenseLink = `<a class="button" href="${GET_LICENSE_KEY_URL}" target="_blank" rel="noopener noreferrer">Buy license</a>`;
@@ -37,7 +37,7 @@ export default async function getLicenseInformation(
   }
 
   if (!previewStartedTimeStamp && !licenseKey) {
-    context.globalState.update(PREVIEW_STARTED_TIMESTAMP, new Date().getTime());
+    context.globalState.update(TRIAL_STARTED_TIMESTAMP, new Date().getTime());
     return `<p>Thanks for previewing Local CI!</p>
       <p>This free trial will last for 2 days, then it will require a purchased license key.</p>
       <p>${getLicenseLink}</p>
