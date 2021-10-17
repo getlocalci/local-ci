@@ -46,7 +46,7 @@ export default async function runJob(
   // If this is the only checkout job, rm the entire local volume directory.
   // This job will checkout to that volume, and there could be an error
   // if it attempts to cp to it and the files exist.
-  // @todo: fix ocasional permisison denied error for deleting this file.
+  // @todo: fix ocasional permission denied error for deleting this file.
   if (checkoutJobs.includes(jobName) && 1 === checkoutJobs.length) {
     fs.rmSync(localVolume, { recursive: true, force: true });
   }
@@ -88,9 +88,10 @@ export default async function runJob(
   const committedImageName = `local-ci/${jobName}`;
   commitContainer(dockerImage, committedImageName);
 
-  const interval = setInterval(() => {
-    commitContainer(dockerImage, committedImageName);
-  }, 1000);
+  const interval = setInterval(
+    () => commitContainer(dockerImage, committedImageName),
+    1000
+  );
 
   const debuggingTerminal = vscode.window.createTerminal({
     name: getDebuggingTerminalName(jobName),
