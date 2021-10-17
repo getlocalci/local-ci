@@ -46,18 +46,27 @@
       {
         "id": "local-ci",
         "title": "Local CI",
-        "description": "Running Your First Jobs With Local CI",
+        "description": "Debug CircleCI® jobs locally with Bash access and workspace persistence",
         "steps": [
           {
+            "id": "operatingSystemNotice",
+            "title": "Sorry, Local CI Doesn't Work On Windows",
+            "when": "isWindows",
+            "description": "It only works on macOS, unfortunately.",
+            "media": { "image": "https://user-images.githubusercontent.com/4063887/132140183-e2b34f96-7e44-4f51-be33-59603c994a18.gif", "altText": "Windows not supported" }
+          },
+          {
             "id": "runFirstWalkthroughJob",
-            "title": "Run A CircleCI® Job",
-            "description": "This will run a job for you, using Local CI \n[Run A Job](command:local-ci.runWalkthroughJob)",
+            "title": "Run A CircleCI® Job In Your Local",
+            "when": "!isWindows",
+            "description": "No need to guess why it failed, push a commit, wait for CI to fail, push a commit, etc… \n You'll see the job running and have Bash access to debug it. \n Even after the job exits. \n[Run A Job](command:local-ci.runWalkthroughJob)",
             "media": { "image": "https://user-images.githubusercontent.com/4063887/132140183-e2b34f96-7e44-4f51-be33-59603c994a18.gif", "altText": "Demo of Local CI" }
           },
           {
             "id": "runSecondWalkthroughJob",
             "title": "Run Another Job",
-            "description": "Click one of the green 'play' icons on the left, like the second 'play' icon.\n Local CI applies a job's [persist_to_workspace](https://circleci.com/blog/deep-diving-into-circleci-workspaces/) and `attach_workspace` values, so you can run an entire workflow with these persisted files.\n Your debugging can be much faster, because you don't have to push a commit, wait for CI to fail, push another commit, etc…",
+            "when": "!isWindows",
+            "description": "Click one of the green 'play' icons on the left, like the second 'play' icon. \n Local CI applies a job's [persist_to_workspace](https://circleci.com/blog/deep-diving-into-circleci-workspaces/) and `attach_workspace` values. \n So you can run the entire workflow with these persisted files. \n Your debugging can be much faster.",
             "media": { "image": "https://user-images.githubusercontent.com/4063887/132140183-e2b34f96-7e44-4f51-be33-59603c994a18.gif", "altText": "Click on another job" }
           }
         ]
