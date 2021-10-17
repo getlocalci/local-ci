@@ -1,7 +1,7 @@
 import { TRIAL_LENGTH_IN_MILLISECONDS } from '../constants';
 const hourInMilliseconds = 3600000;
 
-export default function getHoursRemainingInPreview(
+export default function getHoursRemainingInTrial(
   currentTimeStamp: number,
   trialStartedTimeStamp: number | unknown
 ): number {

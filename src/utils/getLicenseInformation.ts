@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import getHoursRemainingInPreview from './getHoursRemainingInPreview';
-import isPreviewExpired from './isPreviewExpired';
+import getHoursRemainingInTrial from './getHoursRemainingInTrial';
+import isTrialExpired from './isTrialExpired';
 import {
   GET_LICENSE_KEY_URL,
   LICENSE_ERROR,
@@ -29,7 +29,7 @@ export default async function getLicenseInformation(
   const retryValidationButton = `<button class="secondary" id="retry-license-validation">Retry license validation</button>`;
 
   const isValid = await isLicenseValid(context);
-  const previewExpired = isPreviewExpired(previewStartedTimeStamp);
+  const previewExpired = isTrialExpired(previewStartedTimeStamp);
 
   if (isValid) {
     return `<p>Your Local CI license key is valid!</p>
@@ -61,7 +61,7 @@ export default async function getLicenseInformation(
       <p>${enterLicenseButton}</p>`;
   }
 
-  const timeRemaining = getHoursRemainingInPreview(
+  const timeRemaining = getHoursRemainingInTrial(
     new Date().getTime(),
     previewStartedTimeStamp
   );

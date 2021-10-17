@@ -13,7 +13,7 @@ import {
 import getDockerError from '../utils/getDockerError';
 import isDockerRunning from '../utils/isDockerRunning';
 import isLicenseValid from '../utils/isLicenseValid';
-import isPreviewExpired from '../utils/isPreviewExpired';
+import isTrialExpired from '../utils/isTrialExpired';
 import writeProcessFile from '../utils/writeProcessFile';
 
 export default class JobProvider
@@ -42,7 +42,7 @@ export default class JobProvider
 
     const shouldEnableExtension =
       (await isLicenseValid(this.context)) ||
-      !isPreviewExpired(this.context.globalState.get(TRIAL_STARTED_TIMESTAMP));
+      !isTrialExpired(this.context.globalState.get(TRIAL_STARTED_TIMESTAMP));
     const dockerRunning = isDockerRunning();
 
     if (shouldEnableExtension && dockerRunning) {

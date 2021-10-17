@@ -1,6 +1,6 @@
 import { TRIAL_LENGTH_IN_MILLISECONDS } from '../constants';
 
-export default function isPreviewExpired(
+export default function isTrialExpired(
   trialStartedTimeStamp: number | unknown
 ): boolean {
   return (
