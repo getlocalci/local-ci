@@ -37,7 +37,8 @@
     "debuggers",
     "CircleCI",
     "ci",
-    "cicd"
+    "cicd",
+    "devops"
   ],
   "activationEvents": [
     "onCommand:local-ci.runWalkthroughJob",
@@ -129,7 +130,7 @@
         {
           "id": "localCiDebugger",
           "title": "Local CI",
-          "icon": "resources/light/logo.svg"
+          "icon": "resources/dark/logo.svg"
         }
       ]
     },
