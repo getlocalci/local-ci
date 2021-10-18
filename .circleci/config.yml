@@ -5,7 +5,7 @@ orbs:
   browser-tools: circleci/browser-tools@1.1.0
 
 jobs:
-  test:
+  test-lint:
     docker:
       - image: cimg/node:16.8.0-browsers
     steps:
@@ -14,8 +14,23 @@ jobs:
       - checkout
       - node/install-packages
       - run: npm test
+  deploy:
+    docker:
+      - image: cimg/node:16.8.0-browsers
+    steps:
+      - run:
+          name: "Deploy plugin to marketplace"
+          command: npm ci && npm run deploy
 
 workflows:
-  test-lint:
+  test:
     jobs:
-      - test
+      - test-lint
+      - deploy:
+          requires:
+            - test-lint
+          filters:
+            tags:
+              only: /^\d+\.\d+\.\d+$/
+            branches:
+              ignore: /.*/

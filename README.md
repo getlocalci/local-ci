@@ -4,7 +4,7 @@
 [![Buy license key](https://badgen.net/badge/$/paid/yellow)](https://getlocalci.com)
 [![Platform: macOS](https://badgen.net/badge/platform/MacOS/green)](https://getlocalci.come)
 [![Requires CircleCI®](https://badgen.net/badge/requires/CircleCI%C2%AE/green)](https://circleci.com)
-[![CircleCI® status](https://badgen.net/github/status/getlocalci/local-ci/develop/CircleCI)](https://circleci.com/gh/getlocalci/local-ci)
+[![CircleCI](https://circleci.com/gh/getlocalci/local-ci/tree/develop.svg?style=svg)](https://circleci.com/gh/getlocalci/local-ci/tree/develop)
 
 ## Features
 
