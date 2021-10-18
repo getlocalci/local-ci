@@ -1,5 +1,7 @@
 .vscode/**
 .vscode-test/**
+.circleci/**
+.husky/**
 out/**
 node_modules/**
 src/**
