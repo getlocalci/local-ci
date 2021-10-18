@@ -35,7 +35,7 @@ function getSupportedPlatform() {
 function getBinaryPath() {
   return path.join(
     __dirname,
-    `../node_modules/circleci/${getSupportedPlatform().type}/bin/circleci`
+    `../bin/circleci/${getSupportedPlatform().type}/bin/circleci`
   );
 }
 
@@ -59,7 +59,7 @@ function getBinary(platform) {
     name: "cirlceci",
     installDirectory: path.join(
       __dirname,
-      `../node_modules/circleci/${platform}`
+      `../bin/circleci/${platform}`
     ),
   });
 }

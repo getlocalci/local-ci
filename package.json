@@ -14,7 +14,7 @@
     "url": "https://github.com/getlocalci/local-ci"
   },
   "bugs": "https://github.com/getlocalci/local-ci/issues",
-  "icon": "resources/light/logo.png",
+  "icon": "resources/dark/logo.png",
   "extensionKind": ["workspace"],
   "qna": "https://github.com/getlocalci/local-ci/issues",
   "galleryBanner": {
