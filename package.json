@@ -42,6 +42,7 @@
   "activationEvents": [
     "onCommand:local-ci.runWalkthroughJob",
     "onCommand:local-ci.debugWalkthroughJob",
+    "onCommand:local-ci.job.run",
     "onView:localCiJobs",
     "onView:localCiLicense"
   ],

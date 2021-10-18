@@ -22,7 +22,7 @@ Local CI is a paid extension with a 2 day free trial.
 
 ## Requirements
 
-[Mac](https://www.apple.com/mac/), [CircleCI®](https://circleci.com/), [Docker](https://www.docker.com/)
+[macOS](https://en.wikipedia.org/wiki/MacOS), [CircleCI®](https://circleci.com/), [Docker](https://www.docker.com/)
 
 ## Privacy
 

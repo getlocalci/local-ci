@@ -63,6 +63,17 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand(
       RUN_JOB_COMMAND,
       (jobName: string, job?: Job) => {
+        if (!jobName) {
+          vscode.window.showWarningMessage(
+            `Please click a specific job to run it`
+          );
+          vscode.commands.executeCommand(
+            'workbench.view.extension.localCiDebugger'
+          );
+
+          return;
+        }
+
         if (job instanceof Job) {
           job.setIsRunning();
           jobProvider.refresh(job);
