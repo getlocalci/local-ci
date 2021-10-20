@@ -1,10 +1,9 @@
 # Local CI
 
-[![2 day free preview](https://badgen.net/badge/trial/2%20day/red)](https://getlocalci.com)
-[![Buy license key](https://badgen.net/badge/$/paid/yellow)](https://getlocalci.com)
-[![Platform: macOS](https://badgen.net/badge/platform/MacOS/green)](https://getlocalci.come)
-[![Requires CircleCI®](https://badgen.net/badge/requires/CircleCI%C2%AE/green)](https://circleci.com)
-[![CircleCI](https://circleci.com/gh/getlocalci/local-ci/tree/develop.svg?style=svg)](https://circleci.com/gh/getlocalci/local-ci/tree/develop)
+[![2 day free preview](https://img.shields.io/badge/trial-2%20day-red)](https://getlocalci.com)
+[![Buy license key](https://img.shields.io/badge/%24-paid-yellow)](https://getlocalci.com)
+[![Platform: macOS](https://img.shields.io/badge/platform-macOS-brightgreen)](https://getlocalci.come)
+[![Requires CircleCI®](https://img.shields.io/badge/requires-CirlcleCI%C2%AE-brightgreen)](https://circleci.com)
 
 ## Features
 

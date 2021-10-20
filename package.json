@@ -181,29 +181,24 @@
   },
   "badges": [
     {
-      "url": "https://badgen.net/badge/trial/2%20day/red",
+      "url": "https://img.shields.io/badge/trial-2%20day-red",
       "href": "https://getlocalci.com",
       "description": "2 day free preview"
     },
     {
-      "url": "https://badgen.net/badge/$/paid/yellow",
+      "url": "https://img.shields.io/badge/%24-paid-yellow",
       "href": "https://getlocalci.com",
       "description": "Buy license key"
     },
     {
-      "url": "https://badgen.net/badge/platform/MacOS/green",
+      "url": "https://img.shields.io/badge/platform-macOS-brightgreen",
       "href": "https://getlocalci.come",
       "description": "Platform: macOS"
     },
     {
-      "url": "https://badgen.net/badge/requires/CircleCI%C2%AE/green",
+      "url": "https://img.shields.io/badge/requires-CirlcleCI%C2%AE-brightgreen",
       "href": "https://circleci.com",
       "description": "Requires CircleCI®"
-    },
-    {
-      "url": "https://badgen.net/github/status/getlocalci/local-ci/develop/CircleCI",
-      "href": "https://circleci.com/gh/getlocalci/local-ci",
-      "description": "CircleCI® status"
     }
   ],
   "scripts": {
