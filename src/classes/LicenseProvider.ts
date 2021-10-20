@@ -84,15 +84,10 @@ export default class LicenseProvider implements vscode.WebviewViewProvider {
   private async _getHtmlForWebview(): Promise<string> {
     const webviewDirname = 'webview';
     const scriptUri = this.webviewView?.webview.asWebviewUri(
-      vscode.Uri.joinPath(this.extensionUri, 'src', webviewDirname, 'index.js')
+      vscode.Uri.joinPath(this.extensionUri, webviewDirname, 'index.js')
     );
     const styleVSCodeUri = this.webviewView?.webview.asWebviewUri(
-      vscode.Uri.joinPath(
-        this.extensionUri,
-        'src',
-        webviewDirname,
-        'vscode.css'
-      )
+      vscode.Uri.joinPath(this.extensionUri, webviewDirname, 'vscode.css')
     );
 
     // Use a nonce to only allow a specific script to be run.

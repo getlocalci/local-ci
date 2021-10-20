@@ -35,7 +35,7 @@ Local CI has no server that runs jobs, and has no knowledge of the jobs or any d
 
 If you have entered a license key, it only sends to the Local CI site a `GET` request with the license key and an `md5` hash of your VS Code [machineId](https://code.visualstudio.com/api/references/vscode-api#3251).
 
-This is to verify that the license key is only being used on 1 machine.
+This is to verify that the license key is only used on 1 machine.
 
 Here's an example [machineId](https://code.visualstudio.com/api/references/vscode-api#3251): `b068aef3da6acff9c9bf4f129135ffd56adbfa294aeb8117c7264164c1a277d4`
 
