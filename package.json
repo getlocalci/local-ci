@@ -1,7 +1,7 @@
 {
   "name": "local-ci",
   "displayName": "Local CI",
-  "description": "Debug CircleCI® jobs locally with Bash access and workspace persistence between jobs. All in your local, without pushing commits and waiting. Not affiliated with CircleCI®.",
+  "description": "Debug CircleCI® jobs locally with Bash access and workspace persistence between jobs. All in your local, no pushing and waiting.",
   "version": "1.0.0",
   "publisher": "LocalCI",
   "contributors": [
@@ -186,7 +186,7 @@
       "description": "2 day free preview"
     },
     {
-      "url": "https://img.shields.io/badge/%24-paid-yellow",
+      "url": "https://img.shields.io/badge/%24-paid-red",
       "href": "https://getlocalci.com",
       "description": "Buy license key"
     },
@@ -203,6 +203,7 @@
   ],
   "scripts": {
     "vscode:prepublish": "npm run package",
+    "visx": "vsce package",
     "deploy": "vsce publish",
     "compile": "webpack",
     "watch": "webpack --watch",
