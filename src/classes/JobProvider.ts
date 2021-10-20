@@ -9,6 +9,7 @@ import {
   ENTER_LICENSE_COMMAND,
   PROCESS_FILE_PATH,
   TRIAL_STARTED_TIMESTAMP,
+  JOB_TREE_VIEW_ID,
 } from '../constants';
 import getDockerError from '../utils/getDockerError';
 import isDockerRunning from '../utils/isDockerRunning';
@@ -55,7 +56,8 @@ export default class JobProvider
         ? this.jobs
         : [
             new Warning('Error: is Docker running?'),
-            new vscode.TreeItem(` ${getDockerError()}`),
+            new vscode.TreeItem(`${getDockerError()}`),
+            new Command('Try Again', `${JOB_TREE_VIEW_ID}.refresh`),
           ]
       : [
           new Warning('Please enter a Local CI license key.'),

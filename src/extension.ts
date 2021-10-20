@@ -8,6 +8,7 @@ import {
   GET_LICENSE_COMMAND,
   GET_LICENSE_KEY_URL,
   HELP_URL,
+  JOB_TREE_VIEW_ID,
   PROCESS_FILE_PATH,
   RUN_JOB_COMMAND,
 } from './constants';
@@ -22,18 +23,17 @@ import getDebuggingTerminalName from './utils/getDebuggingTerminalName';
 import getFinalTerminalName from './utils/getFinalTerminalName';
 
 export function activate(context: vscode.ExtensionContext): void {
-  const jobTreeViewId = 'localCiJobs';
   const jobProvider = new JobProvider(context);
 
-  vscode.window.registerTreeDataProvider(jobTreeViewId, jobProvider);
+  vscode.window.registerTreeDataProvider(JOB_TREE_VIEW_ID, jobProvider);
   context.subscriptions.push(
-    vscode.commands.registerCommand(`${jobTreeViewId}.refresh`, () =>
+    vscode.commands.registerCommand(`${JOB_TREE_VIEW_ID}.refresh`, () =>
       jobProvider.refresh()
     ),
-    vscode.commands.registerCommand(`${jobTreeViewId}.help`, () =>
+    vscode.commands.registerCommand(`${JOB_TREE_VIEW_ID}.help`, () =>
       vscode.env.openExternal(vscode.Uri.parse(HELP_URL))
     ),
-    vscode.commands.registerCommand(`${jobTreeViewId}.exitAllJobs`, () => {
+    vscode.commands.registerCommand(`${JOB_TREE_VIEW_ID}.exitAllJobs`, () => {
       jobProvider.refresh();
 
       const confirmText = 'Yes';
@@ -56,7 +56,7 @@ export function activate(context: vscode.ExtensionContext): void {
     })
   );
 
-  vscode.window.createTreeView(jobTreeViewId, {
+  vscode.window.createTreeView(JOB_TREE_VIEW_ID, {
     treeDataProvider: jobProvider,
   });
   context.subscriptions.push(
