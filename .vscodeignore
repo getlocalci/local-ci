@@ -2,6 +2,7 @@
 .vscode-test/**
 .circleci/**
 .husky/**
+artifacts/**
 out/**
 node_modules/**
 src/**
