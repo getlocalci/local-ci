@@ -23,6 +23,7 @@ jobs:
     executor:
       name: node
     steps:
+      - checkout
       - run:
           name: Storing a .visx as an artifact
           command: |
@@ -30,11 +31,12 @@ jobs:
             npm ci
             npm run visx --- --out artifacts/
       - store_artifacts:
-          path: ~/artifacts
+          path: ~/project/artifacts
   deploy:
     executor:
       name: node
     steps:
+      - checkout
       - run:
           name: "Deploy plugin to marketplace"
           command: npm ci && npm run deploy
