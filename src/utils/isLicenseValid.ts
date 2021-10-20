@@ -1,8 +1,11 @@
+import * as md5 from 'js-md5';
 import * as vscode from 'vscode';
 import axios from 'axios';
 import {
-  CACHED_LICENSE_ERROR,
-  CACHED_LICENSE_VALIDITY,
+  LICENSE_ERROR,
+  LICENSE_ITEM_ID,
+  LICENSE_KEY,
+  LICENSE_VALIDITY,
   LICENSE_VALIDITY_CACHE_EXPIRATION,
 } from '../constants';
 
@@ -17,38 +20,38 @@ function isCachedValidityExpired(context: vscode.ExtensionContext): boolean {
 
 export default async function isLicenseValid(
   context: vscode.ExtensionContext,
+  forceRecheck?: boolean,
   licenseKey?: string | unknown
 ): Promise<boolean> {
   if ('' === licenseKey) {
-    context.secrets.store(CACHED_LICENSE_ERROR, 'Empty license key');
+    context.secrets.store(LICENSE_ERROR, 'Empty license key');
     return false;
   }
-  const trimmedLicenseKey = licenseKey ? String(licenseKey).trim() : '';
 
-  const isLicenseCacheExpired = isCachedValidityExpired(context);
-  if (!trimmedLicenseKey && !isLicenseCacheExpired) {
-    return !!context.globalState.get(CACHED_LICENSE_VALIDITY);
+  const trimmedLicenseKey = licenseKey
+    ? String(licenseKey).trim()
+    : (await context.secrets.get(LICENSE_KEY))?.trim();
+
+  if (!forceRecheck && !isCachedValidityExpired(context)) {
+    return !!context.globalState.get(LICENSE_VALIDITY);
   }
 
-  let response = null;
+  let response;
   try {
     response = await axios.get(licenseValidationEndpoint, {
       params: {
         license: encodeURI(String(trimmedLicenseKey)),
         edd_action: 'activate_license', // eslint-disable-line @typescript-eslint/naming-convention
-        item_id: 43, // eslint-disable-line @typescript-eslint/naming-convention
-        url: 'https://example.com',
+        item_id: LICENSE_ITEM_ID, // eslint-disable-line @typescript-eslint/naming-convention
+        url: md5(vscode.env.machineId),
       },
     });
   } catch (e) {
-    context.secrets.store(
-      CACHED_LICENSE_ERROR,
-      (e as ErrorWithMessage)?.message
-    );
+    context.secrets.store(LICENSE_ERROR, (e as ErrorWithMessage)?.message);
   }
 
   const isValid = !!response?.data?.success;
-  context.globalState.update(CACHED_LICENSE_VALIDITY, isValid);
+  context.globalState.update(LICENSE_VALIDITY, isValid);
   context.globalState.update(
     LICENSE_VALIDITY_CACHE_EXPIRATION,
     new Date().getTime() +
@@ -56,7 +59,11 @@ export default async function isLicenseValid(
   );
 
   if (!isValid && response?.data?.error) {
-    context.secrets.store(CACHED_LICENSE_ERROR, response.data.error);
+    context.secrets.store(LICENSE_ERROR, response.data.error);
+  }
+
+  if (isValid) {
+    context.secrets.delete(LICENSE_ERROR);
   }
 
   return isValid;

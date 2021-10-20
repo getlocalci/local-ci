@@ -4,7 +4,7 @@ import { EXIT_JOB_COMMAND, RUN_JOB_COMMAND } from '../constants';
 export default class Job extends vscode.TreeItem {
   private jobName: string;
 
-  constructor(public readonly label: string) {
+  constructor(public readonly label: string, isRunning?: boolean) {
     super(label);
     const tooltip = `Runs the CircleCI® job ${this.label}`;
     this.jobName = label;
@@ -16,8 +16,12 @@ export default class Job extends vscode.TreeItem {
       title: label,
       command: RUN_JOB_COMMAND,
       tooltip,
-      arguments: [label, this],
+      arguments: [this.jobName, this],
     };
+
+    if (isRunning) {
+      this.setIsRunning();
+    }
   }
 
   getJobName(): string {

@@ -1,5 +1,8 @@
 import * as vscode from 'vscode';
+import { LICENSE_ERROR } from '../constants';
+import getLicenseErrorMessage from '../utils/getLicenseErrorMessage';
 import getLicenseInformation from '../utils/getLicenseInformation';
+import isLicenseValid from '../utils/isLicenseValid';
 import showLicenseInput from '../utils/showLicenseInput';
 
 function getNonce() {
@@ -44,6 +47,25 @@ export default class LicenseProvider implements vscode.WebviewViewProvider {
           () => this.licenseSuccessCallback()
         );
       }
+
+      if (data.type === 'retryLicenseValidation') {
+        const isValid = await isLicenseValid(this.context, true);
+
+        if (isValid) {
+          vscode.window.showInformationMessage(
+            'Validation worked, your Local CI license key is valid and was activated!'
+          );
+          this.load();
+          this.licenseSuccessCallback();
+        } else {
+          const warningMessage = `Sorry, validation didn't work. ${getLicenseErrorMessage(
+            String(await this.context.secrets.get(LICENSE_ERROR))
+          )}`;
+          vscode.window.showWarningMessage(warningMessage, {
+            detail: 'The license key is invalid',
+          });
+        }
+      }
     });
   }
 
@@ -62,15 +84,10 @@ export default class LicenseProvider implements vscode.WebviewViewProvider {
   private async _getHtmlForWebview(): Promise<string> {
     const webviewDirname = 'webview';
     const scriptUri = this.webviewView?.webview.asWebviewUri(
-      vscode.Uri.joinPath(this.extensionUri, 'src', webviewDirname, 'index.js')
+      vscode.Uri.joinPath(this.extensionUri, webviewDirname, 'index.js')
     );
     const styleVSCodeUri = this.webviewView?.webview.asWebviewUri(
-      vscode.Uri.joinPath(
-        this.extensionUri,
-        'src',
-        webviewDirname,
-        'vscode.css'
-      )
+      vscode.Uri.joinPath(this.extensionUri, webviewDirname, 'vscode.css')
     );
 
     // Use a nonce to only allow a specific script to be run.

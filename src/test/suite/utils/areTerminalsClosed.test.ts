@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 import * as mocha from 'mocha';
 import * as sinon from 'sinon';
-import areAllTerminalsClosed from '../../../utils/areAllTerminalsClosed';
+import areTerminalsClosed from '../../../utils/areTerminalsClosed';
 
 mocha.afterEach(() => {
   sinon.restore();
@@ -18,11 +18,11 @@ const baseTerminal = {
   dispose: sinon.mock(),
 };
 
-suite('areAllTerminalsClosed', () => {
+suite('areTerminalsClosed', () => {
   test('Only one is closed', () => {
     assert.strictEqual(
       false,
-      areAllTerminalsClosed(
+      areTerminalsClosed(
         { ...baseTerminal, exitStatus: { code: 1 } },
         baseTerminal
       )
@@ -32,7 +32,7 @@ suite('areAllTerminalsClosed', () => {
   test('All are closed', () => {
     assert.strictEqual(
       true,
-      areAllTerminalsClosed(
+      areTerminalsClosed(
         { ...baseTerminal, exitStatus: { code: 0 } },
         { ...baseTerminal, exitStatus: { code: 1 } }
       )
@@ -42,7 +42,7 @@ suite('areAllTerminalsClosed', () => {
   test('One undefined, one closed', () => {
     assert.strictEqual(
       true,
-      areAllTerminalsClosed(
+      areTerminalsClosed(
         { ...baseTerminal, exitStatus: { code: 0 } },
         undefined
       )

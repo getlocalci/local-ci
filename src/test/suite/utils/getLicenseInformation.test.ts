@@ -4,7 +4,7 @@ import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as vscode from 'vscode';
 import {
-  CACHED_LICENSE_VALIDITY,
+  LICENSE_VALIDITY,
   LICENSE_VALIDITY_CACHE_EXPIRATION,
 } from '../../../constants';
 import { Substitute } from '@fluffy-spoon/substitute';
@@ -22,7 +22,7 @@ function getMockContext(licenseKey: string, cachedValidity: boolean) {
     globalState: {
       ...initialContext.globalState,
       get: (stateKey: string) => {
-        if (stateKey === CACHED_LICENSE_VALIDITY) {
+        if (stateKey === LICENSE_VALIDITY) {
           return cachedValidity;
         }
         if (stateKey === LICENSE_VALIDITY_CACHE_EXPIRATION) {

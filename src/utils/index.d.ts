@@ -1,9 +1,11 @@
-interface ConfigFile {
+interface ConfigFileWithJobs {
   jobs: Record<
     string,
     Job
   >;
 }
+
+type ConfigFile = ConfigFileWithJobs | null;
 
 interface SpawnOptions {
   cwd: string;

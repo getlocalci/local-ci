@@ -8,21 +8,25 @@ import {
   GET_LICENSE_COMMAND,
   ENTER_LICENSE_COMMAND,
   PROCESS_FILE_PATH,
-  PREVIEW_STARTED_TIMESTAMP,
+  TRIAL_STARTED_TIMESTAMP,
+  JOB_TREE_VIEW_ID,
 } from '../constants';
 import getDockerError from '../utils/getDockerError';
 import isDockerRunning from '../utils/isDockerRunning';
 import isLicenseValid from '../utils/isLicenseValid';
-import isPreviewExpired from '../utils/isPreviewExpired';
+import isTrialExpired from '../utils/isTrialExpired';
+import writeProcessFile from '../utils/writeProcessFile';
 
 export default class JobProvider
   implements vscode.TreeDataProvider<vscode.TreeItem>
 {
-  public runningJobs: string[] = [];
-  public _onDidChangeTreeData: vscode.EventEmitter<Job | undefined> =
+  private _onDidChangeTreeData: vscode.EventEmitter<Job | undefined> =
     new vscode.EventEmitter<Job | undefined>();
   readonly onDidChangeTreeData: vscode.Event<Job | undefined> =
     this._onDidChangeTreeData.event;
+  private jobs: vscode.TreeItem[] | [] = [];
+  private runningJob: string | undefined;
+
   constructor(private readonly context: vscode.ExtensionContext) {}
 
   refresh(job?: Job): void {
@@ -35,23 +39,38 @@ export default class JobProvider
 
   async getChildren(): Promise<vscode.TreeItem[]> {
     processConfig();
+    writeProcessFile();
 
     const shouldEnableExtension =
       (await isLicenseValid(this.context)) ||
-      !isPreviewExpired(
-        this.context.globalState.get(PREVIEW_STARTED_TIMESTAMP)
-      );
+      !isTrialExpired(this.context.globalState.get(TRIAL_STARTED_TIMESTAMP));
+    const dockerRunning = isDockerRunning();
+
+    if (shouldEnableExtension && dockerRunning) {
+      this.jobs = getJobs(PROCESS_FILE_PATH, this.runningJob);
+      this.runningJob = undefined;
+    }
+
     return shouldEnableExtension
-      ? isDockerRunning()
-        ? getJobs(PROCESS_FILE_PATH).map((jobName) => new Job(jobName))
+      ? dockerRunning
+        ? this.jobs
         : [
             new Warning('Error: is Docker running?'),
-            new vscode.TreeItem(` ${getDockerError()}`),
+            new vscode.TreeItem(`${getDockerError()}`),
+            new Command('Try Again', `${JOB_TREE_VIEW_ID}.refresh`),
           ]
       : [
           new Warning('Please enter a Local CI license key.'),
           new Command('Get License', GET_LICENSE_COMMAND),
           new Command('Enter License', ENTER_LICENSE_COMMAND),
         ];
+  }
+
+  getJob(jobName: string): vscode.TreeItem | undefined {
+    return this.jobs.find((job) => jobName === (job as Job)?.getJobName());
+  }
+
+  setRunningJob(jobName: string): void {
+    this.runningJob = jobName;
   }
 }

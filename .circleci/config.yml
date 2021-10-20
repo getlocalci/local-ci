@@ -4,18 +4,53 @@ orbs:
   node: circleci/node@4.1
   browser-tools: circleci/browser-tools@1.1.0
 
-jobs:
-  test:
+executors:
+  node:
     docker:
       - image: cimg/node:16.8.0-browsers
+
+jobs:
+  test-lint:
+    executor:
+      name: node
     steps:
       - browser-tools/install-browser-tools
       - node/install-npm
       - checkout
       - node/install-packages
       - run: npm test
+  build-artifact:
+    executor:
+      name: node
+    steps:
+      - checkout
+      - run:
+          name: Storing a .visx as an artifact
+          command: |
+            mkdir -p artifacts
+            npm ci
+            npm run visx --- --out artifacts/
+      - store_artifacts:
+          path: ~/project/artifacts
+  deploy:
+    executor:
+      name: node
+    steps:
+      - checkout
+      - run:
+          name: "Deploy plugin to marketplace"
+          command: npm ci && npm run deploy
 
 workflows:
-  test-lint:
+  test:
     jobs:
-      - test
+      - test-lint
+      - build-artifact
+      - deploy:
+          requires:
+            - test-lint
+          filters:
+            tags:
+              only: /^\d+\.\d+\.\d+$/
+            branches:
+              ignore: /.*/

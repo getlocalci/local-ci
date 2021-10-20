@@ -1,9 +1,8 @@
 # Change Log
 
-All notable changes to the "local-ci" extension will be documented in this file.
+## [1.0.0] - Unreleased
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
-## [Unreleased]
-
-- Initial release
+- Allow running jobs with a TreeView UI
+- Open a terminal to show the running job
+- Open a debugging terminal for Bash access to the job
+- If the job fails, open another Bash terminal

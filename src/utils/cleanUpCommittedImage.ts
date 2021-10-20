@@ -2,15 +2,13 @@ import * as cp from 'child_process';
 import { GET_ALL_CONTAINERS_FUNCTION } from '../constants';
 import getSpawnOptions from './getSpawnOptions';
 
-export default function cleanUpCommittedImage(
-  committedImageName: string
-): void {
-  cp.spawnSync(
+export default function cleanUpCommittedImage(imagePattern: string): void {
+  cp.spawn(
     '/bin/sh',
     [
       '-c',
       `${GET_ALL_CONTAINERS_FUNCTION}
-      LOCAL_CI_IMAGES=$(docker images -q --filter reference=${committedImageName})
+      LOCAL_CI_IMAGES=$(docker images -q --filter reference=${imagePattern})
       for image in $LOCAL_CI_IMAGES
         do
           LOCAL_CI_CONTAINERS=$(get_all_containers $image)

@@ -10,8 +10,16 @@ mocha.afterEach(() => {
 });
 
 suite('getCheckoutJobs', () => {
+  test('No config file', () => {
+    sinon.mock(fs).expects('existsSync').once().returns(false);
+    sinon.mock(fs).expects('readFileSync').never();
+    assert.deepStrictEqual(getCheckoutJobs('foo'), []);
+  });
+
   test('No checkout job', () => {
+    sinon.mock(fs).expects('existsSync').once().returns(true);
     sinon.mock(fs).expects('readFileSync').once().returns('');
+
     sinon
       .mock(yaml)
       .expects('load')
@@ -24,6 +32,7 @@ suite('getCheckoutJobs', () => {
   });
 
   test('With string checkout job', () => {
+    sinon.mock(fs).expects('existsSync').once().returns(true);
     sinon.mock(fs).expects('readFileSync').once().returns('');
     sinon
       .mock(yaml)

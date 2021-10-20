@@ -1,12 +1,14 @@
 import * as path from 'path';
+import * as vscode from 'vscode';
 import getCheckoutJobs from './getCheckoutJobs';
 import getConfigFile from './getConfigFile';
-import getDefaultWorkspace from './getDefaultWorkspace';
+import getProjectDirectory from './getProjectDirectory';
 import getImageFromJob from './getImageFromJob';
 
-export default function getCheckoutDirectoryBasename(
-  processFile: string
-): string {
+export default async function getCheckoutDirectoryBasename(
+  processFile: string,
+  terminal: vscode.Terminal
+): Promise<string> {
   const checkoutJobs = getCheckoutJobs(processFile);
   const configFile = getConfigFile(processFile);
 
@@ -32,7 +34,10 @@ export default function getCheckoutDirectoryBasename(
     !stepWithPersist?.persist_to_workspace?.root ||
     '.' === stepWithPersist.persist_to_workspace.root
       ? configFile.jobs[checkoutJob]?.working_directory ??
-        getDefaultWorkspace(getImageFromJob(configFile.jobs[checkoutJob]))
+        (await getProjectDirectory(
+          getImageFromJob(configFile.jobs[checkoutJob]),
+          terminal
+        ))
       : stepWithPersist.persist_to_workspace.root;
 
   // If the checkout job has a persist_to_workspace of /tmp,

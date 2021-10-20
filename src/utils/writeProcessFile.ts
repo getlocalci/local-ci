@@ -2,8 +2,9 @@ import * as fs from 'fs';
 import * as yaml from 'js-yaml';
 import getCheckoutJobs from './getCheckoutJobs';
 import getConfigFile from './getConfigFile';
-import getDefaultWorkspace from './getDefaultWorkspace';
+import getProjectDirectory from './getProjectDirectory';
 import getImageFromJob from './getImageFromJob';
+import getStorageDirectory from './getStorageDirectory';
 import { PROCESS_FILE_PATH } from '../constants';
 
 // Rewrites the process.yml file.
@@ -18,48 +19,55 @@ export default function writeProcessFile(): void {
   }
 
   if (!checkoutJobs.length) {
-    fs.writeFileSync(PROCESS_FILE_PATH, yaml.dump(configFile));
+    fs.writeFile(PROCESS_FILE_PATH, yaml.dump(configFile), () => '');
     return;
   }
 
-  checkoutJobs.forEach((checkoutJob: string) => {
-    if (!configFile || !configFile.jobs[checkoutJob]?.steps) {
-      return;
-    }
-
-    // Simulate persist_to_workspace by copying the persisted files to the volume.
-    configFile.jobs[checkoutJob].steps = configFile?.jobs[
-      checkoutJob
-    ]?.steps?.map((step: Step) => {
-      if (!step?.persist_to_workspace) {
-        return step;
+  Promise.all(
+    checkoutJobs.map(async (checkoutJob: string) => {
+      if (!configFile || !configFile.jobs[checkoutJob]?.steps) {
+        return;
       }
 
-      const persistToWorkspacePath = step?.persist_to_workspace?.paths?.length
-        ? step.persist_to_workspace.paths[0]
-        : '';
+      const projectDirectory = await getProjectDirectory(
+        getImageFromJob(configFile.jobs[checkoutJob])
+      );
 
-      const pathBase =
-        !step?.persist_to_workspace?.root ||
-        '.' === step.persist_to_workspace.root
-          ? configFile.jobs[checkoutJob]?.working_directory ??
-            getDefaultWorkspace(getImageFromJob(configFile.jobs[checkoutJob]))
-          : step.persist_to_workspace.root;
+      // Simulate persist_to_workspace by copying the persisted files to the volume.
+      // @todo: handle other jobs that persist_to_workspace, like https://github.com/kefranabg/bento-starter/blob/c5ec78a033d3915d700bd6463594508098d46448/.circleci/config.yml#L81
+      configFile.jobs[checkoutJob].steps = configFile?.jobs[
+        checkoutJob
+      ]?.steps?.map((step: Step) => {
+        if (!step?.persist_to_workspace) {
+          return step;
+        }
 
-      const fullPath =
-        !persistToWorkspacePath || persistToWorkspacePath === '.'
-          ? pathBase
-          : `${pathBase}/${persistToWorkspacePath}`;
+        const persistToWorkspacePath = step?.persist_to_workspace?.paths?.length
+          ? step.persist_to_workspace.paths[0]
+          : '';
 
-      return step.persist_to_workspace && !fullPath.match(/\/tmp\/[^/]+$/)
-        ? {
-            run: {
-              command: `cp -r ${fullPath} /tmp`,
-            },
-          }
-        : step;
-    });
-  });
+        const pathBase =
+          !step?.persist_to_workspace?.root ||
+          '.' === step.persist_to_workspace.root
+            ? configFile.jobs[checkoutJob]?.working_directory ??
+              projectDirectory
+            : step.persist_to_workspace.root;
 
-  fs.writeFileSync(PROCESS_FILE_PATH, yaml.dump(configFile));
+        const fullPath =
+          !persistToWorkspacePath || persistToWorkspacePath === '.'
+            ? pathBase
+            : `${pathBase}/${persistToWorkspacePath}`;
+
+        return step.persist_to_workspace && !fullPath.match(/\/tmp\/[^/]+$/)
+          ? {
+              run: {
+                command: `cp -r ${fullPath} ${getStorageDirectory()}`,
+              },
+            }
+          : step;
+      });
+    })
+  ).then(() =>
+    fs.writeFile(PROCESS_FILE_PATH, yaml.dump(configFile), () => '')
+  );
 }

@@ -1,10 +1,13 @@
 .vscode/**
 .vscode-test/**
+.circleci/**
+.husky/**
+artifacts/**
 out/**
 node_modules/**
 src/**
 .gitignore
-.yarnrc
+.nvmrc
 **/tsconfig.json
 **/.eslintrc.json
 **/*.map
