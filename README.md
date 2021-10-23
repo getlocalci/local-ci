@@ -1,7 +1,7 @@
 # Local CI
 
-[![2 day free preview](https://img.shields.io/badge/trial-2%20day-red)](https://getlocalci.com)
-[![Buy license key](https://img.shields.io/badge/%24-paid-red)](https://getlocalci.com)
+[![2 day free preview](https://img.shields.io/badge/trial-2%20day-orange)](https://getlocalci.com)
+[![Buy license key](https://img.shields.io/badge/%24-paid-orange)](https://getlocalci.com)
 [![Platform: macOS](https://img.shields.io/badge/platform-macOS-brightgreen)](https://getlocalci.come)
 [![Requires CircleCI®](https://img.shields.io/badge/requires-CirlcleCI%C2%AE-brightgreen)](https://circleci.com)
 
@@ -17,7 +17,7 @@ This extension allows shell access to the jobs, and persists the workspace betwe
 
 CircleCI® is a registered trademark of Circle Internet Services, Inc.
 
-Local CI is a paid extension with a 2 day free trial.
+Local CI is a paid extension with a 2 day free preview.
 
 ## Requirements
 
@@ -45,13 +45,11 @@ Feel free to look at the [source code](https://github.com/getlocalci/local-ci/tr
 
 ## Use Case
 
-Local CI won't replace the CircleCI® service, it's a tool to use alongside it.
+Local CI won't replace the CircleCI® service, it's a debugging tool to use alongside it.
 
 If you think CI will pass, it'll probably be faster to simply push a commit and let CI run.
 
 Local CI is for debugging locally, not deploying.
-
-Not affiliated with CircleCI®.
 
 ## License
 [GPL v2](LICENSE) or later
