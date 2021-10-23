@@ -28,15 +28,7 @@ export default async function runJob(
   const terminal = vscode.window.createTerminal({
     name: getTerminalName(jobName),
     message: `About to run the CircleCI® job ${jobName}…`,
-    iconPath: {
-      light: vscode.Uri.joinPath(
-        extensionUri,
-        'resources',
-        'light',
-        'logo.svg'
-      ),
-      dark: vscode.Uri.joinPath(extensionUri, 'resources', 'dark', 'logo.svg'),
-    },
+    iconPath: vscode.Uri.joinPath(extensionUri, 'resources', 'logo.svg'),
   });
   terminal.show();
 
@@ -96,7 +88,7 @@ export default async function runJob(
   const debuggingTerminal = vscode.window.createTerminal({
     name: getDebuggingTerminalName(jobName),
     message: 'This is inside the running container',
-    iconPath: new vscode.ThemeIcon('testing-debug-icon'),
+    iconPath: vscode.Uri.joinPath(extensionUri, 'resources', 'logo.svg'),
   });
 
   // Once the container is available, start an interactive bash session within the container.
@@ -130,7 +122,7 @@ export default async function runJob(
     finalTerminal = vscode.window.createTerminal({
       name: getFinalDebuggingTerminalName(jobName),
       message: 'Debug the final state of the container',
-      iconPath: new vscode.ThemeIcon('testing-debug-icon'),
+      iconPath: vscode.Uri.joinPath(extensionUri, 'resources', 'logo.svg'),
     });
     finalTerminal.sendText(
       `echo "Inside a similar container after the job's container exited:"`
