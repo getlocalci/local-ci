@@ -17,7 +17,7 @@ This extension allows shell access to the jobs, and persists the workspace betwe
 
 CircleCI® is a registered trademark of Circle Internet Services, Inc.
 
-Local CI is a paid extension with a 2 day free trial.
+Local CI is a paid extension with a 2 day free preview.
 
 ## Requirements
 
