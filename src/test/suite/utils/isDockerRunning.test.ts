@@ -12,14 +12,14 @@ suite('isDockerRunning', () => {
   test('Is not running', () => {
     sinon
       .mock(cp)
-      .expects('spawnSync')
+      .expects('execSync')
       .once()
-      .returns({ stderr: 'Cannot connect to the Docker daemon' });
+      .throws({ message: 'Cannot connect to the Docker daemon' });
     assert.strictEqual(isDockerRunning(), false);
   });
 
   test('Is running', () => {
-    sinon.mock(cp).expects('spawnSync').once().returns({ stderr: '' });
+    sinon.mock(cp).expects('execSync').once();
     assert.strictEqual(isDockerRunning(), true);
   });
 });
