@@ -53,6 +53,96 @@
   ],
   "main": "./dist/extension.js",
   "contributes": {
+    "commands": [
+      {
+        "command": "local-ci.job.run",
+        "title": "Run Local CI job",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "local-ci.job.exit",
+        "title": "Exit Job",
+        "icon": "$(notebook-delete-cell)"
+      },
+      {
+        "command": "local-ci.job.rerun",
+        "title": "Rerun Job",
+        "icon": "$(extensions-refresh)"
+      },
+      {
+        "command": "localCiJobs.refresh",
+        "title": "Refresh Job List",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "localCiJobs.help",
+        "title": "Help",
+        "icon": "$(question)"
+      },
+      {
+        "command": "localCiJobs.exitAllJobs",
+        "title": "Exit All Jobs",
+        "icon": "$(notebook-delete-cell)"
+      },
+      {
+        "command": "localCiLicense.refresh",
+        "title": "Refresh License Information",
+        "icon": "$(refresh)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "localCiJobs.refresh",
+          "when": "view == localCiJobs",
+          "group": "navigation"
+        },
+        {
+          "command": "localCiJobs.help",
+          "when": "view == localCiJobs",
+          "group": "navigation"
+        },
+        {
+          "command": "localCiJobs.exitAllJobs",
+          "when": "view == localCiJobs",
+          "group": "navigation"
+        },
+        {
+          "command": "localCiLicense.refresh",
+          "when": "view == localCiLicense",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "local-ci.job.rerun",
+          "when": "view == localCiJobs && viewItem == isRunning",
+          "group": "inline"
+        }
+      ]
+    },
+    "views": {
+      "localCiDebugger": [
+        {
+          "id": "localCiJobs",
+          "name": "CircleCI® Jobs"
+        },
+        {
+          "id": "localCiLicense",
+          "name": "Local CI License Key",
+          "type": "webview"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "localCiDebugger",
+          "title": "Local CI",
+          "icon": "resources/logo.svg"
+        }
+      ]
+    },
     "walkthroughs": [
       {
         "id": "welcomeLocalCi",
@@ -91,97 +181,7 @@
           }
         ]
       }
-    ],
-    "commands": [
-      {
-        "command": "local-ci.job.run",
-        "title": "Run Local CI job",
-        "icon": "$(refresh)"
-      },
-      {
-        "command": "local-ci.job.exit",
-        "title": "Exit Job",
-        "icon": "$(notebook-delete-cell)"
-      },
-      {
-        "command": "local-ci.job.rerun",
-        "title": "Rerun Job",
-        "icon": "$(extensions-refresh)"
-      },
-      {
-        "command": "localCiJobs.refresh",
-        "title": "Refresh Job List",
-        "icon": "$(refresh)"
-      },
-      {
-        "command": "localCiJobs.help",
-        "title": "Help",
-        "icon": "$(question)"
-      },
-      {
-        "command": "localCiJobs.exitAllJobs",
-        "title": "Exit All Jobs",
-        "icon": "$(notebook-delete-cell)"
-      },
-      {
-        "command": "localCiLicense.refresh",
-        "title": "Refresh License Information",
-        "icon": "$(refresh)"
-      }
-    ],
-    "viewsContainers": {
-      "activitybar": [
-        {
-          "id": "localCiDebugger",
-          "title": "Local CI",
-          "icon": "resources/logo.svg"
-        }
-      ]
-    },
-    "views": {
-      "localCiDebugger": [
-        {
-          "id": "localCiJobs",
-          "name": "CircleCI® Jobs"
-        },
-        {
-          "id": "localCiLicense",
-          "name": "Local CI License Key",
-          "type": "webview"
-        }
-      ]
-    },
-    "menus": {
-      "view/title": [
-        {
-          "command": "localCiJobs.refresh",
-          "when": "view == localCiJobs",
-          "group": "navigation"
-        },
-        {
-          "command": "localCiJobs.help",
-          "when": "view == localCiJobs",
-          "group": "navigation"
-        },
-        {
-          "command": "localCiJobs.exitAllJobs",
-          "when": "view == localCiJobs",
-          "group": "navigation"
-        },
-        {
-          "command": "localCiLicense.refresh",
-          "when": "view == localCiLicense",
-          "group": "navigation"
-        }
-      ],
-      "view/item/context": [
-        {
-          "command": "local-ci.job.rerun",
-          "when": "view == localCiJobs && viewItem == isRunning",
-          "group": "inline"
-        }
-      ]
-    }
+    ]
   },
   "badges": [
     {
