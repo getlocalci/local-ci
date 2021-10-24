@@ -13,7 +13,9 @@ import getDebuggingTerminalName from './getDebuggingTerminalName';
 import getStorageDirectory from './getStorageDirectory';
 import getImageFromJob from './getImageFromJob';
 import getRootPath from './getRootPath';
+import showHelperMessages from './showHelperMessages';
 import {
+  GET_LATEST_COMMITTED_IMAGE_FUNCTION,
   GET_RUNNING_CONTAINER_FUNCTION,
   PROCESS_FILE_PATH,
   HOST_TMP_PATH,
@@ -130,11 +132,14 @@ export default async function runJob(
 
     // @todo: handle if debuggingTerminal exits because terminal hasn't started the container.
     finalTerminal.sendText(
-      `docker run -it --rm -v ${volume} ${
+      `${GET_LATEST_COMMITTED_IMAGE_FUNCTION}
+      docker run -it --rm -v ${volume} ${
         projectDirectory !== 'project' ? '--workdir ' + projectDirectory : ''
-      } $(docker images --filter reference=${committedImageName} -q | head -1)`
+      } $(get_latest_committed_image ${committedImageName})`
     );
     finalTerminal.show();
+
+    setTimeout(() => showHelperMessages(committedImageName), 2000);
   });
 
   vscode.window.onDidCloseTerminal(() => {
