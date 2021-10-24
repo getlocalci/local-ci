@@ -90,6 +90,13 @@
         "icon": "$(refresh)"
       }
     ],
+    "keybindings": [
+      {
+        "command": "workbench.view.extension.localCiDebugger",
+        "key": "shift+cmd+l",
+        "mac": "shift+cmd+l"
+      }
+    ],
     "menus": {
       "view/title": [
         {
