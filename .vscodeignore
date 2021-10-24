@@ -6,6 +6,7 @@ artifacts/**
 out/**
 node_modules/**
 src/**
+CONTRIBUTING.md
 .gitignore
 .nvmrc
 **/tsconfig.json

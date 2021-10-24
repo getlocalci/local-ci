@@ -130,7 +130,7 @@ export default async function runJob(
 
     // @todo: handle if debuggingTerminal exits because terminal hasn't started the container.
     finalTerminal.sendText(
-      `docker run -it --rm ${
+      `docker run -it --rm -v ${volume} ${
         projectDirectory !== 'project' ? '--workdir ' + projectDirectory : ''
       } $(docker images --filter reference=${committedImageName} -q | head -1)`
     );

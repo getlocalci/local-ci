@@ -10,16 +10,14 @@ mocha.afterEach(() => {
 
 suite('getDockerError', () => {
   test('No error', () => {
-    sinon
-      .mock(cp)
-      .expects('spawnSync')
-      .once()
-      .returns({ stderr: 'Cannot connect to the Docker daemon' });
-    assert.strictEqual(getDockerError(), 'Cannot connect to the Docker daemon');
+    sinon.mock(cp).expects('execSync').once();
+    assert.strictEqual(getDockerError(), '');
   });
 
   test('With error', () => {
-    sinon.mock(cp).expects('spawnSync').once().returns({ stderr: '' });
-    assert.strictEqual(getDockerError(), '');
+    const message = 'Cannot connect to the Docker daemon';
+    sinon.mock(cp).expects('execSync').once().throws({ message });
+
+    assert.strictEqual(getDockerError(), message);
   });
 });
