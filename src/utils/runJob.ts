@@ -116,7 +116,7 @@ export default async function runJob(
       return;
     }
 
-    clearTimeout(interval);
+    clearInterval(interval);
     if (finalTerminal || areTerminalsClosed(terminal, debuggingTerminal)) {
       return;
     }

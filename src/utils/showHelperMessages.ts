@@ -6,7 +6,7 @@ import {
 } from '../constants';
 import getSpawnOptions from './getSpawnOptions';
 
-export default function showHelperMessages(imageId: string): void {
+export default function showHelperMessages(imageName: string): void {
   const trivialMessages = [
     '_XSERVTransmkdir',
     'Server is already active for display',
@@ -16,9 +16,9 @@ export default function showHelperMessages(imageId: string): void {
     '/bin/sh',
     [
       '-c',
-      `${GET_LATEST_COMMITTED_IMAGE_FUNCTION}
-      ${GET_CONTAINER_FUNCTION}
-      docker logs $(get_container $(get_latest_committed_image ${imageId}))`,
+      `${GET_CONTAINER_FUNCTION}
+      ${GET_LATEST_COMMITTED_IMAGE_FUNCTION}
+      docker logs $(get_container $(get_latest_committed_image ${imageName}))`,
     ],
     getSpawnOptions()
   );
