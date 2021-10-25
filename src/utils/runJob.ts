@@ -15,6 +15,7 @@ import getImageFromJob from './getImageFromJob';
 import getRootPath from './getRootPath';
 import showHelperMessages from './showHelperMessages';
 import {
+  COMMITTED_IMAGE_NAMESPACE,
   GET_LATEST_COMMITTED_IMAGE_FUNCTION,
   GET_RUNNING_CONTAINER_FUNCTION,
   PROCESS_FILE_PATH,
@@ -79,7 +80,7 @@ export default async function runJob(
     `${getBinaryPath()} local execute --job ${jobName} --config ${PROCESS_FILE_PATH} --debug -v ${volume}`
   );
 
-  const committedImageName = `local-ci/${jobName}`;
+  const committedImageName = `${COMMITTED_IMAGE_NAMESPACE}/${jobName}`;
   commitContainer(dockerImage, committedImageName);
 
   const interval = setInterval(

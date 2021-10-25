@@ -3,6 +3,7 @@ import Job from './classes/Job';
 import JobProvider from './classes/JobProvider';
 import LicenseProvider from './classes/LicenseProvider';
 import {
+  COMMITTED_IMAGE_NAMESPACE,
   ENTER_LICENSE_COMMAND,
   EXIT_JOB_COMMAND,
   GET_LICENSE_COMMAND,
@@ -50,7 +51,7 @@ export function activate(context: vscode.ExtensionContext): void {
                 terminal.dispose();
               }
             });
-            cleanUpCommittedImage('local-ci');
+            cleanUpCommittedImage(`${COMMITTED_IMAGE_NAMESPACE}/*`);
           }
         });
     })
