@@ -30,7 +30,7 @@ export const GET_RUNNING_CONTAINER_FUNCTION = `get_running_container() {
 }`;
 export const GET_LATEST_COMMITTED_IMAGE_FUNCTION = `get_latest_committed_image() {
   IMAGE=$1
-  docker images --filter reference=$IMAGE -q | head -1
+  docker images --filter reference=$IMAGE --format "{{.ID}} {{.Tag}}" | sort -k 2 -h | tail -n1 | awk '{print $1}'
 }`;
 export const GET_LICENSE_KEY_URL = 'https://getlocalci.com';
 export const HELP_URL = 'https://getlocalci.com';

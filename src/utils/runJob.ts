@@ -128,7 +128,7 @@ export default async function runJob(
       iconPath: vscode.Uri.joinPath(extensionUri, 'resources', 'logo.svg'),
     });
     finalTerminal.sendText(
-      `echo "Inside a similar container after the job's container exited:"`
+      `echo "Inside a similar container after the job's container exited: \n"`
     );
 
     // @todo: handle if debuggingTerminal exits because terminal hasn't started the container.
