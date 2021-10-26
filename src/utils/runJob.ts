@@ -13,7 +13,8 @@ import getDebuggingTerminalName from './getDebuggingTerminalName';
 import getStorageDirectory from './getStorageDirectory';
 import getImageFromJob from './getImageFromJob';
 import getRootPath from './getRootPath';
-import showHelperMessages from './showHelperMessages';
+import showMainTerminalHelperMessages from './showMainTerminalHelperMessages';
+import showFinalTerminalHelperMessages from './showFinalTerminalHelperMessages';
 import {
   COMMITTED_IMAGE_NAMESPACE,
   GET_LATEST_COMMITTED_IMAGE_FUNCTION,
@@ -80,10 +81,11 @@ export default async function runJob(
     `${getBinaryPath()} local execute --job ${jobName} --config ${PROCESS_FILE_PATH} --debug -v ${volume}`
   );
 
+  showMainTerminalHelperMessages();
   const committedImageName = `${COMMITTED_IMAGE_NAMESPACE}/${jobName}`;
   commitContainer(dockerImage, committedImageName);
 
-  const interval = setInterval(
+  const intervalId = setInterval(
     () => commitContainer(dockerImage, committedImageName),
     1000
   );
@@ -117,7 +119,7 @@ export default async function runJob(
       return;
     }
 
-    clearInterval(interval);
+    clearInterval(intervalId);
     if (finalTerminal || areTerminalsClosed(terminal, debuggingTerminal)) {
       return;
     }
@@ -140,12 +142,12 @@ export default async function runJob(
     );
     finalTerminal.show();
 
-    setTimeout(() => showHelperMessages(committedImageName), 2000);
+    setTimeout(() => showFinalTerminalHelperMessages(committedImageName), 4000);
   });
 
   vscode.window.onDidCloseTerminal(() => {
     if (areTerminalsClosed(terminal, debuggingTerminal, finalTerminal)) {
-      clearTimeout(interval);
+      clearInterval(intervalId);
       cleanUpCommittedImage(committedImageName);
     }
   });

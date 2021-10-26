@@ -3,13 +3,13 @@ import * as cp from 'child_process';
 import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as vscode from 'vscode';
-import showHelperMessages from '../../../utils/showHelperMessages';
+import showFinalTerminalHelperMessages from '../../../utils/showFinalTerminalHelperMessages';
 
 mocha.afterEach(() => {
   sinon.restore();
 });
 
-suite('showHelperMessages', () => {
+suite('showFinalTerminalHelperMessages', () => {
   test('No helper message', async () => {
     const showInformationMessageSpy = sinon.spy();
     sinon.stub(vscode, 'window').value({
@@ -27,7 +27,7 @@ suite('showHelperMessages', () => {
         },
       });
 
-    showHelperMessages('9234323');
+    showFinalTerminalHelperMessages('9234323');
     assert.strictEqual(showInformationMessageSpy.called, false);
   });
 
@@ -51,7 +51,7 @@ suite('showHelperMessages', () => {
         },
       });
 
-    showHelperMessages('9234323');
+    showFinalTerminalHelperMessages('9234323');
     assert.ok(showInformationMessageSpy.called);
   });
 });
