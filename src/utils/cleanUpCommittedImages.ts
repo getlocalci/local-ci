@@ -1,5 +1,4 @@
 import * as cp from 'child_process';
-import { GET_ALL_CONTAINERS_FUNCTION } from '../constants';
 import getSpawnOptions from './getSpawnOptions';
 
 export default function cleanUpCommittedImages(
@@ -10,7 +9,10 @@ export default function cleanUpCommittedImages(
     '/bin/sh',
     [
       '-c',
-      `${GET_ALL_CONTAINERS_FUNCTION}
+      `get_all_containers() {
+        IMAGE=$1
+        docker ps --filter ancestor=$IMAGE -q
+      }
       LOCAL_CI_IMAGES=$(docker images -q --filter reference="${imagePattern}")
       echo $LOCAL_CI_IMAGES | while read image; do
         if [[ ${imageToExclude} == $image ]]; then

@@ -3,10 +3,7 @@ export const LICENSE_ERROR = 'localCiLicenseKeyError';
 export const GET_LICENSE_COMMAND = 'local-ci.license.get';
 export const ENTER_LICENSE_COMMAND = 'local-ci.license.enter';
 export const EXIT_JOB_COMMAND = 'local-ci.job.exit';
-export const GET_ALL_CONTAINERS_FUNCTION = `get_all_containers() {
-  IMAGE=$1
-  docker ps --filter ancestor=$IMAGE -q
-}`;
+
 // @todo: Look at an alternative, as docker inspect hangs sometimes: https://github.com/docker/for-linux/issues/397
 export const GET_CONTAINER_FUNCTION = `get_container() {
   IMAGE=$1
