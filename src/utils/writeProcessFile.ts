@@ -5,21 +5,22 @@ import getConfigFile from './getConfigFile';
 import getProjectDirectory from './getProjectDirectory';
 import getImageFromJob from './getImageFromJob';
 import getStorageDirectory from './getStorageDirectory';
-import { PROCESS_FILE_PATH } from '../constants';
+import getProcessFilePath from './getProcessFilePath';
 
 // Rewrites the process.yml file.
 // When there's a persist_to_workspace value, this copies
 // the files to the volume so they can persist between jobs.
 export default function writeProcessFile(): void {
-  const checkoutJobs = getCheckoutJobs(PROCESS_FILE_PATH);
-  const configFile = getConfigFile(PROCESS_FILE_PATH);
+  const processFilePath = getProcessFilePath();
+  const checkoutJobs = getCheckoutJobs(processFilePath);
+  const configFile = getConfigFile(processFilePath);
 
   if (!configFile) {
     return;
   }
 
   if (!checkoutJobs.length) {
-    fs.writeFile(PROCESS_FILE_PATH, yaml.dump(configFile), () => '');
+    fs.writeFile(processFilePath, yaml.dump(configFile), () => '');
     return;
   }
 
@@ -67,7 +68,5 @@ export default function writeProcessFile(): void {
           : step;
       });
     })
-  ).then(() =>
-    fs.writeFile(PROCESS_FILE_PATH, yaml.dump(configFile), () => '')
-  );
+  ).then(() => fs.writeFile(processFilePath, yaml.dump(configFile), () => ''));
 }

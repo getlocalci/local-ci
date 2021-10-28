@@ -1,5 +1,4 @@
 import * as fs from 'fs';
-import * as path from 'path';
 import * as vscode from 'vscode';
 import { getBinaryPath } from '../../node/binary.js';
 import areTerminalsClosed from './areTerminalsClosed';
@@ -12,17 +11,16 @@ import getCheckoutJobs from './getCheckoutJobs';
 import getDebuggingTerminalName from './getDebuggingTerminalName';
 import getStorageDirectory from './getStorageDirectory';
 import getImageFromJob from './getImageFromJob';
-import getRootPath from './getRootPath';
 import showMainTerminalHelperMessages from './showMainTerminalHelperMessages';
 import showFinalTerminalHelperMessages from './showFinalTerminalHelperMessages';
 import {
   COMMITTED_IMAGE_NAMESPACE,
   GET_LATEST_COMMITTED_IMAGE_FUNCTION,
   GET_RUNNING_CONTAINER_FUNCTION,
-  PROCESS_FILE_PATH,
-  HOST_TMP_PATH,
 } from '../constants';
 import getFinalDebuggingTerminalName from './getFinalTerminalName';
+import getLocalVolumePath from './getLocalVolumePath';
+import getProcessFilePath from './getProcessFilePath';
 import getTerminalName from './getTerminalName';
 
 export default async function runJob(
@@ -36,8 +34,8 @@ export default async function runJob(
   });
   terminal.show();
 
-  const checkoutJobs = getCheckoutJobs(PROCESS_FILE_PATH);
-  const localVolume = `${HOST_TMP_PATH}/${path.basename(getRootPath())}`;
+  const checkoutJobs = getCheckoutJobs(getProcessFilePath());
+  const localVolume = getLocalVolumePath();
 
   // If this is the only checkout job, rm the entire local volume directory.
   // This job will checkout to that volume, and there could be an error
@@ -47,7 +45,7 @@ export default async function runJob(
     fs.rmSync(localVolume, { recursive: true, force: true });
   }
 
-  const configFile = getConfigFile(PROCESS_FILE_PATH);
+  const configFile = getConfigFile(getProcessFilePath());
   const attachWorkspaceSteps = configFile?.jobs[jobName]?.steps?.length
     ? (configFile?.jobs[jobName]?.steps as Array<Step>).filter((step) =>
         Boolean(step.attach_workspace)
@@ -69,16 +67,16 @@ export default async function runJob(
   const volume = checkoutJobs.includes(jobName)
     ? `${localVolume}:${getStorageDirectory()}`
     : `${localVolume}/${await getCheckoutDirectoryBasename(
-        PROCESS_FILE_PATH,
+        getProcessFilePath(),
         terminal
       )}:${attachWorkspace}`;
 
   if (!fs.existsSync(localVolume)) {
-    fs.mkdirSync(localVolume);
+    fs.mkdirSync(localVolume, { recursive: true });
   }
 
   terminal.sendText(
-    `${getBinaryPath()} local execute --job ${jobName} --config ${PROCESS_FILE_PATH} --debug -v ${volume}`
+    `${getBinaryPath()} local execute --job ${jobName} --config ${getProcessFilePath()} --debug -v ${volume}`
   );
 
   showMainTerminalHelperMessages();

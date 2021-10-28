@@ -7,7 +7,6 @@ import processConfig from '../utils/processConfig';
 import {
   GET_LICENSE_COMMAND,
   ENTER_LICENSE_COMMAND,
-  PROCESS_FILE_PATH,
   TRIAL_STARTED_TIMESTAMP,
   JOB_TREE_VIEW_ID,
 } from '../constants';
@@ -16,6 +15,7 @@ import isDockerRunning from '../utils/isDockerRunning';
 import isLicenseValid from '../utils/isLicenseValid';
 import isTrialExpired from '../utils/isTrialExpired';
 import writeProcessFile from '../utils/writeProcessFile';
+import getProcessFilePath from '../utils/getProcessFilePath';
 
 export default class JobProvider
   implements vscode.TreeDataProvider<vscode.TreeItem>
@@ -47,7 +47,7 @@ export default class JobProvider
     const dockerRunning = isDockerRunning();
 
     if (shouldEnableExtension && dockerRunning) {
-      this.jobs = getJobs(PROCESS_FILE_PATH, this.runningJob);
+      this.jobs = getJobs(getProcessFilePath(), this.runningJob);
       this.runningJob = undefined;
     }
 

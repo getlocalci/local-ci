@@ -10,7 +10,6 @@ import {
   GET_LICENSE_KEY_URL,
   HELP_URL,
   JOB_TREE_VIEW_ID,
-  PROCESS_FILE_PATH,
   RUN_JOB_COMMAND,
 } from './constants';
 import getLicenseInformation from './utils/getLicenseInformation';
@@ -22,6 +21,7 @@ import getCheckoutJobs from './utils/getCheckoutJobs';
 import processConfig from './utils/processConfig';
 import getDebuggingTerminalName from './utils/getDebuggingTerminalName';
 import getFinalTerminalName from './utils/getFinalTerminalName';
+import getProcessFilePath from './utils/getProcessFilePath';
 
 export function activate(context: vscode.ExtensionContext): void {
   const jobProvider = new JobProvider(context);
@@ -98,7 +98,7 @@ export function activate(context: vscode.ExtensionContext): void {
     }),
     vscode.commands.registerCommand('local-ci.runWalkthroughJob', async () => {
       processConfig();
-      const checkoutJobs = getCheckoutJobs(PROCESS_FILE_PATH);
+      const checkoutJobs = getCheckoutJobs(getProcessFilePath());
       if (!checkoutJobs.length) {
         return;
       }
