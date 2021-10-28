@@ -18,11 +18,11 @@ export default function getLatestCommittedImage(
       resolve(data?.toString ? data.toString().trim() : '');
     });
 
-    stderr.on('data', (data) => {
+    stderr.on('data', () => {
       reject('');
     });
 
-    stderr.on('error', (error) => {
+    stderr.on('error', () => {
       reject('');
     });
   });

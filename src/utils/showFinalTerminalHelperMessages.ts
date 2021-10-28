@@ -1,10 +1,9 @@
 import * as cp from 'child_process';
 import * as vscode from 'vscode';
-import { GET_FINAL_DEBUGGER_CONTAINER_FUNCTION } from '../constants';
 import getSpawnOptions from './getSpawnOptions';
 
 export default function showFinalTerminalHelperMessages(
-  imageName: string
+  finalTerminalContainerId: string
 ): void {
   const trivialMessages = [
     '_XSERVTransmkdir',
@@ -13,11 +12,7 @@ export default function showFinalTerminalHelperMessages(
 
   const { stdout } = cp.spawn(
     '/bin/sh',
-    [
-      '-c',
-      `${GET_FINAL_DEBUGGER_CONTAINER_FUNCTION}
-      docker logs --follow $(get_final_debugger_container ${imageName})`,
-    ],
+    ['-c', `docker logs --follow ${finalTerminalContainerId}`],
     getSpawnOptions()
   );
 

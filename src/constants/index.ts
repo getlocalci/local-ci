@@ -28,16 +28,6 @@ export const GET_RUNNING_CONTAINER_FUNCTION = `get_running_container() {
       fi
     done
 }`;
-export const GET_FINAL_DEBUGGER_CONTAINER_FUNCTION = `get_final_debugger_container() {
-  IMAGE_REPO=$1
-  for container in $(docker ps -q)
-    do
-      if [[ $(docker inspect $(docker inspect $container --format {{.Image}}) --format {{.RepoTags}}) == *"$IMAGE_REPO"* ]]; then
-        echo $container
-        break
-      fi
-    done
-}`;
 export const GET_PICARD_CONTAINER_FUNCTION = `get_picard_container() {
   for container in $(docker ps -q)
     do

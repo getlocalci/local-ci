@@ -131,20 +131,20 @@ export default async function runJob(
       `echo "Inside a similar container after the job's container exited: \n"`
     );
 
-    // @todo: handle if debuggingTerminal exits because terminal hasn't started the container.
-    const latestCommmittedImage = await getLatestCommittedImage(
+    const latestCommmittedId = await getLatestCommittedImage(
       committedImageName
     );
+    // @todo: handle if debuggingTerminal exits because terminal hasn't started the container.
     finalTerminal.sendText(
       `docker run -it --rm -v ${volume} ${
         projectDirectory !== 'project' ? '--workdir ' + projectDirectory : ''
-      } ${latestCommmittedImage}`
+      } ${latestCommmittedId}`
     );
     finalTerminal.show();
 
     setTimeout(() => {
-      showFinalTerminalHelperMessages(committedImageName);
-      cleanUpCommittedImages(committedImageName, latestCommmittedImage);
+      showFinalTerminalHelperMessages(latestCommmittedId);
+      cleanUpCommittedImages(committedImageName, latestCommmittedId);
     }, 4000);
   });
 
