@@ -47,10 +47,6 @@ export const GET_PICARD_CONTAINER_FUNCTION = `get_picard_container() {
       fi
     done
 }`;
-export const GET_LATEST_COMMITTED_IMAGE_FUNCTION = `get_latest_committed_image() {
-  IMAGE=$1
-  docker images --filter reference=$IMAGE --format "{{.ID}} {{.Tag}}" | sort -k 2 -h | tail -n1 | awk '{print $1}'
-}`;
 export const GET_LICENSE_KEY_URL = 'https://getlocalci.com';
 export const HELP_URL = 'https://getlocalci.com';
 export const JOB_TREE_VIEW_ID = 'localCiJobs';

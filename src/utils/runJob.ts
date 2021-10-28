@@ -15,13 +15,13 @@ import showMainTerminalHelperMessages from './showMainTerminalHelperMessages';
 import showFinalTerminalHelperMessages from './showFinalTerminalHelperMessages';
 import {
   COMMITTED_IMAGE_NAMESPACE,
-  GET_LATEST_COMMITTED_IMAGE_FUNCTION,
   GET_RUNNING_CONTAINER_FUNCTION,
 } from '../constants';
 import getFinalDebuggingTerminalName from './getFinalTerminalName';
 import getLocalVolumePath from './getLocalVolumePath';
 import getProcessFilePath from './getProcessFilePath';
 import getTerminalName from './getTerminalName';
+import getLatestCommittedImage from './getLatestCommittedImage';
 
 export default async function runJob(
   jobName: string,
@@ -109,7 +109,7 @@ export default async function runJob(
   `);
 
   let finalTerminal: vscode.Terminal | undefined;
-  vscode.window.onDidCloseTerminal((closedTerminal) => {
+  vscode.window.onDidCloseTerminal(async (closedTerminal) => {
     if (
       closedTerminal.name !== debuggingTerminal.name ||
       !closedTerminal?.exitStatus?.code
@@ -132,17 +132,19 @@ export default async function runJob(
     );
 
     // @todo: handle if debuggingTerminal exits because terminal hasn't started the container.
+    const latestCommmittedImage = await getLatestCommittedImage(
+      committedImageName
+    );
     finalTerminal.sendText(
-      `${GET_LATEST_COMMITTED_IMAGE_FUNCTION}
-      docker run -it --rm -v ${volume} ${
+      `docker run -it --rm -v ${volume} ${
         projectDirectory !== 'project' ? '--workdir ' + projectDirectory : ''
-      } $(get_latest_committed_image ${committedImageName})`
+      } ${latestCommmittedImage}`
     );
     finalTerminal.show();
 
     setTimeout(() => {
       showFinalTerminalHelperMessages(committedImageName);
-      cleanUpCommittedImages(committedImageName);
+      cleanUpCommittedImages(committedImageName, latestCommmittedImage);
     }, 4000);
   });
 
