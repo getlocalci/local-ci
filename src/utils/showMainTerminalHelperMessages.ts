@@ -11,10 +11,9 @@ export default function showMainTerminalHelperMessages(): void {
     [
       '-c',
       `${GET_PICARD_CONTAINER_FUNCTION}
-      until [[ -n $(get_picard_container) ]]
-        do
-          sleep 2
-        done
+      until [[ -n $(get_picard_container) ]]; do
+        sleep 2
+      done
       docker logs --follow $(get_picard_container)`,
     ],
     getSpawnOptions()
