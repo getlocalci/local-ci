@@ -12,8 +12,8 @@ export default function cleanUpCommittedImages(
       '-c',
       `${GET_ALL_CONTAINERS_FUNCTION}
       LOCAL_CI_IMAGES=$(docker images -q --filter reference="${imagePattern}")
-      for image in $LOCAL_CI_IMAGES; do
-        if [[ ${imageToExclude} == $IMAGE ]]; then
+      echo $LOCAL_CI_IMAGES | while read image; do
+        if [[ ${imageToExclude} == $image ]]; then
           continue
         fi
         LOCAL_CI_CONTAINERS=$(get_all_containers $image)
