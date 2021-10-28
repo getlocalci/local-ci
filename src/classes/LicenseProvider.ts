@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
 import { LICENSE_ERROR } from '../constants';
-import getConfigUi from '../utils/getConfigUi';
 import getLicenseErrorMessage from '../utils/getLicenseErrorMessage';
 import getLicenseInformation from '../utils/getLicenseInformation';
 import isLicenseValid from '../utils/isLicenseValid';
@@ -19,8 +18,8 @@ function getNonce() {
 }
 
 // Mainly taken from https://github.com/microsoft/vscode-extension-samples/blob/57bcea06b04b0f602c9e702147c831dccd0eee4f/webview-view-sample/src/extension.ts
-export default class SettingsProvider implements vscode.WebviewViewProvider {
-  public static readonly viewType = 'localCiSettings';
+export default class LicenseProvider implements vscode.WebviewViewProvider {
+  public static readonly viewType = 'localCiLicense';
   private extensionUri: vscode.Uri;
   private webviewView?: vscode.WebviewView;
 
@@ -107,11 +106,10 @@ export default class SettingsProvider implements vscode.WebviewViewProvider {
       }; script-src 'nonce-${nonce}';">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <link href="${styleVSCodeUri}" rel="stylesheet">
-      <title>Local CI Settings</title>
+      <title>Local CI License Key</title>
     </head>
     <body>
       ${await getLicenseInformation(this.context)}
-      ${getConfigUi()}
       <script nonce="${nonce}" src="${scriptUri}"></script>
     </body>
     </html>`;

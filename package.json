@@ -49,7 +49,7 @@
     "onCommand:local-ci.debugWalkthroughJob",
     "onCommand:local-ci.job.run",
     "onView:localCiJobs",
-    "onView:localCiSettings"
+    "onView:localCiLicense"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -85,8 +85,8 @@
         "icon": "$(notebook-delete-cell)"
       },
       {
-        "command": "localCiSettings.refresh",
-        "title": "Refresh Settings",
+        "command": "localCiLicense.refresh",
+        "title": "Refresh License Information",
         "icon": "$(refresh)"
       }
     ],
@@ -115,8 +115,8 @@
           "group": "navigation"
         },
         {
-          "command": "localCiSettings.refresh",
-          "when": "view == localCiSettings",
+          "command": "localCiLicense.refresh",
+          "when": "view == localCiLicense",
           "group": "navigation"
         }
       ],
@@ -135,8 +135,8 @@
           "name": "CircleCI® Jobs"
         },
         {
-          "id": "localCiSettings",
-          "name": "Local CI Settings",
+          "id": "localCiLicense",
+          "name": "Local CI License Key",
           "type": "webview"
         }
       ]

@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import Job from './classes/Job';
 import JobProvider from './classes/JobProvider';
-import SettingsProvider from './classes/SettingsProvider';
+import LicenseProvider from './classes/LicenseProvider';
 import {
   COMMITTED_IMAGE_NAMESPACE,
   ENTER_LICENSE_COMMAND,
@@ -134,19 +134,13 @@ export function activate(context: vscode.ExtensionContext): void {
   );
 
   const licenseSuccessCallback = () => jobProvider.refresh();
-  const settingsTreeViewId = 'localCiSettings';
-  const settingsProvider = new SettingsProvider(
-    context,
-    licenseSuccessCallback
-  );
-  vscode.window.registerWebviewViewProvider(
-    settingsTreeViewId,
-    settingsProvider
-  );
+  const licenseTreeViewId = 'localCiLicense';
+  const licenseProvider = new LicenseProvider(context, licenseSuccessCallback);
+  vscode.window.registerWebviewViewProvider(licenseTreeViewId, licenseProvider);
 
   context.subscriptions.push(
-    vscode.commands.registerCommand(`${settingsTreeViewId}.refresh`, () => {
-      settingsProvider.load();
+    vscode.commands.registerCommand(`${licenseTreeViewId}.refresh`, () => {
+      licenseProvider.load();
     }),
     vscode.commands.registerCommand(GET_LICENSE_COMMAND, () => {
       vscode.env.openExternal(vscode.Uri.parse(GET_LICENSE_KEY_URL));
@@ -154,7 +148,7 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand(ENTER_LICENSE_COMMAND, () => {
       showLicenseInput(
         context,
-        () => settingsProvider.load(),
+        () => licenseProvider.load(),
         licenseSuccessCallback
       );
     })
@@ -167,7 +161,7 @@ export function activate(context: vscode.ExtensionContext): void {
       if (uri.path === '/enterLicense') {
         showLicenseInput(
           context,
-          () => settingsProvider.load(),
+          () => licenseProvider.load(),
           licenseSuccessCallback
         );
       }
