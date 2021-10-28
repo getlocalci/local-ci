@@ -16,7 +16,7 @@ import getLicenseInformation from './utils/getLicenseInformation';
 import disposeTerminalsForJob from './utils/disposeTerminalsForJob';
 import runJob from './utils/runJob';
 import showLicenseInput from './utils/showLicenseInput';
-import cleanUpCommittedImage from './utils/cleanUpCommittedImage';
+import cleanUpCommittedImages from './utils/cleanUpCommittedImages';
 import getCheckoutJobs from './utils/getCheckoutJobs';
 import processConfig from './utils/processConfig';
 import getDebuggingTerminalName from './utils/getDebuggingTerminalName';
@@ -51,7 +51,7 @@ export function activate(context: vscode.ExtensionContext): void {
                 terminal.dispose();
               }
             });
-            cleanUpCommittedImage(`${COMMITTED_IMAGE_NAMESPACE}/*`);
+            cleanUpCommittedImages(`${COMMITTED_IMAGE_NAMESPACE}/*`);
           }
         });
     })

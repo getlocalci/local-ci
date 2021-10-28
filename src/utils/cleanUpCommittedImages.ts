@@ -2,7 +2,7 @@ import * as cp from 'child_process';
 import { GET_ALL_CONTAINERS_FUNCTION } from '../constants';
 import getSpawnOptions from './getSpawnOptions';
 
-export default function cleanUpCommittedImage(imagePattern: string): void {
+export default function cleanUpCommittedImages(imagePattern: string): void {
   cp.spawn(
     '/bin/sh',
     [

@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as vscode from 'vscode';
 import { getBinaryPath } from '../../node/binary.js';
 import areTerminalsClosed from './areTerminalsClosed';
-import cleanUpCommittedImage from './cleanUpCommittedImage';
+import cleanUpCommittedImages from './cleanUpCommittedImages';
 import commitContainer from './commitContainer';
 import getConfigFile from './getConfigFile';
 import getProjectDirectory from './getProjectDirectory';
@@ -140,13 +140,16 @@ export default async function runJob(
     );
     finalTerminal.show();
 
-    setTimeout(() => showFinalTerminalHelperMessages(committedImageName), 4000);
+    setTimeout(() => {
+      showFinalTerminalHelperMessages(committedImageName);
+      cleanUpCommittedImages(committedImageName);
+    }, 4000);
   });
 
   vscode.window.onDidCloseTerminal(() => {
     if (areTerminalsClosed(terminal, debuggingTerminal, finalTerminal)) {
       clearInterval(intervalId);
-      cleanUpCommittedImage(committedImageName);
+      cleanUpCommittedImages(committedImageName);
     }
   });
 
