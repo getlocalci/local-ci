@@ -3,11 +3,10 @@ import * as fs from 'fs';
 import * as vscode from 'vscode';
 import { getBinaryPath } from '../../node/binary.js';
 import getSpawnOptions from './getSpawnOptions';
-import getRootPath from './getRootPath';
 import { PROCESS_FILE_DIRECTORY } from '../constants';
 import getProcessFilePath from './getProcessFilePath';
 
-export default function processConfig(): void {
+export default function processConfig(configFilePath: string): void {
   if (!fs.existsSync(PROCESS_FILE_DIRECTORY)) {
     fs.mkdirSync(PROCESS_FILE_DIRECTORY, { recursive: true });
   }
@@ -15,7 +14,7 @@ export default function processConfig(): void {
   try {
     const { stdout, stderr } = cp.spawnSync(
       getBinaryPath(),
-      ['config', 'process', `${getRootPath()}/.circleci/config.yml`],
+      ['config', 'process', configFilePath],
       getSpawnOptions()
     );
 

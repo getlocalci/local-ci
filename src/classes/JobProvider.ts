@@ -16,6 +16,7 @@ import isLicenseValid from '../utils/isLicenseValid';
 import isTrialExpired from '../utils/isTrialExpired';
 import writeProcessFile from '../utils/writeProcessFile';
 import getProcessFilePath from '../utils/getProcessFilePath';
+import getConfigFilePath from '../utils/getConfigFilePath';
 
 export default class JobProvider
   implements vscode.TreeDataProvider<vscode.TreeItem>
@@ -38,7 +39,7 @@ export default class JobProvider
   }
 
   async getChildren(): Promise<vscode.TreeItem[]> {
-    processConfig();
+    processConfig(await getConfigFilePath(this.context));
     writeProcessFile();
 
     const shouldEnableExtension =
@@ -47,7 +48,11 @@ export default class JobProvider
     const dockerRunning = isDockerRunning();
 
     if (shouldEnableExtension && dockerRunning) {
-      this.jobs = getJobs(getProcessFilePath(), this.runningJob);
+      this.jobs = await getJobs(
+        this.context,
+        getProcessFilePath(),
+        this.runningJob
+      );
       this.runningJob = undefined;
     }
 

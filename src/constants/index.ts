@@ -1,4 +1,5 @@
 export const COMMITTED_IMAGE_NAMESPACE = 'local-ci';
+export const SELECTED_CONFIG_PATH = 'local-ci.config.path';
 export const LICENSE_ERROR = 'localCiLicenseKeyError';
 export const GET_LICENSE_COMMAND = 'local-ci.license.get';
 export const ENTER_LICENSE_COMMAND = 'local-ci.license.enter';

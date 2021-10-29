@@ -2,15 +2,21 @@ import * as assert from 'assert';
 import * as fs from 'fs';
 import * as mocha from 'mocha';
 import * as sinon from 'sinon';
+import * as vscode from 'vscode';
 import * as yaml from 'js-yaml';
+import { Substitute } from '@fluffy-spoon/substitute';
 import getJobs from '../../../utils/getJobs';
 
 mocha.afterEach(() => {
   sinon.restore();
 });
 
+function getMockContext() {
+  return Substitute.for<vscode.ExtensionContext>();
+}
+
 suite('getJobs', () => {
-  test('Single job', () => {
+  test('Single job', async () => {
     sinon.mock(fs).expects('existsSync').once().returns(true);
     sinon.mock(fs).expects('readFileSync').once().returns('');
     sinon
@@ -21,10 +27,13 @@ suite('getJobs', () => {
         jobs: { test: { docker: [{ image: 'cimg/node:16.8.0-browsers' }] } },
       });
 
-    assert.strictEqual(getJobs('example-path').length, 1);
+    assert.strictEqual(
+      (await getJobs(getMockContext(), 'example-path')).length,
+      1
+    );
   });
 
-  test('Multiple jobs', () => {
+  test('Multiple jobs', async () => {
     sinon.mock(fs).expects('existsSync').once().returns(true);
     sinon.mock(fs).expects('readFileSync').once().returns('');
     sinon
@@ -39,6 +48,9 @@ suite('getJobs', () => {
         },
       });
 
-    assert.strictEqual(getJobs('example-path').length, 3);
+    assert.strictEqual(
+      (await getJobs(getMockContext(), 'example-path')).length,
+      3
+    );
   });
 });

@@ -11,6 +11,7 @@ import {
   HELP_URL,
   JOB_TREE_VIEW_ID,
   RUN_JOB_COMMAND,
+  SELECTED_CONFIG_PATH,
 } from './constants';
 import getLicenseInformation from './utils/getLicenseInformation';
 import disposeTerminalsForJob from './utils/disposeTerminalsForJob';
@@ -18,10 +19,12 @@ import runJob from './utils/runJob';
 import showLicenseInput from './utils/showLicenseInput';
 import cleanUpCommittedImages from './utils/cleanUpCommittedImages';
 import getCheckoutJobs from './utils/getCheckoutJobs';
+import getAllConfigFilePaths from './utils/getAllConfigFilePaths';
 import processConfig from './utils/processConfig';
 import getDebuggingTerminalName from './utils/getDebuggingTerminalName';
 import getFinalTerminalName from './utils/getFinalTerminalName';
 import getProcessFilePath from './utils/getProcessFilePath';
+import getConfigFilePath from './utils/getConfigFilePath';
 
 export function activate(context: vscode.ExtensionContext): void {
   const jobProvider = new JobProvider(context);
@@ -54,7 +57,41 @@ export function activate(context: vscode.ExtensionContext): void {
             cleanUpCommittedImages(`${COMMITTED_IMAGE_NAMESPACE}/*`);
           }
         });
-    })
+    }),
+    vscode.commands.registerCommand(
+      `${JOB_TREE_VIEW_ID}.selectRepo`,
+      async () => {
+        const quickPick = vscode.window.createQuickPick();
+        const configFilePaths = await getAllConfigFilePaths(context);
+        quickPick.title = 'Repo to run CI on';
+        quickPick.items = configFilePaths.length
+          ? configFilePaths
+          : [
+              {
+                label: 'No config file found',
+                description:
+                  'Please add a .circleci/config.yml file so Local CI can run',
+              },
+            ];
+        quickPick.onDidChangeSelection((selection) => {
+          if (
+            selection?.length &&
+            (selection[0] as ConfigFileQuickPick)?.fsPath
+          ) {
+            context.globalState
+              .update(
+                SELECTED_CONFIG_PATH,
+                (selection[0] as ConfigFileQuickPick)?.fsPath
+              )
+              .then(() => jobProvider.refresh());
+          }
+
+          quickPick.dispose();
+        });
+        quickPick.onDidHide(() => quickPick.dispose());
+        quickPick.show();
+      }
+    )
   );
 
   vscode.window.createTreeView(JOB_TREE_VIEW_ID, {
@@ -97,7 +134,7 @@ export function activate(context: vscode.ExtensionContext): void {
       runJob(jobName, context.extensionUri);
     }),
     vscode.commands.registerCommand('local-ci.runWalkthroughJob', async () => {
-      processConfig();
+      processConfig(await getConfigFilePath(context));
       const checkoutJobs = getCheckoutJobs(getProcessFilePath());
       if (!checkoutJobs.length) {
         return;

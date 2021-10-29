@@ -1,30 +1,35 @@
-import * as fs from 'fs';
 import * as vscode from 'vscode';
 import getConfigFile from './getConfigFile';
-import getRootPath from './getRootPath';
 import Job from '../classes/Job';
 import Warning from '../classes/Warning';
 import Command from '../classes/Command';
 import isWindows from './isWindows';
+import getAllConfigFilePaths from './getAllConfigFilePaths';
 
-export default function getJobs(
-  configFilePath: string,
+export default async function getJobs(
+  context: vscode.ExtensionContext,
+  processFilePath: string,
   runningJob?: string
-): vscode.TreeItem[] | [] {
+): Promise<vscode.TreeItem[] | []> {
   if (isWindows()) {
-    return [new Warning(`Sorry, this doesn't work on Windows`)];
+    return Promise.resolve([
+      new Warning(`Sorry, this doesn't work on Windows`),
+    ]);
   }
 
-  const jobs = Object.keys(getConfigFile(configFilePath)?.jobs ?? {});
+  const jobs = Object.keys(getConfigFile(processFilePath)?.jobs ?? {});
+  const configFilePaths = await getAllConfigFilePaths(context);
   return jobs.length
     ? jobs.map((jobName) => new Job(jobName, jobName === runningJob))
     : [
         new Warning('Error: No jobs found'),
         new vscode.TreeItem(
-          fs.existsSync(`${getRootPath()}/.circleci/config.yml`)
-            ? 'The config file was not processed'
-            : 'There is no .circleci/config.yml file in the root of the workspace'
+          configFilePaths.length
+            ? 'Please select a config file'
+            : 'Please add a .circleci/config.yml to this workspace'
         ),
-        new Command('Try again', 'localCiJobs.refresh'),
+        configFilePaths.length
+          ? new Command('Select config file', 'localCiJobs.selectRepo')
+          : new Command('Try again', 'localCiJobs.refresh'),
       ];
 }
