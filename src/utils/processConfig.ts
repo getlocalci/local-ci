@@ -11,6 +11,10 @@ export default function processConfig(configFilePath: string): void {
     fs.mkdirSync(PROCESS_FILE_DIRECTORY, { recursive: true });
   }
 
+  if (!configFilePath) {
+    return;
+  }
+
   try {
     const { stdout, stderr } = cp.spawnSync(
       getBinaryPath(),

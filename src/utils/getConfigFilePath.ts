@@ -19,7 +19,7 @@ export default async function getConfigFilePath(
   const allConfigFilePaths = await getAllConfigFilePaths(context);
   if (!allConfigFilePaths.length) {
     vscode.window.showInformationMessage(
-      'Please add a .circleci/config.yml file so that Local CI can run it',
+      'Please add a .circleci/config.yml file so Local CI can run it',
       { detail: 'There is no config file for Local CI to run' }
     );
     return '';
