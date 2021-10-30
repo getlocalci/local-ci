@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 import { getBinaryPath } from '../../node/binary.js';
 import getSpawnOptions from './getSpawnOptions';
 import { PROCESS_FILE_DIRECTORY } from '../constants';
-import getConfigFilePath from './getConfigFilePath.js';
+import getConfigFilePath from './getConfigFilePath';
 import getProcessFilePath from './getProcessFilePath';
 
 export default function processConfig(

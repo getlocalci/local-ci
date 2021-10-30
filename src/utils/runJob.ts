@@ -5,7 +5,7 @@ import areTerminalsClosed from './areTerminalsClosed';
 import cleanUpCommittedImages from './cleanUpCommittedImages';
 import commitContainer from './commitContainer';
 import getConfig from './getConfig';
-import getConfigFilePath from './getConfigFilePath.js';
+import getConfigFilePath from './getConfigFilePath';
 import getProjectDirectory from './getProjectDirectory';
 import getCheckoutDirectoryBasename from './getCheckoutDirectoryBasename';
 import getCheckoutJobs from './getCheckoutJobs';
