@@ -10,7 +10,7 @@ export default async function getJobs(
   context: vscode.ExtensionContext,
   processFilePath: string,
   runningJob?: string
-): Promise<vscode.TreeItem[] | []> {
+): Promise<vscode.TreeItem[]> {
   if (isWindows()) {
     return Promise.resolve([
       new Warning(`Sorry, this doesn't work on Windows`),
@@ -23,13 +23,10 @@ export default async function getJobs(
     ? jobs.map((jobName) => new Job(jobName, jobName === runningJob))
     : [
         new Warning('Error: No jobs found'),
-        new vscode.TreeItem(
-          configFilePaths.length
-            ? 'Please select a config file'
-            : 'Please add a .circleci/config.yml to this workspace'
-        ),
         configFilePaths.length
-          ? new Command('Select config file', 'localCiJobs.selectRepo')
-          : new Command('Try again', 'localCiJobs.refresh'),
+          ? new Command('Select repo to get jobs', 'localCiJobs.selectRepo')
+          : new vscode.TreeItem(
+              'Please add a .circleci/config.yml to this workspace'
+            ),
       ];
 }

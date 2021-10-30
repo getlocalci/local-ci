@@ -32,7 +32,7 @@ export default async function getConfigFilePath(
   const chooseRepoText = 'Choose repo';
   vscode.window
     .showInformationMessage(
-      'Please choose the repo to run Local CI on',
+      'Please select the repo to run Local CI on',
       { detail: 'There is no repo selected to run Local CI on' },
       chooseRepoText
     )
