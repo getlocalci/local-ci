@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import getConfigFile from './getConfigFile';
+import getConfig from './getConfig';
 import Job from '../classes/Job';
 import Warning from '../classes/Warning';
 import Command from '../classes/Command';
@@ -17,7 +17,7 @@ export default async function getJobs(
     ]);
   }
 
-  const jobs = Object.keys(getConfigFile(processFilePath)?.jobs ?? {});
+  const jobs = Object.keys(getConfig(processFilePath)?.jobs ?? {});
   const configFilePaths = await getAllConfigFilePaths(context);
   return jobs.length
     ? jobs.map((jobName) => new Job(jobName, jobName === runningJob))

@@ -1,11 +1,11 @@
-interface ConfigFileWithJobs {
+interface CiConfigWithJobs {
   jobs: Record<
     string,
     Job
   >;
 }
 
-type ConfigFile = ConfigFileWithJobs | null;
+type CiConfig = CiConfigWithJobs | null;
 
 interface ConfigFileQuickPick {
   label: string;

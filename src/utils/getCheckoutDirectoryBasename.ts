@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
 import getCheckoutJobs from './getCheckoutJobs';
-import getConfigFile from './getConfigFile';
+import getConfig from './getConfig';
 import getProjectDirectory from './getProjectDirectory';
 import getImageFromJob from './getImageFromJob';
 
@@ -10,7 +10,7 @@ export default async function getCheckoutDirectoryBasename(
   terminal: vscode.Terminal
 ): Promise<string> {
   const checkoutJobs = getCheckoutJobs(processFile);
-  const configFile = getConfigFile(processFile);
+  const configFile = getConfig(processFile);
 
   if (!configFile || !checkoutJobs.length) {
     return '';

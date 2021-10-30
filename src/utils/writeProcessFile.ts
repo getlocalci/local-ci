@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';
 import getCheckoutJobs from './getCheckoutJobs';
-import getConfigFile from './getConfigFile';
+import getConfig from './getConfig';
 import getProjectDirectory from './getProjectDirectory';
 import getImageFromJob from './getImageFromJob';
 import getStorageDirectory from './getStorageDirectory';
@@ -13,7 +13,7 @@ import getProcessFilePath from './getProcessFilePath';
 export default function writeProcessFile(configFilePath: string): void {
   const processFilePath = getProcessFilePath(configFilePath);
   const checkoutJobs = getCheckoutJobs(processFilePath);
-  const configFile = getConfigFile(processFilePath);
+  const configFile = getConfig(processFilePath);
 
   if (!configFile) {
     return;

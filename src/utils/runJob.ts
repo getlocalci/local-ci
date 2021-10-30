@@ -4,7 +4,7 @@ import { getBinaryPath } from '../../node/binary.js';
 import areTerminalsClosed from './areTerminalsClosed';
 import cleanUpCommittedImages from './cleanUpCommittedImages';
 import commitContainer from './commitContainer';
-import getConfigFile from './getConfigFile';
+import getConfig from './getConfig';
 import getConfigFilePath from './getConfigFilePath.js';
 import getProjectDirectory from './getProjectDirectory';
 import getCheckoutDirectoryBasename from './getCheckoutDirectoryBasename';
@@ -51,7 +51,7 @@ export default async function runJob(
     fs.rmSync(localVolume, { recursive: true, force: true });
   }
 
-  const configFile = getConfigFile(processFilePath);
+  const configFile = getConfig(processFilePath);
   const attachWorkspaceSteps = configFile?.jobs[jobName]?.steps?.length
     ? (configFile?.jobs[jobName]?.steps as Array<Step>).filter((step) =>
         Boolean(step.attach_workspace)
