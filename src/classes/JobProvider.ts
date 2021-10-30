@@ -39,8 +39,9 @@ export default class JobProvider
   }
 
   async getChildren(): Promise<vscode.TreeItem[]> {
-    processConfig(await getConfigFilePath(this.context));
-    writeProcessFile();
+    const configFilePath = await getConfigFilePath(this.context);
+    processConfig(this.context, configFilePath);
+    writeProcessFile(configFilePath);
 
     const shouldEnableExtension =
       (await isLicenseValid(this.context)) ||
@@ -50,7 +51,7 @@ export default class JobProvider
     if (shouldEnableExtension && dockerRunning) {
       this.jobs = await getJobs(
         this.context,
-        getProcessFilePath(),
+        getProcessFilePath(await getConfigFilePath(this.context)),
         this.runningJob
       );
       this.runningJob = undefined;

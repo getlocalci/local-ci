@@ -12,8 +12,8 @@ suite('getProcessFilePath', () => {
   test('With no root path', () => {
     sinon.stub(vscode, 'workspace').value({});
     assert.strictEqual(
-      getProcessFilePath(),
-      '/tmp/local-ci/process/unknown.yml'
+      getProcessFilePath('foo/baz/something/.circleci/config.yml'),
+      '/tmp/local-ci/process/something.yml'
     );
   });
 
@@ -28,8 +28,8 @@ suite('getProcessFilePath', () => {
     });
 
     assert.strictEqual(
-      getProcessFilePath(),
-      '/tmp/local-ci/process/example.yml'
+      getProcessFilePath('example/another/local-ci/.circleci/config.yml '),
+      '/tmp/local-ci/process/local-ci.yml'
     );
   });
 });

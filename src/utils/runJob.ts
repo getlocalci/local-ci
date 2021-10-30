@@ -5,6 +5,7 @@ import areTerminalsClosed from './areTerminalsClosed';
 import cleanUpCommittedImages from './cleanUpCommittedImages';
 import commitContainer from './commitContainer';
 import getConfigFile from './getConfigFile';
+import getConfigFilePath from './getConfigFilePath.js';
 import getProjectDirectory from './getProjectDirectory';
 import getCheckoutDirectoryBasename from './getCheckoutDirectoryBasename';
 import getCheckoutJobs from './getCheckoutJobs';
@@ -24,17 +25,22 @@ import getTerminalName from './getTerminalName';
 import getLatestCommittedImage from './getLatestCommittedImage';
 
 export default async function runJob(
-  jobName: string,
-  extensionUri: vscode.Uri
+  context: vscode.ExtensionContext,
+  jobName: string
 ): Promise<RunningTerminal[]> {
   const terminal = vscode.window.createTerminal({
     name: getTerminalName(jobName),
     message: `About to run the CircleCI® job ${jobName}…`,
-    iconPath: vscode.Uri.joinPath(extensionUri, 'resources', 'logo.svg'),
+    iconPath: vscode.Uri.joinPath(
+      context.extensionUri,
+      'resources',
+      'logo.svg'
+    ),
   });
   terminal.show();
 
-  const checkoutJobs = getCheckoutJobs(getProcessFilePath());
+  const processFilePath = getProcessFilePath(await getConfigFilePath(context));
+  const checkoutJobs = getCheckoutJobs(processFilePath);
   const localVolume = getLocalVolumePath();
 
   // If this is the only checkout job, rm the entire local volume directory.
@@ -45,7 +51,7 @@ export default async function runJob(
     fs.rmSync(localVolume, { recursive: true, force: true });
   }
 
-  const configFile = getConfigFile(getProcessFilePath());
+  const configFile = getConfigFile(processFilePath);
   const attachWorkspaceSteps = configFile?.jobs[jobName]?.steps?.length
     ? (configFile?.jobs[jobName]?.steps as Array<Step>).filter((step) =>
         Boolean(step.attach_workspace)
@@ -67,7 +73,7 @@ export default async function runJob(
   const volume = checkoutJobs.includes(jobName)
     ? `${localVolume}:${getStorageDirectory()}`
     : `${localVolume}/${await getCheckoutDirectoryBasename(
-        getProcessFilePath(),
+        processFilePath,
         terminal
       )}:${attachWorkspace}`;
 
@@ -76,7 +82,7 @@ export default async function runJob(
   }
 
   terminal.sendText(
-    `${getBinaryPath()} local execute --job ${jobName} --config ${getProcessFilePath()} --debug -v ${volume}`
+    `${getBinaryPath()} local execute --job ${jobName} --config ${processFilePath} --debug -v ${volume}`
   );
 
   showMainTerminalHelperMessages();
@@ -91,7 +97,11 @@ export default async function runJob(
   const debuggingTerminal = vscode.window.createTerminal({
     name: getDebuggingTerminalName(jobName),
     message: 'This is inside the running container',
-    iconPath: vscode.Uri.joinPath(extensionUri, 'resources', 'logo.svg'),
+    iconPath: vscode.Uri.joinPath(
+      context.extensionUri,
+      'resources',
+      'logo.svg'
+    ),
   });
 
   // Once the container is available, start an interactive bash session within the container.
@@ -125,7 +135,11 @@ export default async function runJob(
     finalTerminal = vscode.window.createTerminal({
       name: getFinalDebuggingTerminalName(jobName),
       message: 'Debug the final state of the container',
-      iconPath: vscode.Uri.joinPath(extensionUri, 'resources', 'logo.svg'),
+      iconPath: vscode.Uri.joinPath(
+        context.extensionUri,
+        'resources',
+        'logo.svg'
+      ),
     });
     finalTerminal.sendText(
       `echo "Inside a similar container after the job's container exited: \n"`

@@ -117,7 +117,7 @@ export function activate(context: vscode.ExtensionContext): void {
           jobProvider.refresh(job);
         }
 
-        runJob(jobName, context.extensionUri);
+        runJob(context, jobName);
       }
     ),
     vscode.commands.registerCommand(EXIT_JOB_COMMAND, (job: Job) => {
@@ -131,11 +131,12 @@ export function activate(context: vscode.ExtensionContext): void {
       jobProvider.refresh(job);
       const jobName = job.getJobName();
       disposeTerminalsForJob(jobName);
-      runJob(jobName, context.extensionUri);
+      runJob(context, jobName);
     }),
     vscode.commands.registerCommand('local-ci.runWalkthroughJob', async () => {
-      processConfig(await getConfigFilePath(context));
-      const checkoutJobs = getCheckoutJobs(getProcessFilePath());
+      const configFilePath = await getConfigFilePath(context);
+      processConfig(context, configFilePath);
+      const checkoutJobs = getCheckoutJobs(getProcessFilePath(configFilePath));
       if (!checkoutJobs.length) {
         return;
       }

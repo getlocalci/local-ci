@@ -10,8 +10,8 @@ import getProcessFilePath from './getProcessFilePath';
 // Rewrites the process.yml file.
 // When there's a persist_to_workspace value, this copies
 // the files to the volume so they can persist between jobs.
-export default function writeProcessFile(): void {
-  const processFilePath = getProcessFilePath();
+export default function writeProcessFile(configFilePath: string): void {
+  const processFilePath = getProcessFilePath(configFilePath);
   const checkoutJobs = getCheckoutJobs(processFilePath);
   const configFile = getConfigFile(processFilePath);
 
