@@ -1,6 +1,6 @@
-import * as path from 'path';
 import * as vscode from 'vscode';
 import { SELECTED_CONFIG_PATH } from '../constants';
+import getRepoPath from './getRepoBasename';
 
 export default async function getAllConfigFilePaths(
   context: vscode.ExtensionContext
@@ -28,7 +28,7 @@ export default async function getAllConfigFilePaths(
       return 0;
     })
     .map((configFile) => ({
-      label: path.basename(path.dirname(path.dirname(configFile.fsPath))),
+      label: getRepoPath(configFile.fsPath),
       description: vscode.workspace.asRelativePath(configFile.fsPath),
       fsPath: configFile.fsPath,
     }));

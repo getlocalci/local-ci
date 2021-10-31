@@ -1,12 +1,13 @@
 import * as path from 'path';
 import { HOST_TMP_PATH } from '../constants';
-import getRootPath from './getRootPath';
+import getRepoPath from './getRepoBasename';
 
 // Gets the absolute path to the local volume that stores the workspace between jobs.
-export default function getLocalVolumePath(): string {
+// The configFilePath must end in ./cirleci/config.yml.
+export default function getLocalVolumePath(configFilePath: string): string {
   return path.join(
     HOST_TMP_PATH,
     'volume',
-    path.basename(getRootPath()) || 'unknown'
+    configFilePath ? getRepoPath(configFilePath) : 'unknown'
   );
 }

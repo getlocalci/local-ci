@@ -1,3 +1,4 @@
+import * as path from 'path';
 import * as fs from 'fs';
 import * as vscode from 'vscode';
 import { getBinaryPath } from '../../node/binary.js';
@@ -29,6 +30,8 @@ export default async function runJob(
   context: vscode.ExtensionContext,
   jobName: string
 ): Promise<RunningTerminal[]> {
+  const configFilePath = await getConfigFilePath(context);
+  const repoPath = path.dirname(path.dirname(configFilePath));
   const terminal = vscode.window.createTerminal({
     name: getTerminalName(jobName),
     message: `About to run the CircleCI® job ${jobName}…`,
@@ -37,12 +40,13 @@ export default async function runJob(
       'resources',
       'logo.svg'
     ),
+    cwd: repoPath,
   });
   terminal.show();
 
-  const processFilePath = getProcessFilePath(await getConfigFilePath(context));
+  const processFilePath = getProcessFilePath(configFilePath);
   const checkoutJobs = getCheckoutJobs(processFilePath);
-  const localVolume = getLocalVolumePath();
+  const localVolume = getLocalVolumePath(configFilePath);
 
   // If this is the only checkout job, rm the entire local volume directory.
   // This job will checkout to that volume, and there could be an error
@@ -103,6 +107,7 @@ export default async function runJob(
       'resources',
       'logo.svg'
     ),
+    cwd: repoPath,
   });
   const workingDirectory = await getHomeDirectory(jobImage);
 
@@ -140,6 +145,7 @@ export default async function runJob(
         'resources',
         'logo.svg'
       ),
+      cwd: repoPath,
     });
     finalTerminal.sendText(
       `echo "Inside a similar container after the job's container exited: \n"`
