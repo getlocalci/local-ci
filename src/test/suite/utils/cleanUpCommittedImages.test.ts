@@ -1,15 +1,15 @@
 import * as cp from 'child_process';
 import * as mocha from 'mocha';
 import * as sinon from 'sinon';
-import cleanUpCommittedImage from '../../../utils/cleanUpCommittedImage';
+import cleanUpCommittedImages from '../../../utils/cleanUpCommittedImages';
 
 mocha.afterEach(() => {
   sinon.restore();
 });
 
-suite('cleanUpCommittedImage', () => {
+suite('cleanUpCommittedImages', () => {
   test('No error', () => {
     sinon.mock(cp).expects('spawnSync').twice();
-    cleanUpCommittedImage('local-ci-lint');
+    cleanUpCommittedImages('local-ci-lint');
   });
 });

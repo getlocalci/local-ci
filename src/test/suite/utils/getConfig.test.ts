@@ -3,17 +3,17 @@ import * as fs from 'fs';
 import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as yaml from 'js-yaml';
-import getConfigFile from '../../../utils/getConfigFile';
+import getConfig from '../../../utils/getConfig';
 
 mocha.afterEach(() => {
   sinon.restore();
 });
 
-suite('getConfigFile', () => {
+suite('getConfig', () => {
   test('No config file', () => {
     sinon.mock(fs).expects('existsSync').once().returns(false);
     sinon.mock(fs).expects('readFileSync').never();
-    assert.strictEqual(getConfigFile('example-path'), null);
+    assert.strictEqual(getConfig('example-path'), null);
   });
 
   test('With config file', () => {
@@ -24,6 +24,6 @@ suite('getConfigFile', () => {
     sinon.mock(fs).expects('readFileSync').once().returns('example');
     sinon.mock(yaml).expects('load').once().returns(configFile);
 
-    assert.strictEqual(getConfigFile('example-path'), configFile);
+    assert.strictEqual(getConfig('example-path'), configFile);
   });
 });

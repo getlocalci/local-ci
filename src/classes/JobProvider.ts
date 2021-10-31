@@ -7,11 +7,12 @@ import processConfig from '../utils/processConfig';
 import {
   GET_LICENSE_COMMAND,
   ENTER_LICENSE_COMMAND,
-  PROCESS_FILE_PATH,
   TRIAL_STARTED_TIMESTAMP,
   JOB_TREE_VIEW_ID,
 } from '../constants';
+import getConfigFilePath from '../utils/getConfigFilePath';
 import getDockerError from '../utils/getDockerError';
+import getProcessFilePath from '../utils/getProcessFilePath';
 import isDockerRunning from '../utils/isDockerRunning';
 import isLicenseValid from '../utils/isLicenseValid';
 import isTrialExpired from '../utils/isTrialExpired';
@@ -38,8 +39,9 @@ export default class JobProvider
   }
 
   async getChildren(): Promise<vscode.TreeItem[]> {
-    processConfig();
-    writeProcessFile();
+    const configFilePath = await getConfigFilePath(this.context);
+    processConfig(this.context, configFilePath);
+    writeProcessFile(configFilePath);
 
     const shouldEnableExtension =
       (await isLicenseValid(this.context)) ||
@@ -47,7 +49,11 @@ export default class JobProvider
     const dockerRunning = isDockerRunning();
 
     if (shouldEnableExtension && dockerRunning) {
-      this.jobs = getJobs(PROCESS_FILE_PATH, this.runningJob);
+      this.jobs = await getJobs(
+        this.context,
+        getProcessFilePath(await getConfigFilePath(this.context)),
+        this.runningJob
+      );
       this.runningJob = undefined;
     }
 

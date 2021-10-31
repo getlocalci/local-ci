@@ -45,11 +45,13 @@
     "devops"
   ],
   "activationEvents": [
+    "localCiJobs.selectRepo",
     "onCommand:local-ci.runWalkthroughJob",
     "onCommand:local-ci.debugWalkthroughJob",
     "onCommand:local-ci.job.run",
     "onView:localCiJobs",
-    "onView:localCiLicense"
+    "onView:localCiLicense",
+    "workspaceContains:**/.circleci/config.yml"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -85,6 +87,11 @@
         "icon": "$(notebook-delete-cell)"
       },
       {
+        "command": "localCiJobs.selectRepo",
+        "title": "Select Repo ",
+        "icon": "$(debug-configure)"
+      },
+      {
         "command": "localCiLicense.refresh",
         "title": "Refresh License Information",
         "icon": "$(refresh)"
@@ -111,6 +118,11 @@
         },
         {
           "command": "localCiJobs.exitAllJobs",
+          "when": "view == localCiJobs",
+          "group": "navigation"
+        },
+        {
+          "command": "localCiJobs.selectRepo",
           "when": "view == localCiJobs",
           "group": "navigation"
         },
