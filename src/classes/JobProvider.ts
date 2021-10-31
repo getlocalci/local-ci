@@ -10,13 +10,13 @@ import {
   TRIAL_STARTED_TIMESTAMP,
   JOB_TREE_VIEW_ID,
 } from '../constants';
+import getConfigFilePath from '../utils/getConfigFilePath';
 import getDockerError from '../utils/getDockerError';
+import getProcessFilePath from '../utils/getProcessFilePath';
 import isDockerRunning from '../utils/isDockerRunning';
 import isLicenseValid from '../utils/isLicenseValid';
 import isTrialExpired from '../utils/isTrialExpired';
 import writeProcessFile from '../utils/writeProcessFile';
-import getProcessFilePath from '../utils/getProcessFilePath';
-import getConfigFilePath from '../utils/getConfigFilePath';
 
 export default class JobProvider
   implements vscode.TreeDataProvider<vscode.TreeItem>

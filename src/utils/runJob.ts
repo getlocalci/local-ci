@@ -7,11 +7,17 @@ import cleanUpCommittedImages from './cleanUpCommittedImages';
 import commitContainer from './commitContainer';
 import getConfig from './getConfig';
 import getConfigFilePath from './getConfigFilePath';
-import getProjectDirectory from './getProjectDirectory';
 import getCheckoutDirectoryBasename from './getCheckoutDirectoryBasename';
 import getCheckoutJobs from './getCheckoutJobs';
 import getDebuggingTerminalName from './getDebuggingTerminalName';
+import getFinalDebuggingTerminalName from './getFinalTerminalName';
+import getHomeDirectory from './getHomeDirectory';
 import getImageFromJob from './getImageFromJob';
+import getLatestCommittedImage from './getLatestCommittedImage';
+import getLocalVolumePath from './getLocalVolumePath';
+import getProcessFilePath from './getProcessFilePath';
+import getProjectDirectory from './getProjectDirectory';
+import getTerminalName from './getTerminalName';
 import showMainTerminalHelperMessages from './showMainTerminalHelperMessages';
 import showFinalTerminalHelperMessages from './showFinalTerminalHelperMessages';
 import {
@@ -19,12 +25,6 @@ import {
   GET_RUNNING_CONTAINER_FUNCTION,
   STORAGE_DIRECTORY,
 } from '../constants';
-import getFinalDebuggingTerminalName from './getFinalTerminalName';
-import getLocalVolumePath from './getLocalVolumePath';
-import getProcessFilePath from './getProcessFilePath';
-import getTerminalName from './getTerminalName';
-import getLatestCommittedImage from './getLatestCommittedImage';
-import getHomeDirectory from './getHomeDirectory';
 
 export default async function runJob(
   context: vscode.ExtensionContext,
