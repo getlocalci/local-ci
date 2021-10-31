@@ -10,19 +10,20 @@ import getProjectDirectory from './getProjectDirectory';
 import getCheckoutDirectoryBasename from './getCheckoutDirectoryBasename';
 import getCheckoutJobs from './getCheckoutJobs';
 import getDebuggingTerminalName from './getDebuggingTerminalName';
-import getStorageDirectory from './getStorageDirectory';
 import getImageFromJob from './getImageFromJob';
 import showMainTerminalHelperMessages from './showMainTerminalHelperMessages';
 import showFinalTerminalHelperMessages from './showFinalTerminalHelperMessages';
 import {
   COMMITTED_IMAGE_NAMESPACE,
   GET_RUNNING_CONTAINER_FUNCTION,
+  STORAGE_DIRECTORY,
 } from '../constants';
 import getFinalDebuggingTerminalName from './getFinalTerminalName';
 import getLocalVolumePath from './getLocalVolumePath';
 import getProcessFilePath from './getProcessFilePath';
 import getTerminalName from './getTerminalName';
 import getLatestCommittedImage from './getLatestCommittedImage';
+import getHomeDirectory from './getHomeDirectory';
 
 export default async function runJob(
   context: vscode.ExtensionContext,
@@ -51,27 +52,27 @@ export default async function runJob(
     fs.rmSync(localVolume, { recursive: true, force: true });
   }
 
-  const configFile = getConfig(processFilePath);
-  const attachWorkspaceSteps = configFile?.jobs[jobName]?.steps?.length
-    ? (configFile?.jobs[jobName]?.steps as Array<Step>).filter((step) =>
+  const config = getConfig(processFilePath);
+  const attachWorkspaceSteps = config?.jobs[jobName]?.steps?.length
+    ? (config?.jobs[jobName]?.steps as Array<Step>).filter((step) =>
         Boolean(step.attach_workspace)
       )
     : [];
 
-  const dockerImage = getImageFromJob(configFile?.jobs[jobName]);
+  const jobImage = getImageFromJob(config?.jobs[jobName]);
   const initialAttachWorkspace =
     attachWorkspaceSteps.length && attachWorkspaceSteps[0]?.attach_workspace?.at
       ? attachWorkspaceSteps[0].attach_workspace.at
       : '';
 
-  const projectDirectory = await getProjectDirectory(dockerImage, terminal);
+  const projectDirectory = await getProjectDirectory(jobImage, terminal);
   const attachWorkspace =
     '.' === initialAttachWorkspace || !initialAttachWorkspace
       ? projectDirectory
       : initialAttachWorkspace;
 
   const volume = checkoutJobs.includes(jobName)
-    ? `${localVolume}:${getStorageDirectory()}`
+    ? `${localVolume}:${initialAttachWorkspace || STORAGE_DIRECTORY}`
     : `${localVolume}/${await getCheckoutDirectoryBasename(
         processFilePath,
         terminal
@@ -87,10 +88,10 @@ export default async function runJob(
 
   showMainTerminalHelperMessages();
   const committedImageName = `${COMMITTED_IMAGE_NAMESPACE}/${jobName}`;
-  commitContainer(dockerImage, committedImageName);
+  commitContainer(jobImage, committedImageName);
 
   const intervalId = setInterval(
-    () => commitContainer(dockerImage, committedImageName),
+    () => commitContainer(jobImage, committedImageName),
     1000
   );
 
@@ -103,19 +104,18 @@ export default async function runJob(
       'logo.svg'
     ),
   });
+  const workingDirectory = await getHomeDirectory(jobImage);
 
   // Once the container is available, start an interactive bash session within the container.
   debuggingTerminal.sendText(`
     ${GET_RUNNING_CONTAINER_FUNCTION}
     echo "Waiting for bash access to the running container… \n"
-    until [[ -n $(get_running_container ${dockerImage}) ]]
+    until [[ -n $(get_running_container ${jobImage}) ]]
     do
       sleep 1
     done
     echo "Inside the job's container:"
-    docker exec -it ${
-      projectDirectory !== 'project' ? '--workdir ' + projectDirectory : ''
-    } $(get_running_container ${dockerImage}) /bin/sh || exit 1
+    docker exec -it --workdir ${workingDirectory} $(get_running_container ${jobImage}) /bin/sh || exit 1
   `);
 
   let finalTerminal: vscode.Terminal | undefined;
@@ -150,9 +150,7 @@ export default async function runJob(
     );
     // @todo: handle if debuggingTerminal exits because terminal hasn't started the container.
     finalTerminal.sendText(
-      `docker run -it --rm -v ${volume} ${
-        projectDirectory !== 'project' ? '--workdir ' + projectDirectory : ''
-      } ${latestCommmittedImageId}`
+      `docker run -it --rm -v ${volume} --workdir ${workingDirectory} ${latestCommmittedImageId}`
     );
     finalTerminal.show();
 

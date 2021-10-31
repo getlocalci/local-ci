@@ -40,6 +40,7 @@ export const LICENSE_KEY = 'local-ci.license.key';
 export const LICENSE_VALIDITY = 'local-ci.license.validity.cached';
 export const LICENSE_VALIDITY_CACHE_EXPIRATION =
   'local-ci.license.cache.expiration';
+export const STORAGE_DIRECTORY = '/tmp/local-ci';
 export const TRIAL_LENGTH_IN_MILLISECONDS = 172800000; // 2 days.
 export const TRIAL_STARTED_TIMESTAMP =
   'local-ci.license.trial-started.timestamp';
