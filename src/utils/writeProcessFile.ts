@@ -1,21 +1,21 @@
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';
+import * as path from 'path';
 import getCheckoutJobs from './getCheckoutJobs';
 import getConfig from './getConfig';
 import getProjectDirectory from './getProjectDirectory';
 import getImageFromJob from './getImageFromJob';
-import getProcessFilePath from './getProcessFilePath';
 
 // Rewrites the process.yml file.
 // When there's a persist_to_workspace value, this copies
 // the files to the volume so they can persist between jobs.
 export default function writeProcessFile(
-  configFilePath: string,
+  processedConfig: string,
+  processFilePath: string,
   localVolumePath: string
 ): void {
-  const processFilePath = getProcessFilePath(configFilePath);
-  const checkoutJobs = getCheckoutJobs(processFilePath);
-  const config = getConfig(processFilePath);
+  const checkoutJobs = getCheckoutJobs(processedConfig);
+  const config = getConfig(processedConfig);
 
   if (!config) {
     return;
@@ -58,7 +58,7 @@ export default function writeProcessFile(
           const fullPath =
             !persistToWorkspacePath || persistToWorkspacePath === '.'
               ? pathBase
-              : `${pathBase}/${persistToWorkspacePath}`;
+              : path.join(pathBase, persistToWorkspacePath);
 
           return step.persist_to_workspace
             ? {

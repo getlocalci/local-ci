@@ -20,11 +20,13 @@ import showLicenseInput from './utils/showLicenseInput';
 import cleanUpCommittedImages from './utils/cleanUpCommittedImages';
 import getCheckoutJobs from './utils/getCheckoutJobs';
 import getAllConfigFilePaths from './utils/getAllConfigFilePaths';
-import processConfig from './utils/processConfig';
+import getConfigFilePath from './utils/getConfigFilePath';
 import getDebuggingTerminalName from './utils/getDebuggingTerminalName';
 import getFinalTerminalName from './utils/getFinalTerminalName';
+import getLocalVolumePath from './utils/getLocalVolumePath';
 import getProcessFilePath from './utils/getProcessFilePath';
-import getConfigFilePath from './utils/getConfigFilePath';
+import getProcessedConfig from './utils/getProcessedConfig';
+import writeProcessFile from './utils/writeProcessFile';
 
 export function activate(context: vscode.ExtensionContext): void {
   const jobProvider = new JobProvider(context);
@@ -150,7 +152,12 @@ export function activate(context: vscode.ExtensionContext): void {
     ),
     vscode.commands.registerCommand('local-ci.runWalkthroughJob', async () => {
       const configFilePath = await getConfigFilePath(context);
-      processConfig(context, configFilePath);
+      writeProcessFile(
+        await getProcessedConfig(context, configFilePath),
+        getProcessFilePath(configFilePath),
+        getLocalVolumePath(configFilePath)
+      );
+
       const checkoutJobs = getCheckoutJobs(getProcessFilePath(configFilePath));
       if (!checkoutJobs.length) {
         return;
