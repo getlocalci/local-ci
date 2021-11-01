@@ -5,12 +5,14 @@ import getConfig from './getConfig';
 import getProjectDirectory from './getProjectDirectory';
 import getImageFromJob from './getImageFromJob';
 import getProcessFilePath from './getProcessFilePath';
-import { STORAGE_DIRECTORY } from '../constants';
 
 // Rewrites the process.yml file.
 // When there's a persist_to_workspace value, this copies
 // the files to the volume so they can persist between jobs.
-export default function writeProcessFile(configFilePath: string): void {
+export default function writeProcessFile(
+  configFilePath: string,
+  localVolumePath: string
+): void {
   const processFilePath = getProcessFilePath(configFilePath);
   const checkoutJobs = getCheckoutJobs(processFilePath);
   const config = getConfig(processFilePath);
@@ -61,7 +63,7 @@ export default function writeProcessFile(configFilePath: string): void {
           return step.persist_to_workspace
             ? {
                 run: {
-                  command: `cp -r ${fullPath} ${STORAGE_DIRECTORY}`,
+                  command: `cp -r ${fullPath} ${localVolumePath}`,
                 },
               }
             : step;

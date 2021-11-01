@@ -24,7 +24,7 @@ import showFinalTerminalHelperMessages from './showFinalTerminalHelperMessages';
 import {
   COMMITTED_IMAGE_NAMESPACE,
   GET_RUNNING_CONTAINER_FUNCTION,
-  STORAGE_DIRECTORY,
+  CONTAINER_STORAGE_DIRECTORY,
 } from '../constants';
 
 export default async function runJob(
@@ -79,7 +79,7 @@ export default async function runJob(
 
   const volume = checkoutJobs.includes(jobName)
     ? `${localVolume}:${convertHomeDirToAbsolute(
-        initialAttachWorkspace || STORAGE_DIRECTORY,
+        initialAttachWorkspace || CONTAINER_STORAGE_DIRECTORY,
         homeDir
       )}`
     : `${localVolume}/${await getCheckoutDirectoryBasename(
