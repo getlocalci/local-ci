@@ -133,6 +133,21 @@ export function activate(context: vscode.ExtensionContext): void {
       disposeTerminalsForJob(jobName);
       runJob(context, jobName);
     }),
+    vscode.commands.registerCommand(
+      'local-ci.debug.repo',
+      (clickedFile: vscode.Uri) => {
+        if (clickedFile.fsPath) {
+          context.globalState
+            .update(SELECTED_CONFIG_PATH, clickedFile.fsPath)
+            .then(() => {
+              jobProvider.refresh();
+              vscode.commands.executeCommand(
+                'workbench.view.extension.localCiDebugger'
+              );
+            });
+        }
+      }
+    ),
     vscode.commands.registerCommand('local-ci.runWalkthroughJob', async () => {
       const configFilePath = await getConfigFilePath(context);
       processConfig(context, configFilePath);

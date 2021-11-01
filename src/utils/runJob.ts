@@ -5,6 +5,7 @@ import { getBinaryPath } from '../../node/binary.js';
 import areTerminalsClosed from './areTerminalsClosed';
 import cleanUpCommittedImages from './cleanUpCommittedImages';
 import commitContainer from './commitContainer';
+import convertHomeDirToAbsolute from './convertHomeDirToAbsolute';
 import getConfig from './getConfig';
 import getConfigFilePath from './getConfigFilePath';
 import getCheckoutDirectoryBasename from './getCheckoutDirectoryBasename';
@@ -69,6 +70,7 @@ export default async function runJob(
       ? attachWorkspaceSteps[0].attach_workspace.at
       : '';
 
+  const homeDir = await getHomeDirectory(jobImage);
   const projectDirectory = await getProjectDirectory(jobImage, terminal);
   const attachWorkspace =
     '.' === initialAttachWorkspace || !initialAttachWorkspace
@@ -76,11 +78,14 @@ export default async function runJob(
       : initialAttachWorkspace;
 
   const volume = checkoutJobs.includes(jobName)
-    ? `${localVolume}:${initialAttachWorkspace || STORAGE_DIRECTORY}`
+    ? `${localVolume}:${convertHomeDirToAbsolute(
+        initialAttachWorkspace || STORAGE_DIRECTORY,
+        homeDir
+      )}`
     : `${localVolume}/${await getCheckoutDirectoryBasename(
         processFilePath,
         terminal
-      )}:${attachWorkspace}`;
+      )}:${convertHomeDirToAbsolute(attachWorkspace, homeDir)}`;
 
   if (!fs.existsSync(localVolume)) {
     fs.mkdirSync(localVolume, { recursive: true });
@@ -109,7 +114,6 @@ export default async function runJob(
     ),
     cwd: repoPath,
   });
-  const workingDirectory = await getHomeDirectory(jobImage);
 
   // Once the container is available, start an interactive bash session within the container.
   debuggingTerminal.sendText(`
@@ -120,7 +124,7 @@ export default async function runJob(
       sleep 1
     done
     echo "Inside the job's container:"
-    docker exec -it --workdir ${workingDirectory} $(get_running_container ${jobImage}) /bin/sh || exit 1
+    docker exec -it --workdir ${homeDir} $(get_running_container ${jobImage}) /bin/sh || exit 1
   `);
 
   let finalTerminal: vscode.Terminal | undefined;
@@ -156,7 +160,7 @@ export default async function runJob(
     );
     // @todo: handle if debuggingTerminal exits because terminal hasn't started the container.
     finalTerminal.sendText(
-      `docker run -it --rm -v ${volume} --workdir ${workingDirectory} ${latestCommmittedImageId}`
+      `docker run -it --rm -v ${volume} --workdir ${homeDir} ${latestCommmittedImageId}`
     );
     finalTerminal.show();
 

@@ -72,6 +72,10 @@
         "icon": "$(extensions-refresh)"
       },
       {
+        "command": "local-ci.debug.repo",
+        "title": "Run Jobs Locally (Local CI)"
+      },
+      {
         "command": "localCiJobs.refresh",
         "title": "Refresh Job List",
         "icon": "$(refresh)"
@@ -130,6 +134,12 @@
           "command": "localCiLicense.refresh",
           "when": "view == localCiLicense",
           "group": "navigation"
+        }
+      ],
+      "explorer/context": [
+        {
+            "when": "resourcePath =~ /.circleci/config.yml/",
+            "command": "local-ci.debug.repo"
         }
       ],
       "view/item/context": [
