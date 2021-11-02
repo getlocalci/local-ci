@@ -45,7 +45,7 @@ export default async function runJob(
   terminal.show();
 
   const processFilePath = getProcessFilePath(configFilePath);
-  const checkoutJobs = getCheckoutJobs(processFilePath);
+  const checkoutJobs = getCheckoutJobs(configFilePath);
   const localVolume = getLocalVolumePath(configFilePath);
 
   // If this is the only checkout job, rm the entire local volume directory.
@@ -92,13 +92,22 @@ export default async function runJob(
   );
 
   showMainTerminalHelperMessages();
-  const committedImageName = `${COMMITTED_IMAGE_NAMESPACE}/${jobName}`;
-  commitContainer(jobImage, committedImageName);
+  const committedImageRepo = `${COMMITTED_IMAGE_NAMESPACE}/${jobName}`;
 
-  const intervalId = setInterval(
-    () => commitContainer(jobImage, committedImageName),
-    1000
+  let previousCommittedImage = '';
+  previousCommittedImage = commitContainer(
+    jobImage,
+    committedImageRepo,
+    previousCommittedImage
   );
+
+  const intervalId = setInterval(() => {
+    previousCommittedImage = commitContainer(
+      jobImage,
+      committedImageRepo,
+      previousCommittedImage
+    );
+  }, 1000);
 
   const debuggingTerminal = vscode.window.createTerminal({
     name: getDebuggingTerminalName(jobName),
@@ -152,7 +161,7 @@ export default async function runJob(
     );
 
     const latestCommmittedImageId = await getLatestCommittedImage(
-      committedImageName
+      committedImageRepo
     );
     // @todo: handle if debuggingTerminal exits because terminal hasn't started the container.
     finalTerminal.sendText(
@@ -162,14 +171,14 @@ export default async function runJob(
 
     setTimeout(() => {
       showFinalTerminalHelperMessages(latestCommmittedImageId);
-      cleanUpCommittedImages(committedImageName, latestCommmittedImageId);
+      cleanUpCommittedImages(committedImageRepo, latestCommmittedImageId);
     }, 4000);
   });
 
   vscode.window.onDidCloseTerminal(() => {
     if (areTerminalsClosed(terminal, debuggingTerminal, finalTerminal)) {
       clearInterval(intervalId);
-      cleanUpCommittedImages(committedImageName);
+      cleanUpCommittedImages(committedImageRepo);
     }
   });
 

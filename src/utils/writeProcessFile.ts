@@ -10,23 +10,24 @@ import { CONTAINER_STORAGE_DIRECTORY } from '../constants';
 // Rewrites the process.yml file.
 // When there's a persist_to_workspace value in a checkout job, this copies
 // the files to the volume so they can persist between jobs.
-export default function writeProcessFile(
+export default async function writeProcessFile(
   processedConfig: string,
-  processFilePath: string
-): void {
-  const checkoutJobs = getCheckoutJobs(processFilePath);
+  processFilePath: string,
+  configFilePath: string
+): Promise<void> {
+  const checkoutJobs = getCheckoutJobs(configFilePath);
   const config = getConfig(processedConfig);
 
   if (!config) {
-    return;
+    return Promise.resolve();
   }
 
   if (!checkoutJobs.length) {
     fs.writeFile(processFilePath, yaml.dump(config), () => '');
-    return;
+    return Promise.resolve();
   }
 
-  Promise.all(
+  return Promise.all(
     checkoutJobs.map(async (checkoutJob: string) => {
       if (!config || !config.jobs[checkoutJob]?.steps) {
         return;
@@ -71,6 +72,9 @@ export default function writeProcessFile(
       );
     })
   ).then(() => {
-    fs.writeFile(processFilePath, yaml.dump(config), () => '');
+    if (!fs.existsSync(path.dirname(processFilePath))) {
+      fs.mkdirSync(path.dirname(processFilePath), { recursive: true });
+    }
+    fs.writeFileSync(processFilePath, yaml.dump(config));
   });
 }

@@ -40,9 +40,10 @@ export default class JobProvider
 
   async getChildren(): Promise<vscode.TreeItem[]> {
     const configFilePath = await getConfigFilePath(this.context);
-    writeProcessFile(
+    await writeProcessFile(
       getProcessedConfig(configFilePath),
-      getProcessFilePath(configFilePath)
+      getProcessFilePath(configFilePath),
+      configFilePath
     );
 
     const shouldEnableExtension =

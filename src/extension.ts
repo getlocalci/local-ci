@@ -151,9 +151,10 @@ export function activate(context: vscode.ExtensionContext): void {
     ),
     vscode.commands.registerCommand('local-ci.runWalkthroughJob', async () => {
       const configFilePath = await getConfigFilePath(context);
-      writeProcessFile(
+      await writeProcessFile(
         getProcessedConfig(configFilePath),
-        getProcessFilePath(configFilePath)
+        getProcessFilePath(configFilePath),
+        configFilePath
       );
 
       const checkoutJobs = getCheckoutJobs(getProcessFilePath(configFilePath));
