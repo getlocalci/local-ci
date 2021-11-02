@@ -8,7 +8,6 @@ import commitContainer from './commitContainer';
 import convertHomeDirToAbsolute from './convertHomeDirToAbsolute';
 import getConfigFilePath from './getConfigFilePath';
 import getConfigFromPath from './getConfigFromPath';
-import getCheckoutDirectoryBasename from './getCheckoutDirectoryBasename';
 import getCheckoutJobs from './getCheckoutJobs';
 import getDebuggingTerminalName from './getDebuggingTerminalName';
 import getFinalDebuggingTerminalName from './getFinalTerminalName';
@@ -82,10 +81,7 @@ export default async function runJob(
         initialAttachWorkspace || CONTAINER_STORAGE_DIRECTORY,
         homeDir
       )}`
-    : `${path.join(
-        localVolume,
-        await getCheckoutDirectoryBasename(processFilePath, terminal)
-      )}:${convertHomeDirToAbsolute(attachWorkspace, homeDir)}`;
+    : `${localVolume}:${convertHomeDirToAbsolute(attachWorkspace, homeDir)}`;
 
   if (!fs.existsSync(localVolume)) {
     fs.mkdirSync(localVolume, { recursive: true });
