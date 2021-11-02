@@ -3,7 +3,7 @@ import Command from './Command';
 import Job from './Job';
 import Warning from './Warning';
 import getJobs from '../utils/getJobs';
-import processConfig from '../utils/processConfig';
+import getProcessedConfig from '../utils/getProcessedConfig';
 import {
   GET_LICENSE_COMMAND,
   ENTER_LICENSE_COMMAND,
@@ -40,8 +40,11 @@ export default class JobProvider
 
   async getChildren(): Promise<vscode.TreeItem[]> {
     const configFilePath = await getConfigFilePath(this.context);
-    processConfig(this.context, configFilePath);
-    writeProcessFile(configFilePath);
+    await writeProcessFile(
+      getProcessedConfig(configFilePath),
+      getProcessFilePath(configFilePath),
+      configFilePath
+    );
 
     const shouldEnableExtension =
       (await isLicenseValid(this.context)) ||

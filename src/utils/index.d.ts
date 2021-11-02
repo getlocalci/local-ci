@@ -5,7 +5,7 @@ interface CiConfigWithJobs {
   >;
 }
 
-type CiConfig = CiConfigWithJobs | null;
+type CiConfig = CiConfigWithJobs | undefined;
 
 interface ConfigFileQuickPick {
   label: string;

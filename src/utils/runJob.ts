@@ -5,9 +5,9 @@ import { getBinaryPath } from '../../node/binary.js';
 import areTerminalsClosed from './areTerminalsClosed';
 import cleanUpCommittedImages from './cleanUpCommittedImages';
 import commitContainer from './commitContainer';
-import getConfig from './getConfig';
+import convertHomeDirToAbsolute from './convertHomeDirToAbsolute';
 import getConfigFilePath from './getConfigFilePath';
-import getCheckoutDirectoryBasename from './getCheckoutDirectoryBasename';
+import getConfigFromPath from './getConfigFromPath';
 import getCheckoutJobs from './getCheckoutJobs';
 import getDebuggingTerminalName from './getDebuggingTerminalName';
 import getFinalDebuggingTerminalName from './getFinalTerminalName';
@@ -23,7 +23,7 @@ import showFinalTerminalHelperMessages from './showFinalTerminalHelperMessages';
 import {
   COMMITTED_IMAGE_NAMESPACE,
   GET_RUNNING_CONTAINER_FUNCTION,
-  STORAGE_DIRECTORY,
+  CONTAINER_STORAGE_DIRECTORY,
 } from '../constants';
 
 export default async function runJob(
@@ -45,7 +45,7 @@ export default async function runJob(
   terminal.show();
 
   const processFilePath = getProcessFilePath(configFilePath);
-  const checkoutJobs = getCheckoutJobs(processFilePath);
+  const checkoutJobs = getCheckoutJobs(configFilePath);
   const localVolume = getLocalVolumePath(configFilePath);
 
   // If this is the only checkout job, rm the entire local volume directory.
@@ -56,7 +56,7 @@ export default async function runJob(
     fs.rmSync(localVolume, { recursive: true, force: true });
   }
 
-  const config = getConfig(processFilePath);
+  const config = getConfigFromPath(processFilePath);
   const attachWorkspaceSteps = config?.jobs[jobName]?.steps?.length
     ? (config?.jobs[jobName]?.steps as Array<Step>).filter((step) =>
         Boolean(step.attach_workspace)
@@ -69,6 +69,7 @@ export default async function runJob(
       ? attachWorkspaceSteps[0].attach_workspace.at
       : '';
 
+  const homeDir = await getHomeDirectory(jobImage, terminal);
   const projectDirectory = await getProjectDirectory(jobImage, terminal);
   const attachWorkspace =
     '.' === initialAttachWorkspace || !initialAttachWorkspace
@@ -76,11 +77,11 @@ export default async function runJob(
       : initialAttachWorkspace;
 
   const volume = checkoutJobs.includes(jobName)
-    ? `${localVolume}:${initialAttachWorkspace || STORAGE_DIRECTORY}`
-    : `${localVolume}/${await getCheckoutDirectoryBasename(
-        processFilePath,
-        terminal
-      )}:${attachWorkspace}`;
+    ? `${localVolume}:${convertHomeDirToAbsolute(
+        initialAttachWorkspace || CONTAINER_STORAGE_DIRECTORY,
+        homeDir
+      )}`
+    : `${localVolume}:${convertHomeDirToAbsolute(attachWorkspace, homeDir)}`;
 
   if (!fs.existsSync(localVolume)) {
     fs.mkdirSync(localVolume, { recursive: true });
@@ -91,13 +92,21 @@ export default async function runJob(
   );
 
   showMainTerminalHelperMessages();
-  const committedImageName = `${COMMITTED_IMAGE_NAMESPACE}/${jobName}`;
-  commitContainer(jobImage, committedImageName);
+  const committedImageRepo = `${COMMITTED_IMAGE_NAMESPACE}/${jobName}`;
 
-  const intervalId = setInterval(
-    () => commitContainer(jobImage, committedImageName),
-    1000
-  );
+  commitContainer(jobImage, committedImageRepo);
+
+  const commitContainerIntervalId = setInterval(() => {
+    commitContainer(jobImage, committedImageRepo);
+  }, 1000);
+
+  // The committed images take up 1-2 GB each, so remove the stale ones every 10 seconds.
+  const cleanUpImagesIntervalId = setInterval(async () => {
+    cleanUpCommittedImages(
+      committedImageRepo,
+      await getLatestCommittedImage(committedImageRepo)
+    );
+  }, 10000);
 
   const debuggingTerminal = vscode.window.createTerminal({
     name: getDebuggingTerminalName(jobName),
@@ -109,7 +118,6 @@ export default async function runJob(
     ),
     cwd: repoPath,
   });
-  const workingDirectory = await getHomeDirectory(jobImage);
 
   // Once the container is available, start an interactive bash session within the container.
   debuggingTerminal.sendText(`
@@ -120,7 +128,7 @@ export default async function runJob(
       sleep 1
     done
     echo "Inside the job's container:"
-    docker exec -it --workdir ${workingDirectory} $(get_running_container ${jobImage}) /bin/sh || exit 1
+    docker exec -it --workdir ${homeDir} $(get_running_container ${jobImage}) /bin/sh || exit 1
   `);
 
   let finalTerminal: vscode.Terminal | undefined;
@@ -132,7 +140,8 @@ export default async function runJob(
       return;
     }
 
-    clearInterval(intervalId);
+    clearInterval(commitContainerIntervalId);
+    clearInterval(cleanUpImagesIntervalId);
     if (finalTerminal || areTerminalsClosed(terminal, debuggingTerminal)) {
       return;
     }
@@ -152,24 +161,24 @@ export default async function runJob(
     );
 
     const latestCommmittedImageId = await getLatestCommittedImage(
-      committedImageName
+      committedImageRepo
     );
     // @todo: handle if debuggingTerminal exits because terminal hasn't started the container.
     finalTerminal.sendText(
-      `docker run -it --rm -v ${volume} --workdir ${workingDirectory} ${latestCommmittedImageId}`
+      `docker run -it --rm -v ${volume} --workdir ${homeDir} ${latestCommmittedImageId}`
     );
     finalTerminal.show();
 
     setTimeout(() => {
       showFinalTerminalHelperMessages(latestCommmittedImageId);
-      cleanUpCommittedImages(committedImageName, latestCommmittedImageId);
+      cleanUpCommittedImages(committedImageRepo, latestCommmittedImageId);
     }, 4000);
   });
 
   vscode.window.onDidCloseTerminal(() => {
     if (areTerminalsClosed(terminal, debuggingTerminal, finalTerminal)) {
-      clearInterval(intervalId);
-      cleanUpCommittedImages(committedImageName);
+      clearInterval(commitContainerIntervalId);
+      cleanUpCommittedImages(committedImageRepo);
     }
   });
 

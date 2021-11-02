@@ -3,7 +3,7 @@ import getSpawnOptions from './getSpawnOptions';
 
 export default function cleanUpCommittedImages(
   imagePattern: string,
-  imageToExclude?: string
+  imageIdToExclude?: string
 ): void {
   cp.spawn(
     '/bin/sh',
@@ -15,7 +15,7 @@ export default function cleanUpCommittedImages(
       }
       LOCAL_CI_IMAGES=$(docker images -q --filter reference="${imagePattern}")
       echo $LOCAL_CI_IMAGES | while read image; do
-        if [[ ${imageToExclude} == $image ]]; then
+        if [[ ${imageIdToExclude} == $image ]]; then
           continue
         fi
         LOCAL_CI_CONTAINERS=$(get_all_containers $image)

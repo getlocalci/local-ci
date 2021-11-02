@@ -18,7 +18,7 @@
   "extensionKind": [
     "workspace"
   ],
-  "qna": "https://github.com/getlocalci/local-ci/issues",
+  "qna": "https://github.com/getlocalci/local-ci/discussions",
   "galleryBanner": {
     "color": "#eff1f3",
     "theme": "light"
@@ -70,6 +70,10 @@
         "command": "local-ci.job.rerun",
         "title": "Rerun Job",
         "icon": "$(extensions-refresh)"
+      },
+      {
+        "command": "local-ci.debug.repo",
+        "title": "Run Jobs Locally (Local CI)"
       },
       {
         "command": "localCiJobs.refresh",
@@ -130,6 +134,12 @@
           "command": "localCiLicense.refresh",
           "when": "view == localCiLicense",
           "group": "navigation"
+        }
+      ],
+      "explorer/context": [
+        {
+            "when": "resourcePath =~ /.circleci/config.yml/",
+            "command": "local-ci.debug.repo"
         }
       ],
       "view/item/context": [

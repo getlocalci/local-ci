@@ -37,13 +37,14 @@ export const HELP_URL = 'https://getlocalci.com';
 export const JOB_TREE_VIEW_ID = 'localCiJobs';
 export const LICENSE_ITEM_ID = 43;
 export const LICENSE_KEY = 'local-ci.license.key';
-export const LICENSE_VALIDITY = 'local-ci.license.validity.cached';
+export const LICENSE_VALIDITY = 'local-ci.license.validity';
 export const LICENSE_VALIDITY_CACHE_EXPIRATION =
   'local-ci.license.cache.expiration';
-export const STORAGE_DIRECTORY = '/tmp/local-ci';
 export const TRIAL_LENGTH_IN_MILLISECONDS = 172800000; // 2 days.
 export const TRIAL_STARTED_TIMESTAMP =
   'local-ci.license.trial-started.timestamp';
-export const HOST_TMP_PATH = '/tmp/local-ci'; // Also hard-coded in node/uninstall.js, change that if this changes.
-export const PROCESS_FILE_DIRECTORY = `${HOST_TMP_PATH}/process`;
+export const CONTAINER_STORAGE_DIRECTORY = '/tmp/local-ci';
+export const HOST_TMP_DIRECTORY = '/tmp/local-ci'; // Also hard-coded in node/uninstall.js, change that if this changes.
+export const PROCESS_FILE_DIRECTORY = `${HOST_TMP_DIRECTORY}/process`;
+export const LOCAL_VOLUME_DIRECTORY = `${HOST_TMP_DIRECTORY}/volume`;
 export const RUN_JOB_COMMAND = 'local-ci.job.run';

@@ -20,11 +20,12 @@ import showLicenseInput from './utils/showLicenseInput';
 import cleanUpCommittedImages from './utils/cleanUpCommittedImages';
 import getCheckoutJobs from './utils/getCheckoutJobs';
 import getAllConfigFilePaths from './utils/getAllConfigFilePaths';
-import processConfig from './utils/processConfig';
+import getConfigFilePath from './utils/getConfigFilePath';
 import getDebuggingTerminalName from './utils/getDebuggingTerminalName';
 import getFinalTerminalName from './utils/getFinalTerminalName';
 import getProcessFilePath from './utils/getProcessFilePath';
-import getConfigFilePath from './utils/getConfigFilePath';
+import getProcessedConfig from './utils/getProcessedConfig';
+import writeProcessFile from './utils/writeProcessFile';
 
 export function activate(context: vscode.ExtensionContext): void {
   const jobProvider = new JobProvider(context);
@@ -133,9 +134,29 @@ export function activate(context: vscode.ExtensionContext): void {
       disposeTerminalsForJob(jobName);
       runJob(context, jobName);
     }),
+    vscode.commands.registerCommand(
+      'local-ci.debug.repo',
+      (clickedFile: vscode.Uri) => {
+        if (clickedFile.fsPath) {
+          context.globalState
+            .update(SELECTED_CONFIG_PATH, clickedFile.fsPath)
+            .then(() => {
+              jobProvider.refresh();
+              vscode.commands.executeCommand(
+                'workbench.view.extension.localCiDebugger'
+              );
+            });
+        }
+      }
+    ),
     vscode.commands.registerCommand('local-ci.runWalkthroughJob', async () => {
       const configFilePath = await getConfigFilePath(context);
-      processConfig(context, configFilePath);
+      await writeProcessFile(
+        getProcessedConfig(configFilePath),
+        getProcessFilePath(configFilePath),
+        configFilePath
+      );
+
       const checkoutJobs = getCheckoutJobs(getProcessFilePath(configFilePath));
       if (!checkoutJobs.length) {
         return;

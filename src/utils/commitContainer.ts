@@ -7,15 +7,16 @@ import { GET_RUNNING_CONTAINER_FUNCTION } from '../constants';
 // So this creates an alternative container for shell access.
 export default function commitContainer(
   dockerImage: string,
-  newImageName: string
+  newImageRepo: string
 ): void {
+  const newImageRepoAndTag = `${newImageRepo}:${new Date().getTime()}`;
   cp.spawn(
     '/bin/sh',
     [
       '-c',
       `${GET_RUNNING_CONTAINER_FUNCTION}
       if [[ -n $(get_running_container ${dockerImage}) ]]; then
-        docker commit --pause=false $(get_running_container ${dockerImage}) ${newImageName}:${new Date().getTime()}
+        docker commit --pause=false $(get_running_container ${dockerImage}) ${newImageRepoAndTag}
       fi`,
     ],
     getSpawnOptions()
