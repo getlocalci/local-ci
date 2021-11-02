@@ -94,20 +94,19 @@ export default async function runJob(
   showMainTerminalHelperMessages();
   const committedImageRepo = `${COMMITTED_IMAGE_NAMESPACE}/${jobName}`;
 
-  let previousCommittedImage = '';
-  previousCommittedImage = commitContainer(
-    jobImage,
-    committedImageRepo,
-    previousCommittedImage
-  );
+  commitContainer(jobImage, committedImageRepo);
 
-  const intervalId = setInterval(() => {
-    previousCommittedImage = commitContainer(
-      jobImage,
-      committedImageRepo,
-      previousCommittedImage
-    );
+  const commitContainerIntervalId = setInterval(() => {
+    commitContainer(jobImage, committedImageRepo);
   }, 1000);
+
+  // The committed images take up 1-2 GB each, so remove the stale ones every 10 seconds.
+  const cleanUpImagesIntervalId = setInterval(async () => {
+    cleanUpCommittedImages(
+      committedImageRepo,
+      await getLatestCommittedImage(committedImageRepo)
+    );
+  }, 10000);
 
   const debuggingTerminal = vscode.window.createTerminal({
     name: getDebuggingTerminalName(jobName),
@@ -141,7 +140,8 @@ export default async function runJob(
       return;
     }
 
-    clearInterval(intervalId);
+    clearInterval(commitContainerIntervalId);
+    clearInterval(cleanUpImagesIntervalId);
     if (finalTerminal || areTerminalsClosed(terminal, debuggingTerminal)) {
       return;
     }
@@ -177,7 +177,7 @@ export default async function runJob(
 
   vscode.window.onDidCloseTerminal(() => {
     if (areTerminalsClosed(terminal, debuggingTerminal, finalTerminal)) {
-      clearInterval(intervalId);
+      clearInterval(commitContainerIntervalId);
       cleanUpCommittedImages(committedImageRepo);
     }
   });
