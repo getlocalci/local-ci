@@ -23,7 +23,6 @@ import getAllConfigFilePaths from './utils/getAllConfigFilePaths';
 import getConfigFilePath from './utils/getConfigFilePath';
 import getDebuggingTerminalName from './utils/getDebuggingTerminalName';
 import getFinalTerminalName from './utils/getFinalTerminalName';
-import getLocalVolumePath from './utils/getLocalVolumePath';
 import getProcessFilePath from './utils/getProcessFilePath';
 import getProcessedConfig from './utils/getProcessedConfig';
 import writeProcessFile from './utils/writeProcessFile';
@@ -153,9 +152,8 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand('local-ci.runWalkthroughJob', async () => {
       const configFilePath = await getConfigFilePath(context);
       writeProcessFile(
-        await getProcessedConfig(context, configFilePath),
-        getProcessFilePath(configFilePath),
-        getLocalVolumePath(configFilePath)
+        getProcessedConfig(configFilePath),
+        getProcessFilePath(configFilePath)
       );
 
       const checkoutJobs = getCheckoutJobs(getProcessFilePath(configFilePath));

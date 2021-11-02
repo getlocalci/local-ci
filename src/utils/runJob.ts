@@ -6,8 +6,8 @@ import areTerminalsClosed from './areTerminalsClosed';
 import cleanUpCommittedImages from './cleanUpCommittedImages';
 import commitContainer from './commitContainer';
 import convertHomeDirToAbsolute from './convertHomeDirToAbsolute';
-import getConfig from './getConfig';
 import getConfigFilePath from './getConfigFilePath';
+import getConfigFromPath from './getConfigFromPath';
 import getCheckoutDirectoryBasename from './getCheckoutDirectoryBasename';
 import getCheckoutJobs from './getCheckoutJobs';
 import getDebuggingTerminalName from './getDebuggingTerminalName';
@@ -57,7 +57,7 @@ export default async function runJob(
     fs.rmSync(localVolume, { recursive: true, force: true });
   }
 
-  const config = getConfig(processFilePath);
+  const config = getConfigFromPath(processFilePath);
   const attachWorkspaceSteps = config?.jobs[jobName]?.steps?.length
     ? (config?.jobs[jobName]?.steps as Array<Step>).filter((step) =>
         Boolean(step.attach_workspace)
@@ -70,7 +70,7 @@ export default async function runJob(
       ? attachWorkspaceSteps[0].attach_workspace.at
       : '';
 
-  const homeDir = await getHomeDirectory(jobImage);
+  const homeDir = await getHomeDirectory(jobImage, terminal);
   const projectDirectory = await getProjectDirectory(jobImage, terminal);
   const attachWorkspace =
     '.' === initialAttachWorkspace || !initialAttachWorkspace
@@ -82,9 +82,9 @@ export default async function runJob(
         initialAttachWorkspace || CONTAINER_STORAGE_DIRECTORY,
         homeDir
       )}`
-    : `${localVolume}/${await getCheckoutDirectoryBasename(
-        processFilePath,
-        terminal
+    : `${path.join(
+        localVolume,
+        await getCheckoutDirectoryBasename(processFilePath, terminal)
       )}:${convertHomeDirToAbsolute(attachWorkspace, homeDir)}`;
 
   if (!fs.existsSync(localVolume)) {

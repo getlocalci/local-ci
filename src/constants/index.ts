@@ -40,10 +40,10 @@ export const LICENSE_KEY = 'local-ci.license.key';
 export const LICENSE_VALIDITY = 'local-ci.license.validity';
 export const LICENSE_VALIDITY_CACHE_EXPIRATION =
   'local-ci.license.cache.expiration';
-export const CONTAINER_STORAGE_DIRECTORY = '/tmp/local-ci';
 export const TRIAL_LENGTH_IN_MILLISECONDS = 172800000; // 2 days.
 export const TRIAL_STARTED_TIMESTAMP =
   'local-ci.license.trial-started.timestamp';
+export const CONTAINER_STORAGE_DIRECTORY = '/tmp/local-ci';
 export const HOST_TMP_DIRECTORY = '/tmp/local-ci'; // Also hard-coded in node/uninstall.js, change that if this changes.
 export const PROCESS_FILE_DIRECTORY = `${HOST_TMP_DIRECTORY}/process`;
 export const LOCAL_VOLUME_DIRECTORY = `${HOST_TMP_DIRECTORY}/volume`;

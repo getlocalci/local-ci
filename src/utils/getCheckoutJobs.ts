@@ -1,8 +1,8 @@
-import getConfig from './getConfig';
+import getConfigFromPath from './getConfigFromPath';
 
 // Gets the names of the jobs that have a 'checkout' step.
-export default function getCheckoutJobs(inputFile: string): string[] {
-  const config = getConfig(inputFile);
+export default function getCheckoutJobs(configFilePath: string): string[] {
+  const config = getConfigFromPath(configFilePath);
 
   return Object.keys(config?.jobs ?? []).filter((jobName) =>
     config?.jobs[jobName]?.steps?.some(

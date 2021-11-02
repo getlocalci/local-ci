@@ -17,7 +17,6 @@ import isDockerRunning from '../utils/isDockerRunning';
 import isLicenseValid from '../utils/isLicenseValid';
 import isTrialExpired from '../utils/isTrialExpired';
 import writeProcessFile from '../utils/writeProcessFile';
-import getLocalVolumePath from '../utils/getLocalVolumePath';
 
 export default class JobProvider
   implements vscode.TreeDataProvider<vscode.TreeItem>
@@ -42,9 +41,8 @@ export default class JobProvider
   async getChildren(): Promise<vscode.TreeItem[]> {
     const configFilePath = await getConfigFilePath(this.context);
     writeProcessFile(
-      await getProcessedConfig(this.context, configFilePath),
-      getProcessFilePath(configFilePath),
-      getLocalVolumePath(configFilePath)
+      getProcessedConfig(configFilePath),
+      getProcessFilePath(configFilePath)
     );
 
     const shouldEnableExtension =
