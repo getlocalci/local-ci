@@ -1,4 +1,4 @@
-interface Step {
+interface FullStep {
   checkout?: Record<string, unknown> | string;
   // eslint-disable-next-line @typescript-eslint/naming-convention
   attach_workspace?: {
@@ -14,6 +14,8 @@ interface Step {
   };
 }
 
+type Step = FullStep | 'checkout' | string;
+
 interface Job {
   docker?: Array<Record<string, string>>;
   steps?: Array<Step>;
@@ -22,7 +24,7 @@ interface Job {
   machine?: { image?: string };
 }
 
-type RunningTerminal = (number | undefined);
+type RunningTerminal = number | undefined;
 interface RunningTerminals {
   [key: string]: RunningTerminal[]
 }

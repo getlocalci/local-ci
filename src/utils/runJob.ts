@@ -57,16 +57,16 @@ export default async function runJob(
   }
 
   const config = getConfigFromPath(processFilePath);
-  const attachWorkspaceSteps = config?.jobs[jobName]?.steps?.length
-    ? (config?.jobs[jobName]?.steps as Array<Step>).filter((step) =>
-        Boolean(step.attach_workspace)
+  const attachWorkspaceSteps: FullStep[] = config?.jobs[jobName]?.steps?.length
+    ? (config?.jobs[jobName]?.steps as Array<FullStep>).filter((step) =>
+        Boolean(step?.attach_workspace)
       )
     : [];
 
   const jobImage = getImageFromJob(config?.jobs[jobName]);
   const initialAttachWorkspace =
     attachWorkspaceSteps.length && attachWorkspaceSteps[0]?.attach_workspace?.at
-      ? attachWorkspaceSteps[0].attach_workspace.at
+      ? attachWorkspaceSteps[0]?.attach_workspace.at
       : '';
 
   const homeDir = await getHomeDirectory(jobImage, terminal);

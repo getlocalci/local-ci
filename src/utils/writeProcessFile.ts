@@ -33,12 +33,12 @@ export default async function writeProcessFile(
     // @todo: handle other jobs that persist_to_workspace, like https://github.com/kefranabg/bento-starter/blob/c5ec78a033d3915d700bd6463594508098d46448/.circleci/config.yml#L81
     config.jobs[checkoutJob].steps = config.jobs[checkoutJob].steps?.map(
       (step: Step) => {
-        if (!step?.persist_to_workspace) {
+        if (typeof step === 'string' || !step?.persist_to_workspace) {
           return step;
         }
 
         const persistToWorkspacePath = step?.persist_to_workspace?.paths?.length
-          ? step.persist_to_workspace.paths[0]
+          ? step?.persist_to_workspace.paths[0]
           : '';
 
         const pathBase =
