@@ -32,7 +32,7 @@ jobs:
           command: |
             mkdir -p artifacts
             npm run visx --- --out artifacts/
-            tar -cvzf artifacts.tar.gz artifacts
+            zip -r artifacts.zip artifacts
       - store_artifacts:
           path: ~/project/artifacts.tar.gz
   deploy:
