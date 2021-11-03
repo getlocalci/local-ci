@@ -96,7 +96,7 @@ export default async function runJob(
 
   commitContainer(jobImage, committedImageRepo);
 
-  const intervalIdCommitContainer = setInterval(() => {
+  const intervalId = setInterval(() => {
     commitContainer(jobImage, committedImageRepo);
   }, 2000);
 
@@ -132,7 +132,7 @@ export default async function runJob(
       return;
     }
 
-    clearInterval(intervalIdCommitContainer);
+    clearInterval(intervalId);
     if (finalTerminal || areTerminalsClosed(terminal, debuggingTerminal)) {
       return;
     }
@@ -169,7 +169,7 @@ export default async function runJob(
 
   vscode.window.onDidCloseTerminal(() => {
     if (areTerminalsClosed(terminal, debuggingTerminal, finalTerminal)) {
-      clearInterval(intervalIdCommitContainer);
+      clearInterval(intervalId);
       cleanUpCommittedImages(committedImageRepo);
     }
   });

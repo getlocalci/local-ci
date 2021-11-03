@@ -33,8 +33,8 @@ export default function getHomeDirectory(
     });
 
     stderr.on('data', (data) => {
-      if (terminal && data?.toString) {
-        terminal?.sendText(`echo "${data.toString()}"`);
+      if (terminal?.sendText && data?.toString) {
+        terminal.sendText(`echo "${data.toString()}"`);
       }
     });
   });
