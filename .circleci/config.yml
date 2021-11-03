@@ -34,7 +34,7 @@ jobs:
             npm run visx --- --out artifacts/
             zip -r artifacts.zip artifacts
       - store_artifacts:
-          path: ~/project/artifacts.tar.gz
+          path: ~/project/artifacts.zip
   deploy:
     executor:
       name: node
