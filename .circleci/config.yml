@@ -19,22 +19,6 @@ jobs:
       - checkout
       - node/install-packages
       - run: npm test
-  create-artifact:
-    executor:
-      name: node
-    steps:
-      - browser-tools/install-browser-tools
-      - node/install-npm
-      - checkout
-      - node/install-packages
-      - run:
-          name: Creating a .visx artifact
-          command: |
-            mkdir -p artifacts
-            npm run visx --- --out artifacts/
-            zip -r artifacts.zip artifacts
-      - store_artifacts:
-          path: ~/project/artifacts.zip
   deploy:
     executor:
       name: node
@@ -48,7 +32,6 @@ workflows:
   test:
     jobs:
       - test-lint
-      - create-artifact
       - deploy:
           requires:
             - test-lint
