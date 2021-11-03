@@ -4,7 +4,7 @@ export default function getImagefromJob(job: Job | undefined): string {
   }
 
   if (job?.machine?.image) {
-    return job.machine.image;
+    return job.machine.image.trim();
   }
 
   return '';

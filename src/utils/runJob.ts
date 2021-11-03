@@ -137,33 +137,34 @@ export default async function runJob(
       return;
     }
 
-    finalTerminal = vscode.window.createTerminal({
-      name: getFinalDebuggingTerminalName(jobName),
-      message: 'Debug the final state of the container',
-      iconPath: vscode.Uri.joinPath(
-        context.extensionUri,
-        'resources',
-        'logo.svg'
-      ),
-      cwd: repoPath,
-    });
-    finalTerminal.sendText(
-      `echo "Inside a similar container after the job's container exited: \n"`
-    );
-
     const latestCommmittedImageId = await getLatestCommittedImage(
       committedImageRepo
     );
-    // @todo: handle if debuggingTerminal exits because terminal hasn't started the container.
-    finalTerminal.sendText(
-      `docker run -it --rm -v ${volume} --workdir ${homeDir} ${latestCommmittedImageId}`
-    );
-    finalTerminal.show();
 
     setTimeout(() => {
       showFinalTerminalHelperMessages(latestCommmittedImageId);
       cleanUpCommittedImages(committedImageRepo, latestCommmittedImageId);
     }, 4000);
+
+    if (latestCommmittedImageId) {
+      finalTerminal = vscode.window.createTerminal({
+        name: getFinalDebuggingTerminalName(jobName),
+        message: 'Debug the final state of the container',
+        iconPath: vscode.Uri.joinPath(
+          context.extensionUri,
+          'resources',
+          'logo.svg'
+        ),
+        cwd: repoPath,
+      });
+
+      // @todo: handle if debuggingTerminal exits because terminal hasn't started the container.
+      finalTerminal.sendText(
+        `echo "Inside a similar container after the job's container exited: \n"
+        docker run -it --rm -v ${volume} --workdir ${homeDir} ${latestCommmittedImageId}`
+      );
+      finalTerminal.show();
+    }
   });
 
   vscode.window.onDidCloseTerminal(() => {
