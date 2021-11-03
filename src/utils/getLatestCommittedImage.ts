@@ -8,9 +8,12 @@ export default function getLatestCommittedImage(
     '/bin/sh',
     [
       '-c',
-      `docker images --filter reference=${committedImageName} --format "{{.ID}} {{.Tag}}" | sort -k 2 -h | tail -n1 | awk '{print $1}'`,
+      `docker images ${committedImageName} --format "{{.ID}} {{.Tag}}" | sort -k 2 -h | tail -n1 | awk '{print $1}'`,
     ],
-    getSpawnOptions()
+    {
+      ...getSpawnOptions(),
+      timeout: 5000,
+    }
   );
 
   return new Promise((resolve, reject) => {

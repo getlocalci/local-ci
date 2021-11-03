@@ -45,7 +45,7 @@ export default async function runJob(
   terminal.show();
 
   const processFilePath = getProcessFilePath(configFilePath);
-  const checkoutJobs = getCheckoutJobs(configFilePath);
+  const checkoutJobs = getCheckoutJobs(getConfigFromPath(processFilePath));
   const localVolume = getLocalVolumePath(configFilePath);
 
   // If this is the only checkout job, rm the entire local volume directory.
@@ -96,17 +96,9 @@ export default async function runJob(
 
   commitContainer(jobImage, committedImageRepo);
 
-  const commitContainerIntervalId = setInterval(() => {
+  const intervalIdCommitContainer = setInterval(() => {
     commitContainer(jobImage, committedImageRepo);
-  }, 1000);
-
-  // The committed images take up 1-2 GB each, so remove the stale ones every 10 seconds.
-  const cleanUpImagesIntervalId = setInterval(async () => {
-    cleanUpCommittedImages(
-      committedImageRepo,
-      await getLatestCommittedImage(committedImageRepo)
-    );
-  }, 10000);
+  }, 2000);
 
   const debuggingTerminal = vscode.window.createTerminal({
     name: getDebuggingTerminalName(jobName),
@@ -140,8 +132,7 @@ export default async function runJob(
       return;
     }
 
-    clearInterval(commitContainerIntervalId);
-    clearInterval(cleanUpImagesIntervalId);
+    clearInterval(intervalIdCommitContainer);
     if (finalTerminal || areTerminalsClosed(terminal, debuggingTerminal)) {
       return;
     }
@@ -177,7 +168,7 @@ export default async function runJob(
 
   vscode.window.onDidCloseTerminal(() => {
     if (areTerminalsClosed(terminal, debuggingTerminal, finalTerminal)) {
-      clearInterval(commitContainerIntervalId);
+      clearInterval(intervalIdCommitContainer);
       cleanUpCommittedImages(committedImageRepo);
     }
   });

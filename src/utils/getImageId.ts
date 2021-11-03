@@ -2,6 +2,7 @@ import * as cp from 'child_process';
 import getImageWithoutTag from './getImageWithoutTag';
 import getSpawnOptions from './getSpawnOptions';
 
+// @todo: this might have timing issues.
 function imageQuery(imageName: string): string {
   const { stdout: imageQuery } = cp.spawnSync(
     'docker',

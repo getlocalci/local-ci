@@ -19,6 +19,7 @@ interface Job {
   steps?: Array<Step>;
   // eslint-disable-next-line @typescript-eslint/naming-convention
   working_directory?: string;
+  machine?: { image?: string };
 }
 
 type RunningTerminal = (number | undefined);
