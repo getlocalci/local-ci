@@ -29,10 +29,10 @@ jobs:
           command: |
             mkdir -p artifacts
             npm ci
-            npm run visx --- --out artifacts/local-ci
-            tar -cvzf artifacts/local-ci
+            npm run visx --- --out artifacts/
+            zip -r artifacts.zip artifacts
       - store_artifacts:
-          path: ~/project/artifacts/local-ci-1.0.0.vsix
+          path: ~/project/artifacts.zip
   deploy:
     executor:
       name: node
