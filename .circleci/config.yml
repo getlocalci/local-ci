@@ -25,14 +25,14 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Storing a .visx as an artifact
+          name: Creating a .visx artifact
           command: |
             mkdir -p artifacts
             npm ci
             npm run visx --- --out artifacts/
-            zip -r artifacts.zip artifacts
+            tar -cvzf artifacts.tar artifacts
       - store_artifacts:
-          path: ~/project/artifacts.zip
+          path: ~/project/artifacts.tar
   deploy:
     executor:
       name: node
