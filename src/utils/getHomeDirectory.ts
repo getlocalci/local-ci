@@ -8,7 +8,7 @@ export default function getHomeDirectory(
   terminal?: vscode.Terminal
 ): Promise<string> {
   const defaultHomeDir = '/home/circleci';
-  const { stdout: homeDir, stderr } = cp.spawn(
+  const { stdout, stderr } = cp.spawn(
     'docker',
     [
       'run',
@@ -28,13 +28,13 @@ export default function getHomeDirectory(
   );
 
   return new Promise((resolve) => {
-    homeDir.on('data', (data) => {
+    stdout.on('data', (data) => {
       resolve(data?.toString ? data.toString().trim() : defaultHomeDir);
     });
 
     stderr.on('data', (data) => {
-      if (data?.toString && terminal) {
-        resolve(defaultHomeDir);
+      if (terminal && data?.toString) {
+        terminal?.sendText(`echo "${data.toString()}"`);
       }
     });
   });
