@@ -31,7 +31,7 @@ jobs:
             npm ci
             npm run visx --- --out artifacts/
       - store_artifacts:
-          path: ~/project/artifacts/local-ci*.vsix
+          path: ~/project/artifacts/local-ci-1.0.0.vsix
   deploy:
     executor:
       name: node
