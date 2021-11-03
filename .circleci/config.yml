@@ -31,7 +31,6 @@ jobs:
           name: Creating a .visx artifact
           command: |
             mkdir -p artifacts
-            npm ci
             npm run visx --- --out artifacts/
             tar -cvzf artifacts.tar artifacts
       - store_artifacts:
