@@ -9,16 +9,12 @@ export default function cleanUpCommittedImages(
     '/bin/sh',
     [
       '-c',
-      `get_all_containers() {
-        IMAGE=$1
-        docker ps --filter ancestor=$IMAGE -q
-      }
-      LOCAL_CI_IMAGES=$(docker images -q --filter reference="${imagePattern}")
+      `LOCAL_CI_IMAGES=$(docker images -q --filter reference="${imagePattern}")
       echo $LOCAL_CI_IMAGES | while read image; do
         if [[ ${imageIdToExclude} == $image ]]; then
           continue
         fi
-        LOCAL_CI_CONTAINERS=$(get_all_containers $image)
+        LOCAL_CI_CONTAINERS=$(docker ps --filter ancestor=$image -q)
         if [[ -n $LOCAL_CI_CONTAINERS ]]; then
           docker stop $LOCAL_CI_CONTAINERS
           docker rm $LOCAL_CI_CONTAINERS

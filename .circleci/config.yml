@@ -19,19 +19,6 @@ jobs:
       - checkout
       - node/install-packages
       - run: npm test
-  build-artifact:
-    executor:
-      name: node
-    steps:
-      - checkout
-      - run:
-          name: Storing a .visx as an artifact
-          command: |
-            mkdir -p artifacts
-            npm ci
-            npm run visx --- --out artifacts/
-      - store_artifacts:
-          path: ~/project/artifacts
   deploy:
     executor:
       name: node
@@ -45,7 +32,6 @@ workflows:
   test:
     jobs:
       - test-lint
-      - build-artifact
       - deploy:
           requires:
             - test-lint

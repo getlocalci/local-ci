@@ -7,7 +7,8 @@ export default function getHomeDirectory(
   imageId: string,
   terminal?: vscode.Terminal
 ): Promise<string> {
-  const { stdout: homeDir, stderr } = cp.spawn(
+  const defaultHomeDir = '/home/circleci';
+  const { stdout, stderr } = cp.spawn(
     'docker',
     [
       'run',
@@ -20,31 +21,21 @@ export default function getHomeDirectory(
         echo $HOME
       fi`,
     ],
-    getSpawnOptions()
+    {
+      ...getSpawnOptions(),
+      timeout: 5000,
+    }
   );
 
-  return new Promise((resolve, reject) => {
-    homeDir.on('data', (data) => {
-      resolve(data?.toString ? data.toString().trim() : '/home/circleci');
+  return new Promise((resolve) => {
+    stdout.on('data', (data) => {
+      resolve(data?.toString ? data.toString().trim() : defaultHomeDir);
     });
 
     stderr.on('data', (data) => {
-      if (data?.toString && terminal) {
+      if (terminal?.sendText && data?.toString) {
         terminal.sendText(`echo "${data.toString()}"`);
       }
-    });
-
-    stderr.on('error', (error) => {
-      if (error.message) {
-        vscode.window.showWarningMessage(
-          `Could not find the home directory of the image ${imageId}: ${error.message}`,
-          {
-            detail: 'Could not find the home directory',
-          }
-        );
-      }
-
-      reject('/home');
     });
   });
 }
