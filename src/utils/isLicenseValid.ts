@@ -1,6 +1,6 @@
+import axios from 'axios';
 import * as md5 from 'js-md5';
 import * as vscode from 'vscode';
-import axios from 'axios';
 import {
   LICENSE_ERROR,
   LICENSE_ITEM_ID,

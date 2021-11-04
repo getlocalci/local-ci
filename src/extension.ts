@@ -13,19 +13,19 @@ import {
   RUN_JOB_COMMAND,
   SELECTED_CONFIG_PATH,
 } from './constants';
-import getLicenseInformation from './utils/getLicenseInformation';
 import disposeTerminalsForJob from './utils/disposeTerminalsForJob';
-import runJob from './utils/runJob';
-import showLicenseInput from './utils/showLicenseInput';
+import getLicenseInformation from './utils/getLicenseInformation';
 import cleanUpCommittedImages from './utils/cleanUpCommittedImages';
-import getCheckoutJobs from './utils/getCheckoutJobs';
 import getAllConfigFilePaths from './utils/getAllConfigFilePaths';
+import getCheckoutJobs from './utils/getCheckoutJobs';
 import getConfig from './utils/getConfig';
 import getConfigFilePath from './utils/getConfigFilePath';
 import getDebuggingTerminalName from './utils/getDebuggingTerminalName';
 import getFinalTerminalName from './utils/getFinalTerminalName';
-import getProcessFilePath from './utils/getProcessFilePath';
 import getProcessedConfig from './utils/getProcessedConfig';
+import getProcessFilePath from './utils/getProcessFilePath';
+import runJob from './utils/runJob';
+import showLicenseInput from './utils/showLicenseInput';
 import writeProcessFile from './utils/writeProcessFile';
 
 export function activate(context: vscode.ExtensionContext): void {

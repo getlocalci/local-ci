@@ -5,6 +5,7 @@ import { GET_RUNNING_CONTAINER_FUNCTION } from '../constants';
 // Commits the latest container so that this can open an interactive session when it finishes.
 // Contianers exit when they finish.
 // So this creates an alternative container for shell access.
+// This starts be removing previous images of the same repo, as images can be 1-2 GB each.
 export default function commitContainer(
   dockerImage: string,
   imageRepo: string

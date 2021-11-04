@@ -21,9 +21,13 @@ export default function showFinalTerminalHelperMessages(
       return;
     }
 
-    if (trivialMessages.some((message) => data.toString().includes(message))) {
+    if (
+      trivialMessages.some((trivialMessage) =>
+        data.toString().includes(trivialMessage)
+      )
+    ) {
       vscode.window.showInformationMessage(
-        `👈 If you click return in the terminal, you should be able to debug this`
+        `👈 If you click return in the terminal, you should be able to debug this. This error is for the X11 (graphical) server.`
       );
     }
   });

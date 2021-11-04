@@ -20,11 +20,7 @@ export default function showMainTerminalHelperMessages(): void {
   );
 
   stdout.on('data', (data) => {
-    if (!data?.toString) {
-      return;
-    }
-
-    if (data.toString().includes(memoryMessage)) {
+    if (data?.toString()?.includes(memoryMessage)) {
       vscode.window.showInformationMessage(
         `This may have failed from a lack of Docker memory. You can increase it via Docker Desktop > Preferences > Resources > Advanced > Memory`
       );

@@ -9,7 +9,7 @@ export default function cleanUpCommittedImages(
     '/bin/sh',
     [
       '-c',
-      `LOCAL_CI_IMAGES=$(docker images -q --filter reference="${imagePattern}")
+      `LOCAL_CI_IMAGES=$(docker images -q ${imagePattern})
       echo $LOCAL_CI_IMAGES | while read image; do
         if [[ ${imageIdToExclude} == $image ]]; then
           continue

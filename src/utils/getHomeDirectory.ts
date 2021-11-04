@@ -34,6 +34,7 @@ export default function getHomeDirectory(
 
     stderr.on('data', (data) => {
       if (terminal?.sendText && data?.toString) {
+        // Gives the user feedback in the terminal when pulling the image.
         terminal.sendText(`echo "${data.toString()}"`);
       }
     });

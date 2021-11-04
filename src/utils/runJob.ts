@@ -45,21 +45,20 @@ export default async function runJob(
   terminal.show();
 
   const processFilePath = getProcessFilePath(configFilePath);
-  const checkoutJobs = getCheckoutJobs(getConfigFromPath(processFilePath));
+  const config = getConfigFromPath(processFilePath);
+  const checkoutJobs = getCheckoutJobs(config);
   const localVolume = getLocalVolumePath(configFilePath);
 
   // If this is the only checkout job, rm the entire local volume directory.
   // This job will checkout to that volume, and there could be an error
   // if it attempts to cp to it and the files exist.
-  // @todo: fix ocasional permission denied error for deleting this file.
   if (checkoutJobs.includes(jobName) && 1 === checkoutJobs.length) {
     fs.rmSync(localVolume, { recursive: true, force: true });
   }
 
-  const config = getConfigFromPath(processFilePath);
   const attachWorkspaceSteps: FullStep[] = config?.jobs[jobName]?.steps?.length
-    ? (config?.jobs[jobName]?.steps as Array<FullStep>).filter((step) =>
-        Boolean(step?.attach_workspace)
+    ? (config?.jobs[jobName]?.steps as Array<FullStep>).filter(
+        (step) => !!step?.attach_workspace
       )
     : [];
 
@@ -70,10 +69,9 @@ export default async function runJob(
       : '';
 
   const homeDir = await getHomeDirectory(jobImage, terminal);
-  const projectDirectory = await getProjectDirectory(jobImage, terminal);
   const attachWorkspace =
     '.' === initialAttachWorkspace || !initialAttachWorkspace
-      ? projectDirectory
+      ? await getProjectDirectory(jobImage, terminal)
       : initialAttachWorkspace;
 
   const volume = checkoutJobs.includes(jobName)
@@ -158,7 +156,6 @@ export default async function runJob(
         cwd: repoPath,
       });
 
-      // @todo: handle if debuggingTerminal exits because terminal hasn't started the container.
       finalTerminal.sendText(
         `echo "Inside a similar container after the job's container exited: \n"
         docker run -it --rm -v ${volume} --workdir ${homeDir} ${latestCommmittedImageId}`

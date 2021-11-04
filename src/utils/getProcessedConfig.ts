@@ -3,6 +3,9 @@ import * as vscode from 'vscode';
 import { getBinaryPath } from '../../node/binary.js';
 import getSpawnOptions from './getSpawnOptions';
 
+// Gets the plain text of the processed .circleci/config.yml file.
+// The CircleCI CLI binary processes that file.
+// For example, it copies orbs into the file and evaluates the job parameters.
 export default function getProcessedConfig(configFilePath: string): string {
   try {
     const { stdout, stderr } = cp.spawnSync(
