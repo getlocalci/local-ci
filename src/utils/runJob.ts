@@ -8,6 +8,7 @@ import commitContainer from './commitContainer';
 import convertHomeDirToAbsolute from './convertHomeDirToAbsolute';
 import getConfigFilePath from './getConfigFilePath';
 import getConfigFromPath from './getConfigFromPath';
+import getCheckoutDirectoryBasename from './getCheckoutDirectoryBasename';
 import getCheckoutJobs from './getCheckoutJobs';
 import getDebuggingTerminalName from './getDebuggingTerminalName';
 import getFinalDebuggingTerminalName from './getFinalTerminalName';
@@ -16,8 +17,8 @@ import getImageFromJob from './getImageFromJob';
 import getLatestCommittedImage from './getLatestCommittedImage';
 import getLocalVolumePath from './getLocalVolumePath';
 import getProcessFilePath from './getProcessFilePath';
-import getProjectDirectory from './getProjectDirectory';
 import getTerminalName from './getTerminalName';
+import getWorkingDirectory from './getWorkingDirectory';
 import showMainTerminalHelperMessages from './showMainTerminalHelperMessages';
 import showFinalTerminalHelperMessages from './showFinalTerminalHelperMessages';
 import {
@@ -71,7 +72,11 @@ export default async function runJob(
   const homeDir = await getHomeDirectory(jobImage, terminal);
   const attachWorkspace =
     '.' === initialAttachWorkspace || !initialAttachWorkspace
-      ? await getProjectDirectory(jobImage, terminal)
+      ? await getWorkingDirectory(
+          jobImage,
+          config?.jobs[jobName] as Job,
+          terminal
+        )
       : initialAttachWorkspace;
 
   const volume = checkoutJobs.includes(jobName)
@@ -79,7 +84,10 @@ export default async function runJob(
         initialAttachWorkspace || CONTAINER_STORAGE_DIRECTORY,
         homeDir
       )}`
-    : `${localVolume}:${convertHomeDirToAbsolute(attachWorkspace, homeDir)}`;
+    : `${path.join(
+        localVolume,
+        await getCheckoutDirectoryBasename(config, terminal)
+      )}:${convertHomeDirToAbsolute(attachWorkspace, homeDir)}`;
 
   if (!fs.existsSync(localVolume)) {
     fs.mkdirSync(localVolume, { recursive: true });

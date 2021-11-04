@@ -42,16 +42,15 @@ export default function writeProcessFile(
           ? step?.persist_to_workspace.paths[0]
           : '';
 
+        // @todo: getWorkingDirectory() or workaround.
         const pathBase =
           !step?.persist_to_workspace?.root ||
           '.' === step.persist_to_workspace.root
-            ? config.jobs[checkoutJob]?.working_directory ?? '/home/circleci'
+            ? config.jobs[checkoutJob]?.working_directory ??
+              '/home/circleci/project'
             : step.persist_to_workspace.root;
 
-        const fullPath =
-          !persistToWorkspacePath || persistToWorkspacePath === '.'
-            ? pathBase
-            : path.join(pathBase, persistToWorkspacePath);
+        const fullPath = path.join(pathBase, persistToWorkspacePath);
 
         return {
           run: {

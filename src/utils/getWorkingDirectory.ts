@@ -2,13 +2,19 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 import getHomeDirectory from './getHomeDirectory';
 
-export default async function getProjectDirectory(
+export default async function getWorkingDirectory(
   imageId: string,
+  job: Job,
   terminal?: vscode.Terminal
 ): Promise<string> {
   const defaultDirectory = '/home/circleci/project';
+
+  if (job?.working_directory) {
+    return Promise.resolve(String(job.working_directory));
+  }
+
   if (!imageId) {
-    return defaultDirectory;
+    return Promise.resolve(defaultDirectory);
   }
 
   try {

@@ -9,7 +9,7 @@ interface FullStep {
     root?: string;
     paths?: Array<string>;
   };
-  run?: {
+  run?: string | {
     command?: string;
   };
 }
