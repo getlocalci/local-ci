@@ -4,7 +4,13 @@ import getCheckoutJobs from './getCheckoutJobs';
 import getWorkingDirectory from './getWorkingDirectory';
 import getImageFromJob from './getImageFromJob';
 
-export default async function getCheckoutDirectoryBasename(
+// When a directory is persisted to the CircleCI® workspace,
+// Local CI will store it in /tmp/local-ci/<name>.
+// This gets that <name>, so that the volume can be attached
+// to the container and the container has access to that workspace.
+// This get the basename, the last directory.
+// Like bar in /example/foo/bar
+export default async function getPersistToWorkspaceBasename(
   config: CiConfig,
   terminal: vscode.Terminal
 ): Promise<string> {

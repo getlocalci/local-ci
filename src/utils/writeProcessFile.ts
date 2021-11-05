@@ -47,7 +47,7 @@ export default function writeProcessFile(
           !step?.persist_to_workspace?.root ||
           '.' === step.persist_to_workspace.root
             ? config.jobs[checkoutJob]?.working_directory ??
-              '/home/circleci/project'
+              '$CIRCLE_WORKING_DIRECTORY'
             : step.persist_to_workspace.root;
 
         const fullPath = path.join(pathBase, persistToWorkspacePath);

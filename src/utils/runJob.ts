@@ -8,7 +8,6 @@ import commitContainer from './commitContainer';
 import convertHomeDirToAbsolute from './convertHomeDirToAbsolute';
 import getConfigFilePath from './getConfigFilePath';
 import getConfigFromPath from './getConfigFromPath';
-import getCheckoutDirectoryBasename from './getCheckoutDirectoryBasename';
 import getCheckoutJobs from './getCheckoutJobs';
 import getDebuggingTerminalName from './getDebuggingTerminalName';
 import getFinalDebuggingTerminalName from './getFinalTerminalName';
@@ -16,6 +15,7 @@ import getHomeDirectory from './getHomeDirectory';
 import getImageFromJob from './getImageFromJob';
 import getLatestCommittedImage from './getLatestCommittedImage';
 import getLocalVolumePath from './getLocalVolumePath';
+import getPersistToWorkspaceBasename from './getPersistToWorkspaceBasename';
 import getProcessFilePath from './getProcessFilePath';
 import getTerminalName from './getTerminalName';
 import getWorkingDirectory from './getWorkingDirectory';
@@ -86,7 +86,7 @@ export default async function runJob(
       )}`
     : `${path.join(
         localVolume,
-        await getCheckoutDirectoryBasename(config, terminal)
+        await getPersistToWorkspaceBasename(config, terminal)
       )}:${convertHomeDirToAbsolute(attachWorkspace, homeDir)}`;
 
   if (!fs.existsSync(localVolume)) {
