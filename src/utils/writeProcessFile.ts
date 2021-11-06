@@ -5,10 +5,11 @@ import getCheckoutJobs from './getCheckoutJobs';
 import getConfig from './getConfig';
 import { CONTAINER_STORAGE_DIRECTORY } from '../constants';
 
-// Rewrites the process.yml file.
+// Overwrites parts of the process.yml file.
 // When there's a persist_to_workspace value in a checkout job, this copies
 // the files inside the container to the volume shared with the local machine.
 // This way, they can persist between jobs.
+// The processedConfig was already compiled by the CircleCI® CLI binary.
 export default function writeProcessFile(
   processedConfig: string,
   processFilePath: string
@@ -38,11 +39,6 @@ export default function writeProcessFile(
           return step;
         }
 
-        const persistToWorkspacePath = step?.persist_to_workspace?.paths?.length
-          ? step?.persist_to_workspace.paths[0]
-          : '';
-
-        // @todo: getWorkingDirectory() or workaround.
         const pathBase =
           !step?.persist_to_workspace?.root ||
           '.' === step.persist_to_workspace.root
@@ -50,11 +46,16 @@ export default function writeProcessFile(
               '$CIRCLE_WORKING_DIRECTORY'
             : step.persist_to_workspace.root;
 
-        const fullPath = path.join(pathBase, persistToWorkspacePath);
-
         return {
           run: {
-            command: `cp -r ${fullPath} ${CONTAINER_STORAGE_DIRECTORY}`,
+            command: step?.persist_to_workspace?.paths.reduce(
+              (accumulator, workspacePath) =>
+                `${accumulator}cp -r ${path.join(
+                  pathBase,
+                  workspacePath
+                )} ${CONTAINER_STORAGE_DIRECTORY}\n`,
+              ''
+            ),
           },
         };
       }
