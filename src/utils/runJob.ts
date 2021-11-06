@@ -30,7 +30,7 @@ import {
 export default async function runJob(
   context: vscode.ExtensionContext,
   jobName: string
-): Promise<RunningTerminal[]> {
+): Promise<void> {
   const configFilePath = await getConfigFilePath(context);
   const repoPath = path.dirname(path.dirname(configFilePath));
   const terminal = vscode.window.createTerminal({
@@ -120,7 +120,7 @@ export default async function runJob(
   // Once the container is available, start an interactive bash session within the container.
   debuggingTerminal.sendText(`
     ${GET_RUNNING_CONTAINER_FUNCTION}
-    echo "Waiting for bash access to the running container… \n"
+    echo "You'll get bash access to the job once this conditional is true:\n"
     until [[ -n $(get_running_container ${jobImage}) ]]
     do
       sleep 1
@@ -129,7 +129,7 @@ export default async function runJob(
     docker exec -it --workdir ${homeDir} $(get_running_container ${jobImage}) /bin/sh || exit 1
   `);
 
-  let finalTerminal: vscode.Terminal | undefined;
+  let finalTerminal: vscode.Terminal;
   vscode.window.onDidCloseTerminal(async (closedTerminal) => {
     if (
       closedTerminal.name !== debuggingTerminal.name ||
@@ -178,10 +178,4 @@ export default async function runJob(
       cleanUpCommittedImages(committedImageRepo);
     }
   });
-
-  return [
-    await terminal.processId,
-    await debuggingTerminal.processId,
-    finalTerminal ? await finalTerminal?.processId : finalTerminal,
-  ];
 }
