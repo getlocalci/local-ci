@@ -8,16 +8,9 @@ mocha.afterEach(() => {
   sinon.restore();
 });
 
-function getMockJob(): Job {
-  return { steps: [{ run: 'npm test' }] };
-}
-
 suite('getWorkingDirectory', () => {
   test('No image id', async () => {
-    assert.strictEqual(
-      await getWorkingDirectory('', getMockJob()),
-      '/home/circleci/project'
-    );
+    assert.strictEqual(await getWorkingDirectory(''), '/home/circleci/project');
   });
 
   test('With image id', async () => {
@@ -32,10 +25,7 @@ suite('getWorkingDirectory', () => {
         },
       });
 
-    assert.strictEqual(
-      await getWorkingDirectory('98765', getMockJob()),
-      '/root/project'
-    );
+    assert.strictEqual(await getWorkingDirectory('98765'), '/root/project');
   });
 
   test('Error when getting directory', async () => {
@@ -51,7 +41,7 @@ suite('getWorkingDirectory', () => {
       });
 
     assert.strictEqual(
-      await getWorkingDirectory('98765', getMockJob()),
+      await getWorkingDirectory('98765'),
       '/home/circleci/project'
     );
   });
