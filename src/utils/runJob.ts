@@ -15,7 +15,6 @@ import getHomeDirectory from './getHomeDirectory';
 import getImageFromJob from './getImageFromJob';
 import getLatestCommittedImage from './getLatestCommittedImage';
 import getLocalVolumePath from './getLocalVolumePath';
-import getPersistToWorkspaceBasename from './getPersistToWorkspaceBasename';
 import getProcessFilePath from './getProcessFilePath';
 import getTerminalName from './getTerminalName';
 import getWorkingDirectory from './getWorkingDirectory';
@@ -46,8 +45,8 @@ export default async function runJob(
   terminal.show();
 
   const processFilePath = getProcessFilePath(configFilePath);
-  const config = getConfigFromPath(processFilePath);
-  const checkoutJobs = getCheckoutJobs(config);
+  const parsedProcessFile = getConfigFromPath(processFilePath);
+  const checkoutJobs = getCheckoutJobs(parsedProcessFile);
   const localVolume = getLocalVolumePath(configFilePath);
 
   // If this is the only checkout job, rm the entire local volume directory.
@@ -57,13 +56,14 @@ export default async function runJob(
     fs.rmSync(localVolume, { recursive: true, force: true });
   }
 
-  const attachWorkspaceSteps: FullStep[] = config?.jobs[jobName]?.steps?.length
-    ? (config?.jobs[jobName]?.steps as Array<FullStep>).filter(
+  const attachWorkspaceSteps: FullStep[] = parsedProcessFile?.jobs[jobName]
+    ?.steps?.length
+    ? (parsedProcessFile?.jobs[jobName]?.steps as Array<FullStep>).filter(
         (step) => !!step?.attach_workspace
       )
     : [];
 
-  const jobImage = getImageFromJob(config?.jobs[jobName]);
+  const jobImage = getImageFromJob(parsedProcessFile?.jobs[jobName]);
   const initialAttachWorkspace =
     attachWorkspaceSteps.length && attachWorkspaceSteps[0]?.attach_workspace?.at
       ? attachWorkspaceSteps[0]?.attach_workspace.at
@@ -72,11 +72,7 @@ export default async function runJob(
   const homeDir = await getHomeDirectory(jobImage, terminal);
   const attachWorkspace =
     '.' === initialAttachWorkspace || !initialAttachWorkspace
-      ? await getWorkingDirectory(
-          jobImage,
-          config?.jobs[jobName] as Job,
-          terminal
-        )
+      ? await getWorkingDirectory(jobImage, terminal)
       : initialAttachWorkspace;
 
   const volume = checkoutJobs.includes(jobName)
@@ -84,10 +80,7 @@ export default async function runJob(
         initialAttachWorkspace || CONTAINER_STORAGE_DIRECTORY,
         homeDir
       )}`
-    : `${path.join(
-        localVolume,
-        await getPersistToWorkspaceBasename(config, terminal)
-      )}:${convertHomeDirToAbsolute(attachWorkspace, homeDir)}`;
+    : `${localVolume}:${convertHomeDirToAbsolute(attachWorkspace, homeDir)}`;
 
   if (!fs.existsSync(localVolume)) {
     fs.mkdirSync(localVolume, { recursive: true });

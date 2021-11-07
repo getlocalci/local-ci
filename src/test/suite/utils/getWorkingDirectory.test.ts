@@ -12,13 +12,6 @@ function getMockJob(): Job {
   return { steps: [{ run: 'npm test' }] };
 }
 
-function getMockJobWithWorkingDirectory(): Job {
-  return {
-    ...getMockJob(),
-    working_directory: '/root/project', // eslint-disable-line @typescript-eslint/naming-convention
-  };
-}
-
 suite('getWorkingDirectory', () => {
   test('No image id', async () => {
     assert.strictEqual(
@@ -41,16 +34,6 @@ suite('getWorkingDirectory', () => {
 
     assert.strictEqual(
       await getWorkingDirectory('98765', getMockJob()),
-      '/root/project'
-    );
-  });
-
-  test('With working_directory', async () => {
-    assert.strictEqual(
-      await getWorkingDirectory(
-        '/root/project',
-        getMockJobWithWorkingDirectory()
-      ),
       '/root/project'
     );
   });

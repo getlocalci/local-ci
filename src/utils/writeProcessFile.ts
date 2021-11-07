@@ -39,19 +39,12 @@ export default function writeProcessFile(
           return step;
         }
 
-        const pathBase =
-          !step?.persist_to_workspace?.root ||
-          '.' === step.persist_to_workspace.root
-            ? config.jobs[checkoutJob]?.working_directory ??
-              '$CIRCLE_WORKING_DIRECTORY'
-            : step.persist_to_workspace.root;
-
         return {
           run: {
             command: step?.persist_to_workspace?.paths.reduce(
               (accumulator, workspacePath) =>
                 `${accumulator}cp -r ${path.join(
-                  pathBase,
+                  step?.persist_to_workspace?.root ?? '.',
                   workspacePath
                 )} ${CONTAINER_STORAGE_DIRECTORY}\n`,
               ''
