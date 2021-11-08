@@ -1,8 +1,5 @@
 interface CiConfigWithJobs {
-  jobs: Record<
-    string,
-    Job
-  >;
+  jobs: Record<string, Job>;
 }
 
 type CiConfig = CiConfigWithJobs | undefined;

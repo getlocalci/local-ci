@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { LICENSE_ERROR, GET_LICENSE_KEY_URL, LICENSE_KEY } from '../constants';
 import getLicenseErrorMessage from './getLicenseErrorMessage';
 import isLicenseValid from './isLicenseValid';
+import sanitizeLicenseKey from './sanitizeLicenseKey';
 
 export default async function showLicenseInput(
   context: vscode.ExtensionContext,
@@ -20,10 +21,14 @@ export default async function showLicenseInput(
     return; // They pressed Escape or exited the input box.
   }
 
-  const isValid = await isLicenseValid(context, true, enteredLicenseKey);
+  const isValid = await isLicenseValid(
+    context,
+    true,
+    sanitizeLicenseKey(enteredLicenseKey)
+  );
 
   if (isValid) {
-    context.secrets.store(LICENSE_KEY, enteredLicenseKey);
+    context.secrets.store(LICENSE_KEY, sanitizeLicenseKey(enteredLicenseKey));
     vscode.window.showInformationMessage(
       'Thank you, your Local CI license key is valid and was activated!'
     );

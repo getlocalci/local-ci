@@ -1,3 +1,3 @@
-export default function getFinalTerminalName(jobName: string): string {
+export default function getTerminalName(jobName: string): string {
   return `Local CI ${jobName}`;
 }

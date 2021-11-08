@@ -1,13 +1,15 @@
 import * as fs from 'fs';
-import * as yaml from 'js-yaml';
 import * as path from 'path';
+import * as yaml from 'js-yaml';
 import getCheckoutJobs from './getCheckoutJobs';
 import getConfig from './getConfig';
 import { CONTAINER_STORAGE_DIRECTORY } from '../constants';
 
-// Rewrites the process.yml file.
+// Overwrites parts of the process.yml file.
 // When there's a persist_to_workspace value in a checkout job, this copies
-// the files to the volume so they can persist between jobs.
+// the files inside the container to the volume shared with the local machine.
+// This way, they can persist between jobs.
+// The processedConfig was already compiled by the CircleCI® CLI binary.
 export default function writeProcessFile(
   processedConfig: string,
   processFilePath: string
@@ -37,24 +39,16 @@ export default function writeProcessFile(
           return step;
         }
 
-        const persistToWorkspacePath = step?.persist_to_workspace?.paths?.length
-          ? step?.persist_to_workspace.paths[0]
-          : '';
-
-        const pathBase =
-          !step?.persist_to_workspace?.root ||
-          '.' === step.persist_to_workspace.root
-            ? config.jobs[checkoutJob]?.working_directory ?? '/home/circleci'
-            : step.persist_to_workspace.root;
-
-        const fullPath =
-          !persistToWorkspacePath || persistToWorkspacePath === '.'
-            ? pathBase
-            : path.join(pathBase, persistToWorkspacePath);
-
         return {
           run: {
-            command: `cp -r ${fullPath} ${CONTAINER_STORAGE_DIRECTORY}`,
+            command: step?.persist_to_workspace?.paths.reduce(
+              (accumulator, workspacePath) =>
+                `${accumulator}cp -r ${path.join(
+                  step?.persist_to_workspace?.root ?? '.',
+                  workspacePath
+                )} ${CONTAINER_STORAGE_DIRECTORY}\n`,
+              ''
+            ),
           },
         };
       }

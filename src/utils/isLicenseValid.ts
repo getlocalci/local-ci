@@ -1,6 +1,6 @@
+import axios from 'axios';
 import * as md5 from 'js-md5';
 import * as vscode from 'vscode';
-import axios from 'axios';
 import {
   LICENSE_ERROR,
   LICENSE_ITEM_ID,
@@ -40,6 +40,9 @@ export default async function isLicenseValid(
   try {
     response = await axios.get(licenseValidationEndpoint, {
       params: {
+        headers: {
+          'Cache-Control': 'no-cache', // eslint-disable-line @typescript-eslint/naming-convention
+        },
         license: encodeURI(String(trimmedLicenseKey)),
         edd_action: 'activate_license', // eslint-disable-line @typescript-eslint/naming-convention
         item_id: LICENSE_ITEM_ID, // eslint-disable-line @typescript-eslint/naming-convention

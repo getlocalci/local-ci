@@ -13,19 +13,20 @@ import {
   RUN_JOB_COMMAND,
   SELECTED_CONFIG_PATH,
 } from './constants';
-import getLicenseInformation from './utils/getLicenseInformation';
 import disposeTerminalsForJob from './utils/disposeTerminalsForJob';
-import runJob from './utils/runJob';
-import showLicenseInput from './utils/showLicenseInput';
+import getLicenseInformation from './utils/getLicenseInformation';
 import cleanUpCommittedImages from './utils/cleanUpCommittedImages';
-import getCheckoutJobs from './utils/getCheckoutJobs';
 import getAllConfigFilePaths from './utils/getAllConfigFilePaths';
+import getCheckoutJobs from './utils/getCheckoutJobs';
 import getConfig from './utils/getConfig';
 import getConfigFilePath from './utils/getConfigFilePath';
 import getDebuggingTerminalName from './utils/getDebuggingTerminalName';
 import getFinalTerminalName from './utils/getFinalTerminalName';
-import getProcessFilePath from './utils/getProcessFilePath';
 import getProcessedConfig from './utils/getProcessedConfig';
+import getProcessFilePath from './utils/getProcessFilePath';
+import getRepoBasename from './utils/getRepoBasename';
+import runJob from './utils/runJob';
+import showLicenseInput from './utils/showLicenseInput';
 import writeProcessFile from './utils/writeProcessFile';
 
 export function activate(context: vscode.ExtensionContext): void {
@@ -80,12 +81,16 @@ export function activate(context: vscode.ExtensionContext): void {
             selection?.length &&
             (selection[0] as ConfigFileQuickPick)?.fsPath
           ) {
+            const selectedFsPath = (selection[0] as ConfigFileQuickPick)
+              ?.fsPath;
             context.globalState
-              .update(
-                SELECTED_CONFIG_PATH,
-                (selection[0] as ConfigFileQuickPick)?.fsPath
-              )
-              .then(() => jobProvider.refresh());
+              .update(SELECTED_CONFIG_PATH, selectedFsPath)
+              .then(() => {
+                jobProvider.refresh();
+                vscode.window.showInformationMessage(
+                  `The repo ${getRepoBasename(selectedFsPath)} is now selected`
+                );
+              });
           }
 
           quickPick.dispose();
@@ -178,7 +183,7 @@ export function activate(context: vscode.ExtensionContext): void {
         if (terminal.name === getDebuggingTerminalName(jobName)) {
           terminal.show();
           vscode.window.showInformationMessage(
-            `👈 Here's an interactive bash shell of the job`
+            `👈 Here's an interactive bash shell of the job. Enter something, like whoami`
           );
         } else if (terminal.name === getFinalTerminalName(jobName)) {
           terminal.show();

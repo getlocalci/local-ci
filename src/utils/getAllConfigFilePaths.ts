@@ -2,6 +2,8 @@ import * as vscode from 'vscode';
 import { SELECTED_CONFIG_PATH } from '../constants';
 import getRepoPath from './getRepoBasename';
 
+// A workspace might have multiple .circleci/config.yml files.
+// This gets all of those files.
 export default async function getAllConfigFilePaths(
   context: vscode.ExtensionContext
 ): Promise<ConfigFileQuickPick[]> {

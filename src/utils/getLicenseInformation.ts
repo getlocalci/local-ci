@@ -1,5 +1,7 @@
 import * as vscode from 'vscode';
 import getHoursRemainingInTrial from './getHoursRemainingInTrial';
+import getLicenseErrorMessage from './getLicenseErrorMessage';
+import isLicenseValid from './isLicenseValid';
 import isTrialExpired from './isTrialExpired';
 import {
   GET_LICENSE_KEY_URL,
@@ -8,8 +10,6 @@ import {
   LICENSE_VALIDITY,
   TRIAL_STARTED_TIMESTAMP,
 } from '../constants';
-import isLicenseValid from './isLicenseValid';
-import getLicenseErrorMessage from './getLicenseErrorMessage';
 
 function getTextForNumber(singular: string, plural: string, count: number) {
   return count === 1 ? singular : plural;

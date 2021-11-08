@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { SELECTED_CONFIG_PATH } from '../constants';
 import getAllConfigFilePaths from './getAllConfigFilePaths';
 
+// Gets the path of the selected .circleci/config.yml to run the jobs on.
 export default async function getConfigFilePath(
   context: vscode.ExtensionContext
 ): Promise<string> {

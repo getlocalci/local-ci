@@ -17,7 +17,7 @@ This extension allows shell access to the jobs, and persists the workspace betwe
 
 CircleCI® is a registered trademark of Circle Internet Services, Inc.
 
-Local CI is a paid extension with a 2 day free preview.
+Local CI is a paid VS Code extension with a 2 day free preview.
 
 ## Requirements
 
@@ -25,7 +25,7 @@ Local CI is a paid extension with a 2 day free preview.
 
 ## Privacy
 
-If you haven't entered a license key, this extension has no interaction with Local CI's site.
+If you haven't entered a license key, like during the free preview, this extension has no interaction with Local CI's site.
 
 It does interact with CircleCI® and Docker to process and run the jobs.
 

@@ -5,7 +5,6 @@ import { getBinaryPath } from '../../node/binary.js';
 import areTerminalsClosed from './areTerminalsClosed';
 import cleanUpCommittedImages from './cleanUpCommittedImages';
 import commitContainer from './commitContainer';
-import convertHomeDirToAbsolute from './convertHomeDirToAbsolute';
 import getConfigFilePath from './getConfigFilePath';
 import getConfigFromPath from './getConfigFromPath';
 import getCheckoutJobs from './getCheckoutJobs';
@@ -16,20 +15,20 @@ import getImageFromJob from './getImageFromJob';
 import getLatestCommittedImage from './getLatestCommittedImage';
 import getLocalVolumePath from './getLocalVolumePath';
 import getProcessFilePath from './getProcessFilePath';
-import getProjectDirectory from './getProjectDirectory';
 import getTerminalName from './getTerminalName';
 import showMainTerminalHelperMessages from './showMainTerminalHelperMessages';
 import showFinalTerminalHelperMessages from './showFinalTerminalHelperMessages';
 import {
-  COMMITTED_IMAGE_NAMESPACE,
   GET_RUNNING_CONTAINER_FUNCTION,
+  COMMITTED_IMAGE_NAMESPACE,
   CONTAINER_STORAGE_DIRECTORY,
 } from '../constants';
+import normalizeDirectory from './normalizeDirectory';
 
 export default async function runJob(
   context: vscode.ExtensionContext,
   jobName: string
-): Promise<RunningTerminal[]> {
+): Promise<void> {
   const configFilePath = await getConfigFilePath(context);
   const repoPath = path.dirname(path.dirname(configFilePath));
   const terminal = vscode.window.createTerminal({
@@ -45,48 +44,45 @@ export default async function runJob(
   terminal.show();
 
   const processFilePath = getProcessFilePath(configFilePath);
-  const checkoutJobs = getCheckoutJobs(getConfigFromPath(processFilePath));
+  const parsedProcessFile = getConfigFromPath(processFilePath);
+  const checkoutJobs = getCheckoutJobs(parsedProcessFile);
   const localVolume = getLocalVolumePath(configFilePath);
+  const job = parsedProcessFile?.jobs[jobName];
 
   // If this is the only checkout job, rm the entire local volume directory.
   // This job will checkout to that volume, and there could be an error
   // if it attempts to cp to it and the files exist.
-  // @todo: fix ocasional permission denied error for deleting this file.
   if (checkoutJobs.includes(jobName) && 1 === checkoutJobs.length) {
     fs.rmSync(localVolume, { recursive: true, force: true });
   }
 
-  const config = getConfigFromPath(processFilePath);
-  const attachWorkspaceSteps: FullStep[] = config?.jobs[jobName]?.steps?.length
-    ? (config?.jobs[jobName]?.steps as Array<FullStep>).filter((step) =>
-        Boolean(step?.attach_workspace)
-      )
+  const attachWorkspaceSteps: FullStep[] = job?.steps?.length
+    ? (job?.steps as Array<FullStep>).filter((step) => !!step?.attach_workspace)
     : [];
 
-  const jobImage = getImageFromJob(config?.jobs[jobName]);
-  const initialAttachWorkspace =
+  const attachWorkspaceAt =
     attachWorkspaceSteps.length && attachWorkspaceSteps[0]?.attach_workspace?.at
       ? attachWorkspaceSteps[0]?.attach_workspace.at
       : '';
 
+  const jobImage = getImageFromJob(job);
   const homeDir = await getHomeDirectory(jobImage, terminal);
-  const projectDirectory = await getProjectDirectory(jobImage, terminal);
-  const attachWorkspace =
-    '.' === initialAttachWorkspace || !initialAttachWorkspace
-      ? projectDirectory
-      : initialAttachWorkspace;
 
-  const volume = checkoutJobs.includes(jobName)
-    ? `${localVolume}:${convertHomeDirToAbsolute(
-        initialAttachWorkspace || CONTAINER_STORAGE_DIRECTORY,
-        homeDir
-      )}`
-    : `${localVolume}:${convertHomeDirToAbsolute(attachWorkspace, homeDir)}`;
+  // Jobs with no attachWorkspaceAt often need a different volume path.
+  // If they use the working_directory as the volume path,
+  // There's usually an error if they checkout:
+  // Error: Directory (/home/circleci/foo) you are trying to checkout to is not empty and not a git repository.
+  const volume = `${localVolume}:${normalizeDirectory(
+    attachWorkspaceAt || CONTAINER_STORAGE_DIRECTORY,
+    homeDir,
+    job
+  )}`;
 
   if (!fs.existsSync(localVolume)) {
     fs.mkdirSync(localVolume, { recursive: true });
   }
 
+  // @todo: maybe don't have a volume at all if there's no persist_to_workspace or attach_workspace.
   terminal.sendText(
     `${getBinaryPath()} local execute --job ${jobName} --config ${processFilePath} --debug -v ${volume}`
   );
@@ -114,7 +110,7 @@ export default async function runJob(
   // Once the container is available, start an interactive bash session within the container.
   debuggingTerminal.sendText(`
     ${GET_RUNNING_CONTAINER_FUNCTION}
-    echo "Waiting for bash access to the running container… \n"
+    echo "You'll get bash access to the job once this conditional is true:\n"
     until [[ -n $(get_running_container ${jobImage}) ]]
     do
       sleep 1
@@ -123,7 +119,7 @@ export default async function runJob(
     docker exec -it --workdir ${homeDir} $(get_running_container ${jobImage}) /bin/sh || exit 1
   `);
 
-  let finalTerminal: vscode.Terminal | undefined;
+  let finalTerminal: vscode.Terminal;
   vscode.window.onDidCloseTerminal(async (closedTerminal) => {
     if (
       closedTerminal.name !== debuggingTerminal.name ||
@@ -158,7 +154,6 @@ export default async function runJob(
         cwd: repoPath,
       });
 
-      // @todo: handle if debuggingTerminal exits because terminal hasn't started the container.
       finalTerminal.sendText(
         `echo "Inside a similar container after the job's container exited: \n"
         docker run -it --rm -v ${volume} --workdir ${homeDir} ${latestCommmittedImageId}`
@@ -173,10 +168,4 @@ export default async function runJob(
       cleanUpCommittedImages(committedImageRepo);
     }
   });
-
-  return [
-    await terminal.processId,
-    await debuggingTerminal.processId,
-    finalTerminal ? await finalTerminal?.processId : finalTerminal,
-  ];
 }
