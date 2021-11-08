@@ -68,21 +68,21 @@ export default async function runJob(
   const jobImage = getImageFromJob(job);
   const homeDir = await getHomeDirectory(jobImage, terminal);
 
-  // Jobs with checkout usually need a different volume path.
+  // Jobs with no attach_workspace  need a different volume path.
   // If they use the working_directory as the volume path,
   // There's usually an error:
-  const volume = checkoutJobs.includes(jobName)
-    ? `${localVolume}:${normalizeDirectory(
-        attachWorkspaceAt || CONTAINER_STORAGE_DIRECTORY,
-        homeDir,
-        job
-      )}`
-    : `${localVolume}:${normalizeDirectory(attachWorkspaceAt, homeDir, job)}`;
+  // Error: Directory (/home/circleci/foo) you are trying to checkout to is not empty and not a git repository.
+  const volume = `${localVolume}:${normalizeDirectory(
+    attachWorkspaceAt || CONTAINER_STORAGE_DIRECTORY,
+    homeDir,
+    job
+  )}`;
 
   if (!fs.existsSync(localVolume)) {
     fs.mkdirSync(localVolume, { recursive: true });
   }
 
+  // @todo: maybe don't have a volume at all if there's no persist_to_workspace or attach_workspace.
   terminal.sendText(
     `${getBinaryPath()} local execute --job ${jobName} --config ${processFilePath} --debug -v ${volume}`
   );

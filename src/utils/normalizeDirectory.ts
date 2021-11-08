@@ -14,7 +14,7 @@ function convertHomeToAbsolute(directory: string, homeDirectory: string) {
 function replaceDot(directory: string, job: Job | undefined) {
   const defaultWorkingDirectory = '~/project';
   const newDirectory =
-    '.' === directory || !directory
+    '.' === directory
       ? job?.working_directory ?? defaultWorkingDirectory
       : directory;
 
