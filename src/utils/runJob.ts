@@ -19,8 +19,9 @@ import getTerminalName from './getTerminalName';
 import showMainTerminalHelperMessages from './showMainTerminalHelperMessages';
 import showFinalTerminalHelperMessages from './showFinalTerminalHelperMessages';
 import {
-  COMMITTED_IMAGE_NAMESPACE,
   GET_RUNNING_CONTAINER_FUNCTION,
+  COMMITTED_IMAGE_NAMESPACE,
+  CONTAINER_STORAGE_DIRECTORY,
 } from '../constants';
 import normalizeDirectory from './normalizeDirectory';
 
@@ -46,6 +47,7 @@ export default async function runJob(
   const parsedProcessFile = getConfigFromPath(processFilePath);
   const checkoutJobs = getCheckoutJobs(parsedProcessFile);
   const localVolume = getLocalVolumePath(configFilePath);
+  const job = parsedProcessFile?.jobs[jobName];
 
   // If this is the only checkout job, rm the entire local volume directory.
   // This job will checkout to that volume, and there could be an error
@@ -54,11 +56,8 @@ export default async function runJob(
     fs.rmSync(localVolume, { recursive: true, force: true });
   }
 
-  const attachWorkspaceSteps: FullStep[] = parsedProcessFile?.jobs[jobName]
-    ?.steps?.length
-    ? (parsedProcessFile?.jobs[jobName]?.steps as Array<FullStep>).filter(
-        (step) => !!step?.attach_workspace
-      )
+  const attachWorkspaceSteps: FullStep[] = job?.steps?.length
+    ? (job?.steps as Array<FullStep>).filter((step) => !!step?.attach_workspace)
     : [];
 
   const attachWorkspaceAt =
@@ -66,13 +65,19 @@ export default async function runJob(
       ? attachWorkspaceSteps[0]?.attach_workspace.at
       : '';
 
-  const jobImage = getImageFromJob(parsedProcessFile?.jobs[jobName]);
+  const jobImage = getImageFromJob(job);
   const homeDir = await getHomeDirectory(jobImage, terminal);
-  const volume = `${localVolume}:${normalizeDirectory(
-    attachWorkspaceAt,
-    homeDir,
-    parsedProcessFile?.jobs[jobName]
-  )}`;
+
+  // Jobs with checkout usually need a different volume path.
+  // If they use the working_directory as the volume path,
+  // There's usually an error:
+  const volume = checkoutJobs.includes(jobName)
+    ? `${localVolume}:${normalizeDirectory(
+        attachWorkspaceAt || CONTAINER_STORAGE_DIRECTORY,
+        homeDir,
+        job
+      )}`
+    : `${localVolume}:${normalizeDirectory(attachWorkspaceAt, homeDir, job)}`;
 
   if (!fs.existsSync(localVolume)) {
     fs.mkdirSync(localVolume, { recursive: true });

@@ -10,7 +10,7 @@ function convertHomeToAbsolute(directory: string, homeDirectory: string) {
     : directory;
 }
 
-// If the directory is . this replaces it with either a working_directory or the default.
+// If the directory is . this replaces it with either the working_directory or the default.
 function replaceDot(directory: string, job: Job | undefined) {
   const defaultWorkingDirectory = '~/project';
   const newDirectory =
