@@ -21,10 +21,7 @@ export default function getHomeDirectory(
         echo $HOME
       fi`,
     ],
-    {
-      ...getSpawnOptions(),
-      timeout: 5000,
-    }
+    getSpawnOptions()
   );
 
   return new Promise((resolve) => {

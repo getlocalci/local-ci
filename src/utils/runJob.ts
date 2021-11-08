@@ -68,7 +68,7 @@ export default async function runJob(
   const jobImage = getImageFromJob(job);
   const homeDir = await getHomeDirectory(jobImage, terminal);
 
-  // Jobs with no attach_workspace often need a different volume path.
+  // Jobs with no attachWorkspaceAt often need a different volume path.
   // If they use the working_directory as the volume path,
   // There's usually an error if they checkout:
   // Error: Directory (/home/circleci/foo) you are trying to checkout to is not empty and not a git repository.
