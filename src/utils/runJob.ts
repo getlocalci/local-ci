@@ -5,7 +5,6 @@ import { getBinaryPath } from '../../node/binary.js';
 import areTerminalsClosed from './areTerminalsClosed';
 import cleanUpCommittedImages from './cleanUpCommittedImages';
 import commitContainer from './commitContainer';
-import convertHomeDirToAbsolute from './convertHomeDirToAbsolute';
 import getConfigFilePath from './getConfigFilePath';
 import getConfigFromPath from './getConfigFromPath';
 import getCheckoutJobs from './getCheckoutJobs';
@@ -17,14 +16,13 @@ import getLatestCommittedImage from './getLatestCommittedImage';
 import getLocalVolumePath from './getLocalVolumePath';
 import getProcessFilePath from './getProcessFilePath';
 import getTerminalName from './getTerminalName';
-import getWorkingDirectory from './getWorkingDirectory';
 import showMainTerminalHelperMessages from './showMainTerminalHelperMessages';
 import showFinalTerminalHelperMessages from './showFinalTerminalHelperMessages';
 import {
   COMMITTED_IMAGE_NAMESPACE,
   GET_RUNNING_CONTAINER_FUNCTION,
-  CONTAINER_STORAGE_DIRECTORY,
 } from '../constants';
+import normalizeDirectory from './normalizeDirectory';
 
 export default async function runJob(
   context: vscode.ExtensionContext,
@@ -63,24 +61,18 @@ export default async function runJob(
       )
     : [];
 
-  const jobImage = getImageFromJob(parsedProcessFile?.jobs[jobName]);
-  const initialAttachWorkspace =
+  const attachWorkspaceAt =
     attachWorkspaceSteps.length && attachWorkspaceSteps[0]?.attach_workspace?.at
       ? attachWorkspaceSteps[0]?.attach_workspace.at
       : '';
 
+  const jobImage = getImageFromJob(parsedProcessFile?.jobs[jobName]);
   const homeDir = await getHomeDirectory(jobImage, terminal);
-  const attachWorkspace =
-    '.' === initialAttachWorkspace || !initialAttachWorkspace
-      ? await getWorkingDirectory(jobImage, terminal)
-      : initialAttachWorkspace;
-
-  const volume = checkoutJobs.includes(jobName)
-    ? `${localVolume}:${convertHomeDirToAbsolute(
-        initialAttachWorkspace || CONTAINER_STORAGE_DIRECTORY,
-        homeDir
-      )}`
-    : `${localVolume}:${convertHomeDirToAbsolute(attachWorkspace, homeDir)}`;
+  const volume = `${localVolume}:${normalizeDirectory(
+    attachWorkspaceAt,
+    homeDir,
+    parsedProcessFile?.jobs[jobName]
+  )}`;
 
   if (!fs.existsSync(localVolume)) {
     fs.mkdirSync(localVolume, { recursive: true });

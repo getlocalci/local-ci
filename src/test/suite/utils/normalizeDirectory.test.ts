@@ -1,17 +1,17 @@
 import * as assert from 'assert';
-import convertHomeDirToAbsolute from '../../../utils/convertHomeDirToAbsolute';
+import normalizeDirectory from '../../../utils/normalizeDirectory';
 
 suite('convertHomeDirToAbsolute', () => {
   test('No home directory', () => {
     assert.strictEqual(
-      convertHomeDirToAbsolute('/foo/baz', '/home/project'),
+      normalizeDirectory('/foo/baz', '/root', undefined),
       '/foo/baz'
     );
   });
 
   test('With home directory', () => {
     assert.strictEqual(
-      convertHomeDirToAbsolute('~/foo/baz', '/home/project'),
+      normalizeDirectory('~/foo/baz', '/home/project', undefined),
       '/home/project/foo/baz'
     );
   });
