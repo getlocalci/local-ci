@@ -24,6 +24,7 @@ import {
   CONTAINER_STORAGE_DIRECTORY,
 } from '../constants';
 import normalizeDirectory from './normalizeDirectory';
+import uncommittedWarning from './uncommittedWarning';
 
 export default async function runJob(
   context: vscode.ExtensionContext,
@@ -43,6 +44,7 @@ export default async function runJob(
   });
   terminal.show();
 
+  uncommittedWarning(context, repoPath, jobName);
   const processFilePath = getProcessFilePath(configFilePath);
   const parsedProcessFile = getConfigFromPath(processFilePath);
   const checkoutJobs = getCheckoutJobs(parsedProcessFile);

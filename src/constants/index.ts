@@ -48,3 +48,5 @@ export const HOST_TMP_DIRECTORY = '/tmp/local-ci'; // Also hard-coded in node/un
 export const PROCESS_FILE_DIRECTORY = `${HOST_TMP_DIRECTORY}/process`;
 export const LOCAL_VOLUME_DIRECTORY = `${HOST_TMP_DIRECTORY}/volume`;
 export const RUN_JOB_COMMAND = 'local-ci.job.run';
+export const SUPPRESS_UNCOMMITTED_FILE_WARNING =
+  'local-ci.uncommitted.suppress-warning';
