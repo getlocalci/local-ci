@@ -161,7 +161,6 @@ export function activate(context: vscode.ExtensionContext): void {
       let processedConfig;
       try {
         processedConfig = getProcessedConfig(configFilePath);
-        writeProcessFile(processedConfig, getProcessFilePath(configFilePath));
       } catch (e) {
         vscode.window.showErrorMessage(
           `There was an error processing the CircleCI config: ${
@@ -172,6 +171,7 @@ export function activate(context: vscode.ExtensionContext): void {
         return;
       }
 
+      writeProcessFile(processedConfig, getProcessFilePath(configFilePath));
       const checkoutJobs = getCheckoutJobs(getConfig(processedConfig));
       if (!checkoutJobs.length) {
         return;
@@ -207,7 +207,7 @@ export function activate(context: vscode.ExtensionContext): void {
     })
   );
 
-  // When saving .circlci/config.yml, the jobs should refresh.
+  // When saving .circlci/config.yml, this refreshes the jobs tree.
   const delayer = new Delayer(2000);
   vscode.workspace.onDidSaveTextDocument(
     async (textDocument: vscode.TextDocument): Promise<void> => {
