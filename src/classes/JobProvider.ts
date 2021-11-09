@@ -27,10 +27,12 @@ export default class JobProvider
     this._onDidChangeTreeData.event;
   private jobs: vscode.TreeItem[] | [] = [];
   private runningJob: string | undefined;
+  private suppressMessage: boolean | undefined;
 
   constructor(private readonly context: vscode.ExtensionContext) {}
 
-  refresh(job?: Job): void {
+  refresh(job?: Job, suppressMessage?: boolean): void {
+    this.suppressMessage = suppressMessage;
     this._onDidChangeTreeData.fire(job);
   }
 
@@ -40,8 +42,21 @@ export default class JobProvider
 
   async getChildren(): Promise<vscode.TreeItem[]> {
     const configFilePath = await getConfigFilePath(this.context);
-    const processedConfig = getProcessedConfig(configFilePath);
-    writeProcessFile(processedConfig, getProcessFilePath(configFilePath));
+    let processedConfig = '';
+    let processError = '';
+    try {
+      processedConfig = getProcessedConfig(configFilePath);
+      writeProcessFile(processedConfig, getProcessFilePath(configFilePath));
+    } catch (e) {
+      processError = (e as ErrorWithMessage)?.message;
+      if (!this.suppressMessage) {
+        vscode.window.showErrorMessage(
+          `There was an error processing the CircleCI config: ${
+            (e as ErrorWithMessage)?.message
+          }`
+        );
+      }
+    }
 
     const shouldEnableExtension =
       (await isLicenseValid(this.context)) ||
@@ -49,7 +64,12 @@ export default class JobProvider
     const dockerRunning = isDockerRunning();
 
     if (shouldEnableExtension && dockerRunning) {
-      this.jobs = await getJobs(this.context, processedConfig, this.runningJob);
+      this.jobs = processError
+        ? [
+            new Warning('Error processing the CircleCI config:'),
+            new vscode.TreeItem(processError),
+          ]
+        : await getJobs(this.context, processedConfig, this.runningJob);
       this.runningJob = undefined;
     }
 

@@ -1,5 +1,4 @@
 import * as cp from 'child_process';
-import * as vscode from 'vscode';
 import { getBinaryPath } from '../../node/binary.js';
 import getSpawnOptions from './getSpawnOptions';
 
@@ -7,27 +6,17 @@ import getSpawnOptions from './getSpawnOptions';
 // The CircleCI CLI binary compiles that .yml file into another .yml file.
 // For example, it copies orbs into the file and evaluates the job parameters.
 export default function getProcessedConfig(configFilePath: string): string {
-  try {
-    const { stdout, stderr } = cp.spawnSync(
-      getBinaryPath(),
-      ['config', 'process', configFilePath],
-      getSpawnOptions()
+  const { stdout, stderr } = cp.spawnSync(
+    getBinaryPath(),
+    ['config', 'process', configFilePath],
+    getSpawnOptions()
+  );
+
+  if (!stdout?.length) {
+    throw new Error(
+      stderr?.length ? stderr.toString() : 'Failed to process the config'
     );
-
-    if (!stdout?.length) {
-      throw new Error(
-        stderr?.length ? stderr.toString() : 'Failed to process the config'
-      );
-    }
-
-    return stdout.toString().trim();
-  } catch (e) {
-    vscode.window.showErrorMessage(
-      `There was an error processing the CircleCI config: ${
-        (e as ErrorWithMessage)?.message
-      }`
-    );
-
-    return '';
   }
+
+  return stdout.toString().trim();
 }

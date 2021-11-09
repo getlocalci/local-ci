@@ -158,8 +158,19 @@ export function activate(context: vscode.ExtensionContext): void {
     ),
     vscode.commands.registerCommand('local-ci.runWalkthroughJob', async () => {
       const configFilePath = await getConfigFilePath(context);
-      const processedConfig = getProcessedConfig(configFilePath);
-      writeProcessFile(processedConfig, getProcessFilePath(configFilePath));
+      let processedConfig;
+      try {
+        processedConfig = getProcessedConfig(configFilePath);
+        writeProcessFile(processedConfig, getProcessFilePath(configFilePath));
+      } catch (e) {
+        vscode.window.showErrorMessage(
+          `There was an error processing the CircleCI config: ${
+            (e as ErrorWithMessage)?.message
+          }`
+        );
+
+        return;
+      }
 
       const checkoutJobs = getCheckoutJobs(getConfig(processedConfig));
       if (!checkoutJobs.length) {
@@ -204,7 +215,7 @@ export function activate(context: vscode.ExtensionContext): void {
         textDocument.uri.fsPath.endsWith('.circleci/config.yml') &&
         textDocument.uri.fsPath === (await getConfigFilePath(context))
       ) {
-        delayer.trigger(() => jobProvider.refresh());
+        delayer.trigger(() => jobProvider.refresh(undefined, true));
       }
     }
   );
