@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import Delayer from './classes/Delayer';
 import Job from './classes/Job';
 import JobProvider from './classes/JobProvider';
 import LicenseProvider from './classes/LicenseProvider';
@@ -193,6 +194,19 @@ export function activate(context: vscode.ExtensionContext): void {
         }
       });
     })
+  );
+
+  // When saving .circlci/config.yml, the jobs should refresh.
+  const delayer = new Delayer(2000);
+  vscode.workspace.onDidSaveTextDocument(
+    async (textDocument: vscode.TextDocument): Promise<void> => {
+      if (
+        textDocument.uri.fsPath.endsWith('.circleci/config.yml') &&
+        textDocument.uri.fsPath === (await getConfigFilePath(context))
+      ) {
+        delayer.trigger(() => jobProvider.refresh());
+      }
+    }
   );
 
   const licenseSuccessCallback = () => jobProvider.refresh();
