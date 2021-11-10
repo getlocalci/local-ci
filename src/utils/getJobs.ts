@@ -18,12 +18,11 @@ export default async function getJobs(
   }
 
   const jobs = Object.keys(getConfig(processedConfig)?.jobs ?? {});
-  const configFilePaths = await getAllConfigFilePaths(context);
   return jobs.length
     ? jobs.map((jobName) => new Job(jobName, jobName === runningJob))
     : [
         new Warning('Error: No jobs found'),
-        configFilePaths.length
+        (await getAllConfigFilePaths(context)).length
           ? new Command('Select repo to get jobs', 'localCiJobs.selectRepo')
           : new vscode.TreeItem(
               'Please add a .circleci/config.yml to this workspace'

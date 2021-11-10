@@ -1,3 +1,4 @@
+import * as fs from 'fs';
 import * as vscode from 'vscode';
 import Command from './Command';
 import Job from './Job';
@@ -10,6 +11,7 @@ import {
   TRIAL_STARTED_TIMESTAMP,
   JOB_TREE_VIEW_ID,
 } from '../constants';
+import getAllConfigFilePaths from '../utils/getAllConfigFilePaths';
 import getConfigFilePath from '../utils/getConfigFilePath';
 import getDockerError from '../utils/getDockerError';
 import getProcessFilePath from '../utils/getProcessFilePath';
@@ -42,6 +44,17 @@ export default class JobProvider
 
   async getChildren(): Promise<vscode.TreeItem[]> {
     const configFilePath = await getConfigFilePath(this.context);
+    if (!configFilePath || !fs.existsSync(configFilePath)) {
+      return [
+        new Warning('Error: No jobs found'),
+        (await getAllConfigFilePaths(this.context)).length
+          ? new Command('Select repo', 'localCiJobs.selectRepo')
+          : new vscode.TreeItem(
+              'Please add a .circleci/config.yml to this workspace'
+            ),
+      ];
+    }
+
     let processedConfig = '';
     let processError = '';
     try {
