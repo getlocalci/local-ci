@@ -220,6 +220,7 @@ export function activate(context: vscode.ExtensionContext): void {
     }
   );
 
+  const licenseCompletedCallback = () => licenseProvider.load();
   const licenseSuccessCallback = () => jobProvider.refresh();
   const licenseTreeViewId = 'localCiLicense';
   const licenseProvider = new LicenseProvider(context, licenseSuccessCallback);
@@ -235,7 +236,7 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand(ENTER_LICENSE_COMMAND, () => {
       showLicenseInput(
         context,
-        () => licenseProvider.load(),
+        licenseCompletedCallback,
         licenseSuccessCallback
       );
     })
@@ -248,7 +249,7 @@ export function activate(context: vscode.ExtensionContext): void {
       if (uri.path === '/enterLicense') {
         showLicenseInput(
           context,
-          () => licenseProvider.load(),
+          licenseCompletedCallback,
           licenseSuccessCallback
         );
       }

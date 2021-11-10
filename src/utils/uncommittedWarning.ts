@@ -39,6 +39,7 @@ export default function uncommittedWarning(
       const checkoutJobMessage = checkoutJobs.includes(jobName)
         ? ``
         : `Then, please rerun a checkout job, like ${checkoutJobs.join(', ')}.`;
+
       vscode.window
         .showWarningMessage(
           `There are uncommitted changes that won't be part of this ${jobName} job: ${uncommittedFiles}.
