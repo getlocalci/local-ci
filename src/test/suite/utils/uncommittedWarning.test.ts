@@ -30,14 +30,15 @@ suite('uncommittedWarning', () => {
       showWarningMessage: showWarningMessageSpy,
     });
 
-    uncommittedWarning(getMockContext(true), '/foo/baz', 'build');
+    uncommittedWarning(getMockContext(true), '/foo/baz', 'build', []);
     assert.strictEqual((await showWarningMessageSpy).called, false);
   });
 
   test('No uncommitted file', async () => {
     const showWarningMessageSpy = sinon.spy();
     sinon.stub(vscode, 'window').value({
-      showWarningMessage: async () => showWarningMessageSpy(),
+      showWarningMessage: async (message: string) =>
+        showWarningMessageSpy(message),
     });
 
     const data = `  \n`;
@@ -51,14 +52,15 @@ suite('uncommittedWarning', () => {
         },
       });
 
-    uncommittedWarning(getMockContext(false), '/foo/baz', 'test-lint');
+    uncommittedWarning(getMockContext(false), '/foo/baz', 'test-lint', []);
     assert.strictEqual(showWarningMessageSpy.called, false);
   });
 
   test('Only an uncommitted config file should not show a warning', async () => {
     const showWarningMessageSpy = sinon.spy();
     sinon.stub(vscode, 'window').value({
-      showWarningMessage: async () => showWarningMessageSpy(),
+      showWarningMessage: async (message: string) =>
+        showWarningMessageSpy(message),
     });
 
     const data = `M .circleci/config.yml \n`;
@@ -72,14 +74,15 @@ suite('uncommittedWarning', () => {
         },
       });
 
-    uncommittedWarning(getMockContext(false), '/foo/baz', 'test-lint');
+    uncommittedWarning(getMockContext(false), '/foo/baz', 'test-lint', []);
     assert.strictEqual(showWarningMessageSpy.called, false);
   });
 
   test('With uncommitted files', async () => {
     const showWarningMessageSpy = sinon.spy();
     sinon.stub(vscode, 'window').value({
-      showWarningMessage: async () => showWarningMessageSpy(),
+      showWarningMessage: async (message: string) =>
+        showWarningMessageSpy(message),
     });
 
     const data = `M .circleci/config.yml \nM composer.json \nM package.json`;
@@ -93,7 +96,35 @@ suite('uncommittedWarning', () => {
         },
       });
 
-    uncommittedWarning(getMockContext(false), '/foo/baz', 'build');
+    uncommittedWarning(getMockContext(false), '/foo/baz', 'build', []);
     assert.ok(showWarningMessageSpy.called);
+  });
+
+  test('Not a checkout job', async () => {
+    const showWarningMessageSpy = sinon.spy();
+    sinon.stub(vscode, 'window').value({
+      showWarningMessage: async (message: string) =>
+        showWarningMessageSpy(message),
+    });
+
+    const data = `M .vscode/tasks.json \nM package.json \n`;
+    sinon
+      .mock(cp)
+      .expects('spawn')
+      .once()
+      .returns({
+        stdout: {
+          on: (event: unknown, callback: CallableFunction) => callback(data),
+        },
+      });
+
+    uncommittedWarning(getMockContext(false), '/foo/baz', 'test', [
+      'extension-checkout',
+    ]);
+    assert.ok(
+      showWarningMessageSpy.calledWithMatch(
+        'Then, please rerun a checkout job, like extension-checkout.'
+      )
+    );
   });
 });

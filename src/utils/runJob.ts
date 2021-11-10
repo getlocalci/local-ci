@@ -44,12 +44,12 @@ export default async function runJob(
   });
   terminal.show();
 
-  uncommittedWarning(context, repoPath, jobName);
   const processFilePath = getProcessFilePath(configFilePath);
   const parsedProcessFile = getConfigFromPath(processFilePath);
   const checkoutJobs = getCheckoutJobs(parsedProcessFile);
   const localVolume = getLocalVolumePath(configFilePath);
   const job = parsedProcessFile?.jobs[jobName];
+  uncommittedWarning(context, repoPath, jobName, checkoutJobs);
 
   // If this is the only checkout job, rm the entire local volume directory.
   // This job will checkout to that volume, and there could be an error
@@ -70,6 +70,7 @@ export default async function runJob(
   const jobImage = getImageFromJob(job);
   const homeDir = await getHomeDirectory(jobImage, terminal);
 
+  // This volume allows persisting files between jobs.
   // Jobs with no attachWorkspaceAt often need a different volume path.
   // If they use the working_directory as the volume path,
   // There's usually an error if they checkout:

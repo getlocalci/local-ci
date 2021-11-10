@@ -9,7 +9,8 @@ import getSpawnOptions from './getSpawnOptions';
 export default function uncommittedWarning(
   context: vscode.ExtensionContext,
   repoPath: string,
-  jobName: string
+  jobName: string,
+  checkoutJobs: string[]
 ): void {
   if (context.globalState.get(SUPPRESS_UNCOMMITTED_FILE_WARNING)) {
     return;
@@ -27,16 +28,21 @@ export default function uncommittedWarning(
       .split(`\n`)
       .filter(
         (line: string) =>
-          !!line?.trim() && !line.includes('.circleci/config.yml')
+          !!line?.trim() &&
+          !line.includes('.circleci/config.yml') &&
+          !line.includes('.vscode/')
       )
-      .join(',');
+      .join(', ');
 
     if (uncommittedFiles) {
       const textDontShowAgain = `Don't show again`;
+      const checkoutJobMessage = checkoutJobs.includes(jobName)
+        ? ``
+        : `Then, please rerun a checkout job, like ${checkoutJobs.join(', ')}.`;
       vscode.window
         .showWarningMessage(
           `There are uncommitted changes that won't be part of this ${jobName} job: ${uncommittedFiles}.
-        Please commit those changes if you'd like them to be part of the job.`,
+        Please commit those changes if you'd like them to be part of the job. ${checkoutJobMessage}`,
           { detail: 'There are uncommitted changes' },
           textDontShowAgain
         )

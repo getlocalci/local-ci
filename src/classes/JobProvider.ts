@@ -68,6 +68,7 @@ export default class JobProvider
         ? [
             new Warning('Error processing the CircleCI config:'),
             new vscode.TreeItem(processError),
+            new Command('Try Again', `${JOB_TREE_VIEW_ID}.refresh`),
           ]
         : await getJobs(this.context, processedConfig, this.runningJob);
       this.runningJob = undefined;
