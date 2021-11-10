@@ -14,15 +14,15 @@ import {
   RUN_JOB_COMMAND,
   SELECTED_CONFIG_PATH,
 } from './constants';
-import disposeTerminalsForJob from './utils/disposeTerminalsForJob';
-import getLicenseInformation from './utils/getLicenseInformation';
 import cleanUpCommittedImages from './utils/cleanUpCommittedImages';
+import disposeTerminalsForJob from './utils/disposeTerminalsForJob';
 import getAllConfigFilePaths from './utils/getAllConfigFilePaths';
 import getCheckoutJobs from './utils/getCheckoutJobs';
 import getConfig from './utils/getConfig';
 import getConfigFilePath from './utils/getConfigFilePath';
 import getDebuggingTerminalName from './utils/getDebuggingTerminalName';
 import getFinalTerminalName from './utils/getFinalTerminalName';
+import getLicenseInformation from './utils/getLicenseInformation';
 import getProcessedConfig from './utils/getProcessedConfig';
 import getProcessFilePath from './utils/getProcessFilePath';
 import getRepoBasename from './utils/getRepoBasename';
