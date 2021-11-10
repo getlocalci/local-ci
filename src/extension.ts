@@ -54,7 +54,10 @@ export function activate(context: vscode.ExtensionContext): void {
         .then((selection) => {
           if (selection?.title === confirmText) {
             vscode.window.terminals.forEach((terminal) => {
-              if (terminal.name.startsWith('Local CI')) {
+              if (
+                terminal.name.startsWith('Local CI') &&
+                !terminal.exitStatus
+              ) {
                 terminal.dispose();
               }
             });
@@ -188,7 +191,7 @@ export function activate(context: vscode.ExtensionContext): void {
         `Soon you'll get an interactive bash shell to debug it`
       );
       vscode.window.showInformationMessage(
-        `👈 The job ${jobName} is now running`
+        `👈 The job ${jobName} is now running in your local`
       );
 
       vscode.window.onDidOpenTerminal(async (terminal) => {

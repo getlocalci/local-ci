@@ -12,7 +12,7 @@ export default function disposeTerminalsForJob(jobName: string): void {
   ];
 
   vscode.window.terminals.forEach((terminal) => {
-    if (terminalNames.includes(terminal.name)) {
+    if (terminalNames.includes(terminal.name) && !terminal.exitStatus) {
       terminal.dispose();
     }
   });
