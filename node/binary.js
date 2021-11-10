@@ -15,12 +15,12 @@ const supportedPlatforms = [
   {
     type: "Linux",
     architecture: "x64",
-    url: "https://github.com/CircleCI-Public/circleci-cli/releases/download/v0.1.16225/circleci-cli_0.1.16225_linux_amd64.tar.gz",
+    url: "https://github.com/CircleCI-Public/circleci-cli/releases/download/v0.1.16192/circleci-cli_0.1.16192_linux_amd64.tar.gz",
   },
   {
     type: "Darwin",
     architecture: "x64",
-    url: "https://github.com/CircleCI-Public/circleci-cli/releases/download/v0.1.16225/circleci-cli_0.1.16225_darwin_amd64.tar.gz",
+    url: "https://github.com/CircleCI-Public/circleci-cli/releases/download/v0.1.16192/circleci-cli_0.1.16192_darwin_amd64.tar.gz",
   },
 ];
 
