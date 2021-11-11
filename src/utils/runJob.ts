@@ -10,7 +10,6 @@ import getConfigFromPath from './getConfigFromPath';
 import getCheckoutJobs from './getCheckoutJobs';
 import getDebuggingTerminalName from './getDebuggingTerminalName';
 import getFinalDebuggingTerminalName from './getFinalTerminalName';
-import getHomeDirectory from './getHomeDirectory';
 import getImageFromJob from './getImageFromJob';
 import getLatestCommittedImage from './getLatestCommittedImage';
 import getLocalVolumePath from './getLocalVolumePath';
@@ -23,7 +22,6 @@ import {
   COMMITTED_IMAGE_NAMESPACE,
   CONTAINER_STORAGE_DIRECTORY,
 } from '../constants';
-import normalizeDirectory from './normalizeDirectory';
 import uncommittedWarning from './uncommittedWarning';
 
 export default async function runJob(
@@ -58,28 +56,10 @@ export default async function runJob(
     fs.rmSync(localVolume, { recursive: true, force: true });
   }
 
-  const attachWorkspaceSteps: FullStep[] = job?.steps?.length
-    ? (job?.steps as Array<FullStep>).filter((step) => !!step?.attach_workspace)
-    : [];
-
-  const attachWorkspaceAt =
-    attachWorkspaceSteps.length && attachWorkspaceSteps[0]?.attach_workspace?.at
-      ? attachWorkspaceSteps[0]?.attach_workspace.at
-      : '';
-
   const jobImage = getImageFromJob(job);
-  const homeDir = await getHomeDirectory(jobImage, terminal);
 
   // This volume allows persisting files between jobs.
-  // Jobs with no attachWorkspaceAt often need a different volume path.
-  // If they use the working_directory as the volume path,
-  // There's usually an error if they checkout:
-  // Error: Directory (/home/circleci/foo) you are trying to checkout to is not empty and not a git repository.
-  const volume = `${localVolume}:${normalizeDirectory(
-    attachWorkspaceAt || CONTAINER_STORAGE_DIRECTORY,
-    homeDir,
-    job
-  )}`;
+  const volume = `${localVolume}:${CONTAINER_STORAGE_DIRECTORY}`;
 
   if (!fs.existsSync(localVolume)) {
     fs.mkdirSync(localVolume, { recursive: true });
@@ -119,7 +99,7 @@ export default async function runJob(
       sleep 1
     done
     echo "Inside the job's container:"
-    docker exec -it --workdir ${homeDir} $(get_running_container ${jobImage}) /bin/sh || exit 1
+    docker exec -it $(get_running_container ${jobImage}) /bin/sh || exit 1
   `);
 
   let finalTerminal: vscode.Terminal;
@@ -159,7 +139,7 @@ export default async function runJob(
 
       finalTerminal.sendText(
         `echo "Inside a similar container after the job's container exited: \n"
-        docker run -it --rm -v ${volume} --workdir ${homeDir} ${latestCommmittedImageId}`
+        docker run -it --rm -v ${volume} ${latestCommmittedImageId}`
       );
       finalTerminal.show();
     }

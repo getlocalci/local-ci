@@ -31,26 +31,42 @@ export default function writeProcessFile(
       return;
     }
 
-    // Simulate persist_to_workspace by copying the persisted files to the volume.
+    // Simulate attach_workspace and persist_to_workspace.
     // @todo: handle other jobs that persist_to_workspace, like https://github.com/kefranabg/bento-starter/blob/c5ec78a033d3915d700bd6463594508098d46448/.circleci/config.yml#L81
     config.jobs[checkoutJob].steps = config.jobs[checkoutJob].steps?.map(
       (step: Step) => {
-        if (typeof step === 'string' || !step?.persist_to_workspace) {
+        if (typeof step === 'string') {
           return step;
         }
 
-        return {
-          run: {
-            command: step?.persist_to_workspace?.paths.reduce(
-              (accumulator, workspacePath) =>
-                `${accumulator}cp -r ${path.join(
-                  step?.persist_to_workspace?.root ?? '.',
-                  workspacePath
-                )} ${CONTAINER_STORAGE_DIRECTORY}\n`,
-              ''
-            ),
-          },
-        };
+        if (step?.attach_workspace) {
+          return {
+            run: {
+              name: 'Attach workspace',
+              command: `ln -s ${path.join(CONTAINER_STORAGE_DIRECTORY, '*')} ${
+                step.attach_workspace.at
+              }`,
+            },
+          };
+        }
+
+        if (step?.persist_to_workspace) {
+          return {
+            run: {
+              name: 'Persist to workspace',
+              command: step?.persist_to_workspace?.paths.reduce(
+                (accumulator, workspacePath) =>
+                  `${accumulator}cp -r ${path.join(
+                    step?.persist_to_workspace?.root ?? '.',
+                    workspacePath
+                  )} ${CONTAINER_STORAGE_DIRECTORY}\n`,
+                ''
+              ),
+            },
+          };
+        }
+
+        return step;
       }
     );
   });

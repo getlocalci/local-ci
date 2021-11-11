@@ -16,9 +16,10 @@ export default function uncommittedWarning(
     return;
   }
 
+  // Gets tracked files that have an uncommitted diff.
   const { stdout } = cp.spawn(
     'git',
-    ['status', '-s'],
+    ['status', '-suno'],
     getSpawnOptions(repoPath)
   );
 

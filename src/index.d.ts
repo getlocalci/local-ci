@@ -2,7 +2,7 @@ interface FullStep {
   checkout?: Record<string, unknown> | string;
   // eslint-disable-next-line @typescript-eslint/naming-convention
   attach_workspace?: {
-    at?: string;
+    at: string;
   };
   // eslint-disable-next-line @typescript-eslint/naming-convention
   persist_to_workspace?: {
