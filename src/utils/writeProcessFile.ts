@@ -26,14 +26,14 @@ export default function writeProcessFile(
     return;
   }
 
-  checkoutJobs.map(async (checkoutJob: string): Promise<void> => {
-    if (!config || !config.jobs[checkoutJob]?.steps) {
+  Object.keys(config.jobs).map(async (jobName: string): Promise<void> => {
+    if (!config || !config.jobs[jobName]?.steps) {
       return;
     }
 
     // Simulate attach_workspace and persist_to_workspace.
     // @todo: handle other jobs that persist_to_workspace, like https://github.com/kefranabg/bento-starter/blob/c5ec78a033d3915d700bd6463594508098d46448/.circleci/config.yml#L81
-    config.jobs[checkoutJob].steps = config.jobs[checkoutJob].steps?.map(
+    config.jobs[jobName].steps = config.jobs[jobName].steps?.map(
       (step: Step) => {
         if (typeof step === 'string') {
           return step;
