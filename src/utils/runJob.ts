@@ -99,8 +99,7 @@ export default async function runJob(
       sleep 1
     done
     echo "Inside the job's container:"
-    docker exec -it $(get_running_container ${jobImage}) /bin/sh || exit 1
-  `);
+    docker exec -it $(get_running_container ${jobImage}) /bin/sh || exit 1`);
 
   let finalTerminal: vscode.Terminal;
   vscode.window.onDidCloseTerminal(async (closedTerminal) => {

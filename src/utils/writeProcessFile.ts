@@ -55,11 +55,13 @@ export default function writeProcessFile(
             run: {
               name: 'Persist to workspace',
               command: step?.persist_to_workspace?.paths.reduce(
-                (accumulator, workspacePath) =>
-                  `${accumulator}cp -r ${path.join(
+                (accumulator, workspacePath) => {
+                  const pathToPersist = path.join(
                     step?.persist_to_workspace?.root ?? '.',
                     workspacePath
-                  )} ${CONTAINER_STORAGE_DIRECTORY}\n`,
+                  );
+                  return `${accumulator} cp -rn ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY}\n`;
+                },
                 ''
               ),
             },
