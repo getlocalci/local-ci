@@ -5,7 +5,6 @@ import { getBinaryPath } from '../../node/binary.js';
 import areTerminalsClosed from './areTerminalsClosed';
 import cleanUpCommittedImages from './cleanUpCommittedImages';
 import commitContainer from './commitContainer';
-import getAttachWorkspaceCommand from './getAttachWorkspaceCommand';
 import getCheckoutJobs from './getCheckoutJobs';
 import getConfigFilePath from './getConfigFilePath';
 import getConfigFromPath from './getConfigFromPath';
@@ -19,7 +18,6 @@ import getTerminalName from './getTerminalName';
 import showMainTerminalHelperMessages from './showMainTerminalHelperMessages';
 import showFinalTerminalHelperMessages from './showFinalTerminalHelperMessages';
 import {
-  ATTACH_WORKSPACE_STEP_NAME,
   GET_RUNNING_CONTAINER_FUNCTION,
   COMMITTED_IMAGE_NAMESPACE,
   CONTAINER_STORAGE_DIRECTORY,
