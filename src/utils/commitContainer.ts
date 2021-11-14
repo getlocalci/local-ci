@@ -11,6 +11,7 @@ export default function commitContainer(
   imageRepo: string
 ): void {
   const newImageRepoAndTag = `${imageRepo}:${new Date().getTime()}`;
+
   cp.spawn(
     '/bin/sh',
     [

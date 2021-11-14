@@ -49,21 +49,19 @@ export default async function runJob(
   const job = parsedProcessFile?.jobs[jobName];
   uncommittedWarning(context, repoPath, jobName, checkoutJobs);
 
-  // If this is the only checkout job, rm the entire local volume directory.
-  // This job will checkout to that volume, and there could be an error
-  // if it attempts to cp to it and the files exist.
+  // If this is the only checkout job, it's probably at the beginning of the workflow.
+  // So delete the local volume directory to give a clean start to the workflow,
+  // without files saved from any previous runs.
   if (checkoutJobs.includes(jobName) && 1 === checkoutJobs.length) {
     fs.rmSync(localVolume, { recursive: true, force: true });
   }
 
-  const jobImage = getImageFromJob(job);
-
-  // This volume allows persisting files between jobs.
-  const volume = `${localVolume}:${CONTAINER_STORAGE_DIRECTORY}`;
-
   if (!fs.existsSync(localVolume)) {
     fs.mkdirSync(localVolume, { recursive: true });
   }
+
+  // This allows persisting files between jobs with persist_to_workspace and attach_workspace.
+  const volume = `${localVolume}:${CONTAINER_STORAGE_DIRECTORY}`;
 
   // @todo: maybe don't have a volume at all if there's no persist_to_workspace or attach_workspace.
   terminal.sendText(
@@ -73,8 +71,7 @@ export default async function runJob(
   showMainTerminalHelperMessages();
   const committedImageRepo = `${COMMITTED_IMAGE_NAMESPACE}/${jobName}`;
 
-  commitContainer(jobImage, committedImageRepo);
-
+  const jobImage = getImageFromJob(job);
   const intervalId = setInterval(() => {
     commitContainer(jobImage, committedImageRepo);
   }, 2000);
