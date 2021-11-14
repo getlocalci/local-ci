@@ -32,7 +32,7 @@ export default async function runJob(
   const repoPath = path.dirname(path.dirname(configFilePath));
   const terminal = vscode.window.createTerminal({
     name: getTerminalName(jobName),
-    message: `About to run the CircleCI® job ${jobName}…`,
+    message: `Running the CircleCI® job ${jobName}…`,
     iconPath: vscode.Uri.joinPath(
       context.extensionUri,
       'resources',
