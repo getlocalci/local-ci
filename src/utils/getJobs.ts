@@ -27,7 +27,10 @@ export default async function getJobs(
             return [
               ...accumulator,
               ...workflow.jobs.reduce((accumulator: string[], job) => {
-                return [...accumulator, ...Object.keys(job)];
+                return [
+                  ...accumulator,
+                  ...(typeof job === 'string' ? [job] : Object.keys(job)),
+                ];
               }, []),
             ];
           },

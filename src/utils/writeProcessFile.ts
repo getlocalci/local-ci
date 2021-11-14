@@ -4,7 +4,10 @@ import * as yaml from 'js-yaml';
 import getAttachWorkspaceCommand from './getAttachWorkspaceCommand';
 import getCheckoutJobs from './getCheckoutJobs';
 import getConfig from './getConfig';
-import { CONTAINER_STORAGE_DIRECTORY } from '../constants';
+import {
+  ATTACH_WORKSPACE_STEP_NAME,
+  CONTAINER_STORAGE_DIRECTORY,
+} from '../constants';
 
 // Overwrites parts of the process.yml file.
 // When there's a persist_to_workspace value in a checkout job, this copies
@@ -43,7 +46,7 @@ export default function writeProcessFile(
         if (step?.attach_workspace) {
           return {
             run: {
-              name: 'Attach workspace',
+              name: ATTACH_WORKSPACE_STEP_NAME,
               command: getAttachWorkspaceCommand(step),
             },
           };
@@ -59,7 +62,9 @@ export default function writeProcessFile(
                     step?.persist_to_workspace?.root ?? '.',
                     workspacePath
                   );
-                  return `${accumulator} cp -rn ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY}\n`;
+
+                  // BusyBox doesn't have the -n option.
+                  return `${accumulator} cp -rn ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY} || cp -ru ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY} \n`;
                 },
                 ''
               ),

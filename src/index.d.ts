@@ -1,3 +1,4 @@
+// See https://circleci.com/docs/2.0/configuration-reference/
 interface FullStep {
   checkout?: Record<string, unknown> | string;
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -9,9 +10,10 @@ interface FullStep {
     root: string;
     paths: Array<string>;
   };
-  run?: string | {
-    command?: string;
-  };
+  run?: {
+    command: string;
+    name?: string;
+  } | string;
 }
 
 type Step = FullStep | 'checkout' | string;

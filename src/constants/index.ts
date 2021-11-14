@@ -1,3 +1,4 @@
+export const ATTACH_WORKSPACE_STEP_NAME = 'Attach workspace';
 export const COMMITTED_IMAGE_NAMESPACE = 'local-ci';
 export const SELECTED_CONFIG_PATH = 'local-ci.config.path';
 export const LICENSE_ERROR = 'localCiLicenseKeyError';

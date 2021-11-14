@@ -19,6 +19,7 @@ import getTerminalName from './getTerminalName';
 import showMainTerminalHelperMessages from './showMainTerminalHelperMessages';
 import showFinalTerminalHelperMessages from './showFinalTerminalHelperMessages';
 import {
+  ATTACH_WORKSPACE_STEP_NAME,
   GET_RUNNING_CONTAINER_FUNCTION,
   COMMITTED_IMAGE_NAMESPACE,
   CONTAINER_STORAGE_DIRECTORY,
@@ -141,15 +142,18 @@ export default async function runJob(
         `echo "Inside a similar container after the job's container exited: \n"
         docker run -it --rm -v ${volume} ${latestCommmittedImageId}`
       );
-      finalTerminal.sendText('cd ~/');
 
       const attachWorkspaceStep = job?.steps?.find(
-        (step) => typeof step !== 'string' && !!step.attach_workspace
+        (step) =>
+          typeof step !== 'string' &&
+          typeof step?.run !== 'string' &&
+          step?.run?.name === ATTACH_WORKSPACE_STEP_NAME
       );
 
       if (attachWorkspaceStep) {
         finalTerminal.sendText(getAttachWorkspaceCommand(attachWorkspaceStep));
       }
+      finalTerminal.sendText('cd ~/');
       finalTerminal.show();
     }
   });
