@@ -4,10 +4,7 @@ import * as yaml from 'js-yaml';
 import getAttachWorkspaceCommand from './getAttachWorkspaceCommand';
 import getCheckoutJobs from './getCheckoutJobs';
 import getConfig from './getConfig';
-import {
-  ATTACH_WORKSPACE_STEP_NAME,
-  CONTAINER_STORAGE_DIRECTORY,
-} from '../constants';
+import { CONTAINER_STORAGE_DIRECTORY } from '../constants';
 
 // Overwrites parts of the process.yml file.
 // When there's a persist_to_workspace value in a checkout job, this copies
@@ -46,7 +43,7 @@ export default function writeProcessFile(
         if (step?.attach_workspace) {
           return {
             run: {
-              name: ATTACH_WORKSPACE_STEP_NAME,
+              name: 'Attach workspace',
               command: getAttachWorkspaceCommand(step),
             },
           };
