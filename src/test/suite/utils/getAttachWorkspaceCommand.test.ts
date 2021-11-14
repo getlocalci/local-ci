@@ -1,11 +1,5 @@
 import * as assert from 'assert';
-import * as mocha from 'mocha';
-import * as sinon from 'sinon';
 import getAttachWorkspaceCommand from '../../../utils/getAttachWorkspaceCommand';
-
-mocha.afterEach(() => {
-  sinon.restore();
-});
 
 suite('getAttachWorkspaceCommand', () => {
   test('No attach_workspace', () => {

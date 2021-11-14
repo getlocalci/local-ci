@@ -140,19 +140,9 @@ export default async function runJob(
 
       finalTerminal.sendText(
         `echo "Inside a similar container after the job's container exited: \n"
-        docker run -it --rm -v ${volume} ${latestCommmittedImageId}`
+        docker run -it --rm -v ${volume} $(docker images ${committedImageRepo} --format "{{.ID}} {{.Tag}}" | sort -k 2 -h | tail -n1 | awk '{print $1}')`
       );
 
-      const attachWorkspaceStep = job?.steps?.find(
-        (step) =>
-          typeof step !== 'string' &&
-          typeof step?.run !== 'string' &&
-          step?.run?.name === ATTACH_WORKSPACE_STEP_NAME
-      );
-
-      if (attachWorkspaceStep) {
-        finalTerminal.sendText(getAttachWorkspaceCommand(attachWorkspaceStep));
-      }
       finalTerminal.sendText('cd ~/');
       finalTerminal.show();
     }
