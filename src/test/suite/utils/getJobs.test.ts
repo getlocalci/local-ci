@@ -27,7 +27,9 @@ suite('getJobs', () => {
         jobs: {},
         workflows: {
           'test-deploy': {
-            test: { docker: [{ image: 'cimg/node:16.8.0-browsers' }] },
+            jobs: [
+              { test: { docker: [{ image: 'cimg/node:16.8.0-browsers' }] } },
+            ],
           },
         },
       });
@@ -49,9 +51,11 @@ suite('getJobs', () => {
         jobs: {},
         workflows: {
           'test-deploy': {
-            lint: { docker: [{ image: 'cimg/node:16.8.0' }] },
-            test: { docker: [{ image: 'cimg/node:16.8.0-browsers' }] },
-            deploy: { docker: [{ image: 'cimg/node:16.8.0-browsers' }] },
+            jobs: [
+              { lint: { docker: [{ image: 'cimg/node:16.8.0' }] } },
+              { test: { docker: [{ image: 'cimg/node:16.8.0-browsers' }] } },
+              { deploy: { docker: [{ image: 'cimg/node:16.8.0-browsers' }] } },
+            ],
           },
         },
       });
