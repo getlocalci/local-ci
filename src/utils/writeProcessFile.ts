@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as yaml from 'js-yaml';
+import getAttachWorkspaceCommand from './getAttachWorkspaceCommand';
 import getCheckoutJobs from './getCheckoutJobs';
 import getConfig from './getConfig';
 import { CONTAINER_STORAGE_DIRECTORY } from '../constants';
@@ -43,9 +44,7 @@ export default function writeProcessFile(
           return {
             run: {
               name: 'Attach workspace',
-              command: `cp -rn ${path.join(CONTAINER_STORAGE_DIRECTORY, '*')} ${
-                step.attach_workspace.at
-              }`,
+              command: getAttachWorkspaceCommand(step),
             },
           };
         }

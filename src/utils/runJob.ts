@@ -5,6 +5,7 @@ import { getBinaryPath } from '../../node/binary.js';
 import areTerminalsClosed from './areTerminalsClosed';
 import cleanUpCommittedImages from './cleanUpCommittedImages';
 import commitContainer from './commitContainer';
+import getAttachWorkspaceCommand from './getAttachWorkspaceCommand';
 import getConfigFilePath from './getConfigFilePath';
 import getConfigFromPath from './getConfigFromPath';
 import getCheckoutJobs from './getCheckoutJobs';
@@ -141,6 +142,14 @@ export default async function runJob(
         docker run -it --rm -v ${volume} ${latestCommmittedImageId}`
       );
       finalTerminal.sendText('cd ~/');
+
+      const attachWorkspaceStep = job?.steps?.find(
+        (step) => typeof step !== 'string' && !!step.attach_workspace
+      );
+
+      if (attachWorkspaceStep) {
+        finalTerminal.sendText(getAttachWorkspaceCommand(attachWorkspaceStep));
+      }
       finalTerminal.show();
     }
   });
