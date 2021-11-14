@@ -43,7 +43,7 @@ export default function writeProcessFile(
           return {
             run: {
               name: 'Attach workspace',
-              command: `ln -s ${path.join(CONTAINER_STORAGE_DIRECTORY, '*')} ${
+              command: `cp -rn ${path.join(CONTAINER_STORAGE_DIRECTORY, '*')} ${
                 step.attach_workspace.at
               }`,
             },

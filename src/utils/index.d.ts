@@ -1,5 +1,10 @@
 interface CiConfigWithJobs {
   jobs: Record<string, Job>;
+  workflows: {
+    [key: string]: {
+      jobs: Record<string, unknown>[];
+    }
+  }
 }
 
 type CiConfig = CiConfigWithJobs | undefined;

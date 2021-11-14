@@ -140,6 +140,7 @@ export default async function runJob(
         `echo "Inside a similar container after the job's container exited: \n"
         docker run -it --rm -v ${volume} ${latestCommmittedImageId}`
       );
+      finalTerminal.sendText('cd ~/');
       finalTerminal.show();
     }
   });

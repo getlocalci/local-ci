@@ -16,8 +16,25 @@ export default async function getJobs(
       new Warning(`Sorry, this doesn't work on Windows`),
     ]);
   }
+  const config = getConfig(processedConfig);
+  const jobs =
+    !!config && Object.values(config?.workflows)?.length
+      ? Object.values(config?.workflows).reduce(
+          (accumulator: string[], workflow) => {
+            if (!workflow?.jobs) {
+              return accumulator;
+            }
+            return [
+              ...accumulator,
+              ...workflow.jobs.reduce((accumulator: string[], job) => {
+                return [...accumulator, ...Object.keys(job)];
+              }, []),
+            ];
+          },
+          []
+        )
+      : [];
 
-  const jobs = Object.keys(getConfig(processedConfig)?.jobs ?? {});
   return jobs.length
     ? jobs.map((jobName) => new Job(jobName, jobName === runningJob))
     : [
