@@ -24,7 +24,10 @@ suite('getJobs', () => {
       .expects('load')
       .once()
       .returns({
-        jobs: { test: { docker: [{ image: 'cimg/node:16.8.0-browsers' }] } },
+        jobs: {},
+        workflows: {
+          test: { docker: [{ image: 'cimg/node:16.8.0-browsers' }] },
+        },
       });
 
     assert.strictEqual(
@@ -41,7 +44,8 @@ suite('getJobs', () => {
       .expects('load')
       .once()
       .returns({
-        jobs: {
+        jobs: {},
+        workflows: {
           lint: { docker: [{ image: 'cimg/node:16.8.0' }] },
           test: { docker: [{ image: 'cimg/node:16.8.0-browsers' }] },
           deploy: { docker: [{ image: 'cimg/node:16.8.0-browsers' }] },
