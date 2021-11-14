@@ -8,7 +8,7 @@ interface FullStep {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   persist_to_workspace?: {
     root: string;
-    paths: string | Array<string>;
+    paths: Array<string>;
   };
   run?: {
     command: string;

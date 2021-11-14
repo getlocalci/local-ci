@@ -2,7 +2,6 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as vscode from 'vscode';
 import { getBinaryPath } from '../../node/binary.js';
-import Delayer from '../classes/Delayer';
 import areTerminalsClosed from './areTerminalsClosed';
 import cleanUpCommittedImages from './cleanUpCommittedImages';
 import commitContainer from './commitContainer';
@@ -73,11 +72,9 @@ export default async function runJob(
   const committedImageRepo = `${COMMITTED_IMAGE_NAMESPACE}/${jobName}`;
 
   const jobImage = getImageFromJob(job);
-  const delayer = new Delayer(2000);
-  const intervalId = setInterval(
-    () => delayer.trigger(commitContainer(jobImage, committedImageRepo)),
-    200
-  );
+  const intervalId = setInterval(() => {
+    commitContainer(jobImage, committedImageRepo);
+  }, 2000);
 
   const debuggingTerminal = vscode.window.createTerminal({
     name: getDebuggingTerminalName(jobName),
@@ -112,7 +109,6 @@ export default async function runJob(
     }
 
     clearInterval(intervalId);
-    delayer.cancel();
     if (finalTerminal || areTerminalsClosed(terminal, debuggingTerminal)) {
       return;
     }
@@ -151,7 +147,6 @@ export default async function runJob(
   vscode.window.onDidCloseTerminal(() => {
     if (areTerminalsClosed(terminal, debuggingTerminal, finalTerminal)) {
       clearInterval(intervalId);
-      delayer.cancel();
       cleanUpCommittedImages(committedImageRepo);
     }
   });

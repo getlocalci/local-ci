@@ -9,10 +9,10 @@ import { GET_RUNNING_CONTAINER_FUNCTION } from '../constants';
 export default function commitContainer(
   dockerImage: string,
   imageRepo: string
-): Promise<void> {
+): void {
   const newImageRepoAndTag = `${imageRepo}:${new Date().getTime()}`;
 
-  const { stdout, stderr } = cp.spawn(
+  cp.spawn(
     '/bin/sh',
     [
       '-c',
@@ -33,23 +33,4 @@ export default function commitContainer(
     ],
     getSpawnOptions()
   );
-
-  return new Promise((resolve, reject) => {
-    stdout.on('data', (data) => {
-      const d = data.toString();
-      resolve();
-    });
-    stdout.on('error', (data) => {
-      const d = data.toString();
-      reject();
-    });
-    stderr.on('data', (data) => {
-      const d = data.toString();
-      reject();
-    });
-    stderr.on('data', (data) => {
-      const d = data.toString();
-      reject();
-    });
-  });
 }
