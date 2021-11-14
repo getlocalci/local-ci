@@ -6,6 +6,7 @@ interface ITask<T> {
 export default class Delayer<T> {
   private timeout: null | NodeJS.Timeout;
   private completionPromise: Promise<T | undefined | null> | null;
+  private doReject: ((err: any) => void) | null;
   private doResolve:
     | ((value?: Promise<T | undefined | null> | null) => void)
     | null;
@@ -15,6 +16,7 @@ export default class Delayer<T> {
     this.timeout = null;
     this.completionPromise = null;
     this.doResolve = null;
+    this.doReject = null;
     this.task = null;
   }
 
@@ -48,6 +50,24 @@ export default class Delayer<T> {
     }, delay);
 
     return this.completionPromise;
+  }
+
+  cancel(): void {
+    this.cancelTimeout();
+
+    if (this.completionPromise) {
+      if (this.doReject) {
+        this.doReject(this.getCancelError());
+      }
+      this.completionPromise = null;
+    }
+  }
+
+  // Forked from https://github.com/microsoft/vscode/blob/0eee604f0151a6726e9a31b0b695e28fa988eeca/src/vs/base/common/errors.ts#L159
+  private getCancelError(): Error {
+    const error = new Error('canceledName');
+    error.name = error.message;
+    return error;
   }
 
   private cancelTimeout(): void {
