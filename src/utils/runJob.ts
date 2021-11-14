@@ -97,6 +97,7 @@ export default async function runJob(
     done
     echo "Inside the job's container:"
     docker exec -it $(get_running_container ${jobImage}) /bin/sh || exit 1`);
+  debuggingTerminal.sendText('cd ~/');
 
   let finalTerminal: vscode.Terminal;
   vscode.window.onDidCloseTerminal(async (closedTerminal) => {
@@ -116,10 +117,10 @@ export default async function runJob(
       committedImageRepo
     );
 
-    setTimeout(() => {
-      showFinalTerminalHelperMessages(latestCommmittedImageId);
-      cleanUpCommittedImages(committedImageRepo, latestCommmittedImageId);
-    }, 4000);
+    setTimeout(
+      () => showFinalTerminalHelperMessages(latestCommmittedImageId),
+      4000
+    );
 
     if (latestCommmittedImageId) {
       finalTerminal = vscode.window.createTerminal({

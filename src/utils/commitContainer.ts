@@ -20,14 +20,15 @@ export default function commitContainer(
 
       running_container=$(get_running_container ${dockerImage})
       if [[ -n $running_container ]]; then
-        latest_committed_image=$(docker images ${imageRepo} --format "{{.ID}} {{.Tag}}" | sort -k 2 -h | tail -n1 | awk '{print $1}')
-        for previous_image in $(docker images -q "${imageRepo}"); do
-          if [[ $previous_image != $latest_committed_image ]]; then
-            docker rmi $previous_image
-          fi
-        done;
-
-        docker commit --pause=false $running_container ${newImageRepoAndTag}
+        committed_image=$(docker commit --pause=false $running_container ${newImageRepoAndTag})
+        if [[ -n $committed_image ]]; then
+          latest_committed_image=$(docker images ${imageRepo} --format "{{.ID}} {{.Tag}}" | sort -k 2 -h | tail -n1 | awk '{print $1}')
+          for previous_image in $(docker images -q "${imageRepo}"); do
+            if [[ $previous_image != $latest_committed_image ]]; then
+              docker rmi $previous_image
+            fi
+          done;
+        fi
       fi`,
     ],
     getSpawnOptions()

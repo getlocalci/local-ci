@@ -2,6 +2,8 @@ import * as cp from 'child_process';
 import * as vscode from 'vscode';
 import getSpawnOptions from './getSpawnOptions';
 
+// @todo: this isn't working.
+// It probably needs to run the logic to get the latest image again.
 export default function showFinalTerminalHelperMessages(
   finalTerminalContainerId: string
 ): void {
