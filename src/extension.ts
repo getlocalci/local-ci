@@ -188,9 +188,6 @@ export function activate(context: vscode.ExtensionContext): void {
       );
       vscode.commands.executeCommand(RUN_JOB_COMMAND, jobName);
       vscode.window.showInformationMessage(
-        `Next you'll get an interactive bash shell to debug it in another terminal`
-      );
-      vscode.window.showInformationMessage(
         `👈 The job ${jobName} is now running in your local`
       );
 
