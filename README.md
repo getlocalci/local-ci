@@ -13,7 +13,7 @@ Debug CircleCI® jobs locally with Bash access and persistence between jobs. All
 
 Thanks to [CirleCI-Public/cirlceci-cli](https://github.com/circleci-public/circleci-cli), which this uses.
 
-This extension allows shell access to the jobs, and persists the workspace between jobs.
+You'll have Bash access to jobs, and the workspace will persist between jobs.
 
 CircleCI® is a registered trademark of Circle Internet Services, Inc.
 

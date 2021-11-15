@@ -27,4 +27,8 @@ suite('getSpawnOptions', () => {
     sinon.mock(os).expects('platform').once().returns('darwin');
     assert.ok(getSpawnOptions().env.PATH.includes('/usr/local/bin'));
   });
+
+  test('With cwd argument', () => {
+    assert.strictEqual(getSpawnOptions('/foo/baz').cwd, '/foo/baz');
+  });
 });

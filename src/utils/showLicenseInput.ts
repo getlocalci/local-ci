@@ -30,7 +30,7 @@ export default async function showLicenseInput(
   if (isValid) {
     context.secrets.store(LICENSE_KEY, sanitizeLicenseKey(enteredLicenseKey));
     vscode.window.showInformationMessage(
-      'Thank you, your Local CI license key is valid and was activated!'
+      'Thank you, your Local CI license key is valid and activated!'
     );
     completedCallback();
     successCallback();

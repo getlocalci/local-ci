@@ -23,10 +23,13 @@ jobs:
     executor:
       name: node
     steps:
+      - browser-tools/install-browser-tools
+      - node/install-npm
       - checkout
+      - node/install-packages
       - run:
           name: "Deploy plugin to marketplace"
-          command: npm ci && npm run deploy
+          command: npm run deploy
 
 workflows:
   test:

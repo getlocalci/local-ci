@@ -20,6 +20,7 @@ suite('getCheckoutJobs', () => {
     assert.deepStrictEqual(
       getCheckoutJobs({
         jobs: { test: { docker: [{ image: 'cimg/node:16.8.0-browsers' }] } },
+        workflows: {},
       }),
       []
     );
@@ -34,6 +35,7 @@ suite('getCheckoutJobs', () => {
             steps: ['node/install-npm', 'checkout'],
           },
         },
+        workflows: {},
       }),
       ['test']
     );

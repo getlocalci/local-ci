@@ -1,3 +1,4 @@
+import * as fs from 'fs';
 import * as vscode from 'vscode';
 import Command from './Command';
 import Job from './Job';
@@ -10,6 +11,7 @@ import {
   TRIAL_STARTED_TIMESTAMP,
   JOB_TREE_VIEW_ID,
 } from '../constants';
+import getAllConfigFilePaths from '../utils/getAllConfigFilePaths';
 import getConfigFilePath from '../utils/getConfigFilePath';
 import getDockerError from '../utils/getDockerError';
 import getProcessFilePath from '../utils/getProcessFilePath';
@@ -27,10 +29,12 @@ export default class JobProvider
     this._onDidChangeTreeData.event;
   private jobs: vscode.TreeItem[] | [] = [];
   private runningJob: string | undefined;
+  private suppressMessage: boolean | undefined;
 
   constructor(private readonly context: vscode.ExtensionContext) {}
 
-  refresh(job?: Job): void {
+  refresh(job?: Job, suppressMessage?: boolean): void {
+    this.suppressMessage = suppressMessage;
     this._onDidChangeTreeData.fire(job);
   }
 
@@ -40,8 +44,32 @@ export default class JobProvider
 
   async getChildren(): Promise<vscode.TreeItem[]> {
     const configFilePath = await getConfigFilePath(this.context);
-    const processedConfig = getProcessedConfig(configFilePath);
-    writeProcessFile(processedConfig, getProcessFilePath(configFilePath));
+    if (!configFilePath || !fs.existsSync(configFilePath)) {
+      return [
+        new Warning('Error: No jobs found'),
+        (await getAllConfigFilePaths(this.context)).length
+          ? new Command('Select repo', 'localCiJobs.selectRepo')
+          : new vscode.TreeItem(
+              'Please add a .circleci/config.yml to this workspace'
+            ),
+      ];
+    }
+
+    let processedConfig = '';
+    let processError = '';
+    try {
+      processedConfig = getProcessedConfig(configFilePath);
+      writeProcessFile(processedConfig, getProcessFilePath(configFilePath));
+    } catch (e) {
+      processError = (e as ErrorWithMessage)?.message;
+      if (!this.suppressMessage) {
+        vscode.window.showErrorMessage(
+          `There was an error processing the CircleCI config: ${
+            (e as ErrorWithMessage)?.message
+          }`
+        );
+      }
+    }
 
     const shouldEnableExtension =
       (await isLicenseValid(this.context)) ||
@@ -49,7 +77,13 @@ export default class JobProvider
     const dockerRunning = isDockerRunning();
 
     if (shouldEnableExtension && dockerRunning) {
-      this.jobs = await getJobs(this.context, processedConfig, this.runningJob);
+      this.jobs = processError
+        ? [
+            new Warning('Error processing the CircleCI config:'),
+            new vscode.TreeItem(processError),
+            new Command('Try Again', `${JOB_TREE_VIEW_ID}.refresh`),
+          ]
+        : await getJobs(this.context, processedConfig, this.runningJob);
       this.runningJob = undefined;
     }
 

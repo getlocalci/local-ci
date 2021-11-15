@@ -16,14 +16,33 @@ export default async function getJobs(
       new Warning(`Sorry, this doesn't work on Windows`),
     ]);
   }
+  const config = getConfig(processedConfig);
+  const jobs =
+    !!config && Object.values(config?.workflows)?.length
+      ? Object.values(config?.workflows).reduce(
+          (accumulator: string[], workflow) => {
+            if (!workflow?.jobs) {
+              return accumulator;
+            }
+            return [
+              ...accumulator,
+              ...workflow.jobs.reduce((accumulator: string[], job) => {
+                return [
+                  ...accumulator,
+                  ...(typeof job === 'string' ? [job] : Object.keys(job)),
+                ];
+              }, []),
+            ];
+          },
+          []
+        )
+      : [];
 
-  const jobs = Object.keys(getConfig(processedConfig)?.jobs ?? {});
-  const configFilePaths = await getAllConfigFilePaths(context);
   return jobs.length
     ? jobs.map((jobName) => new Job(jobName, jobName === runningJob))
     : [
         new Warning('Error: No jobs found'),
-        configFilePaths.length
+        (await getAllConfigFilePaths(context)).length
           ? new Command('Select repo to get jobs', 'localCiJobs.selectRepo')
           : new vscode.TreeItem(
               'Please add a .circleci/config.yml to this workspace'

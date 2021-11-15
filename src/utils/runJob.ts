@@ -5,12 +5,11 @@ import { getBinaryPath } from '../../node/binary.js';
 import areTerminalsClosed from './areTerminalsClosed';
 import cleanUpCommittedImages from './cleanUpCommittedImages';
 import commitContainer from './commitContainer';
+import getCheckoutJobs from './getCheckoutJobs';
 import getConfigFilePath from './getConfigFilePath';
 import getConfigFromPath from './getConfigFromPath';
-import getCheckoutJobs from './getCheckoutJobs';
 import getDebuggingTerminalName from './getDebuggingTerminalName';
 import getFinalDebuggingTerminalName from './getFinalTerminalName';
-import getHomeDirectory from './getHomeDirectory';
 import getImageFromJob from './getImageFromJob';
 import getLatestCommittedImage from './getLatestCommittedImage';
 import getLocalVolumePath from './getLocalVolumePath';
@@ -23,7 +22,7 @@ import {
   COMMITTED_IMAGE_NAMESPACE,
   CONTAINER_STORAGE_DIRECTORY,
 } from '../constants';
-import normalizeDirectory from './normalizeDirectory';
+import uncommittedWarning from './uncommittedWarning';
 
 export default async function runJob(
   context: vscode.ExtensionContext,
@@ -33,7 +32,7 @@ export default async function runJob(
   const repoPath = path.dirname(path.dirname(configFilePath));
   const terminal = vscode.window.createTerminal({
     name: getTerminalName(jobName),
-    message: `About to run the CircleCI® job ${jobName}…`,
+    message: `Running the CircleCI® job ${jobName}…`,
     iconPath: vscode.Uri.joinPath(
       context.extensionUri,
       'resources',
@@ -48,39 +47,21 @@ export default async function runJob(
   const checkoutJobs = getCheckoutJobs(parsedProcessFile);
   const localVolume = getLocalVolumePath(configFilePath);
   const job = parsedProcessFile?.jobs[jobName];
+  uncommittedWarning(context, repoPath, jobName, checkoutJobs);
 
-  // If this is the only checkout job, rm the entire local volume directory.
-  // This job will checkout to that volume, and there could be an error
-  // if it attempts to cp to it and the files exist.
+  // If this is the only checkout job, it's probably at the beginning of the workflow.
+  // So delete the local volume directory to give a clean start to the workflow,
+  // without files saved from any previous run.
   if (checkoutJobs.includes(jobName) && 1 === checkoutJobs.length) {
     fs.rmSync(localVolume, { recursive: true, force: true });
   }
 
-  const attachWorkspaceSteps: FullStep[] = job?.steps?.length
-    ? (job?.steps as Array<FullStep>).filter((step) => !!step?.attach_workspace)
-    : [];
-
-  const attachWorkspaceAt =
-    attachWorkspaceSteps.length && attachWorkspaceSteps[0]?.attach_workspace?.at
-      ? attachWorkspaceSteps[0]?.attach_workspace.at
-      : '';
-
-  const jobImage = getImageFromJob(job);
-  const homeDir = await getHomeDirectory(jobImage, terminal);
-
-  // Jobs with no attachWorkspaceAt often need a different volume path.
-  // If they use the working_directory as the volume path,
-  // There's usually an error if they checkout:
-  // Error: Directory (/home/circleci/foo) you are trying to checkout to is not empty and not a git repository.
-  const volume = `${localVolume}:${normalizeDirectory(
-    attachWorkspaceAt || CONTAINER_STORAGE_DIRECTORY,
-    homeDir,
-    job
-  )}`;
-
   if (!fs.existsSync(localVolume)) {
     fs.mkdirSync(localVolume, { recursive: true });
   }
+
+  // This allows persisting files between jobs with persist_to_workspace and attach_workspace.
+  const volume = `${localVolume}:${CONTAINER_STORAGE_DIRECTORY}`;
 
   // @todo: maybe don't have a volume at all if there's no persist_to_workspace or attach_workspace.
   terminal.sendText(
@@ -90,8 +71,7 @@ export default async function runJob(
   showMainTerminalHelperMessages();
   const committedImageRepo = `${COMMITTED_IMAGE_NAMESPACE}/${jobName}`;
 
-  commitContainer(jobImage, committedImageRepo);
-
+  const jobImage = getImageFromJob(job);
   const intervalId = setInterval(() => {
     commitContainer(jobImage, committedImageRepo);
   }, 2000);
@@ -116,8 +96,8 @@ export default async function runJob(
       sleep 1
     done
     echo "Inside the job's container:"
-    docker exec -it --workdir ${homeDir} $(get_running_container ${jobImage}) /bin/sh || exit 1
-  `);
+    docker exec -it $(get_running_container ${jobImage}) /bin/sh || exit 1`);
+  debuggingTerminal.sendText('cd ~/');
 
   let finalTerminal: vscode.Terminal;
   vscode.window.onDidCloseTerminal(async (closedTerminal) => {
@@ -137,10 +117,10 @@ export default async function runJob(
       committedImageRepo
     );
 
-    setTimeout(() => {
-      showFinalTerminalHelperMessages(latestCommmittedImageId);
-      cleanUpCommittedImages(committedImageRepo, latestCommmittedImageId);
-    }, 4000);
+    setTimeout(
+      () => showFinalTerminalHelperMessages(latestCommmittedImageId),
+      4000
+    );
 
     if (latestCommmittedImageId) {
       finalTerminal = vscode.window.createTerminal({
@@ -156,8 +136,10 @@ export default async function runJob(
 
       finalTerminal.sendText(
         `echo "Inside a similar container after the job's container exited: \n"
-        docker run -it --rm -v ${volume} --workdir ${homeDir} ${latestCommmittedImageId}`
+        docker run -it --rm -v ${volume} $(docker images ${committedImageRepo} --format "{{.ID}} {{.Tag}}" | sort -k 2 -h | tail -n1 | awk '{print $1}')`
       );
+
+      finalTerminal.sendText('cd ~/');
       finalTerminal.show();
     }
   });

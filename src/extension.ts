@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import Delayer from './classes/Delayer';
 import Job from './classes/Job';
 import JobProvider from './classes/JobProvider';
 import LicenseProvider from './classes/LicenseProvider';
@@ -13,15 +14,15 @@ import {
   RUN_JOB_COMMAND,
   SELECTED_CONFIG_PATH,
 } from './constants';
-import disposeTerminalsForJob from './utils/disposeTerminalsForJob';
-import getLicenseInformation from './utils/getLicenseInformation';
 import cleanUpCommittedImages from './utils/cleanUpCommittedImages';
+import disposeTerminalsForJob from './utils/disposeTerminalsForJob';
 import getAllConfigFilePaths from './utils/getAllConfigFilePaths';
 import getCheckoutJobs from './utils/getCheckoutJobs';
 import getConfig from './utils/getConfig';
 import getConfigFilePath from './utils/getConfigFilePath';
 import getDebuggingTerminalName from './utils/getDebuggingTerminalName';
 import getFinalTerminalName from './utils/getFinalTerminalName';
+import getLicenseInformation from './utils/getLicenseInformation';
 import getProcessedConfig from './utils/getProcessedConfig';
 import getProcessFilePath from './utils/getProcessFilePath';
 import getRepoBasename from './utils/getRepoBasename';
@@ -53,7 +54,10 @@ export function activate(context: vscode.ExtensionContext): void {
         .then((selection) => {
           if (selection?.title === confirmText) {
             vscode.window.terminals.forEach((terminal) => {
-              if (terminal.name.startsWith('Local CI')) {
+              if (
+                terminal.name.startsWith('Local CI') &&
+                !terminal.exitStatus
+              ) {
                 terminal.dispose();
               }
             });
@@ -157,9 +161,20 @@ export function activate(context: vscode.ExtensionContext): void {
     ),
     vscode.commands.registerCommand('local-ci.runWalkthroughJob', async () => {
       const configFilePath = await getConfigFilePath(context);
-      const processedConfig = getProcessedConfig(configFilePath);
-      writeProcessFile(processedConfig, getProcessFilePath(configFilePath));
+      let processedConfig;
+      try {
+        processedConfig = getProcessedConfig(configFilePath);
+      } catch (e) {
+        vscode.window.showErrorMessage(
+          `There was an error processing the CircleCI config: ${
+            (e as ErrorWithMessage)?.message
+          }`
+        );
 
+        return;
+      }
+
+      writeProcessFile(processedConfig, getProcessFilePath(configFilePath));
       const checkoutJobs = getCheckoutJobs(getConfig(processedConfig));
       if (!checkoutJobs.length) {
         return;
@@ -173,10 +188,10 @@ export function activate(context: vscode.ExtensionContext): void {
       );
       vscode.commands.executeCommand(RUN_JOB_COMMAND, jobName);
       vscode.window.showInformationMessage(
-        `Soon you'll get an interactive bash shell to debug it`
+        `Next you'll get an interactive bash shell to debug it in another terminal`
       );
       vscode.window.showInformationMessage(
-        `👈 The job ${jobName} is now running`
+        `👈 The job ${jobName} is now running in your local`
       );
 
       vscode.window.onDidOpenTerminal(async (terminal) => {
@@ -195,6 +210,20 @@ export function activate(context: vscode.ExtensionContext): void {
     })
   );
 
+  // When saving .circlci/config.yml, this refreshes the jobs tree.
+  const delayer = new Delayer(2000);
+  vscode.workspace.onDidSaveTextDocument(
+    async (textDocument: vscode.TextDocument): Promise<void> => {
+      if (
+        textDocument.uri.fsPath.endsWith('.circleci/config.yml') &&
+        textDocument.uri.fsPath === (await getConfigFilePath(context))
+      ) {
+        delayer.trigger(() => jobProvider.refresh(undefined, true));
+      }
+    }
+  );
+
+  const licenseCompletedCallback = () => licenseProvider.load();
   const licenseSuccessCallback = () => jobProvider.refresh();
   const licenseTreeViewId = 'localCiLicense';
   const licenseProvider = new LicenseProvider(context, licenseSuccessCallback);
@@ -210,7 +239,7 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand(ENTER_LICENSE_COMMAND, () => {
       showLicenseInput(
         context,
-        () => licenseProvider.load(),
+        licenseCompletedCallback,
         licenseSuccessCallback
       );
     })
@@ -223,7 +252,7 @@ export function activate(context: vscode.ExtensionContext): void {
       if (uri.path === '/enterLicense') {
         showLicenseInput(
           context,
-          () => licenseProvider.load(),
+          licenseCompletedCallback,
           licenseSuccessCallback
         );
       }

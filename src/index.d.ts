@@ -1,17 +1,19 @@
+// See https://circleci.com/docs/2.0/configuration-reference/
 interface FullStep {
   checkout?: Record<string, unknown> | string;
   // eslint-disable-next-line @typescript-eslint/naming-convention
   attach_workspace?: {
-    at?: string;
+    at: string;
   };
   // eslint-disable-next-line @typescript-eslint/naming-convention
   persist_to_workspace?: {
     root: string;
     paths: Array<string>;
   };
-  run?: string | {
-    command?: string;
-  };
+  run?: {
+    command: string;
+    name?: string;
+  } | string;
 }
 
 type Step = FullStep | 'checkout' | string;
