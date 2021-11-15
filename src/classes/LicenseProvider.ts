@@ -53,7 +53,7 @@ export default class LicenseProvider implements vscode.WebviewViewProvider {
 
         if (isValid) {
           vscode.window.showInformationMessage(
-            'Validation worked, your Local CI license key is valid and was activated!'
+            'Validation worked, your Local CI license key is valid and activated!'
           );
           this.load();
           this.licenseSuccessCallback();
