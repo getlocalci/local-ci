@@ -40,7 +40,6 @@ export default function writeProcessFile(
         }
 
         // Simulate attach_workspace and persist_to_workspace.
-        // @todo: handle other jobs that persist_to_workspace, like https://github.com/kefranabg/bento-starter/blob/c5ec78a033d3915d700bd6463594508098d46448/.circleci/config.yml#L81
         return {
           ...accumulator,
           [jobName]: {
