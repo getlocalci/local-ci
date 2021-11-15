@@ -29,7 +29,7 @@ jobs:
       - node/install-packages
       - run:
           name: "Deploy plugin to marketplace"
-          command: VSCE_PAT="$VSCE_PAT" npm run deploy
+          command: npm run deploy
 
 workflows:
   test:
