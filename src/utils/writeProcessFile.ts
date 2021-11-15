@@ -35,7 +35,7 @@ export default function writeProcessFile(
         if (!config || !config.jobs[jobName]?.steps) {
           return {
             ...accumulator,
-            [jobName]: config.jobs[jobName],
+            [jobName]: config?.jobs[jobName],
           };
         }
 

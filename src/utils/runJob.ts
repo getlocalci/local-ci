@@ -51,7 +51,7 @@ export default async function runJob(
 
   // If this is the only checkout job, it's probably at the beginning of the workflow.
   // So delete the local volume directory to give a clean start to the workflow,
-  // without files saved from any previous runs.
+  // without files saved from any previous run.
   if (checkoutJobs.includes(jobName) && 1 === checkoutJobs.length) {
     fs.rmSync(localVolume, { recursive: true, force: true });
   }
