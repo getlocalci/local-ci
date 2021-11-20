@@ -1,7 +1,7 @@
 {
   "name": "local-ci",
   "displayName": "Local CI",
-  "description": "Debug CircleCI® jobs locally with Bash access and workspace persistence between jobs. All in your local, no pushing and waiting.",
+  "description": "Debug CircleCI® jobs locally with Bash access and workspace persistence between jobs. Free preview, then paid license.",
   "version": "1.0.0",
   "publisher": "LocalCI",
   "contributors": [
@@ -19,10 +19,6 @@
     "workspace"
   ],
   "qna": "https://github.com/getlocalci/local-ci/discussions",
-  "galleryBanner": {
-    "color": "#eff1f3",
-    "theme": "light"
-  },
   "engines": {
     "vscode": "^1.59.0",
     "node": ">=16"
@@ -179,7 +175,7 @@
       {
         "id": "welcomeLocalCi",
         "title": "Local CI",
-        "description": "Debug CircleCI® jobs locally with Bash access and workspace persistence. All in your local, no pushing and waiting.",
+        "description": "Debug CircleCI® jobs locally with Bash access and workspace persistence. All in your local, no pushing and waiting. Not affiliated with CircleCI®.",
         "steps": [
           {
             "id": "operatingSystemNotice",
@@ -233,16 +229,16 @@
     },
     {
       "url": "https://img.shields.io/badge/%24-paid-orange",
-      "href": "https://getlocalci.com",
+      "href": "https://getlocalci.com/buy",
       "description": "Buy license key"
     },
     {
-      "url": "https://img.shields.io/badge/platform-macOS-brightgreen",
+      "url": "https://img.shields.io/badge/platform-macOS-yellow",
       "href": "https://getlocalci.come",
       "description": "Platform: macOS"
     },
     {
-      "url": "https://img.shields.io/badge/requires-CirlcleCI%C2%AE-brightgreen",
+      "url": "https://img.shields.io/badge/requires-CirlcleCI%C2%AE-yellow",
       "href": "https://circleci.com",
       "description": "Requires CircleCI®"
     }
