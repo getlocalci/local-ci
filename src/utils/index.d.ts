@@ -1,5 +1,7 @@
+type Jobs = Record<string, Job>;
+
 interface CiConfigWithJobs {
-  jobs: Record<string, Job>;
+  jobs: Jobs;
   workflows: {
     [key: string]: {
       jobs: (Record<string, unknown>|string)[];

@@ -6,6 +6,31 @@ import getCheckoutJobs from './getCheckoutJobs';
 import getConfig from './getConfig';
 import { CONTAINER_STORAGE_DIRECTORY } from '../constants';
 
+function getPersistToWorkspaceCommand(step: FullStep): string | undefined {
+  if (typeof step?.persist_to_workspace?.paths === 'string') {
+    const pathToPersist = path.join(
+      step?.persist_to_workspace?.root ?? '.',
+      step?.persist_to_workspace?.paths
+    );
+
+    // BusyBox doesn't have the -n option.
+    return `cp -rn ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY} || cp -ru ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY}`;
+  } else {
+    return step?.persist_to_workspace?.paths.reduce(
+      (accumulator, workspacePath) => {
+        const pathToPersist = path.join(
+          step?.persist_to_workspace?.root ?? '.',
+          workspacePath
+        );
+
+        // BusyBox doesn't have the -n option.
+        return `${accumulator} cp -rn ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY} || cp -ru ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY} \n`;
+      },
+      ''
+    );
+  }
+}
+
 // Overwrites parts of the process.yml file.
 // When there's a persist_to_workspace value in a checkout job, this copies
 // the files inside the container to the volume shared with the local machine.
@@ -31,7 +56,7 @@ export default function writeProcessFile(
   const newConfig = {
     ...config,
     jobs: Object.keys(config.jobs).reduce(
-      (accumulator: Record<string, Job>, jobName: string) => {
+      (accumulator: Jobs | Record<string, unknown>, jobName: string) => {
         if (!config || !config.jobs[jobName]?.steps) {
           return {
             ...accumulator,
@@ -59,35 +84,10 @@ export default function writeProcessFile(
               }
 
               if (step?.persist_to_workspace) {
-                let command;
-
-                if (typeof step?.persist_to_workspace?.paths === 'string') {
-                  const pathToPersist = path.join(
-                    step?.persist_to_workspace?.root ?? '.',
-                    step?.persist_to_workspace?.paths
-                  );
-
-                  // BusyBox doesn't have the -n option.
-                  command = `cp -rn ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY} || cp -ru ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY}`;
-                } else {
-                  command = step?.persist_to_workspace?.paths.reduce(
-                    (accumulator, workspacePath) => {
-                      const pathToPersist = path.join(
-                        step?.persist_to_workspace?.root ?? '.',
-                        workspacePath
-                      );
-
-                      // BusyBox doesn't have the -n option.
-                      return `${accumulator} cp -rn ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY} || cp -ru ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY} \n`;
-                    },
-                    ''
-                  );
-                }
-
                 return {
                   run: {
                     name: 'Persist to workspace',
-                    command,
+                    command: getPersistToWorkspaceCommand(step),
                   },
                 };
               }

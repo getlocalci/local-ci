@@ -87,7 +87,7 @@ export default async function runJob(
     cwd: repoPath,
   });
 
-  // Once the container is available, start an interactive bash session within the container.
+  // Once the container is available, run an interactive bash shell within the container.
   debuggingTerminal.sendText(`
     ${GET_RUNNING_CONTAINER_FUNCTION}
     echo "You'll get bash access to the job once this conditional is true:\n"

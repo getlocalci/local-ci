@@ -9,3 +9,4 @@
 - Select from multiple config files in a workspace
 - Add a walkthrough that runs a job and prompts to run another
 - Show a notice if Docker isn't running
+- Add a warning if there are uncommitted changes

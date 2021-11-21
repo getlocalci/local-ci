@@ -1,7 +1,7 @@
 {
   "name": "local-ci",
   "displayName": "Local CI",
-  "description": "Debug entire CircleCI® workflows locally, with Bash access. Free preview, then paid license.",
+  "description": "Debug CircleCI® workflows locally, with Bash access. Free preview, then paid license.",
   "version": "1.0.0",
   "publisher": "LocalCI",
   "contributors": [

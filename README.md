@@ -3,7 +3,7 @@
 [![Platform: macOS](https://img.shields.io/badge/platform-macOS-yellow)](https://getlocalci.come)
 [![Requires CircleCI®](https://img.shields.io/badge/requires-CirlcleCI%C2%AE-yellow)](https://circleci.com)
 
-Debug CircleCI® jobs locally with Bash access and persistence between jobs.
+Debug entire CircleCI® workflows locally, with Bash access and persistence between jobs.
 
 All in your local, no pushing commits and waiting. Not affiliated with CircleCI®.
 
@@ -39,7 +39,7 @@ CircleCI® is a registered trademark of Circle Internet Services, Inc.
 
 Local CI requires a [license](https://getlocalci.com/buy/) for $70 per month.
 
-But you'll get a free 2-day preview first, no sign-up or credit card needed.
+But first you'll get a free 2-day preview, no sign-up or credit card needed.
 
 ## Requirements
 
@@ -63,7 +63,7 @@ But the jobs still only run locally.
 
 Local CI has no server that runs jobs, so the site has no knowledge of the jobs or any data from them.
 
-If you have entered a license key, it only sends to the Local CI site a `GET` request with the license key and an `md5` hash of your VS Code [machineId](https://code.visualstudio.com/api/references/vscode-api#env).
+If you have entered a license key, it only sends to the [Local CI site](https://getlocalci.com) a `GET` request with the license key and an `md5` hash of your VS Code [machineId](https://code.visualstudio.com/api/references/vscode-api#env).
 
 This is to verify that the license key is only used on 1 machine.
 
@@ -75,11 +75,11 @@ Feel free to look at the [source code](https://github.com/getlocalci/local-ci/tr
 
 ## When To Use
 
-Local CI won't replace the CircleCI® service, it's a debugging tool to use alongside it.
+Local CI won't replace the CircleCI® service, it's a debugging tool to use with it.
 
 If you think CI will pass, it'll probably be faster to simply push a commit and let CI run.
 
-Local CI is not for deploying.
+Local CI is not for making deployments.
 
 ## License
 [GPL v2](LICENSE) or later
