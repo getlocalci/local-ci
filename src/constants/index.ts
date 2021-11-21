@@ -33,7 +33,7 @@ export const GET_PICARD_CONTAINER_FUNCTION = `get_picard_container() {
   done
 }`;
 export const GET_LICENSE_KEY_URL = 'https://getlocalci.com/buy';
-export const HELP_URL = 'https://getlocalci.com';
+export const HELP_URL = 'https://github.com/getlocalci/local-ci/discussions';
 export const JOB_TREE_VIEW_ID = 'localCiJobs';
 export const LICENSE_ITEM_ID = 43;
 export const LICENSE_KEY = 'local-ci.license.key';
