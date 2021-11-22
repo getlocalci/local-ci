@@ -32,9 +32,9 @@ jobs:
           command: npm run deploy
 
 workflows:
-  test:
+  test-publish:
     jobs:
-      - test-lint
+      - test-lint:
           filters:
             tags:
               only: /.*/
