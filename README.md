@@ -7,7 +7,7 @@ Debug entire CircleCI® workflows locally, with Bash access and persistence betw
 
 All in your local, no pushing commits and waiting. Not affiliated with CircleCI®.
 
-![Local CI Demo](https://user-images.githubusercontent.com/4063887/142655486-e7b9cdbc-c0c5-48b1-95bf-c92c34becd48.gif)
+![Local CI Demo](https://user-images.githubusercontent.com/4063887/142807072-fe6a577e-3148-4208-afed-ebd98a2d4fb1.gif)
 
 ## Run Jobs Locally
 
@@ -23,7 +23,7 @@ When the job exits, you'll still have Bash access to the job.
 
 ## Run The Whole Workflow
 
-You can even run jobs that depend on other jobs because this persists the workspace between jobs:
+You can even run jobs that depend on other jobs, because this persists the workspace between jobs:
 
 ![Persisting to the workspace](https://user-images.githubusercontent.com/4063887/142740238-13be4ff8-8c13-43a8-bd93-6536287d336b.jpg)
 
