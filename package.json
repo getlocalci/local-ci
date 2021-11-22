@@ -1,7 +1,7 @@
 {
   "name": "local-ci",
   "displayName": "Local CI",
-  "description": "Debug CircleCI® jobs locally with Bash access and workspace persistence between jobs. All in your local, no pushing and waiting.",
+  "description": "Debug CircleCI® workflows locally, with Bash access during and after. Free preview, then paid.",
   "version": "1.0.0",
   "publisher": "LocalCI",
   "contributors": [
@@ -19,10 +19,6 @@
     "workspace"
   ],
   "qna": "https://github.com/getlocalci/local-ci/discussions",
-  "galleryBanner": {
-    "color": "#eff1f3",
-    "theme": "light"
-  },
   "engines": {
     "vscode": "^1.59.0",
     "node": ">=16"
@@ -32,17 +28,20 @@
   ],
   "categories": [
     "Debuggers",
-    "Testing",
     "Programming Languages",
-    "Other"
+    "Testing"
   ],
   "tags": [
     "debug",
     "debuggers",
-    "CircleCI",
+    "devops",
     "ci",
     "cicd",
-    "devops"
+    "CI/CD",
+    "CircleCI",
+    "continuous integration",
+    "pipeline",
+    "YAML"
   ],
   "activationEvents": [
     "localCiJobs.selectRepo",
@@ -176,7 +175,7 @@
       {
         "id": "welcomeLocalCi",
         "title": "Local CI",
-        "description": "Debug CircleCI® jobs locally with Bash access and workspace persistence. All in your local, no pushing and waiting.",
+        "description": "Debug CircleCI® jobs locally with Bash access and workspace persistence. All in your local, no pushing and waiting. Not affiliated with CircleCI®.",
         "steps": [
           {
             "id": "operatingSystemNotice",
@@ -184,7 +183,7 @@
             "when": "isWindows",
             "description": "It only works on macOS, unfortunately.",
             "media": {
-              "image": "https://user-images.githubusercontent.com/4063887/132140183-e2b34f96-7e44-4f51-be33-59603c994a18.gif",
+              "image": "https://user-images.githubusercontent.com/4063887/141724496-69651ea3-2cb9-4e43-9aa7-3e9b88566865.gif",
               "altText": "Windows not supported"
             }
           },
@@ -194,8 +193,8 @@
             "when": "!isWindows",
             "description": "You'll be able to run jobs locally in it. \n[Select Repo](command:localCiJobs.selectRepo)",
             "media": {
-              "image": "https://user-images.githubusercontent.com/4063887/132140183-e2b34f96-7e44-4f51-be33-59603c994a18.gif",
-              "altText": "Demo of Local CI"
+              "image": "https://user-images.githubusercontent.com/4063887/141724496-69651ea3-2cb9-4e43-9aa7-3e9b88566865.gif",
+              "altText": "Selecting the repo to run CI on"
             }
           },
           {
@@ -204,18 +203,18 @@
             "when": "!isWindows",
             "description": "No need to guess why it failed, push a commit, wait for CI to fail, push a commit, etc… \n You'll see the job running and have Bash access to debug it. \n Even after the job exits. \n[Run A Job](command:local-ci.runWalkthroughJob)",
             "media": {
-              "image": "https://user-images.githubusercontent.com/4063887/132140183-e2b34f96-7e44-4f51-be33-59603c994a18.gif",
-              "altText": "Demo of Local CI"
+              "image": "https://user-images.githubusercontent.com/4063887/141727455-37279ab7-a67f-4a49-8f6d-9850c5c1d805.gif",
+              "altText": "Running the first job on your local machine"
             }
           },
           {
             "id": "runSecondWalkthroughJob",
             "title": "Run Another Job",
             "when": "!isWindows",
-            "description": "Click one of the green triangle icons on the left, like the second one. \n Local CI applies a job's [persist_to_workspace](https://circleci.com/blog/deep-diving-into-circleci-workspaces/) and attach_workspace values. \n So you can run the entire workflow with these persisted files. \n Your debugging can be much faster.",
+            "description": "Click one of the green triangle icons on the left, like the second or third one. \n Local CI applies a job's [persist_to_workspace](https://circleci.com/blog/deep-diving-into-circleci-workspaces/) and attach_workspace values. \n So you can run the entire workflow with these persisted files. \n Your debugging can be much faster.",
             "media": {
-              "image": "https://user-images.githubusercontent.com/4063887/132140183-e2b34f96-7e44-4f51-be33-59603c994a18.gif",
-              "altText": "Click on another job"
+              "image": "https://user-images.githubusercontent.com/4063887/141726659-fdb0fcd2-015a-4c11-9f45-bdcbddff461c.gif",
+              "altText": "Running the second job by clicking the icon"
             }
           }
         ]
@@ -230,16 +229,16 @@
     },
     {
       "url": "https://img.shields.io/badge/%24-paid-orange",
-      "href": "https://getlocalci.com",
+      "href": "https://getlocalci.com/buy",
       "description": "Buy license key"
     },
     {
-      "url": "https://img.shields.io/badge/platform-macOS-brightgreen",
+      "url": "https://img.shields.io/badge/platform-macOS-yellow",
       "href": "https://getlocalci.come",
       "description": "Platform: macOS"
     },
     {
-      "url": "https://img.shields.io/badge/requires-CirlcleCI%C2%AE-brightgreen",
+      "url": "https://img.shields.io/badge/requires-CirlcleCI%C2%AE-yellow",
       "href": "https://circleci.com",
       "description": "Requires CircleCI®"
     }
