@@ -1,6 +1,6 @@
 # Change Log
 
-## [1.0.0] - 21 November 2021
+## 1.0.0 - 22 November 2021
 
 - Allow running jobs in VS Code, with a TreeView UI
 - Open a terminal to show the running job
