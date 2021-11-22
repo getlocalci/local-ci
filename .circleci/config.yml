@@ -10,7 +10,7 @@ executors:
       - image: cimg/node:16.8.0-browsers
 
 jobs:
-  test-lint:
+  test:
     executor:
       name: node
     steps:
@@ -19,7 +19,7 @@ jobs:
       - checkout
       - node/install-packages
       - run: npm test
-  deploy:
+  publish:
     executor:
       name: node
     steps:
@@ -34,13 +34,13 @@ jobs:
 workflows:
   test-publish:
     jobs:
-      - test-lint:
+      - test:
           filters:
             tags:
               only: /.*/
-      - deploy:
+      - publish:
           requires:
-            - test-lint
+            - test
           filters:
             tags:
               only: /^\d+\.\d+\.\d+$/
