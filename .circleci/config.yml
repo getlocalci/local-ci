@@ -35,6 +35,9 @@ workflows:
   test:
     jobs:
       - test-lint
+          filters:
+            tags:
+              only: /.*/
       - deploy:
           requires:
             - test-lint
