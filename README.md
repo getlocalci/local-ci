@@ -1,6 +1,6 @@
 [![2 day free preview](https://img.shields.io/badge/trial-2%20day-orange)](https://getlocalci.com)
 [![Buy license key](https://img.shields.io/badge/%24-paid-orange)](https://getlocalci.com)
-[![Platform: macOS](https://img.shields.io/badge/platform-macOS-yellow)](https://getlocalci.com)
+[![Platform: macOS](https://img.shields.io/badge/platform-macOS-yellow)](https://en.wikipedia.org/wiki/MacOS)
 [![Requires CircleCI®](https://img.shields.io/badge/requires-CirlcleCI%C2%AE-yellow)](https://circleci.com)
 
 Debug entire CircleCI® workflows locally, with Bash access and persistence between jobs.
