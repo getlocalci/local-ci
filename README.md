@@ -17,7 +17,7 @@ All in your local, no pushing commits and waiting. Not affiliated with CircleCIÂ
 
 Get Bash access to the running job by clicking 'Local CI debugging':
 
-![Bash in a running job](https://user-images.githubusercontent.com/4063887/142659294-6d6dce2b-1598-4b33-8aa8-f91c046af99f.gif)
+![Bash in a running job](https://user-images.githubusercontent.com/4063887/143146648-2eb7ed7c-b257-420a-a612-2ba319eb82c4.gif)
 
 When the job exits, you'll still have Bash access to the job.
 

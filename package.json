@@ -39,9 +39,7 @@
     "cicd",
     "CI/CD",
     "CircleCI",
-    "continuous integration",
-    "pipeline",
-    "YAML"
+    "continuous integration"
   ],
   "activationEvents": [
     "localCiJobs.selectRepo",
