@@ -10,3 +10,9 @@
 - Add a walkthrough that runs a job and prompts to run another
 - Show a notice if Docker isn't running
 - Add a warning if there are uncommitted changes
+
+## 1.0.1 - 25 November 2021
+
+### Added
+- Bump the CLI to the latest. [#44](https://github.com/getlocalci/local-ci/pull/44/)
+- Correct links to macOS. [#44](https://github.com/getlocalci/local-ci/pull/44/)
