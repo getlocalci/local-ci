@@ -1,6 +1,6 @@
 # Change Log
 
-## 1.0.1 - 25 November 2021
+## 1.0.1 - 24 November 2021
 
 ### Added
 - Bump the CLI to the latest. [#44](https://github.com/getlocalci/local-ci/pull/44/)
