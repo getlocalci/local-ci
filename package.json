@@ -2,7 +2,7 @@
   "name": "local-ci",
   "displayName": "Local CI",
   "description": "Debug CircleCI® workflows locally, with Bash access during and after. Free preview, then paid.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "LocalCI",
   "contributors": [
     "Ryan Kienstra"
@@ -31,7 +31,7 @@
     "Programming Languages",
     "Testing"
   ],
-  "tags": [
+  "keywords": [
     "debug",
     "debuggers",
     "devops",
@@ -39,9 +39,7 @@
     "cicd",
     "CI/CD",
     "CircleCI",
-    "continuous integration",
-    "pipeline",
-    "YAML"
+    "continuous integration"
   ],
   "activationEvents": [
     "localCiJobs.selectRepo",
@@ -229,12 +227,12 @@
     },
     {
       "url": "https://img.shields.io/badge/%24-paid-orange",
-      "href": "https://getlocalci.com/buy",
+      "href": "https://getlocalci.com/pricing",
       "description": "Buy license key"
     },
     {
       "url": "https://img.shields.io/badge/platform-macOS-yellow",
-      "href": "https://getlocalci.come",
+      "href": "https://en.wikipedia.org/wiki/MacOS",
       "description": "Platform: macOS"
     },
     {
@@ -287,7 +285,7 @@
     "ts-loader": "^9.2.2",
     "typescript": "^4.3.2",
     "util": "^0.12.4",
-    "vsce": "^2.3.0",
+    "vsce": "^2.5.0",
     "vscode-test": "^1.5.2",
     "webpack": "^5.38.1",
     "webpack-cli": "^4.7.0"

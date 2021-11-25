@@ -1,6 +1,6 @@
 [![2 day free preview](https://img.shields.io/badge/trial-2%20day-orange)](https://getlocalci.com)
 [![Buy license key](https://img.shields.io/badge/%24-paid-orange)](https://getlocalci.com)
-[![Platform: macOS](https://img.shields.io/badge/platform-macOS-yellow)](https://getlocalci.com)
+[![Platform: macOS](https://img.shields.io/badge/platform-macOS-yellow)](https://en.wikipedia.org/wiki/MacOS)
 [![Requires CircleCI®](https://img.shields.io/badge/requires-CirlcleCI%C2%AE-yellow)](https://circleci.com)
 
 Debug entire CircleCI® workflows locally, with Bash access and persistence between jobs.
@@ -17,7 +17,7 @@ All in your local, no pushing commits and waiting. Not affiliated with CircleCI�
 
 Get Bash access to the running job by clicking 'Local CI debugging':
 
-![Bash in a running job](https://user-images.githubusercontent.com/4063887/142659294-6d6dce2b-1598-4b33-8aa8-f91c046af99f.gif)
+![Bash in a running job](https://user-images.githubusercontent.com/4063887/143146648-2eb7ed7c-b257-420a-a612-2ba319eb82c4.gif)
 
 When the job exits, you'll still have Bash access to the job.
 
@@ -37,7 +37,7 @@ CircleCI® is a registered trademark of Circle Internet Services, Inc.
 
 ## License
 
-Local CI requires a [license](https://getlocalci.com/buy/) for $70 per month.
+Local CI requires a [license](https://getlocalci.com/pricing/) for $70 per month.
 
 But first you'll get a free 2-day preview, no sign-up or credit card needed.
 
