@@ -37,7 +37,7 @@ CircleCI® is a registered trademark of Circle Internet Services, Inc.
 
 ## License
 
-Local CI requires a [license](https://getlocalci.com/buy/) for $70 per month.
+Local CI requires a [license](https://getlocalci.com/pricing/) for $70 per month.
 
 But first you'll get a free 2-day preview, no sign-up or credit card needed.
 
