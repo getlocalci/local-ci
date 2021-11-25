@@ -45,7 +45,7 @@ But first you'll get a free 2-day preview, no sign-up or credit card needed.
 
 [CircleCI®](https://circleci.com/), [macOS](https://en.wikipedia.org/wiki/MacOS), [Docker](https://www.docker.com/)
 
-If you don't have a CircleCI® account, please [sign up here](https://circleci.com/docs/2.0/first-steps/).
+If you don’t have a CircleCI® account, you can [get started](https://circleci.com/docs/2.0/first-steps/) with CircleCI® for free.
 
 A `.circleci/config.yml` file should be somewhere in the VS Code workspace, using the [2.x configuration](https://circleci.com/docs/2.0/configuration-reference/).
 
