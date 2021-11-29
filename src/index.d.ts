@@ -10,6 +10,14 @@ interface FullStep {
     root: string;
     paths: Array<string>;
   };
+  save_cache?: {
+    key: string;
+    paths: Array<string>;
+  };
+  restore_cache?: {
+    key?: string;
+    keys?: Array<string>;
+  };
   run?: {
     command: string;
     name?: string;

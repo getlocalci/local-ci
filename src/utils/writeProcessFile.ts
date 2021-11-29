@@ -15,20 +15,85 @@ function getPersistToWorkspaceCommand(step: FullStep): string | undefined {
 
     // BusyBox doesn't have the -n option.
     return `cp -rn ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY} || cp -ru ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY}`;
-  } else {
-    return step?.persist_to_workspace?.paths.reduce(
-      (accumulator, workspacePath) => {
-        const pathToPersist = path.join(
-          step?.persist_to_workspace?.root ?? '.',
-          workspacePath
-        );
-
-        // BusyBox doesn't have the -n option.
-        return `${accumulator} cp -rn ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY} || cp -ru ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY} \n`;
-      },
-      ''
-    );
   }
+
+  return step?.persist_to_workspace?.paths.reduce(
+    (accumulator, workspacePath) => {
+      const pathToPersist = path.join(
+        step?.persist_to_workspace?.root ?? '.',
+        workspacePath
+      );
+
+      // BusyBox doesn't have the -n option.
+      return `${accumulator} cp -rn ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY} || cp -ru ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY} \n`;
+    },
+    ''
+  );
+}
+
+function getRestoreCacheCommand(step: FullStep): string | undefined {
+  if (step?.restore_cache?.key) {
+    const tarFile = `${path.join(
+      CONTAINER_STORAGE_DIRECTORY,
+      convertToBash(step.restore_cache.key)
+    )}.tar.gz`;
+
+    // BusyBox doesn't have the -n option.
+    return `if [ -d ${tarFile} ]; then tar xvzf ${tarFile} .; fi \n`;
+  }
+
+  return step?.restore_cache?.keys?.reduce((accumulator, directory) => {
+    const fullDirectory = convertToBash(
+      path.join(CONTAINER_STORAGE_DIRECTORY, directory)
+    );
+
+    // BusyBox doesn't have the -n option.
+    return `${accumulator} if [ -d ${fullDirectory} ]; then tar xvzf ${fullDirectory} .; fi \n`;
+  }, '');
+}
+
+function getSaveCacheCommand(step: FullStep): string | undefined {
+  return step?.save_cache?.paths.reduce((accumulator, directory) => {
+    const destination = path.join(
+      CONTAINER_STORAGE_DIRECTORY,
+      convertToBash(step?.save_cache?.key ?? '')
+    );
+
+    return `${accumulator} mkdir -p ${destination}; cp -r ${directory} ${destination} \n`;
+  }, '');
+}
+
+// See https://circleci.com/docs/2.0/caching/#using-keys-and-templates
+// arch doesn't need to be replaced.
+// @todo: implement .Revision
+const dynamicCache: DynamicCache = {
+  '.Branch': '$CIRCLE_BRANCH',
+  '.BuildNum': '$CIRCLE_BUILD_NUM',
+  '.Environment.variableName': '',
+  '.Revision': '',
+  epoch: 'date +%s',
+};
+
+function convertToBash(command: string) {
+  return command.replace(
+    /{{(.+?)}}/g,
+    (fullMatch: string, dynamicCommand: string) =>
+      `$(${Object.keys(dynamicCache).reduce(
+        (accumulator, original) =>
+          accumulator
+            .replace(original, dynamicCache[original as keyof DynamicCache])
+            .replace(
+              /checksum (\S+)/g,
+              (fullMatch: string, fileName: string) =>
+                `shasum ${fileName} | awk '{print $1}'`
+            )
+            .replace(
+              /\.Environment\.(\S+)/,
+              (fullMatch: string, envVar: string) => `echo $${envVar}`
+            ),
+        dynamicCommand
+      )})`
+  );
 }
 
 // Overwrites parts of the process.yml file.
@@ -88,6 +153,24 @@ export default function writeProcessFile(
                   run: {
                     name: 'Persist to workspace',
                     command: getPersistToWorkspaceCommand(step),
+                  },
+                };
+              }
+
+              if (step?.restore_cache) {
+                return {
+                  run: {
+                    name: 'Restore cache',
+                    command: getRestoreCacheCommand(step),
+                  },
+                };
+              }
+
+              if (step?.save_cache) {
+                return {
+                  run: {
+                    name: 'Save cache',
+                    command: getSaveCacheCommand(step),
                   },
                 };
               }

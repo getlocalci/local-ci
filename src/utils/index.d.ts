@@ -17,6 +17,14 @@ interface ConfigFileQuickPick {
   fsPath: string;
 }
 
+interface DynamicCache {
+  '.Branch': string;
+  '.BuildNum': string;
+  '.Environment.variableName': string;
+  '.Revision': string;
+  epoch: string;
+}
+
 interface SpawnOptions {
   cwd: string;
   env: {
