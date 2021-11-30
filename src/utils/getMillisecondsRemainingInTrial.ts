@@ -1,15 +1,12 @@
 import { TRIAL_LENGTH_IN_MILLISECONDS } from '../constants';
-const hourInMilliseconds = 3600000;
 
-export default function getHoursRemainingInTrial(
+export default function getMillisecondsRemainingInTrial(
   currentTimeStamp: number,
   trialStartedTimeStamp: number | unknown
 ): number {
   const previewTimeElapsed = currentTimeStamp - Number(trialStartedTimeStamp);
 
   return trialStartedTimeStamp
-    ? Math.ceil(
-        (TRIAL_LENGTH_IN_MILLISECONDS - previewTimeElapsed) / hourInMilliseconds
-      )
+    ? TRIAL_LENGTH_IN_MILLISECONDS - previewTimeElapsed
     : 0;
 }

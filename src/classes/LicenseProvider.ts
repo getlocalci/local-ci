@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { LICENSE_ERROR } from '../constants';
+import { LICENSE_ERROR, SURVEY_URL } from '../constants';
 import getLicenseErrorMessage from '../utils/getLicenseErrorMessage';
 import getLicenseInformation from '../utils/getLicenseInformation';
 import isLicenseValid from '../utils/isLicenseValid';
@@ -65,6 +65,11 @@ export default class LicenseProvider implements vscode.WebviewViewProvider {
             detail: 'The license key is invalid',
           });
         }
+      }
+
+      if (data.type === 'takeSurvey') {
+        // @todo: Set globalState to extend the preview length.
+        vscode.env.openExternal(vscode.Uri.parse(SURVEY_URL));
       }
     });
   }
