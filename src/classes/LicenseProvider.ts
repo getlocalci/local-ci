@@ -1,8 +1,15 @@
 import * as vscode from 'vscode';
-import { LICENSE_ERROR, SURVEY_URL } from '../constants';
+import {
+  HAS_EXTENDED_TRIAL,
+  LICENSE_ERROR,
+  SURVEY_URL,
+  TRIAL_STARTED_TIMESTAMP,
+  EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS,
+} from '../constants';
 import getLicenseErrorMessage from '../utils/getLicenseErrorMessage';
 import getLicenseInformation from '../utils/getLicenseInformation';
 import isLicenseValid from '../utils/isLicenseValid';
+import getPrettyPrintedTimeRemaining from '../utils/getPrettyPrintedTimeRemaining';
 import showLicenseInput from '../utils/showLicenseInput';
 
 function getNonce() {
@@ -37,7 +44,7 @@ export default class LicenseProvider implements vscode.WebviewViewProvider {
       localResourceRoots: [this.extensionUri],
     };
 
-    await this.load();
+    this.load();
 
     webviewView.webview.onDidReceiveMessage(async (data) => {
       if (data.type === 'enterLicense') {
@@ -68,8 +75,22 @@ export default class LicenseProvider implements vscode.WebviewViewProvider {
       }
 
       if (data.type === 'takeSurvey') {
-        // @todo: Set globalState to extend the preview length.
+        if (this.context.globalState.get(HAS_EXTENDED_TRIAL)) {
+          return;
+        }
+
+        this.load();
+        this.context.globalState.update(HAS_EXTENDED_TRIAL, true);
+        this.context.globalState.update(
+          TRIAL_STARTED_TIMESTAMP,
+          new Date().getTime()
+        );
         vscode.env.openExternal(vscode.Uri.parse(SURVEY_URL));
+        vscode.window.showInformationMessage(
+          `Thanks, your free preview is now ${getPrettyPrintedTimeRemaining(
+            EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS
+          )} longer`
+        );
       }
     });
   }

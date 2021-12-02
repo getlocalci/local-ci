@@ -21,7 +21,7 @@
   "qna": "https://github.com/getlocalci/local-ci/discussions",
   "engines": {
     "vscode": "^1.59.0",
-    "node": ">=16"
+    "node": "16"
   },
   "os": [
     "!win32"

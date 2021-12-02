@@ -22,7 +22,6 @@ import getConfig from './utils/getConfig';
 import getConfigFilePath from './utils/getConfigFilePath';
 import getDebuggingTerminalName from './utils/getDebuggingTerminalName';
 import getFinalTerminalName from './utils/getFinalTerminalName';
-import getLicenseInformation from './utils/getLicenseInformation';
 import getProcessedConfig from './utils/getProcessedConfig';
 import getProcessFilePath from './utils/getProcessFilePath';
 import getRepoBasename from './utils/getRepoBasename';
@@ -255,6 +254,4 @@ export function activate(context: vscode.ExtensionContext): void {
       }
     },
   });
-
-  getLicenseInformation(context);
 }
