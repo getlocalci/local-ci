@@ -30,33 +30,23 @@ export default function getPrettyPrintedTimeRemaining(
     );
   }
 
-  if (millisecondsRemaining < 2 * dayInMilliseconds) {
-    const daysRemaining = Math.floor(millisecondsRemaining / dayInMilliseconds);
-    const hoursRemaining = Math.floor(
-      (millisecondsRemaining % dayInMilliseconds) / hourInMilliseconds
-    );
-
-    return [
-      getTextForNumber(
-        `${daysRemaining} day`,
-        `${daysRemaining} days`,
-        daysRemaining
-      ),
-      getTextForNumber(
-        `${hoursRemaining} hour`,
-        `${hoursRemaining} hours`,
-        hoursRemaining
-      ),
-    ]
-      .filter((timeRemaining) => timeRemaining)
-      .join(', ');
-  }
-
   const daysRemaining = Math.floor(millisecondsRemaining / dayInMilliseconds);
-
-  return getTextForNumber(
-    `${daysRemaining} day`,
-    `${daysRemaining} days`,
-    daysRemaining
+  const hoursRemaining = Math.floor(
+    (millisecondsRemaining % dayInMilliseconds) / hourInMilliseconds
   );
+
+  return [
+    getTextForNumber(
+      `${daysRemaining} day`,
+      `${daysRemaining} days`,
+      daysRemaining
+    ),
+    getTextForNumber(
+      `${hoursRemaining} hour`,
+      `${hoursRemaining} hours`,
+      hoursRemaining
+    ),
+  ]
+    .filter((timeRemaining) => timeRemaining)
+    .join(', ');
 }

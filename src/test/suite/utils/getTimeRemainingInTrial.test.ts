@@ -22,7 +22,7 @@ suite('getTimeRemainingInTrial', () => {
         time,
         14 * dayInMilliseconds + hourInMilliseconds
       ),
-      '14 days'
+      '14 days, 1 hour'
     );
   });
 
