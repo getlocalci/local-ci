@@ -12,7 +12,7 @@ suite('getMillisecondsRemainingInTrial', () => {
     );
   });
 
-  test('one day remaining', () => {
+  test('1 day remaining', () => {
     const time = new Date().getTime();
     assert.strictEqual(
       getMillisecondsRemainingInTrial(
@@ -24,7 +24,7 @@ suite('getMillisecondsRemainingInTrial', () => {
     );
   });
 
-  test('one hour remaining', () => {
+  test('1 hour remaining', () => {
     const time = new Date().getTime();
     assert.strictEqual(
       getMillisecondsRemainingInTrial(

@@ -14,7 +14,7 @@ export default function getPrettyPrintedTimeRemaining(
   millisecondsRemaining: number
 ): string {
   const defaultTime = 'No time';
-  if (millisecondsRemaining <= 0) {
+  if (millisecondsRemaining < minuteInMilliseconds) {
     return defaultTime;
   }
 

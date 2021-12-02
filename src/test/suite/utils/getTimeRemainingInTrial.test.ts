@@ -51,7 +51,7 @@ suite('getTimeRemainingInTrial', () => {
     );
   });
 
-  test('exactly one day remaining', () => {
+  test('exactly 1 day remaining', () => {
     assert.strictEqual(
       getTimeRemainingInTrial(
         time,
@@ -103,6 +103,17 @@ suite('getTimeRemainingInTrial', () => {
         dayInMilliseconds * 2
       ),
       '1 minute'
+    );
+  });
+
+  test('30 seconds remaining', () => {
+    assert.strictEqual(
+      getTimeRemainingInTrial(
+        time,
+        time - 47 * hourInMilliseconds - 59 * minuteInMilliseconds - 30000,
+        dayInMilliseconds * 2
+      ),
+      'No time'
     );
   });
 

@@ -63,7 +63,7 @@ suite('isTrialExpired', () => {
     );
   });
 
-  test('preview began a 17 days and 1 millisecond ago and was extended', () => {
+  test('preview began 17 days and 1 millisecond ago and was extended', () => {
     assert.strictEqual(
       isTrialExpired(new Date().getTime() - 1468800001, extendedTrial),
       true
