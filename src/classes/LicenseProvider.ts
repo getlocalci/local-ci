@@ -1,15 +1,15 @@
 import * as vscode from 'vscode';
 import {
+  EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS,
   HAS_EXTENDED_TRIAL,
   LICENSE_ERROR,
   SURVEY_URL,
   TRIAL_STARTED_TIMESTAMP,
-  EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS,
 } from '../constants';
 import getLicenseErrorMessage from '../utils/getLicenseErrorMessage';
 import getLicenseInformation from '../utils/getLicenseInformation';
-import isLicenseValid from '../utils/isLicenseValid';
 import getPrettyPrintedTimeRemaining from '../utils/getPrettyPrintedTimeRemaining';
+import isLicenseValid from '../utils/isLicenseValid';
 import showLicenseInput from '../utils/showLicenseInput';
 
 function getNonce() {

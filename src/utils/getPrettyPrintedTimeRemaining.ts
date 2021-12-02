@@ -3,6 +3,10 @@ const hourInMilliseconds = 3600000;
 const dayInMilliseconds = 86400000;
 
 function getTextForNumber(singular: string, plural: string, count: number) {
+  if (!count) {
+    return '';
+  }
+
   return count === 1 ? singular : plural;
 }
 
@@ -26,16 +30,26 @@ export default function getPrettyPrintedTimeRemaining(
     );
   }
 
-  if (millisecondsRemaining < dayInMilliseconds) {
+  if (millisecondsRemaining < 2 * dayInMilliseconds) {
+    const daysRemaining = Math.floor(millisecondsRemaining / dayInMilliseconds);
     const hoursRemaining = Math.floor(
-      millisecondsRemaining / hourInMilliseconds
+      (millisecondsRemaining % dayInMilliseconds) / hourInMilliseconds
     );
 
-    return getTextForNumber(
-      `${hoursRemaining} hour`,
-      `${hoursRemaining} hours`,
-      hoursRemaining
-    );
+    return [
+      getTextForNumber(
+        `${daysRemaining} day`,
+        `${daysRemaining} days`,
+        daysRemaining
+      ),
+      getTextForNumber(
+        `${hoursRemaining} hour`,
+        `${hoursRemaining} hours`,
+        hoursRemaining
+      ),
+    ]
+      .filter((timeRemaining) => timeRemaining)
+      .join(', ');
   }
 
   const daysRemaining = Math.floor(millisecondsRemaining / dayInMilliseconds);

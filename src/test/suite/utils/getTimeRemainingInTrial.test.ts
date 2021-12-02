@@ -4,91 +4,114 @@ import getTimeRemainingInTrial from '../../../utils/getTimeRemainingInTrial';
 
 const minuteInMilliseconds = 60000;
 const hourInMilliseconds = 3600000;
+const dayInMilliseconds = 86400000;
 
 suite('getTimeRemainingInTrial', () => {
+  const time = new Date().getTime();
   test('no trial started timestamp', () => {
-    const time = new Date().getTime();
     assert.strictEqual(
       getTimeRemainingInTrial(time, null, TRIAL_LENGTH_IN_MILLISECONDS),
       'No time'
     );
   });
 
-  test('entire trial remaining', () => {
-    const time = new Date().getTime();
+  test('14 days and 1 hour remaining', () => {
     assert.strictEqual(
-      getTimeRemainingInTrial(time, time, TRIAL_LENGTH_IN_MILLISECONDS),
+      getTimeRemainingInTrial(
+        time,
+        time,
+        14 * dayInMilliseconds + hourInMilliseconds
+      ),
+      '14 days'
+    );
+  });
+
+  test('14 days remaining', () => {
+    assert.strictEqual(
+      getTimeRemainingInTrial(time, time, 14 * dayInMilliseconds),
+      '14 days'
+    );
+  });
+
+  test('2 hours remaining', () => {
+    assert.strictEqual(
+      getTimeRemainingInTrial(time, time, dayInMilliseconds * 2),
       '2 days'
     );
   });
 
   test('1 day, 14 hours remaining', () => {
-    const time = new Date().getTime();
     assert.strictEqual(
       getTimeRemainingInTrial(
         time,
         time - 10 * hourInMilliseconds,
-        TRIAL_LENGTH_IN_MILLISECONDS
+        dayInMilliseconds * 2
       ),
-      '1 day'
+      '1 day, 14 hours'
     );
   });
 
   test('exactly one day remaining', () => {
-    const time = new Date().getTime();
     assert.strictEqual(
       getTimeRemainingInTrial(
         time,
         time - 24 * hourInMilliseconds,
-        TRIAL_LENGTH_IN_MILLISECONDS
+        dayInMilliseconds * 2
       ),
       '1 day'
     );
   });
 
   test('five hours remaining', () => {
-    const time = new Date().getTime();
     assert.strictEqual(
       getTimeRemainingInTrial(
         time,
         time - 43 * hourInMilliseconds,
-        TRIAL_LENGTH_IN_MILLISECONDS
+        dayInMilliseconds * 2
       ),
       '5 hours'
     );
   });
 
   test('one hour remaining', () => {
-    const time = new Date().getTime();
     assert.strictEqual(
       getTimeRemainingInTrial(
         time,
         time - 47 * hourInMilliseconds,
-        TRIAL_LENGTH_IN_MILLISECONDS
+        dayInMilliseconds * 2
       ),
       '1 hour'
     );
   });
 
-  test('one minute remaining', () => {
-    const time = new Date().getTime();
+  test('23 minutes remaining', () => {
+    assert.strictEqual(
+      getTimeRemainingInTrial(
+        time,
+        time - 47 * hourInMilliseconds - 37 * minuteInMilliseconds,
+        dayInMilliseconds * 2
+      ),
+      '23 minutes'
+    );
+  });
+
+  test('1 minute remaining', () => {
     assert.strictEqual(
       getTimeRemainingInTrial(
         time,
         time - 47 * hourInMilliseconds - 59 * minuteInMilliseconds,
-        TRIAL_LENGTH_IN_MILLISECONDS
+        dayInMilliseconds * 2
       ),
       '1 minute'
     );
   });
 
   test('no time remaining', () => {
-    const time = new Date().getTime();
     assert.strictEqual(
       getTimeRemainingInTrial(
         time,
         time - 48 * hourInMilliseconds,
-        TRIAL_LENGTH_IN_MILLISECONDS
+        dayInMilliseconds * 2
       ),
       'No time'
     );
