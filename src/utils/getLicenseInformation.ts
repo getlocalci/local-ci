@@ -21,14 +21,14 @@ export default async function getLicenseInformation(
   const previewStartedTimeStamp = context.globalState.get(
     TRIAL_STARTED_TIMESTAMP
   );
-  const daysInMilliseconds = 86400000;
+  const dayInMilliseconds = 86400000;
   const licenseKey = await context.secrets.get(LICENSE_KEY);
   const getLicenseLink = `<a class="button secondary" href="${GET_LICENSE_KEY_URL}" target="_blank" rel="noopener noreferrer">Buy license</a>`;
   const enterLicenseButton = `<button class="secondary" id="enter-license">Enter license key</button>`;
   const changeLicenseButton = `<button class="secondary" id="enter-license">Change license key</button>`;
   const retryValidationButton = `<button class="secondary" id="retry-license-validation">Retry license validation</button>`;
   const takeSurveyButton = `<button class="button primary" id="take-survey">Get ${
-    EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS / daysInMilliseconds
+    EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS / dayInMilliseconds
   } more free days by taking a 2-minute anonymous survey</button>`;
 
   const isValid = await isLicenseValid(context);
