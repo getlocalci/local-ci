@@ -34,6 +34,7 @@ a.button {
   text-align: center;
   outline: 1px solid transparent;
   outline-offset: 2px !important;
+  text-decoration: none;
 }
 
 button.primary,
