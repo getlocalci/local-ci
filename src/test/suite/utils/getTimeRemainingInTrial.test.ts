@@ -15,14 +15,25 @@ suite('getTimeRemainingInTrial', () => {
     );
   });
 
-  test('14 days and 1 hour remaining', () => {
+  test('14 days and 13 hours remaining', () => {
     assert.strictEqual(
       getTimeRemainingInTrial(
         time,
         time,
-        14 * dayInMilliseconds + hourInMilliseconds
+        14 * dayInMilliseconds + 13 * hourInMilliseconds
       ),
-      '14 days, 1 hour'
+      '15 days'
+    );
+  });
+
+  test('14 days and 11 hours remaining', () => {
+    assert.strictEqual(
+      getTimeRemainingInTrial(
+        time,
+        time,
+        14 * dayInMilliseconds + 11 * hourInMilliseconds
+      ),
+      '14 days, 11 hours'
     );
   });
 
@@ -47,7 +58,7 @@ suite('getTimeRemainingInTrial', () => {
         time - 10 * hourInMilliseconds,
         dayInMilliseconds * 2
       ),
-      '1 day, 14 hours'
+      '2 days'
     );
   });
 

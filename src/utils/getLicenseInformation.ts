@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
 import getLicenseErrorMessage from './getLicenseErrorMessage';
-import getPrettyPrintedTimeRemaining from './getPrettyPrintedTimeRemaining';
 import getTimeRemainingInTrial from './getTimeRemainingInTrial';
 import getTrialLength from './getTrialLength';
 import isLicenseValid from './isLicenseValid';
@@ -43,17 +42,6 @@ export default async function getLicenseInformation(
   if (isValid) {
     return `<p>Your Local CI license key is valid!</p>
       ${changeLicenseButton}`;
-  }
-
-  if (!previewStartedTimeStamp && !licenseKey) {
-    context.globalState.update(TRIAL_STARTED_TIMESTAMP, new Date().getTime());
-    return `<p>Thanks for previewing Local CI!</p>
-      <p>This free trial will last for ${getPrettyPrintedTimeRemaining(
-        trialLengthInMilliseconds
-      )}.</p>
-      ${hasExtendedTrial ? '' : `<p>${takeSurveyButton}</p>`}
-      <p>${getLicenseLink}</p>
-      <p>${enterLicenseButton}</p>`;
   }
 
   if (isPreviewExpired && !!licenseKey && !isValid) {
