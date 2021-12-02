@@ -48,7 +48,7 @@ export default class LicenseProvider implements vscode.WebviewViewProvider {
 
     webviewView.webview.onDidReceiveMessage(async (data) => {
       if (data.type === 'enterLicense') {
-        await showLicenseInput(
+        showLicenseInput(
           this.context,
           () => this.load(),
           () => this.licenseSuccessCallback()
