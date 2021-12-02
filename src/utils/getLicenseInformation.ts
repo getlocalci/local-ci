@@ -12,6 +12,7 @@ import {
   TRIAL_STARTED_TIMESTAMP,
   HAS_EXTENDED_TRIAL,
 } from '../constants';
+import getTimeRemainingInTrial from './getTimeRemainingInTrial';
 
 export default async function getLicenseInformation(
   context: vscode.ExtensionContext
@@ -40,14 +41,12 @@ export default async function getLicenseInformation(
       ${changeLicenseButton}`;
   }
 
-  const daysAndHoursRemainingInTrial = getPrettyPrintedTimeRemaining(
-    trialLengthInMilliseconds
-  );
-
   if (!previewStartedTimeStamp && !licenseKey) {
     context.globalState.update(TRIAL_STARTED_TIMESTAMP, new Date().getTime());
     return `<p>Thanks for previewing Local CI!</p>
-      <p>This free trial will last for ${daysAndHoursRemainingInTrial}.</p>
+      <p>This free trial will last for ${getPrettyPrintedTimeRemaining(
+        trialLengthInMilliseconds
+      )}.</p>
       ${hasExtendedTrial ? '' : `<p>${takeSurveyButton}<p>`}
       <p>${getLicenseLink}</p>
       <p>${enterLicenseButton}</p>`;
@@ -73,7 +72,11 @@ export default async function getLicenseInformation(
   }
 
   return `<p>Thanks for previewing Local CI!</p>
-    <p>${daysAndHoursRemainingInTrial} left in the free preview.</p>
+    <p>${getTimeRemainingInTrial(
+      new Date().getTime(),
+      context.globalState.get(TRIAL_STARTED_TIMESTAMP),
+      trialLengthInMilliseconds
+    )} left in the free preview.</p>
     ${hasExtendedTrial ? '' : `<p>${takeSurveyButton}<p>`}
     <p>${getLicenseLink}</p>
     <p>${enterLicenseButton}</p>`;
