@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import getLicenseErrorMessage from './getLicenseErrorMessage';
 import getPrettyPrintedTimeRemaining from './getPrettyPrintedTimeRemaining';
+import getTimeRemainingInTrial from './getTimeRemainingInTrial';
 import getTrialLength from './getTrialLength';
 import isLicenseValid from './isLicenseValid';
 import isTrialExpired from './isTrialExpired';
@@ -13,7 +14,6 @@ import {
   HAS_EXTENDED_TRIAL,
   EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS,
 } from '../constants';
-import getTimeRemainingInTrial from './getTimeRemainingInTrial';
 
 export default async function getLicenseInformation(
   context: vscode.ExtensionContext
@@ -28,9 +28,9 @@ export default async function getLicenseInformation(
   const enterLicenseButton = `<button class="secondary" id="enter-license">Enter license key</button>`;
   const changeLicenseButton = `<button class="secondary" id="enter-license">Change license key</button>`;
   const retryValidationButton = `<button class="secondary" id="retry-license-validation">Retry license validation</button>`;
-  const takeSurveyButton = `<a class="button primary" id="take-survey">Get ${
+  const takeSurveyButton = `<button class="button primary" id="take-survey">Get ${
     EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS / daysInMilliseconds
-  } more free days by taking a 2-minute anonymous survey</a>`;
+  } more free days by taking a 2-minute anonymous survey</button>`;
 
   const isValid = await isLicenseValid(context);
   const hasExtendedTrial = !!context.globalState.get(HAS_EXTENDED_TRIAL);
