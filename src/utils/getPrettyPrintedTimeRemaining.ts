@@ -31,10 +31,12 @@ export default function getPrettyPrintedTimeRemaining(
   }
 
   const daysRemaining = Math.round(millisecondsRemaining / dayInMilliseconds);
-  const hoursRemaining = Math.max(
-    (millisecondsRemaining - daysRemaining * dayInMilliseconds) /
-      hourInMilliseconds,
-    0
+  const hoursRemaining = Math.floor(
+    Math.max(
+      (millisecondsRemaining - daysRemaining * dayInMilliseconds) /
+        hourInMilliseconds,
+      0
+    )
   );
 
   return [
