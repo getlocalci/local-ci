@@ -5,13 +5,14 @@ import getTrialLength from './getTrialLength';
 import isLicenseValid from './isLicenseValid';
 import isTrialExpired from './isTrialExpired';
 import {
+  EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS,
   GET_LICENSE_KEY_URL,
+  HAS_EXTENDED_TRIAL,
   LICENSE_ERROR,
   LICENSE_KEY,
   LICENSE_VALIDITY,
   TRIAL_STARTED_TIMESTAMP,
-  HAS_EXTENDED_TRIAL,
-  EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS,
+  SCHEDULE_INTERVIEW_URL,
 } from '../constants';
 
 export default async function getLicenseInformation(
@@ -23,13 +24,14 @@ export default async function getLicenseInformation(
   );
   const dayInMilliseconds = 86400000;
   const licenseKey = await context.secrets.get(LICENSE_KEY);
-  const getLicenseLink = `<a class="button secondary" href="${GET_LICENSE_KEY_URL}" target="_blank" rel="noopener noreferrer">Buy license</a>`;
+  const getLicenseLink = `<a class="button secondary" href="${GET_LICENSE_KEY_URL}" target="_blank">Buy license</a>`;
   const enterLicenseButton = `<button class="secondary" id="enter-license">Enter license key</button>`;
   const changeLicenseButton = `<button class="secondary" id="enter-license">Change license key</button>`;
   const retryValidationButton = `<button class="secondary" id="retry-license-validation">Retry license validation</button>`;
   const takeSurveyButton = `<button class="button primary" id="take-survey">Get ${
     EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS / dayInMilliseconds
   } more free days by taking a 2-minute anonymous survey</button>`;
+  const scheduleInterviewLink = `<a class="button primary" href="${SCHEDULE_INTERVIEW_URL}" target="_blank">Get a free lifetime license by doing a 30-minute Zoom interview about why you didn't buy</button>`;
 
   const isValid = await isLicenseValid(context);
   const hasExtendedTrial = !!context.globalState.get(HAS_EXTENDED_TRIAL);
@@ -37,6 +39,11 @@ export default async function getLicenseInformation(
   const isPreviewExpired = isTrialExpired(
     previewStartedTimeStamp,
     trialLengthInMilliseconds
+  );
+
+  const isPreviewExpiredByOneDay = isTrialExpired(
+    previewStartedTimeStamp,
+    trialLengthInMilliseconds + dayInMilliseconds
   );
 
   if (isValid) {
@@ -53,6 +60,12 @@ export default async function getLicenseInformation(
     <p>${enterLicenseButton}</p>
     ${hasExtendedTrial ? '' : `<p>${takeSurveyButton}</p>`}
     <p>${retryValidationButton}</p>`;
+  }
+
+  if (isPreviewExpiredByOneDay) {
+    return `<p>${scheduleInterviewLink}</p>
+      <p>No sales pitch, I have nothing to sell you after giving you the free lifetime license.</p>
+      <p>${enterLicenseButton}</p>`;
   }
 
   if (isPreviewExpired) {
