@@ -32,6 +32,8 @@ export default async function getLicenseInformation(
     EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS / dayInMilliseconds
   } more free days by taking a 2-minute anonymous survey</button>`;
   const scheduleInterviewLink = `<a class="button primary" href="${SCHEDULE_INTERVIEW_URL}" target="_blank">Get a free lifetime license by doing a 30-minute Zoom interview about why you didn't buy</button>`;
+  const complainUrl = 'mailto:ryan@getlocalci.com';
+  const complainLink = `<a class="button secondary" href="${complainUrl}" target="_blank">Complain to me</a>`;
 
   const isValid = await isLicenseValid(context);
   const hasExtendedTrial = !!context.globalState.get(HAS_EXTENDED_TRIAL);
@@ -48,7 +50,8 @@ export default async function getLicenseInformation(
 
   if (isValid) {
     return `<p>Your Local CI license key is valid!</p>
-      ${changeLicenseButton}`;
+      <p>${changeLicenseButton}</p>
+      <p>${complainLink}</p>`;
   }
 
   if (isPreviewExpired && !!licenseKey && !isValid) {
@@ -59,7 +62,8 @@ export default async function getLicenseInformation(
     <p>${getLicenseLink}</p>
     <p>${enterLicenseButton}</p>
     ${hasExtendedTrial ? '' : `<p>${takeSurveyButton}</p>`}
-    <p>${retryValidationButton}</p>`;
+    <p>${retryValidationButton}</p>
+    <p>${complainLink}</p>`;
   }
 
   if (isPreviewExpiredByOneDay) {
@@ -73,7 +77,8 @@ export default async function getLicenseInformation(
       <p>Please enter a Local CI license key to keep using this.</p>
       ${hasExtendedTrial ? '' : `<p>${takeSurveyButton}</p>`}
       <p>${getLicenseLink}</p>
-      <p>${enterLicenseButton}</p>`;
+      <p>${enterLicenseButton}</p>
+      <p>${complainLink}</p>`;
   }
 
   return `<p>Thanks for previewing Local CI!</p>
@@ -84,5 +89,6 @@ export default async function getLicenseInformation(
     )} left in this free preview.</p>
     ${hasExtendedTrial ? '' : `<p>${takeSurveyButton}</p>`}
     <p>${getLicenseLink}</p>
-    <p>${enterLicenseButton}</p>`;
+    <p>${enterLicenseButton}</p>
+    <p>${complainLink}</p>`;
 }
