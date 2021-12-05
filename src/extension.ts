@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import TelemetryReporter from 'vscode-extension-telemetry';
 import Delayer from './classes/Delayer';
 import Job from './classes/Job';
 import JobProvider from './classes/JobProvider';
@@ -30,14 +31,21 @@ import runJob from './utils/runJob';
 import showLicenseInput from './utils/showLicenseInput';
 import writeProcessFile from './utils/writeProcessFile';
 
+const extensionId = 'LocalCI.local-ci';
+const extensionVersion = '1.1.0';
+const key = '<your key>';
+
 export function activate(context: vscode.ExtensionContext): void {
   if (!context.globalState.get(TRIAL_STARTED_TIMESTAMP)) {
     context.globalState.update(TRIAL_STARTED_TIMESTAMP, new Date().getTime());
   }
   const jobProvider = new JobProvider(context);
+  const reporter = new TelemetryReporter(extensionId, extensionVersion, key);
+  const reportRunJob = () => reporter.sendTelemetryEvent('runJob');
 
   vscode.window.registerTreeDataProvider(JOB_TREE_VIEW_ID, jobProvider);
   context.subscriptions.push(
+    reporter,
     vscode.commands.registerCommand(`${JOB_TREE_VIEW_ID}.refresh`, () =>
       jobProvider.refresh()
     ),
@@ -131,7 +139,7 @@ export function activate(context: vscode.ExtensionContext): void {
           jobProvider.refresh(job);
         }
 
-        runJob(context, jobName);
+        runJob(context, jobName, reportRunJob);
       }
     ),
     vscode.commands.registerCommand(EXIT_JOB_COMMAND, (job: Job) => {
@@ -145,7 +153,7 @@ export function activate(context: vscode.ExtensionContext): void {
       jobProvider.refresh(job);
       const jobName = job.getJobName();
       disposeTerminalsForJob(jobName);
-      runJob(context, jobName);
+      runJob(context, jobName, reportRunJob);
     }),
     vscode.commands.registerCommand(
       'local-ci.debug.repo',
