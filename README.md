@@ -59,7 +59,7 @@ You can opt out of telemetry by adding this to your VS Code `settings.json`:
 
 `"telemetry.enableTelemetry": false`
 
-If you haven't opted out, this will send the following data via [VS Code telemetry](https://code.visualstudio.com/docs/getstarted/telemetry):
+If you haven't opted out, this will send the following events via [VS Code telemetry](https://code.visualstudio.com/docs/getstarted/telemetry):
 
 * This extension is activated
 * There are no jobs found, like if there's no `.circleci/config.yml` file
