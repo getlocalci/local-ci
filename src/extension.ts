@@ -13,6 +13,7 @@ import {
   JOB_TREE_VIEW_ID,
   RUN_JOB_COMMAND,
   SELECTED_CONFIG_PATH,
+  TRIAL_STARTED_TIMESTAMP,
 } from './constants';
 import cleanUpCommittedImages from './utils/cleanUpCommittedImages';
 import disposeTerminalsForJob from './utils/disposeTerminalsForJob';
@@ -22,7 +23,6 @@ import getConfig from './utils/getConfig';
 import getConfigFilePath from './utils/getConfigFilePath';
 import getDebuggingTerminalName from './utils/getDebuggingTerminalName';
 import getFinalTerminalName from './utils/getFinalTerminalName';
-import getLicenseInformation from './utils/getLicenseInformation';
 import getProcessedConfig from './utils/getProcessedConfig';
 import getProcessFilePath from './utils/getProcessFilePath';
 import getRepoBasename from './utils/getRepoBasename';
@@ -31,6 +31,9 @@ import showLicenseInput from './utils/showLicenseInput';
 import writeProcessFile from './utils/writeProcessFile';
 
 export function activate(context: vscode.ExtensionContext): void {
+  if (!context.globalState.get(TRIAL_STARTED_TIMESTAMP)) {
+    context.globalState.update(TRIAL_STARTED_TIMESTAMP, new Date().getTime());
+  }
   const jobProvider = new JobProvider(context);
 
   vscode.window.registerTreeDataProvider(JOB_TREE_VIEW_ID, jobProvider);
@@ -255,6 +258,4 @@ export function activate(context: vscode.ExtensionContext): void {
       }
     },
   });
-
-  getLicenseInformation(context);
 }

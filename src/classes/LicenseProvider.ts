@@ -1,7 +1,14 @@
 import * as vscode from 'vscode';
-import { LICENSE_ERROR } from '../constants';
+import {
+  EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS,
+  HAS_EXTENDED_TRIAL,
+  LICENSE_ERROR,
+  SURVEY_URL,
+  TRIAL_STARTED_TIMESTAMP,
+} from '../constants';
 import getLicenseErrorMessage from '../utils/getLicenseErrorMessage';
 import getLicenseInformation from '../utils/getLicenseInformation';
+import getPrettyPrintedTimeRemaining from '../utils/getPrettyPrintedTimeRemaining';
 import isLicenseValid from '../utils/isLicenseValid';
 import showLicenseInput from '../utils/showLicenseInput';
 
@@ -37,11 +44,11 @@ export default class LicenseProvider implements vscode.WebviewViewProvider {
       localResourceRoots: [this.extensionUri],
     };
 
-    await this.load();
+    this.load();
 
     webviewView.webview.onDidReceiveMessage(async (data) => {
       if (data.type === 'enterLicense') {
-        await showLicenseInput(
+        showLicenseInput(
           this.context,
           () => this.load(),
           () => this.licenseSuccessCallback()
@@ -65,6 +72,25 @@ export default class LicenseProvider implements vscode.WebviewViewProvider {
             detail: 'The license key is invalid',
           });
         }
+      }
+
+      if (data.type === 'takeSurvey') {
+        if (this.context.globalState.get(HAS_EXTENDED_TRIAL)) {
+          return;
+        }
+
+        this.load();
+        this.context.globalState.update(HAS_EXTENDED_TRIAL, true);
+        this.context.globalState.update(
+          TRIAL_STARTED_TIMESTAMP,
+          new Date().getTime()
+        );
+        vscode.env.openExternal(vscode.Uri.parse(SURVEY_URL));
+        vscode.window.showInformationMessage(
+          `Thanks, your free preview is now ${getPrettyPrintedTimeRemaining(
+            EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS
+          )} longer`
+        );
       }
     });
   }
