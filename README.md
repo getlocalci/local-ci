@@ -55,6 +55,16 @@ If there's more than one `.circleci/config.yml` file, click the gear icon to sel
 
 ## Privacy
 
+You can opt out of telemetry by adding this to your VS Code `settings.json`:
+
+`"telemetry.enableTelemetry": false`
+
+If you haven't opted out, this will send the following data via [VS Code telemetry](https://code.visualstudio.com/docs/getstarted/telemetry):
+
+* This extension is activated
+* There are no jobs found, like with `.circleci/config.yml` file
+* A CircleCI® job is run (but no data about the job, not even the name)
+
 If you haven't entered a license key, like during the free preview, this extension has no interaction with Local CI's site.
 
 It does interact with CircleCI® and Docker to process and run the jobs.
