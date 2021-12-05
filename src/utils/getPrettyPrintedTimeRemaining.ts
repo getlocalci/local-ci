@@ -13,9 +13,8 @@ function getTextForNumber(singular: string, plural: string, count: number) {
 export default function getPrettyPrintedTimeRemaining(
   millisecondsRemaining: number
 ): string {
-  const defaultTime = 'No time';
   if (millisecondsRemaining < minuteInMilliseconds) {
-    return defaultTime;
+    return 'No time';
   }
 
   if (millisecondsRemaining < hourInMilliseconds) {

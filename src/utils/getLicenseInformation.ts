@@ -11,8 +11,8 @@ import {
   LICENSE_ERROR,
   LICENSE_KEY,
   LICENSE_VALIDITY,
-  TRIAL_STARTED_TIMESTAMP,
   SCHEDULE_INTERVIEW_URL,
+  TRIAL_STARTED_TIMESTAMP,
 } from '../constants';
 
 export default async function getLicenseInformation(
@@ -31,9 +31,9 @@ export default async function getLicenseInformation(
   const takeSurveyButton = `<button class="button primary" id="take-survey">Get ${
     EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS / dayInMilliseconds
   } more free days by taking a 2-minute anonymous survey</button>`;
-  const scheduleInterviewLink = `<a class="button primary" href="${SCHEDULE_INTERVIEW_URL}" target="_blank">Get a free lifetime license by doing a 30-minute Zoom interview about why you didn't buy</button>`;
-  const complainUrl = 'mailto:ryan@getlocalci.com';
-  const complainLink = `<a class="button secondary" href="${complainUrl}" target="_blank">Complain to me</a>`;
+  const scheduleInterviewLink = `<a class="button primary" href="${SCHEDULE_INTERVIEW_URL}" target="_blank">Get a free lifetime license by doing a 30-minute Zoom user research interview</button>`;
+  const complainUri = 'mailto:ryan@getlocalci.com';
+  const complainLink = `<a class="button secondary" href="${complainUri}" target="_blank">Complain to me</a>`;
 
   const isValid = await isLicenseValid(context);
   const hasExtendedTrial = !!context.globalState.get(HAS_EXTENDED_TRIAL);
