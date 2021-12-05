@@ -54,4 +54,4 @@ export const SCHEDULE_INTERVIEW_URL =
   'https://tidycal.com/localci/30-minute-meeting';
 export const SUPPRESS_UNCOMMITTED_FILE_WARNING =
   'local-ci.suppress-warning.uncommitted';
-export const SURVEY_URL = 'https://example.com';
+export const SURVEY_URL = 'https://www.surveymonkey.com/r/localci';
