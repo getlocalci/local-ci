@@ -4,6 +4,8 @@ export const LICENSE_ERROR = 'localCiLicenseKeyError';
 export const GET_LICENSE_COMMAND = 'local-ci.license.get';
 export const ENTER_LICENSE_COMMAND = 'local-ci.license.enter';
 export const EXIT_JOB_COMMAND = 'local-ci.job.exit';
+export const EXTENSION_ID = 'LocalCI.local-ci';
+export const EXTENSION_VERSION = '1.1.0';
 
 // @todo: Look at an alternative, as docker inspect hangs sometimes: https://github.com/docker/for-linux/issues/397
 export const GET_CONTAINER_FUNCTION = `get_container() {
@@ -55,3 +57,4 @@ export const SCHEDULE_INTERVIEW_URL =
 export const SUPPRESS_UNCOMMITTED_FILE_WARNING =
   'local-ci.suppress-warning.uncommitted';
 export const SURVEY_URL = 'https://www.surveymonkey.com/r/localci';
+export const TELEMETRY_KEY = '<your key>';

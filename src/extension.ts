@@ -8,12 +8,15 @@ import {
   COMMITTED_IMAGE_NAMESPACE,
   ENTER_LICENSE_COMMAND,
   EXIT_JOB_COMMAND,
+  EXTENSION_ID,
+  EXTENSION_VERSION,
   GET_LICENSE_COMMAND,
   GET_LICENSE_KEY_URL,
   HELP_URL,
   JOB_TREE_VIEW_ID,
   RUN_JOB_COMMAND,
   SELECTED_CONFIG_PATH,
+  TELEMETRY_KEY,
   TRIAL_STARTED_TIMESTAMP,
 } from './constants';
 import cleanUpCommittedImages from './utils/cleanUpCommittedImages';
@@ -31,16 +34,17 @@ import runJob from './utils/runJob';
 import showLicenseInput from './utils/showLicenseInput';
 import writeProcessFile from './utils/writeProcessFile';
 
-const extensionId = 'LocalCI.local-ci';
-const extensionVersion = '1.1.0';
-const key = '<your key>';
-
 export function activate(context: vscode.ExtensionContext): void {
   if (!context.globalState.get(TRIAL_STARTED_TIMESTAMP)) {
     context.globalState.update(TRIAL_STARTED_TIMESTAMP, new Date().getTime());
   }
   const jobProvider = new JobProvider(context);
-  const reporter = new TelemetryReporter(extensionId, extensionVersion, key);
+  const reporter = new TelemetryReporter(
+    EXTENSION_ID,
+    EXTENSION_VERSION,
+    TELEMETRY_KEY
+  );
+  reporter.sendTelemetryEvent('activate');
   const reportRunJob = () => reporter.sendTelemetryEvent('runJob');
 
   vscode.window.registerTreeDataProvider(JOB_TREE_VIEW_ID, jobProvider);
