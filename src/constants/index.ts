@@ -1,3 +1,5 @@
+export const EXTENSION_VERSION = '1.1.0';
+export const EXTENSION_ID = 'LocalCI.local-ci';
 export const COMMITTED_IMAGE_NAMESPACE = 'local-ci';
 export const SELECTED_CONFIG_PATH = 'local-ci.config.path';
 export const LICENSE_ERROR = 'localCiLicenseKeyError';
@@ -55,3 +57,4 @@ export const SCHEDULE_INTERVIEW_URL =
 export const SUPPRESS_UNCOMMITTED_FILE_WARNING =
   'local-ci.suppress-warning.uncommitted';
 export const SURVEY_URL = 'https://www.surveymonkey.com/r/localci';
+export const TELEMETRY_KEY = '90189d4e-b560-4a92-aa2c-5a9df190b66a'; // Microsoft.AppInsights Instrumentation Key.
