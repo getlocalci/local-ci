@@ -35,16 +35,16 @@ function getRestoreCacheCommand(step: FullStep): string | undefined {
   if (step?.restore_cache?.key) {
     const cacheDirectory = `${path.join(
       CONTAINER_STORAGE_DIRECTORY,
-      convertToBash(step.restore_cache.key)
-    )}`;
-
+      convertToBash(step.restore_cache.key),
+      path.sep
+    )}.`;
     // BusyBox doesn't have the -n option.
     return `if [ -d ${cacheDirectory} ]; cp -rn ${cacheDirectory} . || cp -ru ${cacheDirectory} .; fi \n`;
   }
 
   return step?.restore_cache?.keys?.reduce((accumulator, directory) => {
     const fullDirectory = convertToBash(
-      path.join(CONTAINER_STORAGE_DIRECTORY, directory)
+      `${path.join(CONTAINER_STORAGE_DIRECTORY, directory, path.sep)}.`
     );
 
     return `${accumulator} if [ -d ${fullDirectory} ]; then cp -rn ${fullDirectory} . || cp -ru ${fullDirectory} .; fi \n`;
