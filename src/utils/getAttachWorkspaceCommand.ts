@@ -9,5 +9,5 @@ export default function getAttachWorkspaceCommand(step: Step): string {
   const attachFrom = path.join(CONTAINER_STORAGE_DIRECTORY, '*');
 
   // BusyBox doesn't have the -n option.
-  return `cp -rn ${attachFrom} ${step?.attach_workspace?.at} || cp -ru ${attachFrom} ${step?.attach_workspace?.at}`;
+  return `if [ -d ${attachFrom} ]; then cp -rn ${attachFrom} ${step?.attach_workspace?.at} || cp -ru ${attachFrom} ${step?.attach_workspace?.at}; fi`;
 }
