@@ -33,13 +33,13 @@ function getPersistToWorkspaceCommand(step: FullStep): string | undefined {
 
 function getRestoreCacheCommand(step: FullStep): string | undefined {
   if (step?.restore_cache?.key) {
-    const tarFile = `${path.join(
+    const cacheDirectory = `${path.join(
       CONTAINER_STORAGE_DIRECTORY,
       convertToBash(step.restore_cache.key)
-    )}.tar.gz`;
+    )}`;
 
     // BusyBox doesn't have the -n option.
-    return `if [ -d ${tarFile} ]; then tar xvzf ${tarFile} .; fi \n`;
+    return `if [ -d ${cacheDirectory} ]; cp -rn ${cacheDirectory} . || cp -ru ${cacheDirectory} .; fi \n`;
   }
 
   return step?.restore_cache?.keys?.reduce((accumulator, directory) => {
@@ -47,8 +47,7 @@ function getRestoreCacheCommand(step: FullStep): string | undefined {
       path.join(CONTAINER_STORAGE_DIRECTORY, directory)
     );
 
-    // BusyBox doesn't have the -n option.
-    return `${accumulator} if [ -d ${fullDirectory} ]; then tar xvzf ${fullDirectory} .; fi \n`;
+    return `${accumulator} if [ -d ${fullDirectory} ]; then cp -rn ${fullDirectory} . || cp -ru ${fullDirectory} .; fi \n`;
   }, '');
 }
 
@@ -59,7 +58,7 @@ function getSaveCacheCommand(step: FullStep): string | undefined {
       convertToBash(step?.save_cache?.key ?? '')
     );
 
-    return `${accumulator} mkdir -p ${destination}; cp -r ${directory} ${destination} \n`;
+    return `${accumulator} mkdir -p ${destination}; cp -rn ${directory} ${destination} || cp -ru ${directory} ${destination} \n`;
   }, '');
 }
 
