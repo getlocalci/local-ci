@@ -1,15 +1,16 @@
 import getMillisecondsRemainingInTrial from './getMillisecondsRemainingInTrial';
+import getPrettyPrintedTimeRemaining from './getPrettyPrintedTimeRemaining';
 
-export default function isTrialExpired(
+export default function getTimeRemainingInTrial(
+  currentTimeStamp: number,
   trialStartedTimeStamp: number | unknown,
   trialLengthInMilliseconds: number
-): boolean {
-  return (
-    !trialStartedTimeStamp ||
+): string {
+  return getPrettyPrintedTimeRemaining(
     getMillisecondsRemainingInTrial(
-      new Date().getTime(),
+      currentTimeStamp,
       trialStartedTimeStamp,
       trialLengthInMilliseconds
-    ) <= 0
+    )
   );
 }

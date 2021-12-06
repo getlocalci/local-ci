@@ -1,5 +1,15 @@
 # Change Log
 
+## 1.1.0 - 6 December 2021
+
+### Added
+- Telemetry for activating, running a job, and no jobs, opt out with `"telemetry.enableTelemetry": false`. [#50](https://github.com/getlocalci/local-ci/pull/50/)
+
+## 1.0.2 - 5 December 2021
+
+### Added
+- Extend the free preview for filling out a 2-minute survey. [#49](https://github.com/getlocalci/local-ci/pull/49/)
+
 ## 1.0.1 - 24 November 2021
 
 ### Added

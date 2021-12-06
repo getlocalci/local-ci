@@ -1,3 +1,5 @@
+export const EXTENSION_VERSION = '1.1.0';
+export const EXTENSION_ID = 'LocalCI.local-ci';
 export const COMMITTED_IMAGE_NAMESPACE = 'local-ci';
 export const SELECTED_CONFIG_PATH = 'local-ci.config.path';
 export const LICENSE_ERROR = 'localCiLicenseKeyError';
@@ -41,6 +43,8 @@ export const LICENSE_VALIDITY = 'local-ci.license.validity';
 export const LICENSE_VALIDITY_CACHE_EXPIRATION =
   'local-ci.license.cache.expiration';
 export const TRIAL_LENGTH_IN_MILLISECONDS = 172800000; // 2 days.
+export const EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS = 1296000000; // 15 days.
+export const HAS_EXTENDED_TRIAL = 'local-ci.license.trial-extended.survey';
 export const TRIAL_STARTED_TIMESTAMP =
   'local-ci.license.trial-started.timestamp';
 export const CONTAINER_STORAGE_DIRECTORY = '/tmp/local-ci';
@@ -48,5 +52,9 @@ export const HOST_TMP_DIRECTORY = '/tmp/local-ci'; // Also hard-coded in node/un
 export const PROCESS_FILE_DIRECTORY = `${HOST_TMP_DIRECTORY}/process`;
 export const LOCAL_VOLUME_DIRECTORY = `${HOST_TMP_DIRECTORY}/volume`;
 export const RUN_JOB_COMMAND = 'local-ci.job.run';
+export const SCHEDULE_INTERVIEW_URL =
+  'https://tidycal.com/localci/30-minute-meeting';
 export const SUPPRESS_UNCOMMITTED_FILE_WARNING =
   'local-ci.suppress-warning.uncommitted';
+export const SURVEY_URL = 'https://www.surveymonkey.com/r/localci';
+export const TELEMETRY_KEY = '90189d4e-b560-4a92-aa2c-5a9df190b66a'; // Microsoft.AppInsights Instrumentation Key.

@@ -15,6 +15,7 @@ import getAllConfigFilePaths from '../utils/getAllConfigFilePaths';
 import getConfigFilePath from '../utils/getConfigFilePath';
 import getDockerError from '../utils/getDockerError';
 import getProcessFilePath from '../utils/getProcessFilePath';
+import getTrialLength from '../utils/getTrialLength';
 import isDockerRunning from '../utils/isDockerRunning';
 import isLicenseValid from '../utils/isLicenseValid';
 import isTrialExpired from '../utils/isTrialExpired';
@@ -73,7 +74,10 @@ export default class JobProvider
 
     const shouldEnableExtension =
       (await isLicenseValid(this.context)) ||
-      !isTrialExpired(this.context.globalState.get(TRIAL_STARTED_TIMESTAMP));
+      !isTrialExpired(
+        this.context.globalState.get(TRIAL_STARTED_TIMESTAMP),
+        getTrialLength(this.context)
+      );
     const dockerRunning = isDockerRunning();
 
     if (shouldEnableExtension && dockerRunning) {

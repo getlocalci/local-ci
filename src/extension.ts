@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import TelemetryReporter from 'vscode-extension-telemetry';
 import Delayer from './classes/Delayer';
 import Job from './classes/Job';
 import JobProvider from './classes/JobProvider';
@@ -7,12 +8,16 @@ import {
   COMMITTED_IMAGE_NAMESPACE,
   ENTER_LICENSE_COMMAND,
   EXIT_JOB_COMMAND,
+  EXTENSION_ID,
+  EXTENSION_VERSION,
   GET_LICENSE_COMMAND,
   GET_LICENSE_KEY_URL,
   HELP_URL,
   JOB_TREE_VIEW_ID,
   RUN_JOB_COMMAND,
   SELECTED_CONFIG_PATH,
+  TELEMETRY_KEY,
+  TRIAL_STARTED_TIMESTAMP,
 } from './constants';
 import cleanUpCommittedImages from './utils/cleanUpCommittedImages';
 import disposeTerminalsForJob from './utils/disposeTerminalsForJob';
@@ -22,7 +27,6 @@ import getConfig from './utils/getConfig';
 import getConfigFilePath from './utils/getConfigFilePath';
 import getDebuggingTerminalName from './utils/getDebuggingTerminalName';
 import getFinalTerminalName from './utils/getFinalTerminalName';
-import getLicenseInformation from './utils/getLicenseInformation';
 import getProcessedConfig from './utils/getProcessedConfig';
 import getProcessFilePath from './utils/getProcessFilePath';
 import getRepoBasename from './utils/getRepoBasename';
@@ -31,10 +35,21 @@ import showLicenseInput from './utils/showLicenseInput';
 import writeProcessFile from './utils/writeProcessFile';
 
 export function activate(context: vscode.ExtensionContext): void {
+  if (!context.globalState.get(TRIAL_STARTED_TIMESTAMP)) {
+    context.globalState.update(TRIAL_STARTED_TIMESTAMP, new Date().getTime());
+  }
   const jobProvider = new JobProvider(context);
+  const reporter = new TelemetryReporter(
+    EXTENSION_ID,
+    EXTENSION_VERSION,
+    TELEMETRY_KEY
+  );
+  reporter.sendTelemetryEvent('activate');
+  const reportRunJob = () => reporter.sendTelemetryEvent('runJob');
 
   vscode.window.registerTreeDataProvider(JOB_TREE_VIEW_ID, jobProvider);
   context.subscriptions.push(
+    reporter,
     vscode.commands.registerCommand(`${JOB_TREE_VIEW_ID}.refresh`, () =>
       jobProvider.refresh()
     ),
@@ -128,7 +143,7 @@ export function activate(context: vscode.ExtensionContext): void {
           jobProvider.refresh(job);
         }
 
-        runJob(context, jobName);
+        runJob(context, jobName, reportRunJob);
       }
     ),
     vscode.commands.registerCommand(EXIT_JOB_COMMAND, (job: Job) => {
@@ -142,7 +157,7 @@ export function activate(context: vscode.ExtensionContext): void {
       jobProvider.refresh(job);
       const jobName = job.getJobName();
       disposeTerminalsForJob(jobName);
-      runJob(context, jobName);
+      runJob(context, jobName, reportRunJob);
     }),
     vscode.commands.registerCommand(
       'local-ci.debug.repo',
@@ -255,6 +270,4 @@ export function activate(context: vscode.ExtensionContext): void {
       }
     },
   });
-
-  getLicenseInformation(context);
 }

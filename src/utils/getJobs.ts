@@ -1,10 +1,12 @@
 import * as vscode from 'vscode';
+import TelemetryReporter from 'vscode-extension-telemetry';
 import Job from '../classes/Job';
 import Warning from '../classes/Warning';
 import Command from '../classes/Command';
 import getAllConfigFilePaths from './getAllConfigFilePaths';
 import getConfig from './getConfig';
 import isWindows from './isWindows';
+import { EXTENSION_ID, EXTENSION_VERSION, TELEMETRY_KEY } from '../constants';
 
 export default async function getJobs(
   context: vscode.ExtensionContext,
@@ -37,6 +39,14 @@ export default async function getJobs(
           []
         )
       : [];
+
+  if (!jobs.length) {
+    new TelemetryReporter(
+      EXTENSION_ID,
+      EXTENSION_VERSION,
+      TELEMETRY_KEY
+    ).sendTelemetryEvent('noJobs');
+  }
 
   return jobs.length
     ? jobs.map((jobName) => new Job(jobName, jobName === runningJob))
