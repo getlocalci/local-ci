@@ -9,7 +9,7 @@ suite('getAttachWorkspaceCommand', () => {
   test('With attach_workspace', () => {
     assert.strictEqual(
       getAttachWorkspaceCommand({ attach_workspace: { at: '/foo/baz' } }), // eslint-disable-line @typescript-eslint/naming-convention
-      'cp -rn /tmp/local-ci/* /foo/baz || cp -ru /tmp/local-ci/* /foo/baz'
+      'cp -rn /tmp/local-ci/. /foo/baz || cp -ru /tmp/local-ci/. /foo/baz'
     );
   });
 });
