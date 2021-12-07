@@ -99,8 +99,12 @@ export default class JobProvider
       this.runningJob = undefined;
     }
 
+    if (processError) {
+      this.reporter.sendTelemetryErrorEvent('processError');
+    }
+
     if (!dockerRunning) {
-      this.reporter.sendTelemetryErrorEvent('dockerRunning');
+      this.reporter.sendTelemetryErrorEvent('dockerNotRunning');
     }
 
     if (!this.jobs.length) {
