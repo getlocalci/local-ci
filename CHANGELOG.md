@@ -1,9 +1,17 @@
 # Change Log
 
+## 1.2.0 - 7 December 2021
+
+### Added
+- Telemetry for errors, like if there are no jobs. [#55](https://github.com/getlocalci/local-ci/pull/55/)
+
+### Fixed
+- Fix cannot stat error in `tmp/`. [#54](https://github.com/getlocalci/local-ci/pull/54)
+
 ## 1.1.0 - 6 December 2021
 
 ### Added
-- Telemetry for activating, running a job, and no jobs, opt out with `"telemetry.enableTelemetry": false`. [#50](https://github.com/getlocalci/local-ci/pull/50/)
+- Telemetry for activating, running a job, and no jobs, opt out with `"telemetry.telemetryLevel": "off"`. [#50](https://github.com/getlocalci/local-ci/pull/50/)
 
 ## 1.0.2 - 5 December 2021
 

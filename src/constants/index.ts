@@ -1,4 +1,4 @@
-export const EXTENSION_VERSION = '1.1.0';
+export const EXTENSION_VERSION = '1.2.0';
 export const EXTENSION_ID = 'LocalCI.local-ci';
 export const COMMITTED_IMAGE_NAMESPACE = 'local-ci';
 export const SELECTED_CONFIG_PATH = 'local-ci.config.path';
