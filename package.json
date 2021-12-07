@@ -223,12 +223,12 @@
   "badges": [
     {
       "url": "https://img.shields.io/badge/trial-2%20day-orange",
-      "href": "https://getlocalci.com/pricing",
+      "href": "https://getlocalci.com/pricing/?utm_medium=extension&utm_source=badge",
       "description": "2 day free preview"
     },
     {
       "url": "https://img.shields.io/badge/%24-paid-orange",
-      "href": "https://getlocalci.com/pricing",
+      "href": "https://getlocalci.com/pricing/?utm_medium=extension&utm_source=badge",
       "description": "Buy license key"
     },
     {
