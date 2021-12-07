@@ -3,7 +3,7 @@
 ## 1.2.0 - 7 December 2021
 
 ### Added
-- Telemetry for errors, like if there are no jobs. [#55](https://github.com/getlocalci/local-ci/pull/55/)
+- Telemetry, including for errors like if there are no jobs. [#55](https://github.com/getlocalci/local-ci/pull/55/)
 
 ### Fixed
 - Fix cannot stat error in `tmp/`. [#54](https://github.com/getlocalci/local-ci/pull/54)
