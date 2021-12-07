@@ -59,11 +59,7 @@ You can opt out of telemetry by adding this to your VS Code `settings.json`:
 
 `"telemetry.enableTelemetry": false`
 
-If you haven't opted out, this will send the following events via [VS Code telemetry](https://code.visualstudio.com/docs/getstarted/telemetry):
-
-* This extension is activated
-* There are no jobs found, like if there's no `.circleci/config.yml` file
-* A CircleCI® job is run (but it sends no data about the job, not even the name)
+If you haven't opted out, here are the [telemetry events](https://github.com/getlocalci/local-ci/search?q=reporter.send) sent via [VS Code telemetry](https://code.visualstudio.com/docs/getstarted/telemetry).
 
 If you haven't entered a license key, like during the free preview, this extension has no interaction with Local CI's site.
 
