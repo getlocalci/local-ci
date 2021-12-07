@@ -95,7 +95,12 @@ export default class JobProvider
             new vscode.TreeItem(processError),
             new Command('Try Again', `${JOB_TREE_VIEW_ID}.refresh`),
           ]
-        : await getJobs(this.context, processedConfig, this.runningJob);
+        : await getJobs(
+            this.context,
+            processedConfig,
+            this.reporter,
+            this.runningJob
+          );
       this.runningJob = undefined;
     }
 

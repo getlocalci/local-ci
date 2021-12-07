@@ -55,9 +55,9 @@ If there's more than one `.circleci/config.yml` file, click the gear icon to sel
 
 ## Privacy
 
-You can opt out of telemetry by adding this to your VS Code `settings.json`:
+You can opt out of all telemetry by adding this to your VS Code `settings.json`:
 
-`"telemetry.enableTelemetry": false`
+`"telemetry.telemetryLevel": "off"`
 
 If you haven't opted out, here are the [telemetry events](https://github.com/getlocalci/local-ci/search?q=reporter.send) sent via [VS Code telemetry](https://code.visualstudio.com/docs/getstarted/telemetry).
 
