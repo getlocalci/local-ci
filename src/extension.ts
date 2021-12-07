@@ -43,7 +43,26 @@ const reporter = new TelemetryReporter(
 export function activate(context: vscode.ExtensionContext): void {
   if (!context.globalState.get(TRIAL_STARTED_TIMESTAMP)) {
     context.globalState.update(TRIAL_STARTED_TIMESTAMP, new Date().getTime());
+    reporter.sendTelemetryEvent('firstActivation');
+
+    const getStartedText = 'Get started debugging faster';
+    vscode.window
+      .showInformationMessage(
+        'Thanks for installing Local CI!',
+        { detail: 'Getting started with Local CI' },
+        getStartedText
+      )
+      .then((clicked) => {
+        if (clicked === getStartedText) {
+          vscode.commands.executeCommand(
+            'workbench.action.openWalkthrough',
+            'LocalCI.local-ci#welcomeLocalCi'
+          );
+          reporter.sendTelemetryEvent('click.getStarted');
+        }
+      });
   }
+
   const jobProvider = new JobProvider(context, reporter);
   reporter.sendTelemetryEvent('activate');
 
@@ -167,7 +186,7 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand(
       'local-ci.debug.repo',
       (clickedFile: vscode.Uri) => {
-        reporter.sendTelemetryEvent('clickDebugRepo');
+        reporter.sendTelemetryEvent('click.debugRepo');
         if (clickedFile.fsPath) {
           context.globalState
             .update(SELECTED_CONFIG_PATH, clickedFile.fsPath)
