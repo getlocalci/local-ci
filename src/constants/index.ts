@@ -1,4 +1,4 @@
-export const EXTENSION_VERSION = '1.1.0';
+export const EXTENSION_VERSION = '1.2.0';
 export const EXTENSION_ID = 'LocalCI.local-ci';
 export const COMMITTED_IMAGE_NAMESPACE = 'local-ci';
 export const SELECTED_CONFIG_PATH = 'local-ci.config.path';
@@ -34,7 +34,8 @@ export const GET_PICARD_CONTAINER_FUNCTION = `get_picard_container() {
     fi
   done
 }`;
-export const GET_LICENSE_KEY_URL = 'https://getlocalci.com/pricing';
+export const GET_LICENSE_KEY_URL =
+  'https://getlocalci.com/pricing/?utm_medium=extension&utm_source=ui';
 export const HELP_URL = 'https://github.com/getlocalci/local-ci/discussions';
 export const JOB_TREE_VIEW_ID = 'localCiJobs';
 export const LICENSE_ITEM_ID = 43;
