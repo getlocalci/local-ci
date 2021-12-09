@@ -14,6 +14,8 @@ export default async function getJobs(
   runningJob?: string
 ): Promise<vscode.TreeItem[]> {
   if (isWindows()) {
+    reporter.sendTelemetryErrorEvent('osNotCompatible');
+
     return Promise.resolve([
       new Warning(`Sorry, this doesn't work on Windows`),
     ]);
