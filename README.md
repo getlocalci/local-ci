@@ -1,5 +1,5 @@
-[![2 day free preview](https://img.shields.io/badge/trial-2%20day-orange)](https://getlocalci.com/pricing)
-[![Buy license key](https://img.shields.io/badge/%24-paid-orange)](https://getlocalci.com/pricing)
+[![2 day free preview](https://img.shields.io/badge/trial-2%20day-orange)](https://getlocalci.com/pricing/?utm_medium=extension&utm_source=readme)
+[![Buy license key](https://img.shields.io/badge/%24-paid-orange)](https://getlocalci.com/pricing/?utm_medium=extension&utm_source=readme)
 [![Platform: macOS](https://img.shields.io/badge/platform-macOS-yellow)](https://en.wikipedia.org/wiki/MacOS)
 [![Requires CircleCI®](https://img.shields.io/badge/requires-CirlcleCI%C2%AE-yellow)](https://circleci.com)
 
@@ -37,7 +37,7 @@ CircleCI® is a registered trademark of Circle Internet Services, Inc.
 
 ## License
 
-Local CI requires a [license](https://getlocalci.com/pricing/) for $70 per month.
+Local CI requires a [license](https://getlocalci.com/pricing/?utm_medium=extension&utm_source=readme) for $70 per month.
 
 But first you'll get a free 2-day preview, no sign-up or credit card needed.
 
@@ -55,15 +55,11 @@ If there's more than one `.circleci/config.yml` file, click the gear icon to sel
 
 ## Privacy
 
-You can opt out of telemetry by adding this to your VS Code `settings.json`:
+You can opt out of all telemetry by adding this to your VS Code `settings.json`:
 
-`"telemetry.enableTelemetry": false`
+`"telemetry.telemetryLevel": "off"`
 
-If you haven't opted out, this will send the following events via [VS Code telemetry](https://code.visualstudio.com/docs/getstarted/telemetry):
-
-* This extension is activated
-* There are no jobs found, like if there's no `.circleci/config.yml` file
-* A CircleCI® job is run (but it sends no data about the job, not even the name)
+If you haven't opted out, here are the [telemetry events](https://github.com/getlocalci/local-ci/search?q=reporter.send) sent via [VS Code telemetry](https://code.visualstudio.com/docs/getstarted/telemetry).
 
 If you haven't entered a license key, like during the free preview, this extension has no interaction with Local CI's site.
 

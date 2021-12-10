@@ -26,8 +26,7 @@ import uncommittedWarning from './uncommittedWarning';
 
 export default async function runJob(
   context: vscode.ExtensionContext,
-  jobName: string,
-  reportRunJob: () => void
+  jobName: string
 ): Promise<void> {
   const configFilePath = await getConfigFilePath(context);
   const repoPath = path.dirname(path.dirname(configFilePath));
@@ -42,7 +41,6 @@ export default async function runJob(
     cwd: repoPath,
   });
   terminal.show();
-  reportRunJob();
 
   const processFilePath = getProcessFilePath(configFilePath);
   const parsedProcessFile = getConfigFromPath(processFilePath);

@@ -6,11 +6,11 @@ import Command from '../classes/Command';
 import getAllConfigFilePaths from './getAllConfigFilePaths';
 import getConfig from './getConfig';
 import isWindows from './isWindows';
-import { EXTENSION_ID, EXTENSION_VERSION, TELEMETRY_KEY } from '../constants';
 
 export default async function getJobs(
   context: vscode.ExtensionContext,
   processedConfig: string,
+  reporter: TelemetryReporter,
   runningJob?: string
 ): Promise<vscode.TreeItem[]> {
   if (isWindows()) {
@@ -41,11 +41,7 @@ export default async function getJobs(
       : [];
 
   if (!jobs.length) {
-    new TelemetryReporter(
-      EXTENSION_ID,
-      EXTENSION_VERSION,
-      TELEMETRY_KEY
-    ).sendTelemetryEvent('noJobs');
+    reporter.sendTelemetryEvent('noJobs');
   }
 
   return jobs.length

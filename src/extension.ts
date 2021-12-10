@@ -34,18 +34,37 @@ import runJob from './utils/runJob';
 import showLicenseInput from './utils/showLicenseInput';
 import writeProcessFile from './utils/writeProcessFile';
 
+const reporter = new TelemetryReporter(
+  EXTENSION_ID,
+  EXTENSION_VERSION,
+  TELEMETRY_KEY
+);
+
 export function activate(context: vscode.ExtensionContext): void {
   if (!context.globalState.get(TRIAL_STARTED_TIMESTAMP)) {
     context.globalState.update(TRIAL_STARTED_TIMESTAMP, new Date().getTime());
+    reporter.sendTelemetryEvent('firstActivation');
+
+    const getStartedText = 'Get started debugging faster';
+    vscode.window
+      .showInformationMessage(
+        'Thanks for installing Local CI!',
+        { detail: 'Getting started with Local CI' },
+        getStartedText
+      )
+      .then((clicked) => {
+        if (clicked === getStartedText) {
+          vscode.commands.executeCommand(
+            'workbench.action.openWalkthrough',
+            'LocalCI.local-ci#welcomeLocalCi'
+          );
+          reporter.sendTelemetryEvent('click.getStarted');
+        }
+      });
   }
-  const jobProvider = new JobProvider(context);
-  const reporter = new TelemetryReporter(
-    EXTENSION_ID,
-    EXTENSION_VERSION,
-    TELEMETRY_KEY
-  );
+
+  const jobProvider = new JobProvider(context, reporter);
   reporter.sendTelemetryEvent('activate');
-  const reportRunJob = () => reporter.sendTelemetryEvent('runJob');
 
   vscode.window.registerTreeDataProvider(JOB_TREE_VIEW_ID, jobProvider);
   context.subscriptions.push(
@@ -57,6 +76,7 @@ export function activate(context: vscode.ExtensionContext): void {
       vscode.env.openExternal(vscode.Uri.parse(HELP_URL))
     ),
     vscode.commands.registerCommand(`${JOB_TREE_VIEW_ID}.exitAllJobs`, () => {
+      reporter.sendTelemetryEvent('exitAllJobs');
       jobProvider.refresh();
 
       const confirmText = 'Yes';
@@ -83,6 +103,7 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand(
       `${JOB_TREE_VIEW_ID}.selectRepo`,
       async () => {
+        reporter.sendTelemetryEvent('selectRepo');
         const quickPick = vscode.window.createQuickPick();
         const configFilePaths = await getAllConfigFilePaths(context);
         quickPick.title = 'Repo to run CI on';
@@ -143,7 +164,8 @@ export function activate(context: vscode.ExtensionContext): void {
           jobProvider.refresh(job);
         }
 
-        runJob(context, jobName, reportRunJob);
+        reporter.sendTelemetryEvent('runJob');
+        runJob(context, jobName);
       }
     ),
     vscode.commands.registerCommand(EXIT_JOB_COMMAND, (job: Job) => {
@@ -157,11 +179,14 @@ export function activate(context: vscode.ExtensionContext): void {
       jobProvider.refresh(job);
       const jobName = job.getJobName();
       disposeTerminalsForJob(jobName);
-      runJob(context, jobName, reportRunJob);
+
+      reporter.sendTelemetryEvent('rerunJob');
+      runJob(context, jobName);
     }),
     vscode.commands.registerCommand(
       'local-ci.debug.repo',
       (clickedFile: vscode.Uri) => {
+        reporter.sendTelemetryEvent('click.debugRepo');
         if (clickedFile.fsPath) {
           context.globalState
             .update(SELECTED_CONFIG_PATH, clickedFile.fsPath)
@@ -175,6 +200,7 @@ export function activate(context: vscode.ExtensionContext): void {
       }
     ),
     vscode.commands.registerCommand('local-ci.runWalkthroughJob', async () => {
+      reporter.sendTelemetryEvent('runWalkthroughJob');
       const configFilePath = await getConfigFilePath(context);
       let processedConfig;
       try {
@@ -270,4 +296,8 @@ export function activate(context: vscode.ExtensionContext): void {
       }
     },
   });
+}
+
+export function deactivate(): void {
+  reporter.sendTelemetryEvent('deactivate');
 }

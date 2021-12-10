@@ -19,17 +19,6 @@ jobs:
       - checkout
       - node/install-packages
       - run: npm test
-  publish:
-    executor:
-      name: node
-    steps:
-      - browser-tools/install-browser-tools
-      - node/install-npm
-      - checkout
-      - node/install-packages
-      - run:
-          name: "Deploy plugin to marketplace"
-          command: npm run deploy
 
 workflows:
   test-publish:
@@ -38,11 +27,3 @@ workflows:
           filters:
             tags:
               only: /.*/
-      - publish:
-          requires:
-            - test
-          filters:
-            tags:
-              only: /^\d+\.\d+\.\d+$/
-            branches:
-              ignore: /.*/

@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as vscode from 'vscode';
+import TelemetryReporter from 'vscode-extension-telemetry';
 import Command from './Command';
 import Job from './Job';
 import Warning from './Warning';
@@ -32,7 +33,10 @@ export default class JobProvider
   private runningJob: string | undefined;
   private suppressMessage: boolean | undefined;
 
-  constructor(private readonly context: vscode.ExtensionContext) {}
+  constructor(
+    private readonly context: vscode.ExtensionContext,
+    private readonly reporter: TelemetryReporter
+  ) {}
 
   refresh(job?: Job, suppressMessage?: boolean): void {
     this.suppressMessage = suppressMessage;
@@ -46,6 +50,8 @@ export default class JobProvider
   async getChildren(): Promise<vscode.TreeItem[]> {
     const configFilePath = await getConfigFilePath(this.context);
     if (!configFilePath || !fs.existsSync(configFilePath)) {
+      this.reporter.sendTelemetryErrorEvent('configFilePath');
+
       return [
         new Warning('Error: No jobs found'),
         (await getAllConfigFilePaths(this.context)).length
@@ -70,6 +76,8 @@ export default class JobProvider
           }`
         );
       }
+
+      this.reporter.sendTelemetryErrorEvent('writeProcessFile');
     }
 
     const shouldEnableExtension =
@@ -87,8 +95,25 @@ export default class JobProvider
             new vscode.TreeItem(processError),
             new Command('Try Again', `${JOB_TREE_VIEW_ID}.refresh`),
           ]
-        : await getJobs(this.context, processedConfig, this.runningJob);
+        : await getJobs(
+            this.context,
+            processedConfig,
+            this.reporter,
+            this.runningJob
+          );
       this.runningJob = undefined;
+    }
+
+    if (processError) {
+      this.reporter.sendTelemetryErrorEvent('processError');
+    }
+
+    if (!dockerRunning) {
+      this.reporter.sendTelemetryErrorEvent('dockerNotRunning');
+    }
+
+    if (!this.jobs.length) {
+      this.reporter.sendTelemetryErrorEvent('noJobsFound');
     }
 
     return shouldEnableExtension

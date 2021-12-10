@@ -6,6 +6,7 @@ import * as vscode from 'vscode';
 import * as yaml from 'js-yaml';
 import { Substitute } from '@fluffy-spoon/substitute';
 import getJobs from '../../../utils/getJobs';
+import TelemetryReporter from 'vscode-extension-telemetry';
 
 mocha.afterEach(() => {
   sinon.restore();
@@ -35,7 +36,14 @@ suite('getJobs', () => {
       });
 
     assert.strictEqual(
-      (await getJobs(getMockContext(), 'example-path')).length,
+      (
+        await getJobs(
+          getMockContext(),
+          'example-path',
+          Substitute.for<TelemetryReporter>(),
+          'build'
+        )
+      ).length,
       1
     );
   });
@@ -61,7 +69,14 @@ suite('getJobs', () => {
       });
 
     assert.strictEqual(
-      (await getJobs(getMockContext(), 'example-path')).length,
+      (
+        await getJobs(
+          getMockContext(),
+          'example-path',
+          Substitute.for<TelemetryReporter>(),
+          'build'
+        )
+      ).length,
       3
     );
   });
