@@ -30,7 +30,7 @@ type Step = FullStep | 'checkout' | string;
 
 interface Job {
   docker?: Array<Record<string, string>>;
-  steps?: Record<string, Step>
+  steps?: Step[];
   // eslint-disable-next-line @typescript-eslint/naming-convention
   working_directory?: string;
   machine?: { image?: string };

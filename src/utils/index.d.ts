@@ -1,4 +1,6 @@
-type Jobs = Record<string, Job>;
+interface Jobs {
+  [key: string]: Job;
+}
 
 interface CiConfigWithJobs {
   jobs: Jobs;
