@@ -4,25 +4,33 @@ import getConfigFromPath from '../../../utils/getConfigFromPath';
 import getSaveCacheSteps from '../../../utils/getSaveCacheSteps';
 
 suite('getSaveCacheSteps', () => {
-  test('With 1 save_cache', () => {
-    const config = getConfigFromPath(
-      path.resolve(
-        __dirname,
-        '..',
-        '..',
-        '..',
-        '..',
-        'src',
-        'test',
-        'fixture',
-        'config-with-cache.yml'
-      )
+  test('With 2 save_cache values', () => {
+    assert.deepStrictEqual(
+      getSaveCacheSteps(
+        getConfigFromPath(
+          path.resolve(
+            __dirname,
+            '..',
+            '..',
+            '..',
+            '..',
+            'src',
+            'test',
+            'fixture',
+            'config-with-cache.yml'
+          )
+        )
+      ),
+      [
+        {
+          paths: ['~/.npm', '~/.cache'],
+          key: 'v2-deps-{{ checksum "package-lock.json" }}',
+        },
+        {
+          paths: ['node_modules'],
+          key: 'node-modules-{{ checksum "package-lock.json" }}',
+        },
+      ]
     );
-    assert.deepStrictEqual(getSaveCacheSteps(config), [
-      {
-        paths: ['~/.npm', '~/.cache'],
-        key: 'v2-deps-{{ checksum "package-lock.json" }}',
-      },
-    ]);
   });
 });

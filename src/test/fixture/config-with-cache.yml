@@ -38,6 +38,10 @@ jobs:
       - run:
           name: 'Run prettier check on project files'
           command: npm run prettier:check
+      - save_cache:
+          paths:
+            - node_modules
+          key: node-modules-{{ checksum "package-lock.json" }}
 
   run-linter:
     executor: default-executor
@@ -66,6 +70,7 @@ jobs:
           keys:
             - v2-deps-{{ checksum "package-lock.json" }}
             - v2-deps
+            - node-modules-{{ checksum "package-lock.json" }}
       - run:
           name: 'Run e2e tests'
           command: npm run test:e2e:headless
