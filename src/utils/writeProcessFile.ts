@@ -1,10 +1,13 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as yaml from 'js-yaml';
+import convertToBash from './convertToBash';
 import getAttachWorkspaceCommand from './getAttachWorkspaceCommand';
 import getCheckoutJobs from './getCheckoutJobs';
 import getConfig from './getConfig';
+import getRestoreCacheCommand from './getRestoreCacheCommand';
 import { CONTAINER_STORAGE_DIRECTORY } from '../constants';
+import getSaveCacheSteps from './getSaveCacheSteps';
 
 function getPersistToWorkspaceCommand(step: FullStep): string | undefined {
   if (typeof step?.persist_to_workspace?.paths === 'string') {
@@ -31,26 +34,6 @@ function getPersistToWorkspaceCommand(step: FullStep): string | undefined {
   );
 }
 
-function getRestoreCacheCommand(step: FullStep): string | undefined {
-  if (step?.restore_cache?.key) {
-    const cacheDirectory = `${path.join(
-      CONTAINER_STORAGE_DIRECTORY,
-      convertToBash(step.restore_cache.key),
-      path.sep
-    )}.`;
-    // BusyBox doesn't have the -n option.
-    return `if [ -d ${cacheDirectory} ]; cp -rn ${cacheDirectory} . || cp -ru ${cacheDirectory} .; fi \n`;
-  }
-
-  return step?.restore_cache?.keys?.reduce((accumulator, directory) => {
-    const fullDirectory = convertToBash(
-      `${path.join(CONTAINER_STORAGE_DIRECTORY, directory, path.sep)}.`
-    );
-
-    return `${accumulator} if [ -d ${fullDirectory} ]; then cp -rn ${fullDirectory} . || cp -ru ${fullDirectory} .; fi \n`;
-  }, '');
-}
-
 function getSaveCacheCommand(step: FullStep): string | undefined {
   return step?.save_cache?.paths.reduce((accumulator, directory) => {
     const destination = path.join(
@@ -60,39 +43,6 @@ function getSaveCacheCommand(step: FullStep): string | undefined {
 
     return `${accumulator} mkdir -p ${destination}; cp -rn ${directory} ${destination} || cp -ru ${directory} ${destination} \n`;
   }, '');
-}
-
-// See https://circleci.com/docs/2.0/caching/#using-keys-and-templates
-// arch doesn't need to be replaced.
-// @todo: implement .Revision
-const dynamicCache: DynamicCache = {
-  '.Branch': '$CIRCLE_BRANCH',
-  '.BuildNum': '$CIRCLE_BUILD_NUM',
-  '.Environment.variableName': '',
-  '.Revision': '',
-  epoch: 'date +%s',
-};
-
-function convertToBash(command: string) {
-  return command.replace(
-    /{{(.+?)}}/g,
-    (fullMatch: string, dynamicCommand: string) =>
-      `$(${Object.keys(dynamicCache).reduce(
-        (accumulator, original) =>
-          accumulator
-            .replace(original, dynamicCache[original as keyof DynamicCache])
-            .replace(
-              /checksum (\S+)/g,
-              (fullMatch: string, fileName: string) =>
-                `shasum ${fileName} | awk '{print $1}'`
-            )
-            .replace(
-              /\.Environment\.(\S+)/,
-              (fullMatch: string, envVar: string) => `echo $${envVar}`
-            ),
-        dynamicCommand
-      )})`
-  );
 }
 
 // Overwrites parts of the process.yml file.
@@ -160,7 +110,10 @@ export default function writeProcessFile(
                 return {
                   run: {
                     name: 'Restore cache',
-                    command: getRestoreCacheCommand(step),
+                    command: getRestoreCacheCommand(
+                      step,
+                      getSaveCacheSteps(config)
+                    ),
                   },
                 };
               }
