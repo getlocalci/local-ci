@@ -30,7 +30,7 @@ export default function getRestoreCacheCommand(
         (restoreCacheKey) =>
           `"${path.join(
             CONTAINER_STORAGE_DIRECTORY,
-            convertToBash(restoreCacheKey) + '*', // To support cascading fallback: https://circleci.com/docs/2.0/caching/#example-caching-configuration
+            convertToBash(restoreCacheKey) + '*', // The * is to support cascading fallback: https://circleci.com/docs/2.0/caching/#example-caching-configuration
             path.basename(saveCachePath)
           )}"`
       )

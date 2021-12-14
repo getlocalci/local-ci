@@ -1,5 +1,5 @@
-import * as path from 'path';
 import * as assert from 'assert';
+import { getTestFilePath } from '../../helpers';
 import getConfigFromPath from '../../../utils/getConfigFromPath';
 import getSaveCacheSteps from '../../../utils/getSaveCacheSteps';
 
@@ -7,19 +7,7 @@ suite('getSaveCacheSteps', () => {
   test('With 2 save_cache values', () => {
     assert.deepStrictEqual(
       getSaveCacheSteps(
-        getConfigFromPath(
-          path.resolve(
-            __dirname,
-            '..',
-            '..',
-            '..',
-            '..',
-            'src',
-            'test',
-            'fixture',
-            'config-with-cache.yml'
-          )
-        )
+        getConfigFromPath(getTestFilePath('fixture', 'config-with-cache.yml'))
       ),
       [
         {
