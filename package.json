@@ -47,6 +47,7 @@
     "onCommand:local-ci.runWalkthroughJob",
     "onCommand:local-ci.debugWalkthroughJob",
     "onCommand:local-ci.job.run",
+    "onUri",
     "onView:localCiJobs",
     "onView:localCiLicense",
     "workspaceContains:**/.circleci/config.yml"
