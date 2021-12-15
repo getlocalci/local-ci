@@ -12,8 +12,6 @@ export default function commitContainer(
   dockerImage: string,
   imageRepo: string
 ): cp.ChildProcess {
-  const newImageRepoAndTag = `${imageRepo}:${new Date().getTime()}`;
-
   return cp.spawn(
     '/bin/sh',
     [
@@ -23,7 +21,7 @@ export default function commitContainer(
       while [[ true ]]; do
         running_container=$(get_running_container ${dockerImage})
         if [[ -n $running_container ]]; then
-          committed_image=$(docker commit --pause=false $running_container ${newImageRepoAndTag})
+          committed_image=$(docker commit --pause=false $running_container ${imageRepo}:$(date +"%s"))
           if [[ -n $committed_image ]]; then
             latest_committed_image=$(docker images ${imageRepo} --format "{{.ID}} {{.Tag}}" | sort -k 2 -h | tail -n1 | awk '{print $1}')
             for previous_image in $(docker images -q "${imageRepo}"); do
