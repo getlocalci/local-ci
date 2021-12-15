@@ -38,7 +38,7 @@ suite('getRestoreCacheCommand', () => {
         `restore_from_directories=("/tmp/local-ci/v2-deps-$( shasum "package-lock.json" | awk '{print $1}' )*/.npm");
         for directory_candidate in $restore_from_directories; do
           if [ $(ls -ard $directory_candidate 2>/dev/null) ]; then
-            verified_directory=$(ls -ard $directory_candidate | tail -n1)
+            verified_directory=$(ls -ard $directory_candidate | tail -n1) echo "Restoring cached directory $verified_directory";
             cp -rn $verified_directory ~ || cp -ru $verified_directory ~;
             break;
           fi
@@ -47,10 +47,11 @@ suite('getRestoreCacheCommand', () => {
         for directory_candidate in $restore_from_directories; do
           if [ $(ls -ard $directory_candidate 2>/dev/null) ]; then
             verified_directory=$(ls -ard $directory_candidate | tail -n1)
+            echo "Restoring cached directory $verified_directory";
             cp -rn $verified_directory ~ || cp -ru $verified_directory ~;
             break;
           fi
-        done;\n`
+        done; `
       )
     );
   });
@@ -78,22 +79,7 @@ suite('getRestoreCacheCommand', () => {
         )
       ),
       normalize(
-        `restore_from_directories=("/tmp/local-ci/v2-deps-$( shasum "package-lock.json" | awk '{print $1}' )*/.npm" "/tmp/local-ci/v2-deps*/.npm");
-        for directory_candidate in $restore_from_directories; do
-          if [ $(ls -ard $directory_candidate 2>/dev/null) ]; then
-            verified_directory=$(ls -ard $directory_candidate | tail -n1)
-            cp -rn $verified_directory ~ || cp -ru $verified_directory ~;
-            break;
-          fi
-        done;
-        restore_from_directories=("/tmp/local-ci/v2-deps-$( shasum "package-lock.json" | awk '{print $1}' )*/.cache" "/tmp/local-ci/v2-deps*/.cache");
-        for directory_candidate in $restore_from_directories; do
-          if [ $(ls -ard $directory_candidate 2>/dev/null) ]; then
-            verified_directory=$(ls -ard $directory_candidate | tail -n1)
-            cp -rn $verified_directory ~ || cp -ru $verified_directory ~;
-            break;
-          fi
-        done;\n`
+        `restore_from_directories=("/tmp/local-ci/v2-deps-$( shasum "package-lock.json" | awk '{print $1}' )*/.npm" "/tmp/local-ci/v2-deps*/.npm"); for directory_candidate in $restore_from_directories; do if [ $(ls -ard $directory_candidate 2>/dev/null) ]; then verified_directory=$(ls -ard $directory_candidate | tail -n1) echo "Restoring cached directory $verified_directory"; cp -rn $verified_directory ~ || cp -ru $verified_directory ~; break; fi done; restore_from_directories=("/tmp/local-ci/v2-deps-$( shasum "package-lock.json" | awk '{print $1}' )*/.cache" "/tmp/local-ci/v2-deps*/.cache"); for directory_candidate in $restore_from_directories; do if [ $(ls -ard $directory_candidate 2>/dev/null) ]; then verified_directory=$(ls -ard $directory_candidate | tail -n1) echo "Restoring cached directory $verified_directory"; cp -rn $verified_directory ~ || cp -ru $verified_directory ~; break; fi done; `
       )
     );
   });

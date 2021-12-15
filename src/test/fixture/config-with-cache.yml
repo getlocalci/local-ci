@@ -127,7 +127,7 @@ workflows:
             - set-up-dependencies
       - build:
           requires:
-            - check-prettier
+            - run-prettier
             - run-linter
             - run-unit-tests
             - e2e-tests

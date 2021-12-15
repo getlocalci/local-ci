@@ -10,7 +10,19 @@ export default function getSaveCacheCommand(
       CONTAINER_STORAGE_DIRECTORY,
       convertToBash(step?.save_cache?.key ?? '')
     );
+    const destinationWhenCopied = path.join(
+      destination,
+      path.basename(directory)
+    );
 
-    return `${accumulator} if [ -d ${destination} ]; then echo "Cached file already exists, skipping"; elif [ ! -d ${directory} ]; then echo "Directory to cache does not exist, skipping"; else cp -rn ${directory} ${destination} || cp -ru ${directory} ${destination}; fi \n`;
+    return `${accumulator} if [ -d ${destinationWhenCopied} ]; then
+      echo "${directory} is already cached, skipping";
+    elif [ ! -d ${directory} ]; then
+      echo "${directory} does not exist, skipping caching";
+    else
+      echo "Saving ${directory} to the cache";
+      mkdir -p ${destination}
+      cp -rn ${directory} ${destinationWhenCopied} || cp -ru ${directory} ${destinationWhenCopied};
+    fi \n`;
   }, '');
 }
