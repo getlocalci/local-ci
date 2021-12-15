@@ -72,9 +72,7 @@ export default async function runJob(
   const committedImageRepo = `${COMMITTED_IMAGE_NAMESPACE}/${jobName}`;
 
   const jobImage = getImageFromJob(job);
-  const intervalId = setInterval(() => {
-    commitContainer(jobImage, committedImageRepo);
-  }, 2000);
+  const commitProcess = commitContainer(jobImage, committedImageRepo);
 
   const debuggingTerminal = vscode.window.createTerminal({
     name: getDebuggingTerminalName(jobName),
@@ -108,7 +106,7 @@ export default async function runJob(
       return;
     }
 
-    clearInterval(intervalId);
+    commitProcess.kill();
     if (finalTerminal || areTerminalsClosed(terminal, debuggingTerminal)) {
       return;
     }
@@ -146,7 +144,7 @@ export default async function runJob(
 
   vscode.window.onDidCloseTerminal(() => {
     if (areTerminalsClosed(terminal, debuggingTerminal, finalTerminal)) {
-      clearInterval(intervalId);
+      commitProcess.kill();
       cleanUpCommittedImages(committedImageRepo);
     }
   });

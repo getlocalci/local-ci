@@ -1,4 +1,6 @@
-type Jobs = Record<string, Job>;
+interface Jobs {
+  [key: string]: Job;
+}
 
 interface CiConfigWithJobs {
   jobs: Jobs;
@@ -15,6 +17,14 @@ interface ConfigFileQuickPick {
   label: string;
   description: string;
   fsPath: string;
+}
+
+interface DynamicCache {
+  '.Branch': string;
+  '.BuildNum': string;
+  '.Environment.variableName': string;
+  '.Revision': string;
+  epoch: string;
 }
 
 interface SpawnOptions {

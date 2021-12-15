@@ -6,7 +6,7 @@ export default function getAttachWorkspaceCommand(step: Step): string {
     return '';
   }
 
-  const attachFrom = path.join(CONTAINER_STORAGE_DIRECTORY, '*');
+  const attachFrom = `${path.join(CONTAINER_STORAGE_DIRECTORY, path.sep)}.`;
 
   // BusyBox doesn't have the -n option.
   // Check if the directory is empty before copying it.

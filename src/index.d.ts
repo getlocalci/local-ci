@@ -1,3 +1,8 @@
+interface SaveCache {
+  key: string;
+  paths: Array<string>;
+}
+
 // See https://circleci.com/docs/2.0/configuration-reference/
 interface FullStep {
   checkout?: Record<string, unknown> | string;
@@ -10,6 +15,11 @@ interface FullStep {
     root: string;
     paths: Array<string>;
   };
+  save_cache?: SaveCache;
+  restore_cache?: {
+    key?: string;
+    keys?: Array<string>;
+  };
   run?: {
     command: string;
     name?: string;
@@ -20,7 +30,7 @@ type Step = FullStep | 'checkout' | string;
 
 interface Job {
   docker?: Array<Record<string, string>>;
-  steps?: Array<Step>;
+  steps?: Step[];
   // eslint-disable-next-line @typescript-eslint/naming-convention
   working_directory?: string;
   machine?: { image?: string };

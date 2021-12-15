@@ -2,8 +2,10 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as yaml from 'js-yaml';
 import getAttachWorkspaceCommand from './getAttachWorkspaceCommand';
-import getCheckoutJobs from './getCheckoutJobs';
 import getConfig from './getConfig';
+import getRestoreCacheCommand from './getRestoreCacheCommand';
+import getSaveCacheCommand from './getSaveCacheCommand';
+import getSaveCacheSteps from './getSaveCacheSteps';
 import { CONTAINER_STORAGE_DIRECTORY } from '../constants';
 
 function getPersistToWorkspaceCommand(step: FullStep): string | undefined {
@@ -15,20 +17,20 @@ function getPersistToWorkspaceCommand(step: FullStep): string | undefined {
 
     // BusyBox doesn't have the -n option.
     return `cp -rn ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY} || cp -ru ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY}`;
-  } else {
-    return step?.persist_to_workspace?.paths.reduce(
-      (accumulator, workspacePath) => {
-        const pathToPersist = path.join(
-          step?.persist_to_workspace?.root ?? '.',
-          workspacePath
-        );
-
-        // BusyBox doesn't have the -n option.
-        return `${accumulator} cp -rn ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY} || cp -ru ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY} \n`;
-      },
-      ''
-    );
   }
+
+  return step?.persist_to_workspace?.paths.reduce(
+    (accumulator, workspacePath) => {
+      const pathToPersist = path.join(
+        step?.persist_to_workspace?.root ?? '.',
+        workspacePath
+      );
+
+      // BusyBox doesn't have the -n option.
+      return `${accumulator} cp -rn ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY} || cp -ru ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY} \n`;
+    },
+    ''
+  );
 }
 
 // Overwrites parts of the process.yml file.
@@ -42,14 +44,8 @@ export default function writeProcessFile(
   processFilePath: string
 ): void {
   const config = getConfig(processedConfig);
-  const checkoutJobs = getCheckoutJobs(config);
 
   if (!config) {
-    return;
-  }
-
-  if (!checkoutJobs.length) {
-    fs.writeFile(processFilePath, yaml.dump(config), () => '');
     return;
   }
 
@@ -88,6 +84,27 @@ export default function writeProcessFile(
                   run: {
                     name: 'Persist to workspace',
                     command: getPersistToWorkspaceCommand(step),
+                  },
+                };
+              }
+
+              if (step?.restore_cache) {
+                return {
+                  run: {
+                    name: 'Restore cache',
+                    command: getRestoreCacheCommand(
+                      step,
+                      getSaveCacheSteps(config)
+                    ),
+                  },
+                };
+              }
+
+              if (step?.save_cache) {
+                return {
+                  run: {
+                    name: 'Save cache',
+                    command: getSaveCacheCommand(step),
                   },
                 };
               }

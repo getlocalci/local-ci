@@ -5,31 +5,35 @@ import { GET_RUNNING_CONTAINER_FUNCTION } from '../constants';
 // Commits the latest container so that this can open an interactive session when it finishes.
 // Contianers exit when they finish.
 // So this creates an alternative container for shell access.
-// This starts be removing previous images of the same repo, as images can be 1-2 GB each.
+// This starts by removing previous images of the same repo, as images can be 1-2 GB each.
+// The while loop has a [[ true ]] condition because runJob()
+// ends this process with .kill().
 export default function commitContainer(
   dockerImage: string,
   imageRepo: string
-): void {
-  const newImageRepoAndTag = `${imageRepo}:${new Date().getTime()}`;
-
-  cp.spawn(
+): cp.ChildProcess {
+  return cp.spawn(
     '/bin/sh',
     [
       '-c',
       `${GET_RUNNING_CONTAINER_FUNCTION}
 
-      running_container=$(get_running_container ${dockerImage})
-      if [[ -n $running_container ]]; then
-        committed_image=$(docker commit --pause=false $running_container ${newImageRepoAndTag})
-        if [[ -n $committed_image ]]; then
-          latest_committed_image=$(docker images ${imageRepo} --format "{{.ID}} {{.Tag}}" | sort -k 2 -h | tail -n1 | awk '{print $1}')
-          for previous_image in $(docker images -q "${imageRepo}"); do
-            if [[ $previous_image != $latest_committed_image ]]; then
-              docker rmi $previous_image
-            fi
-          done;
+      while [[ true ]]; do
+        running_container=$(get_running_container ${dockerImage})
+        if [[ -n $running_container ]]; then
+          committed_image=$(docker commit --pause=false $running_container ${imageRepo}:$(date +"%s"))
+          if [[ -n $committed_image ]]; then
+            latest_committed_image=$(docker images ${imageRepo} --format "{{.ID}} {{.Tag}}" | sort -k 2 -h | tail -n1 | awk '{print $1}')
+            for previous_image in $(docker images -q "${imageRepo}"); do
+              if [[ $previous_image != $latest_committed_image ]]; then
+                docker rmi $previous_image
+              fi
+            done;
+          fi
         fi
-      fi`,
+
+        sleep 2
+      done`,
     ],
     getSpawnOptions()
   );
