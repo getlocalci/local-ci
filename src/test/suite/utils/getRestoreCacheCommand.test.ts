@@ -1,15 +1,12 @@
 import * as assert from 'assert';
 import * as mocha from 'mocha';
 import * as sinon from 'sinon';
+import { normalize } from '../../helpers';
 import getRestoreCacheCommand from '../../../utils/getRestoreCacheCommand';
 
 mocha.afterEach(() => {
   sinon.restore();
 });
-
-function normalize(text: string | undefined): string {
-  return String(text).replace(/\s+/g, ' ').trim();
-}
 
 suite('getRestoreCacheCommand', () => {
   test('simple key property', () => {

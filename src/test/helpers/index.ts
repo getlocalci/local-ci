@@ -14,5 +14,5 @@ export function getTestFilePath(basename: string, file: string): string {
 }
 
 export function normalize(text: string | undefined): string {
-  return String(text).replace(/\s+/g, ' ');
+  return String(text).replace(/\s+/g, ' ').trim();
 }
