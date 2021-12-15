@@ -50,11 +50,17 @@ export default class JobProvider
   async getChildren(): Promise<vscode.TreeItem[]> {
     const configFilePath = await getConfigFilePath(this.context);
     if (!configFilePath || !fs.existsSync(configFilePath)) {
-      this.reporter.sendTelemetryErrorEvent('configFilePath');
+      this.reporter.sendTelemetryEvent('configFilePath');
+
+      const doExistConfigPaths = !!(await getAllConfigFilePaths(this.context))
+        .length;
+      if (!doExistConfigPaths) {
+        this.reporter.sendTelemetryErrorEvent('noConfigFile');
+      }
 
       return [
         new Warning('Error: No jobs found'),
-        (await getAllConfigFilePaths(this.context)).length
+        doExistConfigPaths
           ? new Command('Select repo', 'localCiJobs.selectRepo')
           : new vscode.TreeItem(
               'Please add a .circleci/config.yml to this workspace'
