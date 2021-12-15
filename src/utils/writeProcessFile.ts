@@ -1,12 +1,12 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as yaml from 'js-yaml';
-import convertToBash from './convertToBash';
 import getAttachWorkspaceCommand from './getAttachWorkspaceCommand';
 import getConfig from './getConfig';
 import getRestoreCacheCommand from './getRestoreCacheCommand';
-import { CONTAINER_STORAGE_DIRECTORY } from '../constants';
+import getSaveCacheCommand from './getSaveCacheCommand';
 import getSaveCacheSteps from './getSaveCacheSteps';
+import { CONTAINER_STORAGE_DIRECTORY } from '../constants';
 
 function getPersistToWorkspaceCommand(step: FullStep): string | undefined {
   if (typeof step?.persist_to_workspace?.paths === 'string') {
@@ -31,17 +31,6 @@ function getPersistToWorkspaceCommand(step: FullStep): string | undefined {
     },
     ''
   );
-}
-
-function getSaveCacheCommand(step: FullStep): string | undefined {
-  return step?.save_cache?.paths.reduce((accumulator, directory) => {
-    const destination = path.join(
-      CONTAINER_STORAGE_DIRECTORY,
-      convertToBash(step?.save_cache?.key ?? '')
-    );
-
-    return `${accumulator} mkdir -p ${destination}; cp -rn ${directory} ${destination} || cp -ru ${directory} ${destination} \n`;
-  }, '');
 }
 
 // Overwrites parts of the process.yml file.

@@ -37,8 +37,8 @@ jobs:
       - run:
           name: Save cache
           command: |2
-             mkdir -p /tmp/local-ci/v2-deps-$( shasum "package-lock.json" | awk '{print $1}' ); cp -rn ~/.npm /tmp/local-ci/v2-deps-$( shasum "package-lock.json" | awk '{print $1}' ) || cp -ru ~/.npm /tmp/local-ci/v2-deps-$( shasum "package-lock.json" | awk '{print $1}' )
-             mkdir -p /tmp/local-ci/v2-deps-$( shasum "package-lock.json" | awk '{print $1}' ); cp -rn ~/.cache /tmp/local-ci/v2-deps-$( shasum "package-lock.json" | awk '{print $1}' ) || cp -ru ~/.cache /tmp/local-ci/v2-deps-$( shasum "package-lock.json" | awk '{print $1}' )
+             if [ -d /tmp/local-ci/v2-deps-$( shasum "package-lock.json" | awk '{print $1}' ) ]; then echo "Cached file already exists, skipping"; elif [ ! -d ~/.npm ]; then echo "Directory to cache does not exist, skipping"; else cp -rn ~/.npm /tmp/local-ci/v2-deps-$( shasum "package-lock.json" | awk '{print $1}' ) || cp -ru ~/.npm /tmp/local-ci/v2-deps-$( shasum "package-lock.json" | awk '{print $1}' ); fi
+             if [ -d /tmp/local-ci/v2-deps-$( shasum "package-lock.json" | awk '{print $1}' ) ]; then echo "Cached file already exists, skipping"; elif [ ! -d ~/.cache ]; then echo "Directory to cache does not exist, skipping"; else cp -rn ~/.cache /tmp/local-ci/v2-deps-$( shasum "package-lock.json" | awk '{print $1}' ) || cp -ru ~/.cache /tmp/local-ci/v2-deps-$( shasum "package-lock.json" | awk '{print $1}' ); fi
       - run:
           name: Persist to workspace
           command: cp -rn . /tmp/local-ci || cp -ru . /tmp/local-ci
@@ -55,7 +55,7 @@ jobs:
       - run:
           name: Save cache
           command: |2
-             mkdir -p /tmp/local-ci/node-modules-$( shasum "package-lock.json" | awk '{print $1}' ); cp -rn node_modules /tmp/local-ci/node-modules-$( shasum "package-lock.json" | awk '{print $1}' ) || cp -ru node_modules /tmp/local-ci/node-modules-$( shasum "package-lock.json" | awk '{print $1}' )
+             if [ -d /tmp/local-ci/node-modules-$( shasum "package-lock.json" | awk '{print $1}' ) ]; then echo "Cached file already exists, skipping"; elif [ ! -d node_modules ]; then echo "Directory to cache does not exist, skipping"; else cp -rn node_modules /tmp/local-ci/node-modules-$( shasum "package-lock.json" | awk '{print $1}' ) || cp -ru node_modules /tmp/local-ci/node-modules-$( shasum "package-lock.json" | awk '{print $1}' ); fi
   run-linter:
     executor: default-executor
     steps:
