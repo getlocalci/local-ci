@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.3.0 - 15 December 2021
+
+### Added
+- Support `save_cache` and `restore_cache`. [#53](https://github.com/getlocalci/local-ci/pull/53/)
+- Add more telemetry events, like for no config paths, or wrong OS. [#56](https://github.com/getlocalci/local-ci/pull/56)
+
 ## 1.2.0 - 7 December 2021
 
 ### Added
