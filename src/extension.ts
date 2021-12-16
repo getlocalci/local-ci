@@ -1,3 +1,4 @@
+import * as fs from 'fs';
 import * as vscode from 'vscode';
 import TelemetryReporter from 'vscode-extension-telemetry';
 import Delayer from './classes/Delayer';
@@ -13,6 +14,7 @@ import {
   GET_LICENSE_COMMAND,
   GET_LICENSE_KEY_URL,
   HELP_URL,
+  HOST_TMP_DIRECTORY,
   JOB_TREE_VIEW_ID,
   RUN_JOB_COMMAND,
   SELECTED_CONFIG_PATH,
@@ -300,4 +302,5 @@ export function activate(context: vscode.ExtensionContext): void {
 
 export function deactivate(): void {
   reporter.sendTelemetryEvent('deactivate');
+  fs.rmSync(HOST_TMP_DIRECTORY, { recursive: true, force: true });
 }
