@@ -57,46 +57,51 @@
     "commands": [
       {
         "command": "local-ci.job.run",
-        "title": "Run Local CI job",
+        "title": "Local CI: Run Job",
         "icon": "$(refresh)"
       },
       {
         "command": "local-ci.job.exit",
-        "title": "Exit Job",
+        "title": "Local CI: Exit Job",
         "icon": "$(notebook-delete-cell)"
       },
       {
         "command": "local-ci.job.rerun",
-        "title": "Rerun Job",
+        "title": "Local CI: Rerun Job",
         "icon": "$(extensions-refresh)"
       },
       {
         "command": "local-ci.debug.repo",
-        "title": "Run Jobs Locally (Local CI)"
+        "title": "Local CI: Run Jobs Locally (Local CI)"
+      },
+      {
+        "command": "localCiJobs.enterToken",
+        "title": "Local CI: Enter API Token",
+        "icon": "$(record-keys)"
       },
       {
         "command": "localCiJobs.refresh",
-        "title": "Refresh Job List",
+        "title": "Local CI: Refresh Job List",
         "icon": "$(refresh)"
       },
       {
         "command": "localCiJobs.help",
-        "title": "Help",
+        "title": "Local CI: Help",
         "icon": "$(question)"
       },
       {
         "command": "localCiJobs.exitAllJobs",
-        "title": "Exit All Jobs",
+        "title": "Local CI: Exit All Jobs",
         "icon": "$(notebook-delete-cell)"
       },
       {
         "command": "localCiJobs.selectRepo",
-        "title": "Select Repo ",
+        "title": "Local CI: Select Repo ",
         "icon": "$(debug-configure)"
       },
       {
         "command": "localCiLicense.refresh",
-        "title": "Refresh License Information",
+        "title": "Local CI: Refresh License Information",
         "icon": "$(refresh)"
       }
     ],
@@ -111,6 +116,11 @@
       "view/title": [
         {
           "command": "localCiJobs.refresh",
+          "when": "view == localCiJobs",
+          "group": "navigation"
+        },
+        {
+          "command": "localCiJobs.enterToken",
           "when": "view == localCiJobs",
           "group": "navigation"
         },

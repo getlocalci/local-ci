@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as vscode from 'vscode';
 import TelemetryReporter from 'vscode-extension-telemetry';
+import { getBinaryPath } from '../node/binary';
 import Delayer from './classes/Delayer';
 import Job from './classes/Job';
 import JobProvider from './classes/JobProvider';
@@ -74,9 +75,23 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand(`${JOB_TREE_VIEW_ID}.refresh`, () =>
       jobProvider.refresh()
     ),
-    vscode.commands.registerCommand(`${JOB_TREE_VIEW_ID}.help`, () =>
-      vscode.env.openExternal(vscode.Uri.parse(HELP_URL))
-    ),
+    vscode.commands.registerCommand(`${JOB_TREE_VIEW_ID}.enterToken`, () => {
+      const terminal = vscode.window.createTerminal({
+        name: 'Store CircleCI® token',
+        message: `Please get a CircleCI® API token: https://circleci.com/docs/2.0/managing-api-tokens/ This will store the token on your local machine, Local CI won't do anything with that token other than run CircleCI jobs. If you'd rather store the token on your own, please follow these instructions to install the CircleCI CLI: https://circleci.com/docs/2.0/local-cli/ Then, run this Bash command: circleci setup. This token isn't necessary for all jobs, so you might not have to enter a token.`,
+        iconPath: vscode.Uri.joinPath(
+          context.extensionUri,
+          'resources',
+          'logo.svg'
+        ),
+      });
+      terminal.show();
+      terminal.sendText(`${getBinaryPath()} setup`);
+    }),
+    vscode.commands.registerCommand(`${JOB_TREE_VIEW_ID}.help`, () => {
+      reporter.sendTelemetryEvent('help');
+      vscode.env.openExternal(vscode.Uri.parse(HELP_URL));
+    }),
     vscode.commands.registerCommand(`${JOB_TREE_VIEW_ID}.exitAllJobs`, () => {
       reporter.sendTelemetryEvent('exitAllJobs');
       jobProvider.refresh();
