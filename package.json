@@ -72,7 +72,7 @@
       },
       {
         "command": "local-ci.debug.repo",
-        "title": "Local CI: Run Jobs Locally (Local CI)"
+        "title": "Local CI: Run Jobs Locally"
       },
       {
         "command": "localCiJobs.enterToken",
@@ -80,9 +80,9 @@
         "icon": "$(record-keys)"
       },
       {
-        "command": "localCiJobs.refresh",
-        "title": "Local CI: Refresh Job List",
-        "icon": "$(refresh)"
+        "command": "localCiJobs.exitAllJobs",
+        "title": "Local CI: Exit All Jobs",
+        "icon": "$(notebook-delete-cell)"
       },
       {
         "command": "localCiJobs.help",
@@ -90,9 +90,9 @@
         "icon": "$(question)"
       },
       {
-        "command": "localCiJobs.exitAllJobs",
-        "title": "Local CI: Exit All Jobs",
-        "icon": "$(notebook-delete-cell)"
+        "command": "localCiJobs.refresh",
+        "title": "Local CI: Refresh Job List",
+        "icon": "$(refresh)"
       },
       {
         "command": "localCiJobs.selectRepo",
@@ -115,12 +115,12 @@
     "menus": {
       "view/title": [
         {
-          "command": "localCiJobs.refresh",
+          "command": "localCiJobs.enterToken",
           "when": "view == localCiJobs",
           "group": "navigation"
         },
         {
-          "command": "localCiJobs.enterToken",
+          "command": "localCiJobs.exitAllJobs",
           "when": "view == localCiJobs",
           "group": "navigation"
         },
@@ -130,7 +130,7 @@
           "group": "navigation"
         },
         {
-          "command": "localCiJobs.exitAllJobs",
+          "command": "localCiJobs.refresh",
           "when": "view == localCiJobs",
           "group": "navigation"
         },
