@@ -2,7 +2,7 @@
   "name": "local-ci",
   "displayName": "Local CI",
   "description": "Debug CircleCI® workflows locally, with Bash access during and after. Free preview, then paid.",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "publisher": "LocalCI",
   "contributors": [
     "Ryan Kienstra"
@@ -57,46 +57,51 @@
     "commands": [
       {
         "command": "local-ci.job.run",
-        "title": "Run Local CI job",
+        "title": "Local CI: Run Job",
         "icon": "$(refresh)"
       },
       {
         "command": "local-ci.job.exit",
-        "title": "Exit Job",
+        "title": "Local CI: Exit Job",
         "icon": "$(notebook-delete-cell)"
       },
       {
         "command": "local-ci.job.rerun",
-        "title": "Rerun Job",
+        "title": "Local CI: Rerun Job",
         "icon": "$(extensions-refresh)"
       },
       {
         "command": "local-ci.debug.repo",
-        "title": "Run Jobs Locally (Local CI)"
+        "title": "Local CI: Run Jobs Locally"
       },
       {
-        "command": "localCiJobs.refresh",
-        "title": "Refresh Job List",
-        "icon": "$(refresh)"
-      },
-      {
-        "command": "localCiJobs.help",
-        "title": "Help",
-        "icon": "$(question)"
+        "command": "localCiJobs.enterToken",
+        "title": "Local CI: Enter API Token",
+        "icon": "$(record-keys)"
       },
       {
         "command": "localCiJobs.exitAllJobs",
-        "title": "Exit All Jobs",
+        "title": "Local CI: Exit All Jobs",
         "icon": "$(notebook-delete-cell)"
       },
       {
+        "command": "localCiJobs.help",
+        "title": "Local CI: Help",
+        "icon": "$(question)"
+      },
+      {
+        "command": "localCiJobs.refresh",
+        "title": "Local CI: Refresh Job List",
+        "icon": "$(refresh)"
+      },
+      {
         "command": "localCiJobs.selectRepo",
-        "title": "Select Repo ",
+        "title": "Local CI: Select Repo ",
         "icon": "$(debug-configure)"
       },
       {
         "command": "localCiLicense.refresh",
-        "title": "Refresh License Information",
+        "title": "Local CI: Refresh License Information",
         "icon": "$(refresh)"
       }
     ],
@@ -110,7 +115,12 @@
     "menus": {
       "view/title": [
         {
-          "command": "localCiJobs.refresh",
+          "command": "localCiJobs.enterToken",
+          "when": "view == localCiJobs",
+          "group": "navigation"
+        },
+        {
+          "command": "localCiJobs.exitAllJobs",
           "when": "view == localCiJobs",
           "group": "navigation"
         },
@@ -120,7 +130,7 @@
           "group": "navigation"
         },
         {
-          "command": "localCiJobs.exitAllJobs",
+          "command": "localCiJobs.refresh",
           "when": "view == localCiJobs",
           "group": "navigation"
         },
