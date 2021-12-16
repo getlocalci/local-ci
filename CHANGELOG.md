@@ -1,5 +1,10 @@
 # Change Log
 
+## 1.3.1 - 16 December 2021
+
+### Added
+- Allow entering a CircleCI® API token. [#57](https://github.com/getlocalci/local-ci/pull/57)
+
 ## 1.3.0 - 15 December 2021
 
 ### Added
