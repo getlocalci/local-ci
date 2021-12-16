@@ -21,6 +21,14 @@ Get Bash access to the running job by clicking 'Local CI debugging':
 
 When the job exits, you'll still have Bash access to the job.
 
+## Restore And Save Cache
+
+Run jobs faster when you cache dependencies.
+
+Local CI supports the [native](https://circleci.com/docs/2.0/caching/) `restore_cache` and `save_cache` values:
+
+![Editor with restore cache](https://user-images.githubusercontent.com/4063887/146306642-87ccc2c3-5e99-467e-ae41-70ecaef1bcc6.png)
+
 ## Run The Whole Workflow
 
 You can even run jobs that depend on other jobs, because this persists the workspace between jobs:
