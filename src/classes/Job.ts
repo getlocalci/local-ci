@@ -8,7 +8,7 @@ export default class Job extends vscode.TreeItem {
     super(label);
     const tooltip = `Runs the CircleCI® job ${this.label}`;
     this.jobName = label;
-    this.collapsibleState = vscode.TreeItemCollapsibleState.None;
+    this.collapsibleState = vscode.TreeItemCollapsibleState.Expanded;
 
     this.iconPath = new vscode.ThemeIcon('debug-start');
     this.tooltip = `Runs the CircleCI® job ${this.label}`;

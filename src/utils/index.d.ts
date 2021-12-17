@@ -6,7 +6,7 @@ interface CiConfigWithJobs {
   jobs: Jobs;
   workflows: {
     [key: string]: {
-      jobs: (Record<string, unknown>|string)[];
+      jobs: (Record<string, Record<string, unknown>>|string)[];
     }
   }
 }
