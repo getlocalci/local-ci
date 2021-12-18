@@ -4,7 +4,12 @@ import TelemetryReporter from 'vscode-extension-telemetry';
 import Job from './Job';
 import getJobs from '../utils/getJobs';
 import getProcessedConfig from '../utils/getProcessedConfig';
-import { TRIAL_STARTED_TIMESTAMP } from '../constants';
+import {
+  ENTER_LICENSE_COMMAND,
+  GET_LICENSE_COMMAND,
+  JOB_TREE_VIEW_ID,
+  TRIAL_STARTED_TIMESTAMP,
+} from '../constants';
 import getAllConfigFilePaths from '../utils/getAllConfigFilePaths';
 import getConfigFilePath from '../utils/getConfigFilePath';
 import getProcessFilePath from '../utils/getProcessFilePath';
@@ -13,6 +18,9 @@ import isDockerRunning from '../utils/isDockerRunning';
 import isLicenseValid from '../utils/isLicenseValid';
 import isTrialExpired from '../utils/isTrialExpired';
 import writeProcessFile from '../utils/writeProcessFile';
+import Warning from './Warning';
+import Command from './Command';
+import getDockerError from '../utils/getDockerError';
 
 interface Element {
   type: string;
@@ -23,7 +31,6 @@ enum JobError {
   dockerNotRunning,
   noConfigFilePathInWorkspace,
   noConfigFilePathSelected,
-  noJobsFound,
   licenseKey,
   processFile,
 }
@@ -36,7 +43,8 @@ export default class JobProvider
   readonly onDidChangeTreeData: vscode.Event<Job | undefined> =
     this._onDidChangeTreeData.event;
   private jobs: string[];
-  private jobError: JobError | undefined;
+  private jobErrorType: JobError | undefined;
+  private jobErrorMessage: string | undefined;
   private runningJob: string | undefined;
   private jobDependencies: Map<string, string[] | null> | undefined;
   private suppressMessage: boolean | undefined;
@@ -49,10 +57,10 @@ export default class JobProvider
     this.loadJobs();
   }
 
-  refresh(job?: Job, suppressMessage?: boolean): void {
+  async refresh(job?: Job, suppressMessage?: boolean): Promise<void> {
+    await this.loadJobs();
     this.suppressMessage = suppressMessage;
     this._onDidChangeTreeData.fire(job);
-    this.loadJobs();
   }
 
   getTreeItem(element: Job): vscode.TreeItem {
@@ -61,13 +69,13 @@ export default class JobProvider
 
   getChildren(parentElement: Element): vscode.TreeItem[] | undefined {
     if (!parentElement) {
-      // This has no parent element, so it's at the root level.
-      // Only include jobs that have no dependency.
-      return this.getJobTreeItems(
-        this.jobs.filter((jobName) => {
-          return !this?.jobDependencies?.get(jobName);
-        })
-      );
+      return this.jobs.length
+        ? this.getJobTreeItems(
+            this.jobs.filter((jobName) => {
+              return !this?.jobDependencies?.get(jobName);
+            })
+          )
+        : this.getErrorTreeItems();
     }
 
     const jobNames = this.jobDependencies?.keys();
@@ -77,7 +85,7 @@ export default class JobProvider
 
     const children = [];
     for (const jobName of jobNames) {
-      const jobDependencies = this?.jobDependencies?.get(jobName);
+      const jobDependencies = this?.jobDependencies?.get(jobName) ?? [];
       const dependencyLength = jobDependencies?.length;
       if (
         dependencyLength &&
@@ -97,7 +105,47 @@ export default class JobProvider
     );
   }
 
-  getErrorTreeItems(): void {}
+  getErrorTreeItems(): vscode.TreeItem[] {
+    switch (this.jobErrorType) {
+      case JobError.processFile:
+        return [
+          new Warning('Error processing the CircleCI config:'),
+          new vscode.TreeItem(this.getJobErrorMessage()),
+          new Command('Try Again', `${JOB_TREE_VIEW_ID}.refresh`),
+        ];
+
+      case JobError.dockerNotRunning:
+        return [
+          new Warning('Error: is Docker running?'),
+          new vscode.TreeItem(`${this.getJobErrorMessage()}`),
+          new Command('Try Again', `${JOB_TREE_VIEW_ID}.refresh`),
+        ];
+      case JobError.licenseKey:
+        return [
+          new Warning('Please enter a Local CI license key.'),
+          new Command('Get License', GET_LICENSE_COMMAND),
+          new Command('Enter License', ENTER_LICENSE_COMMAND),
+        ];
+      case JobError.noConfigFilePathInWorkspace:
+        return [
+          new Warning('Error: No jobs found'),
+          new vscode.TreeItem(
+            'Please add a .circleci/config.yml to this workspace'
+          ),
+        ];
+      case JobError.noConfigFilePathSelected:
+        return [
+          new Warning('Error: No jobs found'),
+          new Command('Select repo', 'localCiJobs.selectRepo'),
+        ];
+      default:
+        return [new Warning('Error: No jobs found')];
+    }
+  }
+
+  getJobErrorMessage(): string {
+    return this.jobErrorMessage || '';
+  }
 
   hasChildJob(jobName: string): boolean {
     for (const [, possibleChildDependecies] of this?.jobDependencies ?? []) {
@@ -115,18 +163,18 @@ export default class JobProvider
 
   async loadJobs(): Promise<void> {
     this.jobs = [];
-    this.jobError = undefined;
+    this.jobErrorType = undefined;
 
     const configFilePath = await getConfigFilePath(this.context);
     if (!configFilePath || !fs.existsSync(configFilePath)) {
       this.reporter.sendTelemetryEvent('configFilePath');
-      this.jobError = JobError.noConfigFilePathSelected;
+      this.jobErrorType = JobError.noConfigFilePathSelected;
 
       const doExistConfigPaths = !!(await getAllConfigFilePaths(this.context))
         .length;
       if (!doExistConfigPaths) {
         this.reporter.sendTelemetryErrorEvent('noConfigFile');
-        this.jobError = JobError.noConfigFilePathInWorkspace;
+        this.jobErrorType = JobError.noConfigFilePathInWorkspace;
       }
 
       return;
@@ -158,19 +206,21 @@ export default class JobProvider
       );
 
     if (!shouldEnableExtension) {
-      this.jobError = JobError.licenseKey;
+      this.jobErrorType = JobError.licenseKey;
       return;
     }
 
     if (!isDockerRunning()) {
       this.reporter.sendTelemetryErrorEvent('dockerNotRunning');
-      this.jobError = JobError.dockerNotRunning;
+      this.jobErrorType = JobError.dockerNotRunning;
+      this.jobErrorMessage = getDockerError();
       return;
     }
 
     if (processError) {
       this.reporter.sendTelemetryErrorEvent('processError');
-      this.jobError = JobError.processFile;
+      this.jobErrorType = JobError.processFile;
+      this.jobErrorMessage = processError;
       return;
     }
 
@@ -179,10 +229,6 @@ export default class JobProvider
     for (const jobName of this.jobDependencies.keys()) {
       this.jobs.push(jobName);
     }
-  }
-
-  getParent(element: Element): Element {
-    return element;
   }
 
   setRunningJob(jobName: string): void {
