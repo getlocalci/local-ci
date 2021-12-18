@@ -15,6 +15,7 @@ export default function getJobs(
       for (const job of workflow.jobs) {
         if (typeof job === 'string') {
           allJobs.set(job, null);
+          continue;
         }
 
         const jobName = Object.keys(job).length ? Object.keys(job)[0] : null;

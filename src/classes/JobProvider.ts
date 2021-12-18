@@ -126,17 +126,17 @@ export default class JobProvider
           new Command('Get License', GET_LICENSE_COMMAND),
           new Command('Enter License', ENTER_LICENSE_COMMAND),
         ];
+      case JobError.noConfigFilePathSelected:
+        return [
+          new Warning('Error: No jobs found'),
+          new Command('Select repo', 'localCiJobs.selectRepo'),
+        ];
       case JobError.noConfigFilePathInWorkspace:
         return [
           new Warning('Error: No jobs found'),
           new vscode.TreeItem(
             'Please add a .circleci/config.yml to this workspace'
           ),
-        ];
-      case JobError.noConfigFilePathSelected:
-        return [
-          new Warning('Error: No jobs found'),
-          new Command('Select repo', 'localCiJobs.selectRepo'),
         ];
       default:
         return [new Warning('Error: No jobs found')];
@@ -164,6 +164,7 @@ export default class JobProvider
   async loadJobs(): Promise<void> {
     this.jobs = [];
     this.jobErrorType = undefined;
+    this.jobErrorMessage = undefined;
 
     const configFilePath = await getConfigFilePath(this.context);
     if (!configFilePath || !fs.existsSync(configFilePath)) {
