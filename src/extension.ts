@@ -68,7 +68,11 @@ export function activate(context: vscode.ExtensionContext): void {
 
   reporter.sendTelemetryEvent('activate');
   const jobProvider = new JobProvider(context, reporter);
-  vscode.window.registerTreeDataProvider(JOB_TREE_VIEW_ID, jobProvider);
+  jobProvider
+    .loadJobs()
+    .then(() =>
+      vscode.window.registerTreeDataProvider(JOB_TREE_VIEW_ID, jobProvider)
+    );
 
   context.subscriptions.push(
     reporter,

@@ -54,7 +54,6 @@ export default class JobProvider
     private readonly reporter: TelemetryReporter
   ) {
     this.jobs = [];
-    this.loadJobs();
   }
 
   async refresh(job?: Job, suppressMessage?: boolean): Promise<void> {
@@ -168,11 +167,12 @@ export default class JobProvider
     const configFilePath = await getConfigFilePath(this.context);
     if (!configFilePath || !fs.existsSync(configFilePath)) {
       this.reporter.sendTelemetryEvent('configFilePath');
-      this.jobErrorType = JobError.noConfigFilePathSelected;
 
       const doExistConfigPaths = !!(await getAllConfigFilePaths(this.context))
         .length;
-      if (!doExistConfigPaths) {
+      if (doExistConfigPaths) {
+        this.jobErrorType = JobError.noConfigFilePathSelected;
+      } else {
         this.reporter.sendTelemetryErrorEvent('noConfigFile');
         this.jobErrorType = JobError.noConfigFilePathInWorkspace;
       }
