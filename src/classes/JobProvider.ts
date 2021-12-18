@@ -148,11 +148,10 @@ export default class JobProvider
   }
 
   hasChildJob(jobName: string): boolean {
-    for (const [, possibleChildDependecies] of this?.jobDependencies ?? []) {
+    for (const [, dependecies] of this?.jobDependencies ?? []) {
       if (
-        possibleChildDependecies?.length &&
-        jobName ===
-          possibleChildDependecies[possibleChildDependecies.length - 1]
+        dependecies?.length &&
+        jobName === dependecies[dependecies.length - 1]
       ) {
         return true;
       }
