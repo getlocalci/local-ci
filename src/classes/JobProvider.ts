@@ -1,31 +1,31 @@
 import * as fs from 'fs';
 import * as vscode from 'vscode';
 import TelemetryReporter from 'vscode-extension-telemetry';
-import Command from './Command';
 import Job from './Job';
-import Warning from './Warning';
 import getJobs from '../utils/getJobs';
 import getProcessedConfig from '../utils/getProcessedConfig';
-import {
-  GET_LICENSE_COMMAND,
-  ENTER_LICENSE_COMMAND,
-  TRIAL_STARTED_TIMESTAMP,
-  JOB_TREE_VIEW_ID,
-} from '../constants';
+import { TRIAL_STARTED_TIMESTAMP } from '../constants';
 import getAllConfigFilePaths from '../utils/getAllConfigFilePaths';
 import getConfigFilePath from '../utils/getConfigFilePath';
-import getDockerError from '../utils/getDockerError';
 import getProcessFilePath from '../utils/getProcessFilePath';
 import getTrialLength from '../utils/getTrialLength';
 import isDockerRunning from '../utils/isDockerRunning';
 import isLicenseValid from '../utils/isLicenseValid';
 import isTrialExpired from '../utils/isTrialExpired';
 import writeProcessFile from '../utils/writeProcessFile';
-import getJobTreeItems from '../utils/getJobTreeItems';
 
 interface Element {
   type: string;
   label: string;
+}
+
+enum JobError {
+  dockerNotRunning,
+  noConfigFilePathInWorkspace,
+  noConfigFilePathSelected,
+  noJobsFound,
+  licenseKey,
+  processFile,
 }
 
 export default class JobProvider
@@ -35,7 +35,8 @@ export default class JobProvider
     new vscode.EventEmitter<Job | undefined>();
   readonly onDidChangeTreeData: vscode.Event<Job | undefined> =
     this._onDidChangeTreeData.event;
-  private jobs: Element[];
+  private jobs: string[];
+  private jobError: JobError | undefined;
   private runningJob: string | undefined;
   private jobDependencies: Map<string, string[] | null> | undefined;
   private suppressMessage: boolean | undefined;
@@ -58,11 +59,15 @@ export default class JobProvider
     return element;
   }
 
-  getChildren(element: Element): vscode.TreeItem[] | undefined{
-    if (!element) {
-      return this.jobs.filter((job) => {
-        return !this?.jobDependencies.get(job.label);
-      }).map((job) => new Job(job.label, false));
+  getChildren(parentElement: Element): vscode.TreeItem[] | undefined {
+    if (!parentElement) {
+      // This has no parent element, so it's at the root level.
+      // Only include jobs that have no dependency.
+      return this.getJobTreeItems(
+        this.jobs.filter((jobName) => {
+          return !this?.jobDependencies?.get(jobName);
+        })
+      );
     }
 
     const jobNames = this.jobDependencies?.keys();
@@ -72,31 +77,59 @@ export default class JobProvider
 
     const children = [];
     for (const jobName of jobNames) {
-      if (this.jobDependencies?.get(jobName)?.length && element.label === this.jobDependencies.get(jobName)[this.jobDependencies.get(jobName)?.length - 1]) {
+      const jobDependencies = this?.jobDependencies?.get(jobName);
+      const dependencyLength = jobDependencies?.length;
+      if (
+        dependencyLength &&
+        parentElement.label === jobDependencies[dependencyLength - 1]
+      ) {
         children.push(jobName);
       }
     }
 
-    return children.map((jobName) =>
-      new Job(jobName, false)
+    return this.getJobTreeItems(children);
+  }
+
+  getJobTreeItems(jobs: string[]): Job[] {
+    return jobs.map(
+      (jobName) =>
+        new Job(jobName, jobName === this.runningJob, this.hasChildJob(jobName))
     );
   }
 
+  getErrorTreeItems(): void {}
+
+  hasChildJob(jobName: string): boolean {
+    for (const [, possibleChildDependecies] of this?.jobDependencies ?? []) {
+      if (
+        possibleChildDependecies?.length &&
+        jobName ===
+          possibleChildDependecies[possibleChildDependecies.length - 1]
+      ) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   async loadJobs(): Promise<void> {
+    this.jobs = [];
+    this.jobError = undefined;
+
     const configFilePath = await getConfigFilePath(this.context);
     if (!configFilePath || !fs.existsSync(configFilePath)) {
       this.reporter.sendTelemetryEvent('configFilePath');
+      this.jobError = JobError.noConfigFilePathSelected;
 
       const doExistConfigPaths = !!(await getAllConfigFilePaths(this.context))
         .length;
       if (!doExistConfigPaths) {
         this.reporter.sendTelemetryErrorEvent('noConfigFile');
+        this.jobError = JobError.noConfigFilePathInWorkspace;
       }
 
-      this.jobs = [{
-        type: 'warning',
-        label: 'Error: No jobs found',
-      }];
+      return;
     }
 
     let processedConfig = '';
@@ -123,57 +156,33 @@ export default class JobProvider
         this.context.globalState.get(TRIAL_STARTED_TIMESTAMP),
         getTrialLength(this.context)
       );
-    const dockerRunning = isDockerRunning();
 
-    if (shouldEnableExtension && dockerRunning) {
-      if (!processError) {
-        this.jobDependencies = getJobs(processedConfig);
-        this.jobs = [];
-        for ( const jobName of this.jobDependencies.keys()) {
-          this.jobs.push({type: 'job', label: jobName});
-        }
-      } else {
-        this.jobs = [{
-          label:'Error processing the CircleCI config',
-          type: 'warning',
-        }]
-      }
+    if (!shouldEnableExtension) {
+      this.jobError = JobError.licenseKey;
+      return;
+    }
 
-      this.runningJob = undefined;
+    if (!isDockerRunning()) {
+      this.reporter.sendTelemetryErrorEvent('dockerNotRunning');
+      this.jobError = JobError.dockerNotRunning;
+      return;
     }
 
     if (processError) {
       this.reporter.sendTelemetryErrorEvent('processError');
+      this.jobError = JobError.processFile;
+      return;
     }
 
-    if (!dockerRunning) {
-      this.reporter.sendTelemetryErrorEvent('dockerNotRunning');
+    this.runningJob = undefined;
+    this.jobDependencies = getJobs(processedConfig);
+    for (const jobName of this.jobDependencies.keys()) {
+      this.jobs.push(jobName);
     }
-
-    if (!this.jobs?.length) {
-      this.reporter.sendTelemetryErrorEvent('noJobsFound');
-    }
-
-    this.jobs = shouldEnableExtension
-      ? dockerRunning
-        ? this.jobs
-        : [{
-          type: 'warning',
-          label: 'Error: is Docker running?',
-        }]
-      :
-      [{
-        type: 'warning',
-        label: 'Please enter a Local CI license key',
-      }];
   }
 
-  getParent(element: vscode.TreeItem): vscode.TreeItem {
+  getParent(element: Element): Element {
     return element;
-  }
-
-  getJob(jobName: string): vscode.TreeItem | undefined {
-    return this.jobs.find((job) => jobName === (job as Job)?.getJobName());
   }
 
   setRunningJob(jobName: string): void {

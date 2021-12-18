@@ -4,11 +4,17 @@ import { EXIT_JOB_COMMAND, RUN_JOB_COMMAND } from '../constants';
 export default class Job extends vscode.TreeItem {
   private jobName: string;
 
-  constructor(public readonly label: string, isRunning?: boolean) {
+  constructor(
+    public readonly label: string,
+    isRunning?: boolean,
+    hasChildJob?: boolean
+  ) {
     super(label);
     const tooltip = `Runs the CircleCI® job ${this.label}`;
     this.jobName = label;
-    this.collapsibleState = vscode.TreeItemCollapsibleState.Expanded;
+    this.collapsibleState = hasChildJob
+      ? vscode.TreeItemCollapsibleState.Expanded
+      : vscode.TreeItemCollapsibleState.None;
 
     this.iconPath = new vscode.ThemeIcon('debug-start');
     this.tooltip = `Runs the CircleCI® job ${this.label}`;

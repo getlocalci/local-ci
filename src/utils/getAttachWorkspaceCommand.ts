@@ -8,7 +8,12 @@ export default function getAttachWorkspaceCommand(step: Step): string {
 
   const attachFrom = `${path.join(CONTAINER_STORAGE_DIRECTORY, path.sep)}.`;
 
-  // BusyBox doesn't have the -n option.
-  // Check if the directory is empty before copying it.
-  return `if [ -d ${CONTAINER_STORAGE_DIRECTORY} ] && [ "$(ls -A ${CONTAINER_STORAGE_DIRECTORY})" ]; then cp -rn ${attachFrom} ${step?.attach_workspace?.at} || cp -ru ${attachFrom} ${step?.attach_workspace?.at}; fi`;
+  // BusyBox doesn't allow cp -n.
+  return `if [ ! -d ${CONTAINER_STORAGE_DIRECTORY} ]; then
+      echo "Error: tried to attach_workspace to ${CONTAINER_STORAGE_DIRECTORY}, but it's not a directory. It might require a job to run before it."
+    elif [ ! "$(ls -A ${CONTAINER_STORAGE_DIRECTORY})" ]; then
+      echo "Error: tried to attach_workspace to ${CONTAINER_STORAGE_DIRECTORY}, but it's empty. It might require a job to run before it."
+    else
+      cp -rn ${attachFrom} ${step?.attach_workspace?.at} || cp -ru ${attachFrom} ${step?.attach_workspace?.at}
+    fi`;
 }
