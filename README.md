@@ -1,7 +1,8 @@
 [![2 day free preview](https://img.shields.io/badge/trial-2%20day-orange)](https://getlocalci.com/pricing/?utm_medium=extension&utm_source=readme)
 [![Buy license key](https://img.shields.io/badge/%24-paid-orange)](https://getlocalci.com/pricing/?utm_medium=extension&utm_source=readme)
+[![Trending Monthly][https://vsmarketplacebadge.apphb.com/trending-monthly/LocalCI.local-ci.svg?logo=tinder&color=orange&logoColor=white&label=trending%20monthly](https://marketplace.visualstudio.com/items?itemName=LocalCI.local-ci)]
 [![Platform: macOS](https://img.shields.io/badge/platform-macOS-yellow)](https://en.wikipedia.org/wiki/MacOS)
-[![Requires CircleCI®](https://img.shields.io/badge/requires-CirlcleCI%C2%AE-yellow)](https://circleci.com)
+[![Requires CircleCI®](https://img.shields.io/badge/requires-CirlcleCI%C2%AE-yellow)](https://circleci.com/docs/2.0/first-steps/)
 
 Debug entire CircleCI® workflows locally, with Bash access and persistence between jobs.
 
@@ -51,7 +52,7 @@ But first you'll get a free 2-day preview, no sign-up or credit card needed.
 
 ## Requirements
 
-[CircleCI®](https://circleci.com/), [macOS](https://en.wikipedia.org/wiki/MacOS), [Docker](https://www.docker.com/)
+[CircleCI®](https://circleci.com/docs/2.0/first-steps/), [macOS](https://en.wikipedia.org/wiki/MacOS), [Docker](https://www.docker.com/)
 
 If you don't have a CircleCI® account, you can [get started](https://circleci.com/docs/2.0/first-steps/) with CircleCI® for free.
 

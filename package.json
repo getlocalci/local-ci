@@ -243,6 +243,11 @@
       "description": "Buy license key"
     },
     {
+      "url": "https://vsmarketplacebadge.apphb.com/trending-monthly/LocalCI.local-ci.svg?logo=tinder&color=orange&logoColor=white&label=trending%20monthly",
+      "href": "https://marketplace.visualstudio.com/items?itemName=LocalCI.local-ci",
+      "description": "Trending Monthly"
+    },
+    {
       "url": "https://img.shields.io/badge/platform-macOS-yellow",
       "href": "https://en.wikipedia.org/wiki/MacOS",
       "description": "Platform: macOS"
