@@ -61,8 +61,14 @@ jobs:
     steps:
       - run:
           name: Attach workspace
-          command: >-
-            if [ -d /tmp/local-ci ] && [ "$(ls -A /tmp/local-ci)" ]; then cp -rn /tmp/local-ci/. . || cp -ru /tmp/local-ci/. .; fi
+          command: |-
+            if [ ! -d /tmp/local-ci ]; then
+                  echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's not a directory. It might require a job to run before it."
+                elif [ ! "$(ls -A /tmp/local-ci)" ]; then
+                  echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
+                else
+                  cp -rn /tmp/local-ci/. . || cp -ru /tmp/local-ci/. .
+                fi
       - run:
           name: Run prettier check on project files
           command: npm run prettier:check
@@ -83,8 +89,14 @@ jobs:
     steps:
       - run:
           name: Attach workspace
-          command: >-
-            if [ -d /tmp/local-ci ] && [ "$(ls -A /tmp/local-ci)" ]; then cp -rn  /tmp/local-ci/. . || cp -ru /tmp/local-ci/. .; fi
+          command: |-
+            if [ ! -d /tmp/local-ci ]; then
+                  echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's not a directory. It might require a job to run before it."
+                elif [ ! "$(ls -A /tmp/local-ci)" ]; then
+                  echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
+                else
+                  cp -rn /tmp/local-ci/. . || cp -ru /tmp/local-ci/. .
+                fi
       - run:
           name: Run linter
           command: npm run lint
@@ -93,8 +105,14 @@ jobs:
     steps:
       - run:
           name: Attach workspace
-          command: >-
-            if [ -d /tmp/local-ci ] && [ "$(ls -A /tmp/local-ci)" ]; then cp -rn /tmp/local-ci/. . || cp -ru /tmp/local-ci/. .; fi
+          command: |-
+            if [ ! -d /tmp/local-ci ]; then
+                  echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's not a directory. It might require a job to run before it."
+                elif [ ! "$(ls -A /tmp/local-ci)" ]; then
+                  echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
+                else
+                  cp -rn /tmp/local-ci/. . || cp -ru /tmp/local-ci/. .
+                fi
       - run:
           name: Run unit tests
           command: npm run test:unit
@@ -103,8 +121,14 @@ jobs:
     steps:
       - run:
           name: Attach workspace
-          command: >-
-            if [ -d /tmp/local-ci ] && [ "$(ls -A /tmp/local-ci)" ]; then cp -rn /tmp/local-ci/. . || cp -ru /tmp/local-ci/. .; fi
+          command: |-
+            if [ ! -d /tmp/local-ci ]; then
+                  echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's not a directory. It might require a job to run before it."
+                elif [ ! "$(ls -A /tmp/local-ci)" ]; then
+                  echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
+                else
+                  cp -rn /tmp/local-ci/. . || cp -ru /tmp/local-ci/. .
+                fi
       - run:
           name: Restore cache
           command: >
@@ -134,9 +158,14 @@ jobs:
     steps:
       - run:
           name: Attach workspace
-          command: >-
-            if [ -d /tmp/local-ci ] && [ "$(ls -A /tmp/local-ci)" ]; then cp -rn
-            /tmp/local-ci/. . || cp -ru /tmp/local-ci/. .; fi
+          command: |-
+            if [ ! -d /tmp/local-ci ]; then
+                  echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's not a directory. It might require a job to run before it."
+                elif [ ! "$(ls -A /tmp/local-ci)" ]; then
+                  echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
+                else
+                  cp -rn /tmp/local-ci/. . || cp -ru /tmp/local-ci/. .
+                fi
       - run:
           name: Build
           command: npm run build
@@ -148,8 +177,14 @@ jobs:
     steps:
       - run:
           name: Attach workspace
-          command: >-
-            if [ -d /tmp/local-ci ] && [ "$(ls -A /tmp/local-ci)" ]; then cp -rn /tmp/local-ci/. . || cp -ru /tmp/local-ci/. .; fi
+          command: |-
+            if [ ! -d /tmp/local-ci ]; then
+                  echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's not a directory. It might require a job to run before it."
+                elif [ ! "$(ls -A /tmp/local-ci)" ]; then
+                  echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
+                else
+                  cp -rn /tmp/local-ci/. . || cp -ru /tmp/local-ci/. .
+                fi
       - run:
           name: Check bundles sizes
           command: npm run bundlesize
@@ -158,8 +193,14 @@ jobs:
     steps:
       - run:
           name: Attach workspace
-          command: >-
-            if [ -d /tmp/local-ci ] && [ "$(ls -A /tmp/local-ci)" ]; then cp -rn /tmp/local-ci/. . || cp -ru /tmp/local-ci/. .; fi
+          command: |-
+            if [ ! -d /tmp/local-ci ]; then
+                  echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's not a directory. It might require a job to run before it."
+                elif [ ! "$(ls -A /tmp/local-ci)" ]; then
+                  echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
+                else
+                  cp -rn /tmp/local-ci/. . || cp -ru /tmp/local-ci/. .
+                fi
       - run:
           name: Firebase deploy
           command: |

@@ -21,7 +21,7 @@ jobs:
       - run: npm test
 
 workflows:
-  test-publish:
+  test-lint:
     jobs:
       - test:
           filters:

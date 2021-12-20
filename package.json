@@ -75,11 +75,6 @@
         "title": "Local CI: Run Jobs Locally"
       },
       {
-        "command": "localCiJobs.enterToken",
-        "title": "Local CI: Enter API Token",
-        "icon": "$(record-keys)"
-      },
-      {
         "command": "localCiJobs.exitAllJobs",
         "title": "Local CI: Exit All Jobs",
         "icon": "$(notebook-delete-cell)"
@@ -100,6 +95,11 @@
         "icon": "$(debug-configure)"
       },
       {
+        "command": "localCiJobs.enterToken",
+        "title": "Local CI: Token Entry",
+        "icon": "$(record-keys)"
+      },
+      {
         "command": "localCiLicense.refresh",
         "title": "Local CI: Refresh License Information",
         "icon": "$(refresh)"
@@ -114,11 +114,6 @@
     ],
     "menus": {
       "view/title": [
-        {
-          "command": "localCiJobs.enterToken",
-          "when": "view == localCiJobs",
-          "group": "navigation"
-        },
         {
           "command": "localCiJobs.exitAllJobs",
           "when": "view == localCiJobs",
@@ -136,6 +131,11 @@
         },
         {
           "command": "localCiJobs.selectRepo",
+          "when": "view == localCiJobs",
+          "group": "navigation"
+        },
+        {
+          "command": "localCiJobs.enterToken",
           "when": "view == localCiJobs",
           "group": "navigation"
         },
@@ -241,6 +241,11 @@
       "url": "https://img.shields.io/badge/%24-paid-orange",
       "href": "https://getlocalci.com/pricing/?utm_medium=extension&utm_source=badge",
       "description": "Buy license key"
+    },
+    {
+      "url": "https://vsmarketplacebadge.apphb.com/trending-monthly/LocalCI.local-ci.svg?logo=tinder&color=orange&logoColor=white&label=trending%20monthly",
+      "href": "https://marketplace.visualstudio.com/items?itemName=LocalCI.local-ci",
+      "description": "Trending Monthly"
     },
     {
       "url": "https://img.shields.io/badge/platform-macOS-yellow",
