@@ -22,8 +22,7 @@ import Warning from './Warning';
 import Command from './Command';
 import getDockerError from '../utils/getDockerError';
 
-interface Element {
-  type: string;
+interface TreeElement {
   label: string;
 }
 
@@ -66,7 +65,7 @@ export default class JobProvider
     return element;
   }
 
-  getChildren(parentElement: Element): vscode.TreeItem[] | undefined {
+  getChildren(parentElement: TreeElement): vscode.TreeItem[] | undefined {
     if (!parentElement) {
       return this.jobs.length
         ? this.getJobTreeItems(
