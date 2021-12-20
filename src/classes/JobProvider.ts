@@ -172,12 +172,6 @@ export default class JobProvider
 
   getErrorTreeItems(): vscode.TreeItem[] {
     switch (this.jobErrorType) {
-      case JobError.processFile:
-        return [
-          new Warning('Error processing the CircleCI config:'),
-          new vscode.TreeItem(this.getJobErrorMessage()),
-          new Command('Try Again', `${JOB_TREE_VIEW_ID}.refresh`),
-        ];
       case JobError.dockerNotRunning:
         return [
           new Warning('Error: is Docker running?'),
@@ -190,17 +184,23 @@ export default class JobProvider
           new Command('Get License', GET_LICENSE_COMMAND),
           new Command('Enter License', ENTER_LICENSE_COMMAND),
         ];
-      case JobError.noConfigFilePathSelected:
-        return [
-          new Warning('Error: No jobs found'),
-          new Command('Select repo', 'localCiJobs.selectRepo'),
-        ];
       case JobError.noConfigFilePathInWorkspace:
         return [
           new Warning('Error: No jobs found'),
           new vscode.TreeItem(
             'Please add a .circleci/config.yml to this workspace'
           ),
+        ];
+      case JobError.noConfigFilePathSelected:
+        return [
+          new Warning('Error: No jobs found'),
+          new Command('Select repo', 'localCiJobs.selectRepo'),
+        ];
+      case JobError.processFile:
+        return [
+          new Warning('Error processing the CircleCI config:'),
+          new vscode.TreeItem(this.getJobErrorMessage()),
+          new Command('Try Again', `${JOB_TREE_VIEW_ID}.refresh`),
         ];
       default:
         return [];
