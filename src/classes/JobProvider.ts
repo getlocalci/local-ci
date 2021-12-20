@@ -133,7 +133,7 @@ export default class JobProvider
           ),
         ];
       default:
-        return [new Warning('Error: No jobs found')];
+        return [];
     }
   }
 
