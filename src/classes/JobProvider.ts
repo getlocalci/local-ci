@@ -22,10 +22,6 @@ import Warning from './Warning';
 import Command from './Command';
 import getDockerError from '../utils/getDockerError';
 
-interface TreeElement {
-  label: string;
-}
-
 enum JobError {
   dockerNotRunning,
   licenseKey,
@@ -61,11 +57,11 @@ export default class JobProvider
     this._onDidChangeTreeData.fire(job);
   }
 
-  getTreeItem(element: Job): vscode.TreeItem {
-    return element;
+  getTreeItem(treeItem: vscode.TreeItem): vscode.TreeItem {
+    return treeItem;
   }
 
-  getChildren(parentElement: TreeElement): vscode.TreeItem[] | undefined {
+  getChildren(parentElement: vscode.TreeItem): vscode.TreeItem[] {
     if (!parentElement) {
       return this.jobs.length
         ? this.getJobTreeItems(
@@ -163,6 +159,7 @@ export default class JobProvider
     this.jobs = [];
     this.jobErrorType = undefined;
     this.jobErrorMessage = undefined;
+    this.runningJob = undefined;
 
     const configFilePath = await getConfigFilePath(this.context);
     if (!configFilePath || !fs.existsSync(configFilePath)) {
@@ -224,7 +221,6 @@ export default class JobProvider
       return;
     }
 
-    this.runningJob = undefined;
     this.jobDependencies = getJobs(processedConfig);
     for (const jobName of this.jobDependencies.keys()) {
       this.jobs.push(jobName);
