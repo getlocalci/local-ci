@@ -37,7 +37,7 @@ export default class JobProvider
     new vscode.EventEmitter<Job | undefined>();
   readonly onDidChangeTreeData: vscode.Event<Job | undefined> =
     this._onDidChangeTreeData.event;
-  private jobs: string[];
+  private jobs: string[] = [];
   private jobErrorType: JobError | undefined;
   private jobErrorMessage: string | undefined;
   private runningJob: string | undefined;
@@ -47,9 +47,7 @@ export default class JobProvider
   constructor(
     private readonly context: vscode.ExtensionContext,
     private readonly reporter: TelemetryReporter
-  ) {
-    this.jobs = [];
-  }
+  ) {}
 
   async refresh(job?: Job, suppressMessage?: boolean): Promise<void> {
     await this.loadJobs();
