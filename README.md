@@ -3,7 +3,7 @@
 [![Platform: macOS](https://img.shields.io/badge/platform-macOS-yellow)](https://en.wikipedia.org/wiki/MacOS)
 [![Requires CircleCI®](https://img.shields.io/badge/requires-CirlcleCI%C2%AE-yellow)](https://circleci.com/docs/2.0/first-steps/)
 
-Debug entire CircleCI® workflows locally, with Bash access and persistence between jobs.
+Debug entire CircleCI® workflows locally, with Bash access and caching between jobs.
 
 All in your local, no pushing commits and waiting. Not affiliated with CircleCI®.
 
