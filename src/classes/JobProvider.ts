@@ -55,6 +55,78 @@ export default class JobProvider
     this._onDidChangeTreeData.fire(job);
   }
 
+  async loadJobs(): Promise<void> {
+    this.jobs = [];
+    this.jobErrorType = undefined;
+    this.jobErrorMessage = undefined;
+    this.runningJob = undefined;
+
+    const configFilePath = await getConfigFilePath(this.context);
+    if (!configFilePath || !fs.existsSync(configFilePath)) {
+      this.reporter.sendTelemetryEvent('configFilePath');
+
+      const doExistConfigPaths = !!(await getAllConfigFilePaths(this.context))
+        .length;
+      if (doExistConfigPaths) {
+        this.jobErrorType = JobError.noConfigFilePathSelected;
+      } else {
+        this.reporter.sendTelemetryErrorEvent('noConfigFile');
+        this.jobErrorType = JobError.noConfigFilePathInWorkspace;
+      }
+
+      return;
+    }
+
+    let processedConfig = '';
+    let processError = '';
+    try {
+      processedConfig = getProcessedConfig(configFilePath);
+      writeProcessFile(processedConfig, getProcessFilePath(configFilePath));
+    } catch (e) {
+      processError = (e as ErrorWithMessage)?.message;
+      if (!this.suppressMessage) {
+        vscode.window.showErrorMessage(
+          `There was an error processing the CircleCI config: ${
+            (e as ErrorWithMessage)?.message
+          }`
+        );
+      }
+
+      this.reporter.sendTelemetryErrorEvent('writeProcessFile');
+    }
+
+    const shouldEnableExtension =
+      (await isLicenseValid(this.context)) ||
+      !isTrialExpired(
+        this.context.globalState.get(TRIAL_STARTED_TIMESTAMP),
+        getTrialLength(this.context)
+      );
+
+    if (!shouldEnableExtension) {
+      this.jobErrorType = JobError.licenseKey;
+      return;
+    }
+
+    if (!isDockerRunning()) {
+      this.reporter.sendTelemetryErrorEvent('dockerNotRunning');
+      this.jobErrorType = JobError.dockerNotRunning;
+      this.jobErrorMessage = getDockerError();
+      return;
+    }
+
+    if (processError) {
+      this.reporter.sendTelemetryErrorEvent('processError');
+      this.jobErrorType = JobError.processFile;
+      this.jobErrorMessage = processError;
+      return;
+    }
+
+    this.jobDependencies = getJobs(processedConfig);
+    for (const jobName of this.jobDependencies.keys()) {
+      this.jobs.push(jobName);
+    }
+  }
+
   getTreeItem(treeItem: vscode.TreeItem): vscode.TreeItem {
     return treeItem;
   }
@@ -151,78 +223,6 @@ export default class JobProvider
     }
 
     return false;
-  }
-
-  async loadJobs(): Promise<void> {
-    this.jobs = [];
-    this.jobErrorType = undefined;
-    this.jobErrorMessage = undefined;
-    this.runningJob = undefined;
-
-    const configFilePath = await getConfigFilePath(this.context);
-    if (!configFilePath || !fs.existsSync(configFilePath)) {
-      this.reporter.sendTelemetryEvent('configFilePath');
-
-      const doExistConfigPaths = !!(await getAllConfigFilePaths(this.context))
-        .length;
-      if (doExistConfigPaths) {
-        this.jobErrorType = JobError.noConfigFilePathSelected;
-      } else {
-        this.reporter.sendTelemetryErrorEvent('noConfigFile');
-        this.jobErrorType = JobError.noConfigFilePathInWorkspace;
-      }
-
-      return;
-    }
-
-    let processedConfig = '';
-    let processError = '';
-    try {
-      processedConfig = getProcessedConfig(configFilePath);
-      writeProcessFile(processedConfig, getProcessFilePath(configFilePath));
-    } catch (e) {
-      processError = (e as ErrorWithMessage)?.message;
-      if (!this.suppressMessage) {
-        vscode.window.showErrorMessage(
-          `There was an error processing the CircleCI config: ${
-            (e as ErrorWithMessage)?.message
-          }`
-        );
-      }
-
-      this.reporter.sendTelemetryErrorEvent('writeProcessFile');
-    }
-
-    const shouldEnableExtension =
-      (await isLicenseValid(this.context)) ||
-      !isTrialExpired(
-        this.context.globalState.get(TRIAL_STARTED_TIMESTAMP),
-        getTrialLength(this.context)
-      );
-
-    if (!shouldEnableExtension) {
-      this.jobErrorType = JobError.licenseKey;
-      return;
-    }
-
-    if (!isDockerRunning()) {
-      this.reporter.sendTelemetryErrorEvent('dockerNotRunning');
-      this.jobErrorType = JobError.dockerNotRunning;
-      this.jobErrorMessage = getDockerError();
-      return;
-    }
-
-    if (processError) {
-      this.reporter.sendTelemetryErrorEvent('processError');
-      this.jobErrorType = JobError.processFile;
-      this.jobErrorMessage = processError;
-      return;
-    }
-
-    this.jobDependencies = getJobs(processedConfig);
-    for (const jobName of this.jobDependencies.keys()) {
-      this.jobs.push(jobName);
-    }
   }
 
   setRunningJob(jobName: string): void {
