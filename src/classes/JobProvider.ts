@@ -28,9 +28,9 @@ interface TreeElement {
 
 enum JobError {
   dockerNotRunning,
+  licenseKey,
   noConfigFilePathInWorkspace,
   noConfigFilePathSelected,
-  licenseKey,
   processFile,
 }
 
@@ -85,6 +85,7 @@ export default class JobProvider
     for (const jobName of jobNames) {
       const jobDependencies = this?.jobDependencies?.get(jobName) ?? [];
       const dependencyLength = jobDependencies?.length;
+      // This element's children should be the jobs that list it as their last dependency.
       if (
         dependencyLength &&
         parentElement.label === jobDependencies[dependencyLength - 1]
@@ -111,7 +112,6 @@ export default class JobProvider
           new vscode.TreeItem(this.getJobErrorMessage()),
           new Command('Try Again', `${JOB_TREE_VIEW_ID}.refresh`),
         ];
-
       case JobError.dockerNotRunning:
         return [
           new Warning('Error: is Docker running?'),
@@ -145,6 +145,7 @@ export default class JobProvider
     return this.jobErrorMessage || '';
   }
 
+  // A job has a child job if any other job has it as the last value in its requires array.
   hasChildJob(jobName: string): boolean {
     for (const [, dependecies] of this?.jobDependencies ?? []) {
       if (

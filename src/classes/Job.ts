@@ -6,8 +6,8 @@ export default class Job extends vscode.TreeItem {
 
   constructor(
     public readonly label: string,
-    isRunning?: boolean,
-    hasChildJob?: boolean
+    isRunning: boolean,
+    hasChildJob: boolean
   ) {
     super(label);
     const tooltip = `Runs the CircleCI® job ${this.label}`;
