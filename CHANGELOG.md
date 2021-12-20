@@ -1,5 +1,10 @@
 # Change Log
 
+## 1.3.2 - 19 December 2021
+
+### Added
+- Nest jobs by dependencies, so you can see the order to run jobs. [#58](https://github.com/getlocalci/local-ci/pull/58)
+
 ## 1.3.1 - 16 December 2021
 
 ### Added
