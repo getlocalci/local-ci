@@ -1,4 +1,3 @@
-export const EXTENSION_VERSION = '1.3.2';
 export const EXTENSION_ID = 'LocalCI.local-ci';
 export const COMMITTED_IMAGE_NAMESPACE = 'local-ci';
 export const SELECTED_CONFIG_PATH = 'local-ci.config.path';
@@ -7,16 +6,6 @@ export const GET_LICENSE_COMMAND = 'local-ci.license.get';
 export const ENTER_LICENSE_COMMAND = 'local-ci.license.enter';
 export const EXIT_JOB_COMMAND = 'local-ci.job.exit';
 
-// @todo: Look at an alternative, as docker inspect hangs sometimes: https://github.com/docker/for-linux/issues/397
-export const GET_CONTAINER_FUNCTION = `get_container() {
-  IMAGE=$1
-  for container in $(docker ps -q); do
-    if [[ $IMAGE == $(docker inspect --format '{{.Config.Image}}' $container) ]]; then
-      echo $container
-      break
-    fi
-  done
-}`;
 export const GET_RUNNING_CONTAINER_FUNCTION = `get_running_container() {
   IMAGE=$1
   for container in $(docker ps -q --filter status=running); do
