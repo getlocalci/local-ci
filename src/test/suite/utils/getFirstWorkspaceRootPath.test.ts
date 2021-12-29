@@ -2,16 +2,16 @@ import * as assert from 'assert';
 import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as vscode from 'vscode';
-import getRootPath from '../../../utils/getRootPath';
+import getFirstWorkspaceRootPath from '../../../utils/getFirstWorkspaceRootPath';
 
 mocha.afterEach(() => {
   sinon.restore();
 });
 
-suite('getRootPath', () => {
+suite('getFirstWorkspaceRootPath', () => {
   test('With no workspaceFolders', () => {
     sinon.stub(vscode, 'workspace').value({});
-    assert.strictEqual(getRootPath(), '');
+    assert.strictEqual(getFirstWorkspaceRootPath(), '');
   });
 
   test('With workspaceFolders', () => {
@@ -24,6 +24,6 @@ suite('getRootPath', () => {
       ],
     });
 
-    assert.strictEqual(getRootPath(), path);
+    assert.strictEqual(getFirstWorkspaceRootPath(), path);
   });
 });

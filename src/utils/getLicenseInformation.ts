@@ -43,9 +43,9 @@ export default async function getLicenseInformation(
     trialLengthInMilliseconds
   );
 
-  const isPreviewExpiredByOneDay = isTrialExpired(
+  const isPreviewExpiredByTwoDays = isTrialExpired(
     previewStartedTimeStamp,
-    trialLengthInMilliseconds + dayInMilliseconds
+    trialLengthInMilliseconds + 2 * dayInMilliseconds
   );
 
   if (isValid) {
@@ -66,7 +66,7 @@ export default async function getLicenseInformation(
     <p>${complainLink}</p>`;
   }
 
-  if (isPreviewExpiredByOneDay) {
+  if (isPreviewExpiredByTwoDays) {
     return `<p>${scheduleInterviewLink}</p>
       <p>No sales pitch, I have nothing to sell you after giving you the free lifetime license.</p>
       <p>${enterLicenseButton}</p>`;
