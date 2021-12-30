@@ -1,10 +1,8 @@
-import getConfig from './getConfig';
-
 export default function getJobs(
-  processedConfig: string
+  config: CiConfig
 ): Map<string, string[] | null> {
-  const config = getConfig(processedConfig);
   const allJobs = new Map();
+
   if (config && Object.values(config?.workflows)?.length) {
     for (const workflowName in config?.workflows) {
       const workflow = config.workflows[workflowName];

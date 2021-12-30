@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as vscode from 'vscode';
 import TelemetryReporter from 'vscode-extension-telemetry';
 import Job from './Job';
-import getJobs from '../utils/getJobs';
+import getAllJobs from '../utils/getAllJobs';
 import getProcessedConfig from '../utils/getProcessedConfig';
 import {
   ENTER_LICENSE_COMMAND,
@@ -121,7 +121,7 @@ export default class JobProvider
       return;
     }
 
-    this.jobDependencies = getJobs(processedConfig);
+    this.jobDependencies = getAllJobs(processedConfig, configFilePath);
     for (const jobName of this.jobDependencies.keys()) {
       this.jobs.push(jobName);
     }
