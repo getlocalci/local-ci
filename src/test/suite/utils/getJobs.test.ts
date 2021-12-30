@@ -1,6 +1,8 @@
 import * as assert from 'assert';
+import * as fs from 'fs';
 import * as yaml from 'js-yaml';
 import getJobs from '../../../utils/getJobs';
+import { getTestFilePath } from '../../helpers';
 
 suite('getJobs', () => {
   test('Single job', () => {
@@ -49,6 +51,18 @@ suite('getJobs', () => {
         })
       ).size,
       3
+    );
+  });
+
+  test('Multiple jobs from fixture', () => {
+    assert.strictEqual(
+      getJobs(
+        fs.readFileSync(
+          getTestFilePath('fixture', 'config-with-cache.yml'),
+          'utf8'
+        )
+      ).size,
+      8
     );
   });
 });
