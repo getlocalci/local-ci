@@ -1,5 +1,7 @@
+import * as path from 'path';
 import * as fs from 'fs';
 import * as vscode from 'vscode';
+import * as yaml from 'js-yaml';
 import TelemetryReporter from 'vscode-extension-telemetry';
 import Job from './Job';
 import getAllJobs from '../utils/getAllJobs';
@@ -21,6 +23,9 @@ import writeProcessFile from '../utils/writeProcessFile';
 import Warning from './Warning';
 import Command from './Command';
 import getDockerError from '../utils/getDockerError';
+import getDynamicConfigFilePath from '../utils/getDynamicConfigFilePath';
+import replaceDynamicConfigOrb from '../utils/replaceDynamicConfigOrb';
+import getConfigFromPath from '../utils/getConfigFromPath';
 
 enum JobError {
   dockerNotRunning,
@@ -80,8 +85,26 @@ export default class JobProvider
     let processedConfig = '';
     let processError = '';
     try {
-      processedConfig = getProcessedConfig(configFilePath);
-      writeProcessFile(processedConfig, getProcessFilePath(configFilePath));
+      const processFilePath = getProcessFilePath(configFilePath);
+
+      if (!fs.existsSync(path.dirname(processFilePath))) {
+        fs.mkdirSync(path.dirname(processFilePath), { recursive: true });
+      }
+      fs.writeFileSync(
+        processFilePath,
+        yaml.dump(replaceDynamicConfigOrb(getConfigFromPath(configFilePath)))
+      );
+
+      processedConfig = getProcessedConfig(processFilePath);
+      writeProcessFile(processedConfig, processFilePath);
+
+      const dynamicConfigFilePath = getDynamicConfigFilePath(configFilePath);
+      if (fs.existsSync(dynamicConfigFilePath)) {
+        const processedDynamicConfig = getProcessedConfig(
+          dynamicConfigFilePath
+        );
+        writeProcessFile(processedDynamicConfig, dynamicConfigFilePath);
+      }
     } catch (e) {
       processError = (e as ErrorWithMessage)?.message;
       if (!this.suppressMessage) {

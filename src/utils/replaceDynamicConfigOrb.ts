@@ -34,12 +34,18 @@ export default function replaceDynamicConfigOrb(config: CiConfig): CiConfig {
               }
 
               if (step['continuation/continue']?.configuration_path) {
+                const dynamicConfigPath = path.join(
+                  CONTAINER_STORAGE_DIRECTORY,
+                  'config.yml'
+                );
                 return {
                   run: {
                     name: 'Continue the pipeline',
-                    command: `cp ${
-                      step['continuation/continue']?.configuration_path
-                    } ${path.join(CONTAINER_STORAGE_DIRECTORY, 'config.yml')}`,
+                    // cp -rn || cp -ru because Busybox doesn't allow cp -n.
+                    command: `if [ -f ${dynamicConfigPath} ]; then
+                      rm ${dynamicConfigPath};
+                    fi
+                    cp ${step['continuation/continue']?.configuration_path} ${dynamicConfigPath}`,
                   },
                 };
               }

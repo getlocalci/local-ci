@@ -23,6 +23,7 @@ import {
   CONTAINER_STORAGE_DIRECTORY,
 } from '../constants';
 import uncommittedWarning from './uncommittedWarning';
+import getDynamicConfigFilePath from './getDynamicConfigFilePath';
 
 export default async function runJob(
   context: vscode.ExtensionContext,
@@ -44,9 +45,22 @@ export default async function runJob(
 
   const processFilePath = getProcessFilePath(configFilePath);
   const parsedProcessFile = getConfigFromPath(processFilePath);
+
+  // If there's a dynamic config, this should look for the job in
+  // the generated dynamic config file.
+  // https://circleci.com/docs/2.0/dynamic-config/
+  const dyanmicConfigFilePath = getDynamicConfigFilePath(configFilePath);
+  const parsedDynamicConfigFile = getConfigFromPath(dyanmicConfigFilePath);
   const checkoutJobs = getCheckoutJobs(parsedProcessFile);
   const localVolume = getLocalVolumePath(configFilePath);
-  const job = parsedProcessFile?.jobs[jobName];
+  let job = parsedProcessFile?.jobs[jobName];
+  const isJobInDynamicConfig =
+    !!parsedDynamicConfigFile && !!parsedDynamicConfigFile?.jobs[jobName];
+
+  if (!job && isJobInDynamicConfig) {
+    job = parsedDynamicConfigFile?.jobs[jobName];
+  }
+
   uncommittedWarning(context, repoPath, jobName, checkoutJobs);
 
   // If this is the only checkout job, it's probably at the beginning of the workflow.
@@ -65,7 +79,9 @@ export default async function runJob(
 
   // @todo: maybe don't have a volume at all if there's no persist_to_workspace or attach_workspace.
   terminal.sendText(
-    `${getBinaryPath()} local execute --job ${jobName} --config ${processFilePath} --debug -v ${volume}`
+    `${getBinaryPath()} local execute --job ${jobName} --config ${
+      isJobInDynamicConfig ? dyanmicConfigFilePath : processFilePath
+    } --debug -v ${volume}`
   );
 
   showMainTerminalHelperMessages();

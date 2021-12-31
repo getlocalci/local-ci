@@ -1,5 +1,7 @@
 import * as fs from 'fs';
+import * as path from 'path';
 import * as vscode from 'vscode';
+import * as yaml from 'js-yaml';
 import TelemetryReporter from 'vscode-extension-telemetry';
 import { getBinaryPath } from '../node/binary';
 import Delayer from './classes/Delayer';
@@ -27,11 +29,13 @@ import getAllConfigFilePaths from './utils/getAllConfigFilePaths';
 import getCheckoutJobs from './utils/getCheckoutJobs';
 import getConfig from './utils/getConfig';
 import getConfigFilePath from './utils/getConfigFilePath';
+import getConfigFromPath from './utils/getConfigFromPath';
 import getDebuggingTerminalName from './utils/getDebuggingTerminalName';
 import getFinalTerminalName from './utils/getFinalTerminalName';
 import getProcessedConfig from './utils/getProcessedConfig';
 import getProcessFilePath from './utils/getProcessFilePath';
 import getRepoBasename from './utils/getRepoBasename';
+import replaceDynamicConfigOrb from './utils/replaceDynamicConfigOrb';
 import runJob from './utils/runJob';
 import showLicenseInput from './utils/showLicenseInput';
 import writeProcessFile from './utils/writeProcessFile';
@@ -222,6 +226,17 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand('local-ci.runWalkthroughJob', async () => {
       reporter.sendTelemetryEvent('runWalkthroughJob');
       const configFilePath = await getConfigFilePath(context);
+
+      const processFilePath = getProcessFilePath(configFilePath);
+
+      if (!fs.existsSync(path.dirname(processFilePath))) {
+        fs.mkdirSync(path.dirname(processFilePath), { recursive: true });
+      }
+      fs.writeFileSync(
+        processFilePath,
+        yaml.dump(replaceDynamicConfigOrb(getConfigFromPath(configFilePath)))
+      );
+
       let processedConfig;
       try {
         processedConfig = getProcessedConfig(configFilePath);
