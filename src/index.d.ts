@@ -25,8 +25,8 @@ interface FullStep {
     name?: string;
   } | string;
   'continuation/continue'?: {
-    parameters: string;
     configuration_path: string;
+    parameters?: string;
   };
   [key: string]: unknown;
 }
