@@ -100,10 +100,10 @@ export default class JobProvider
 
       const dynamicConfigFilePath = getDynamicConfigFilePath(configFilePath);
       if (fs.existsSync(dynamicConfigFilePath)) {
-        const processedDynamicConfig = getProcessedConfig(
+        writeProcessFile(
+          getProcessedConfig(dynamicConfigFilePath),
           dynamicConfigFilePath
         );
-        writeProcessFile(processedDynamicConfig, dynamicConfigFilePath);
       }
     } catch (e) {
       processError = (e as ErrorWithMessage)?.message;
