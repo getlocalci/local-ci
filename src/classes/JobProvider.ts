@@ -1,5 +1,5 @@
-import * as path from 'path';
 import * as fs from 'fs';
+import * as path from 'path';
 import * as vscode from 'vscode';
 import * as yaml from 'js-yaml';
 import TelemetryReporter from 'vscode-extension-telemetry';

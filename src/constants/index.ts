@@ -42,6 +42,7 @@ export const HOST_TMP_DIRECTORY = '/tmp/local-ci'; // Also hard-coded in node/un
 export const PROCESS_FILE_DIRECTORY = `${HOST_TMP_DIRECTORY}/process`;
 export const LOCAL_VOLUME_DIRECTORY = `${HOST_TMP_DIRECTORY}/volume`;
 export const RUN_JOB_COMMAND = 'local-ci.job.run';
+export const CONTINUE_PIPELINE_STEP_NAME = 'Continue the pipeline';
 export const SCHEDULE_INTERVIEW_URL =
   'https://tidycal.com/localci/30-minute-meeting';
 export const SUPPRESS_UNCOMMITTED_FILE_WARNING =

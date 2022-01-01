@@ -189,7 +189,7 @@ export function activate(context: vscode.ExtensionContext): void {
         }
 
         reporter.sendTelemetryEvent('runJob');
-        runJob(context, jobName);
+        runJob(context, jobName, jobProvider);
       }
     ),
     vscode.commands.registerCommand(EXIT_JOB_COMMAND, (job: Job) => {
@@ -205,7 +205,7 @@ export function activate(context: vscode.ExtensionContext): void {
       disposeTerminalsForJob(jobName);
 
       reporter.sendTelemetryEvent('rerunJob');
-      runJob(context, jobName);
+      runJob(context, jobName, jobProvider);
     }),
     vscode.commands.registerCommand(
       'local-ci.debug.repo',

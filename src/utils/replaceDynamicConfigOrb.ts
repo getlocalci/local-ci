@@ -1,5 +1,8 @@
 import * as path from 'path';
-import { CONTAINER_STORAGE_DIRECTORY } from '../constants';
+import {
+  CONTAINER_STORAGE_DIRECTORY,
+  CONTINUE_PIPELINE_STEP_NAME,
+} from '../constants';
 
 // Overwrites the dynamic config continuation orb: https://circleci.com/developer/orbs/orb/circleci/continuation
 // Normally, that orb makes a POST request to CircleCI® with the generated config file.
@@ -40,12 +43,8 @@ export default function replaceDynamicConfigOrb(config: CiConfig): CiConfig {
                 );
                 return {
                   run: {
-                    name: 'Continue the pipeline',
-                    // cp -rn || cp -ru because Busybox doesn't allow cp -n.
-                    command: `if [ -f ${dynamicConfigPath} ]; then
-                      rm ${dynamicConfigPath};
-                    fi
-                    cp ${step['continuation/continue']?.configuration_path} ${dynamicConfigPath}`,
+                    name: CONTINUE_PIPELINE_STEP_NAME,
+                    command: `if [ -f ${dynamicConfigPath} ]; then rm ${dynamicConfigPath}; fi; cp ${step['continuation/continue']?.configuration_path} ${dynamicConfigPath};`,
                   },
                 };
               }

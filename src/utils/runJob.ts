@@ -21,13 +21,29 @@ import {
   GET_RUNNING_CONTAINER_FUNCTION,
   COMMITTED_IMAGE_NAMESPACE,
   CONTAINER_STORAGE_DIRECTORY,
+  CONTINUE_PIPELINE_STEP_NAME,
 } from '../constants';
 import uncommittedWarning from './uncommittedWarning';
 import getDynamicConfigFilePath from './getDynamicConfigFilePath';
+import JobProvider from '../classes/JobProvider';
+
+// Whether this job creates a dynamic config: https://circleci.com/docs/2.0/dynamic-config/
+function doesJobCreateDynamicConfig(job: Job | undefined) {
+  return (
+    !!job?.steps &&
+    job?.steps.some(
+      (step) =>
+        typeof step !== 'string' &&
+        typeof step.run !== 'string' &&
+        CONTINUE_PIPELINE_STEP_NAME === step?.run?.name
+    )
+  );
+}
 
 export default async function runJob(
   context: vscode.ExtensionContext,
-  jobName: string
+  jobName: string,
+  jobProvider: JobProvider
 ): Promise<void> {
   const configFilePath = await getConfigFilePath(context);
   const repoPath = path.dirname(path.dirname(configFilePath));
@@ -49,8 +65,8 @@ export default async function runJob(
   // If there's a dynamic config, this should look for the job in
   // the generated dynamic config file.
   // https://circleci.com/docs/2.0/dynamic-config/
-  const dyanmicConfigFilePath = getDynamicConfigFilePath(configFilePath);
-  const parsedDynamicConfigFile = getConfigFromPath(dyanmicConfigFilePath);
+  const dynamicConfigFilePath = getDynamicConfigFilePath(configFilePath);
+  const parsedDynamicConfigFile = getConfigFromPath(dynamicConfigFilePath);
   const checkoutJobs = getCheckoutJobs(parsedProcessFile);
   const localVolume = getLocalVolumePath(configFilePath);
   let job = parsedProcessFile?.jobs[jobName];
@@ -80,11 +96,14 @@ export default async function runJob(
   // @todo: maybe don't have a volume at all if there's no persist_to_workspace or attach_workspace.
   terminal.sendText(
     `${getBinaryPath()} local execute --job ${jobName} --config ${
-      isJobInDynamicConfig ? dyanmicConfigFilePath : processFilePath
+      isJobInDynamicConfig ? dynamicConfigFilePath : processFilePath
     } --debug -v ${volume}`
   );
 
-  showMainTerminalHelperMessages();
+  const helperMessagesProcess = showMainTerminalHelperMessages(
+    jobProvider,
+    doesJobCreateDynamicConfig(job)
+  );
   const committedImageRepo = `${COMMITTED_IMAGE_NAMESPACE}/${jobName}`;
 
   const jobImage = getImageFromJob(job);
@@ -161,6 +180,7 @@ export default async function runJob(
   vscode.window.onDidCloseTerminal(() => {
     if (areTerminalsClosed(terminal, debuggingTerminal, finalTerminal)) {
       commitProcess.kill();
+      helperMessagesProcess.kill();
       cleanUpCommittedImages(committedImageRepo);
     }
   });
