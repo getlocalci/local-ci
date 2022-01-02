@@ -1,11 +1,9 @@
 import * as fs from 'fs';
-import * as path from 'path';
+
 import * as vscode from 'vscode';
-import * as yaml from 'js-yaml';
 import TelemetryReporter from 'vscode-extension-telemetry';
 import Job from './Job';
 import getAllJobs from '../utils/getAllJobs';
-import getProcessedConfig from '../utils/getProcessedConfig';
 import {
   ENTER_LICENSE_COMMAND,
   GET_LICENSE_COMMAND,
@@ -14,18 +12,14 @@ import {
 } from '../constants';
 import getAllConfigFilePaths from '../utils/getAllConfigFilePaths';
 import getConfigFilePath from '../utils/getConfigFilePath';
-import getProcessFilePath from '../utils/getProcessFilePath';
 import getTrialLength from '../utils/getTrialLength';
 import isDockerRunning from '../utils/isDockerRunning';
 import isLicenseValid from '../utils/isLicenseValid';
 import isTrialExpired from '../utils/isTrialExpired';
-import writeProcessFile from '../utils/writeProcessFile';
 import Warning from './Warning';
 import Command from './Command';
 import getDockerError from '../utils/getDockerError';
-import getDynamicConfigFilePath from '../utils/getDynamicConfigFilePath';
-import replaceDynamicConfigOrb from '../utils/replaceDynamicConfigOrb';
-import getConfigFromPath from '../utils/getConfigFromPath';
+import prepareConfig from '../utils/prepareConfig';
 
 enum JobError {
   dockerNotRunning,
@@ -81,42 +75,11 @@ export default class JobProvider
 
       return;
     }
-
-    let processedConfig = '';
-    let processError = '';
-    try {
-      const processFilePath = getProcessFilePath(configFilePath);
-
-      if (!fs.existsSync(path.dirname(processFilePath))) {
-        fs.mkdirSync(path.dirname(processFilePath), { recursive: true });
-      }
-      fs.writeFileSync(
-        processFilePath,
-        yaml.dump(replaceDynamicConfigOrb(getConfigFromPath(configFilePath)))
-      );
-
-      processedConfig = getProcessedConfig(processFilePath);
-      writeProcessFile(processedConfig, processFilePath);
-
-      const dynamicConfigFilePath = getDynamicConfigFilePath(configFilePath);
-      if (fs.existsSync(dynamicConfigFilePath)) {
-        writeProcessFile(
-          getProcessedConfig(dynamicConfigFilePath),
-          dynamicConfigFilePath
-        );
-      }
-    } catch (e) {
-      processError = (e as ErrorWithMessage)?.message;
-      if (!this.suppressMessage) {
-        vscode.window.showErrorMessage(
-          `There was an error processing the CircleCI config: ${
-            (e as ErrorWithMessage)?.message
-          }`
-        );
-      }
-
-      this.reporter.sendTelemetryErrorEvent('writeProcessFile');
-    }
+    const { processedConfig, processError } = prepareConfig(
+      configFilePath,
+      this.reporter,
+      this.suppressMessage
+    );
 
     const shouldEnableExtension =
       (await isLicenseValid(this.context)) ||
@@ -138,7 +101,6 @@ export default class JobProvider
     }
 
     if (processError) {
-      this.reporter.sendTelemetryErrorEvent('processError');
       this.jobErrorType = JobError.processFile;
       this.jobErrorMessage = processError;
       return;
