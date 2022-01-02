@@ -32,7 +32,7 @@ export default function showMainTerminalHelperMessages(
       if (doesJobCreateDynamicConfig) {
         jobProvider.refresh();
         vscode.window.showInformationMessage(
-          `You can now run the dynamic config jobs`
+          'Success, you can now run the dynamic config jobs'
         );
       } else {
         jobProvider.refresh(job);

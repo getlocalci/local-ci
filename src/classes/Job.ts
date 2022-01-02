@@ -10,14 +10,14 @@ export default class Job extends vscode.TreeItem {
     hasChildJob: boolean
   ) {
     super(label);
-    const tooltip = `Runs the CircleCI® job ${this.label}`;
+    const tooltip = `Run the CircleCI® job ${this.label}`;
     this.jobName = label;
     this.collapsibleState = hasChildJob
       ? vscode.TreeItemCollapsibleState.Expanded
       : vscode.TreeItemCollapsibleState.None;
 
     this.iconPath = new vscode.ThemeIcon('debug-start');
-    this.tooltip = `Runs the CircleCI® job ${this.label}`;
+    this.tooltip = tooltip;
     this.command = {
       title: label,
       command: RUN_JOB_COMMAND,
@@ -35,26 +35,32 @@ export default class Job extends vscode.TreeItem {
   }
 
   setIsRunning(): void {
+    const tooltip = `Exit the CircleCI® job ${this.label}`;
+
     this.contextValue = 'isRunning';
     this.description = undefined;
     this.command = {
       title: this.label,
       command: EXIT_JOB_COMMAND,
-      tooltip: `Exits the CircleCI® job ${this.label}`,
+      tooltip,
       arguments: [this],
     };
     this.iconPath = new vscode.ThemeIcon('trash');
+    this.tooltip = tooltip;
   }
 
   setIsNotRunning(): void {
+    const tooltip = `Run the CircleCI® job ${this.label}`;
+
     this.contextValue = undefined;
     this.description = undefined;
     this.command = {
       title: this.label,
       command: RUN_JOB_COMMAND,
-      tooltip: `Runs the CircleCI® job ${this.label}`,
       arguments: [this.label, this],
+      tooltip,
     };
+    this.tooltip = tooltip;
     this.iconPath = new vscode.ThemeIcon('debug-start');
   }
 
