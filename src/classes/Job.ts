@@ -53,7 +53,6 @@ export default class Job extends vscode.TreeItem {
     const tooltip = `Run the CircleCI® job ${this.label}`;
 
     this.contextValue = undefined;
-    this.description = undefined;
     this.command = {
       title: this.label,
       command: RUN_JOB_COMMAND,
