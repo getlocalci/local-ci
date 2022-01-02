@@ -43,10 +43,7 @@ suite('getJobs', () => {
     assert.strictEqual(
       getJobs(
         getConfig(
-          fs.readFileSync(
-            getTestFilePath('fixture', 'config-with-cache.yml'),
-            'utf8'
-          )
+          fs.readFileSync(getTestFilePath('fixture', 'with-cache.yml'), 'utf8')
         )
       ).size,
       8

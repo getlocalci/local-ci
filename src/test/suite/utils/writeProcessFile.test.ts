@@ -24,10 +24,7 @@ suite('writeProcessFile', () => {
 
     writeProcessFile(
       fs
-        .readFileSync(
-          getTestFilePath('fixture', 'config-with-cache.yml'),
-          'utf8'
-        )
+        .readFileSync(getTestFilePath('fixture', 'with-cache.yml'), 'utf8')
         .toString(),
       processFilePath
     );
@@ -36,7 +33,7 @@ suite('writeProcessFile', () => {
       normalize(writeFileSyncSpy.firstCall.lastArg),
       normalize(
         fs
-          .readFileSync(getTestFilePath('expected', 'config-with-cache.yml'))
+          .readFileSync(getTestFilePath('expected', 'with-cache.yml'))
           .toString()
       )
     );
