@@ -30,9 +30,9 @@ import getConfigFilePath from './utils/getConfigFilePath';
 import getDebuggingTerminalName from './utils/getDebuggingTerminalName';
 import getFinalTerminalName from './utils/getFinalTerminalName';
 import getRepoBasename from './utils/getRepoBasename';
+import prepareConfig from './utils/prepareConfig';
 import runJob from './utils/runJob';
 import showLicenseInput from './utils/showLicenseInput';
-import prepareConfig from './utils/prepareConfig';
 
 const reporter = new TelemetryReporter(
   EXTENSION_ID,

@@ -99,7 +99,7 @@ export default async function runJob(
   terminal.sendText(
     `${getBinaryPath()} local execute --job ${jobName} --config ${
       isJobInDynamicConfig ? dynamicConfigFilePath : processFilePath
-    } --debug -v ${volume}`
+    } -v ${volume} --debug`
   );
 
   const helperMessagesProcess = showMainTerminalHelperMessages(
