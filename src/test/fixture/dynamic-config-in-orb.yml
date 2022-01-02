@@ -1,0 +1,30 @@
+version: 2.1
+
+setup: true
+orbs:
+  creating-config:
+    orbs:
+      continuation: circleci/continuation@0.1.2
+    jobs:
+      set-up-config:
+        executor: continuation/default
+        steps:
+          - checkout
+          - run:
+              name: Create config
+              command: |
+                ./create-config > created_config.yml
+          - continuation/continue:
+              configuration_path: created_config.yml
+
+jobs:
+  example:
+    executor:
+      name: node
+    steps:
+      - node --version
+
+workflows:
+  setup:
+    jobs:
+      - creating-config/set-up-config

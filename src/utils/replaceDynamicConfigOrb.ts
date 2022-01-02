@@ -4,6 +4,44 @@ import {
   CONTINUE_PIPELINE_STEP_NAME,
 } from '../constants';
 
+function replaceDynamicConfigInJobs(jobs: Jobs): Jobs {
+  return Object.keys(jobs).reduce((accumulator: Jobs, jobName: string) => {
+    if (!jobs[jobName]?.steps) {
+      return {
+        ...accumulator,
+        [jobName]: jobs[jobName],
+      };
+    }
+
+    return {
+      ...accumulator,
+      [jobName]: {
+        ...jobs[jobName],
+        steps: jobs[jobName].steps?.map((step: Step) => {
+          if (typeof step === 'string') {
+            return step;
+          }
+
+          if (step['continuation/continue']?.configuration_path) {
+            const dynamicConfigPath = path.join(
+              CONTAINER_STORAGE_DIRECTORY,
+              'config.yml'
+            );
+            return {
+              run: {
+                name: CONTINUE_PIPELINE_STEP_NAME,
+                command: `if [ -f ${dynamicConfigPath} ]; then rm ${dynamicConfigPath}; fi; cp ${step['continuation/continue']?.configuration_path} ${dynamicConfigPath};`,
+              },
+            };
+          }
+
+          return step;
+        }),
+      },
+    };
+  }, {});
+}
+
 // Overwrites the dynamic config continuation orb: https://circleci.com/developer/orbs/orb/circleci/continuation
 // Normally, that orb makes a POST request to CircleCI® with the generated config file.
 // But that doesn't work locally, and maybe it shouldn't.
@@ -16,45 +54,27 @@ export default function replaceDynamicConfigOrb(config: CiConfig): CiConfig {
     return config;
   }
 
-  return {
+  const newConfig = {
     ...config,
-    jobs: Object.keys(config.jobs).reduce(
-      (accumulator: Jobs, jobName: string) => {
-        if (!config || !config.jobs[jobName]?.steps) {
-          return {
-            ...accumulator,
-            [jobName]: config?.jobs[jobName],
-          };
-        }
-
-        return {
-          ...accumulator,
-          [jobName]: {
-            ...config.jobs[jobName],
-            steps: config.jobs[jobName].steps?.map((step: Step) => {
-              if (typeof step === 'string') {
-                return step;
-              }
-
-              if (step['continuation/continue']?.configuration_path) {
-                const dynamicConfigPath = path.join(
-                  CONTAINER_STORAGE_DIRECTORY,
-                  'config.yml'
-                );
-                return {
-                  run: {
-                    name: CONTINUE_PIPELINE_STEP_NAME,
-                    command: `if [ -f ${dynamicConfigPath} ]; then rm ${dynamicConfigPath}; fi; cp ${step['continuation/continue']?.configuration_path} ${dynamicConfigPath};`,
-                  },
-                };
-              }
-
-              return step;
-            }),
-          },
-        };
-      },
-      {}
-    ),
+    jobs: replaceDynamicConfigInJobs(config.jobs),
   };
+
+  const newOrbs: Orbs = {};
+  for (const orbName in config?.orbs) {
+    if ('string' === typeof config.orbs[orbName]) {
+      newOrbs[orbName] = config.orbs[orbName];
+    } else {
+      newOrbs[orbName] = {
+        ...config.orbs[orbName],
+        jobs: replaceDynamicConfigInJobs(config.orbs[orbName]?.jobs ?? {}),
+      };
+    }
+  }
+
+  return Object.keys(newOrbs).length
+    ? {
+        ...newConfig,
+        orbs: newOrbs,
+      }
+    : newConfig;
 }

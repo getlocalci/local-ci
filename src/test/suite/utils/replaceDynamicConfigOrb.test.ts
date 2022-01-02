@@ -19,6 +19,19 @@ suite('replaceDynamicConfigOrb', () => {
     );
   });
 
+  test('Dynamic config in orb', () => {
+    assert.deepStrictEqual(
+      replaceDynamicConfigOrb(
+        getConfigFromPath(
+          getTestFilePath('fixture', 'dynamic-config-in-orb.yml')
+        )
+      ),
+      getConfigFromPath(
+        getTestFilePath('expected', 'dynamic-config-in-orb.yml')
+      )
+    );
+  });
+
   test('Non dynamic config file should not be changed', () => {
     const testFile = getTestFilePath('fixture', 'with-cache.yml');
 
