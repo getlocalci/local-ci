@@ -1,25 +1,24 @@
 import * as fs from 'fs';
-
 import * as vscode from 'vscode';
 import TelemetryReporter from 'vscode-extension-telemetry';
+import Command from './Command';
 import Job from './Job';
+import Warning from './Warning';
+import getAllConfigFilePaths from '../utils/getAllConfigFilePaths';
 import getAllJobs from '../utils/getAllJobs';
+import getConfigFilePath from '../utils/getConfigFilePath';
+import getTrialLength from '../utils/getTrialLength';
+import isDockerRunning from '../utils/isDockerRunning';
+import isLicenseValid from '../utils/isLicenseValid';
+import isTrialExpired from '../utils/isTrialExpired';
+import getDockerError from '../utils/getDockerError';
+import prepareConfig from '../utils/prepareConfig';
 import {
   ENTER_LICENSE_COMMAND,
   GET_LICENSE_COMMAND,
   JOB_TREE_VIEW_ID,
   TRIAL_STARTED_TIMESTAMP,
 } from '../constants';
-import getAllConfigFilePaths from '../utils/getAllConfigFilePaths';
-import getConfigFilePath from '../utils/getConfigFilePath';
-import getTrialLength from '../utils/getTrialLength';
-import isDockerRunning from '../utils/isDockerRunning';
-import isLicenseValid from '../utils/isLicenseValid';
-import isTrialExpired from '../utils/isTrialExpired';
-import Warning from './Warning';
-import Command from './Command';
-import getDockerError from '../utils/getDockerError';
-import prepareConfig from '../utils/prepareConfig';
 
 enum JobError {
   dockerNotRunning,
