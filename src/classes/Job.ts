@@ -36,6 +36,7 @@ export default class Job extends vscode.TreeItem {
 
   setIsRunning(): void {
     this.contextValue = 'isRunning';
+    this.description = undefined;
     this.command = {
       title: this.label,
       command: EXIT_JOB_COMMAND,
@@ -47,6 +48,7 @@ export default class Job extends vscode.TreeItem {
 
   setIsNotRunning(): void {
     this.contextValue = undefined;
+    this.description = undefined;
     this.command = {
       title: this.label,
       command: RUN_JOB_COMMAND,
@@ -54,5 +56,13 @@ export default class Job extends vscode.TreeItem {
       arguments: [this.label, this],
     };
     this.iconPath = new vscode.ThemeIcon('debug-start');
+  }
+
+  setIsSuccess(): void {
+    this.description = '✅';
+  }
+
+  setIsFailure(): void {
+    this.description = '❌';
   }
 }

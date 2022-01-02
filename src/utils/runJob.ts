@@ -17,6 +17,7 @@ import getProcessFilePath from './getProcessFilePath';
 import getTerminalName from './getTerminalName';
 import showMainTerminalHelperMessages from './showMainTerminalHelperMessages';
 import showFinalTerminalHelperMessages from './showFinalTerminalHelperMessages';
+import JobClass from '../classes/Job';
 import {
   GET_RUNNING_CONTAINER_FUNCTION,
   COMMITTED_IMAGE_NAMESPACE,
@@ -28,7 +29,7 @@ import getDynamicConfigFilePath from './getDynamicConfigFilePath';
 import JobProvider from '../classes/JobProvider';
 
 // Whether this job creates a dynamic config: https://circleci.com/docs/2.0/dynamic-config/
-function doesJobCreateDynamicConfig(job: Job | undefined) {
+function doesJobCreateDynamicConfig(job: Job | undefined): boolean {
   return (
     !!job?.steps &&
     job?.steps.some(
@@ -43,7 +44,8 @@ function doesJobCreateDynamicConfig(job: Job | undefined) {
 export default async function runJob(
   context: vscode.ExtensionContext,
   jobName: string,
-  jobProvider: JobProvider
+  jobProvider: JobProvider,
+  job: JobClass | undefined
 ): Promise<void> {
   const configFilePath = await getConfigFilePath(context);
   const repoPath = path.dirname(path.dirname(configFilePath));
@@ -69,12 +71,12 @@ export default async function runJob(
   const parsedDynamicConfigFile = getConfigFromPath(dynamicConfigFilePath);
   const checkoutJobs = getCheckoutJobs(parsedProcessFile);
   const localVolume = getLocalVolumePath(configFilePath);
-  let job = parsedProcessFile?.jobs[jobName];
+  let jobInConfig = parsedProcessFile?.jobs[jobName];
   const isJobInDynamicConfig =
     !!parsedDynamicConfigFile && !!parsedDynamicConfigFile?.jobs[jobName];
 
-  if (!job && isJobInDynamicConfig) {
-    job = parsedDynamicConfigFile?.jobs[jobName];
+  if (!jobInConfig && isJobInDynamicConfig) {
+    jobInConfig = parsedDynamicConfigFile?.jobs[jobName];
   }
 
   uncommittedWarning(context, repoPath, jobName, checkoutJobs);
@@ -102,11 +104,12 @@ export default async function runJob(
 
   const helperMessagesProcess = showMainTerminalHelperMessages(
     jobProvider,
-    doesJobCreateDynamicConfig(job)
+    job,
+    doesJobCreateDynamicConfig(jobInConfig)
   );
   const committedImageRepo = `${COMMITTED_IMAGE_NAMESPACE}/${jobName}`;
 
-  const jobImage = getImageFromJob(job);
+  const jobImage = getImageFromJob(jobInConfig);
   const commitProcess = commitContainer(jobImage, committedImageRepo);
 
   const debuggingTerminal = vscode.window.createTerminal({

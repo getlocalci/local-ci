@@ -16,8 +16,9 @@ export const GET_RUNNING_CONTAINER_FUNCTION = `get_running_container() {
   done
 }`;
 export const GET_PICARD_CONTAINER_FUNCTION = `get_picard_container() {
+  JOB_NAME=$1
   for container in $(docker ps -q); do
-    if [[ $(docker inspect $(docker inspect $container --format {{.Image}}) --format {{.RepoDigests}}) == *"circleci/picard"* ]]; then
+    if [[ $(docker inspect $(docker inspect $container --format {{.Image}}) --format {{.RepoDigests}}) == *"circleci/picard"* ]] && [[ $(docker inspect $container --format {{.Args}} | grep $JOB_NAME) ]]; then
       echo $container
       break
     fi
