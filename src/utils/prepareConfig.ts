@@ -26,8 +26,8 @@ export default function prepareConfig(
     }
 
     // This runs before writeProcessFile(), as circleci config process
-    // will compile the continuation orb,
-    // and this won't be able to replace that orb with something that works locally.
+    // will compile the continuation orb, making it unrecognizable.
+    // Then, this wouldn't be able to replace that orb with something that works locally.
     fs.writeFileSync(
       processFilePath,
       yaml.dump(replaceDynamicConfigOrb(getConfigFromPath(configFilePath)))
