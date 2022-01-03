@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.4.0 - 2 January 2022
+
+### Added
+- Basic support for dynamic configs. [#66](https://github.com/getlocalci/local-ci/pull/66/)
+- Add ✅ and ❌ after jobs, depending on whether they passed. [#66](https://github.com/getlocalci/local-ci/pull/66/)
+
 ## 1.3.2 - 19 December 2021
 
 ### Added
