@@ -64,9 +64,6 @@ export default async function runJob(
   const processFilePath = getProcessFilePath(configFilePath);
   const parsedProcessFile = getConfigFromPath(processFilePath);
 
-  // If there's a dynamic config, this should look for the job in
-  // the generated dynamic config file.
-  // https://circleci.com/docs/2.0/dynamic-config/
   const dynamicConfigFilePath = getDynamicConfigFilePath(configFilePath);
   const parsedDynamicConfigFile = getConfigFromPath(dynamicConfigFilePath);
   const checkoutJobs = getCheckoutJobs(parsedProcessFile);
@@ -75,6 +72,9 @@ export default async function runJob(
   const isJobInDynamicConfig =
     !!parsedDynamicConfigFile && !!parsedDynamicConfigFile?.jobs[jobName];
 
+  // If there's a dynamic config, this should look for the job in
+  // the generated dynamic config file.
+  // https://circleci.com/docs/2.0/dynamic-config/
   if (!jobInConfig && isJobInDynamicConfig) {
     jobInConfig = parsedDynamicConfigFile?.jobs[jobName];
   }
