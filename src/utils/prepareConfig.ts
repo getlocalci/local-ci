@@ -24,6 +24,10 @@ export default function prepareConfig(
     if (!fs.existsSync(path.dirname(processFilePath))) {
       fs.mkdirSync(path.dirname(processFilePath), { recursive: true });
     }
+
+    // This runs before writeProcessFile(), as circleci config process
+    // will compile the continuation orb,
+    // and this won't be able to replace that orb with something that works locally.
     fs.writeFileSync(
       processFilePath,
       yaml.dump(replaceDynamicConfigOrb(getConfigFromPath(configFilePath)))
