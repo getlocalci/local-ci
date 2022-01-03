@@ -16,8 +16,9 @@ export const GET_RUNNING_CONTAINER_FUNCTION = `get_running_container() {
   done
 }`;
 export const GET_PICARD_CONTAINER_FUNCTION = `get_picard_container() {
+  JOB_NAME=$1
   for container in $(docker ps -q); do
-    if [[ $(docker inspect $(docker inspect $container --format {{.Image}}) --format {{.RepoDigests}}) == *"circleci/picard"* ]]; then
+    if [[ $(docker inspect $(docker inspect $container --format {{.Image}}) --format {{.RepoDigests}}) == *"circleci/picard"* ]] && [[ $(docker inspect $container --format {{.Args}} | grep $JOB_NAME) ]]; then
       echo $container
       break
     fi
@@ -42,6 +43,7 @@ export const HOST_TMP_DIRECTORY = '/tmp/local-ci'; // Also hard-coded in node/un
 export const PROCESS_FILE_DIRECTORY = `${HOST_TMP_DIRECTORY}/process`;
 export const LOCAL_VOLUME_DIRECTORY = `${HOST_TMP_DIRECTORY}/volume`;
 export const RUN_JOB_COMMAND = 'local-ci.job.run';
+export const CONTINUE_PIPELINE_STEP_NAME = 'Continue the pipeline';
 export const SCHEDULE_INTERVIEW_URL =
   'https://tidycal.com/localci/30-minute-meeting';
 export const SUPPRESS_UNCOMMITTED_FILE_WARNING =

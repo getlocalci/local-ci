@@ -1,26 +1,24 @@
 import * as fs from 'fs';
 import * as vscode from 'vscode';
 import TelemetryReporter from 'vscode-extension-telemetry';
+import Command from './Command';
 import Job from './Job';
-import getJobs from '../utils/getJobs';
-import getProcessedConfig from '../utils/getProcessedConfig';
+import Warning from './Warning';
+import getAllConfigFilePaths from '../utils/getAllConfigFilePaths';
+import getAllJobs from '../utils/getAllJobs';
+import getConfigFilePath from '../utils/getConfigFilePath';
+import getTrialLength from '../utils/getTrialLength';
+import isDockerRunning from '../utils/isDockerRunning';
+import isLicenseValid from '../utils/isLicenseValid';
+import isTrialExpired from '../utils/isTrialExpired';
+import getDockerError from '../utils/getDockerError';
+import prepareConfig from '../utils/prepareConfig';
 import {
   ENTER_LICENSE_COMMAND,
   GET_LICENSE_COMMAND,
   JOB_TREE_VIEW_ID,
   TRIAL_STARTED_TIMESTAMP,
 } from '../constants';
-import getAllConfigFilePaths from '../utils/getAllConfigFilePaths';
-import getConfigFilePath from '../utils/getConfigFilePath';
-import getProcessFilePath from '../utils/getProcessFilePath';
-import getTrialLength from '../utils/getTrialLength';
-import isDockerRunning from '../utils/isDockerRunning';
-import isLicenseValid from '../utils/isLicenseValid';
-import isTrialExpired from '../utils/isTrialExpired';
-import writeProcessFile from '../utils/writeProcessFile';
-import Warning from './Warning';
-import Command from './Command';
-import getDockerError from '../utils/getDockerError';
 
 enum JobError {
   dockerNotRunning,
@@ -76,24 +74,11 @@ export default class JobProvider
 
       return;
     }
-
-    let processedConfig = '';
-    let processError = '';
-    try {
-      processedConfig = getProcessedConfig(configFilePath);
-      writeProcessFile(processedConfig, getProcessFilePath(configFilePath));
-    } catch (e) {
-      processError = (e as ErrorWithMessage)?.message;
-      if (!this.suppressMessage) {
-        vscode.window.showErrorMessage(
-          `There was an error processing the CircleCI config: ${
-            (e as ErrorWithMessage)?.message
-          }`
-        );
-      }
-
-      this.reporter.sendTelemetryErrorEvent('writeProcessFile');
-    }
+    const { processedConfig, processError } = prepareConfig(
+      configFilePath,
+      this.reporter,
+      this.suppressMessage
+    );
 
     const shouldEnableExtension =
       (await isLicenseValid(this.context)) ||
@@ -115,13 +100,12 @@ export default class JobProvider
     }
 
     if (processError) {
-      this.reporter.sendTelemetryErrorEvent('processError');
       this.jobErrorType = JobError.processFile;
       this.jobErrorMessage = processError;
       return;
     }
 
-    this.jobDependencies = getJobs(processedConfig);
+    this.jobDependencies = getAllJobs(processedConfig, configFilePath);
     for (const jobName of this.jobDependencies.keys()) {
       this.jobs.push(jobName);
     }

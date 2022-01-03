@@ -20,7 +20,7 @@ export default function convertToBash(command: string): string {
             .replace(
               /checksum (\S+)/g,
               (fullMatch: string, fileName: string) =>
-                `shasum ${fileName} | awk '{print $1}'`
+                `if [ -f ${fileName} ]; then shasum ${fileName} | awk '{print $1}'; fi`
             )
             .replace(
               /\.Environment\.(\S+)/,

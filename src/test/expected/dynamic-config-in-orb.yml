@@ -1,0 +1,31 @@
+version: 2.1
+
+setup: true
+orbs:
+  creating-config:
+    orbs:
+      continuation: circleci/continuation@0.1.2
+    jobs:
+      set-up-config:
+        executor: continuation/default
+        steps:
+          - checkout
+          - run:
+              name: Create config
+              command: |
+                ./create-config > created_config.yml
+          - run:
+              name: Continue the pipeline
+              command: if [ -f /tmp/local-ci/config.yml ]; then rm /tmp/local-ci/config.yml; fi; cp created_config.yml /tmp/local-ci/config.yml;
+
+jobs:
+  example:
+    executor:
+      name: node
+    steps:
+      - node --version
+
+workflows:
+  setup:
+    jobs:
+      - creating-config/set-up-config

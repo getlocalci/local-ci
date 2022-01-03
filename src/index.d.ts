@@ -24,6 +24,11 @@ interface FullStep {
     command: string;
     name?: string;
   } | string;
+  'continuation/continue'?: {
+    configuration_path: string;
+    parameters?: string;
+  };
+  [key: string]: unknown;
 }
 
 type Step = FullStep | 'checkout' | string;

@@ -1,8 +1,19 @@
+interface Orb {
+  orbs?: Record<string, unknown>;
+  commands?: Record<string, unknown>;
+  jobs: Jobs;
+}
+
+interface Orbs {
+  [key: string]: Orb;
+}
+
 interface Jobs {
   [key: string]: Job;
 }
 
 interface CiConfigWithJobs {
+  orbs?: Orbs;
   jobs: Jobs;
   workflows: {
     [key: string]: {

@@ -11,7 +11,7 @@ jobs:
       - run:
           name: Restore cache
           command: >
-            restore_from_directories=("/tmp/local-ci/v2-deps-$( shasum "package-lock.json" | awk '{print $1}' )*/.npm" "/tmp/local-ci/v2-deps*/.npm");
+            restore_from_directories=("/tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )*/.npm" "/tmp/local-ci/v2-deps*/.npm");
             for directory_candidate in $restore_from_directories; do
               if [ $(ls -ard $directory_candidate 2>/dev/null) ]; then
                 verified_directory=$(ls -ard $directory_candidate | tail -n1)
@@ -20,7 +20,7 @@ jobs:
                 break;
               fi
             done;
-            restore_from_directories=("/tmp/local-ci/v2-deps-$( shasum "package-lock.json" | awk '{print $1}' )*/.cache" "/tmp/local-ci/v2-deps*/.cache");
+            restore_from_directories=("/tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )*/.cache" "/tmp/local-ci/v2-deps*/.cache");
             for directory_candidate in $restore_from_directories; do
               if [ $(ls -ard $directory_candidate 2>/dev/null) ]; then
                 verified_directory=$(ls -ard $directory_candidate | tail -n1)
@@ -35,23 +35,23 @@ jobs:
       - run:
           name: Save cache
           command: |2
-            if [ -d /tmp/local-ci/v2-deps-$( shasum "package-lock.json" | awk '{print $1}' )/.npm ]; then
+            if [ -d /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )/.npm ]; then
               echo "~/.npm is already cached, skipping";
             elif [ ! -d ~/.npm ]; then
               echo "~/.npm does not exist, skipping caching";
             else
               echo "Saving ~/.npm to the cache";
-              mkdir -p /tmp/local-ci/v2-deps-$( shasum "package-lock.json" | awk '{print $1}' )
-              cp -rn ~/.npm /tmp/local-ci/v2-deps-$( shasum "package-lock.json" | awk '{print $1}' )/.npm || cp -ru ~/.npm /tmp/local-ci/v2-deps-$( shasum "package-lock.json" | awk '{print $1}' )/.npm;
+              mkdir -p /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )
+              cp -rn ~/.npm /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )/.npm || cp -ru ~/.npm /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )/.npm;
             fi
-            if [ -d /tmp/local-ci/v2-deps-$( shasum "package-lock.json" | awk '{print $1}' )/.cache ]; then
+            if [ -d /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )/.cache ]; then
               echo "~/.cache is already cached, skipping";
             elif [ ! -d ~/.cache ]; then
               echo "~/.cache does not exist, skipping caching";
             else
               echo "Saving ~/.cache to the cache";
-              mkdir -p /tmp/local-ci/v2-deps-$( shasum "package-lock.json" | awk '{print $1}' )
-              cp -rn ~/.cache /tmp/local-ci/v2-deps-$( shasum "package-lock.json" | awk '{print $1}' )/.cache || cp -ru ~/.cache /tmp/local-ci/v2-deps-$( shasum "package-lock.json" | awk '{print $1}' )/.cache;
+              mkdir -p /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )
+              cp -rn ~/.cache /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )/.cache || cp -ru ~/.cache /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )/.cache;
             fi
       - run:
           name: Persist to workspace
@@ -75,14 +75,14 @@ jobs:
       - run:
           name: Save cache
           command: |2
-            if [ -d /tmp/local-ci/node-modules-$( shasum "package-lock.json" | awk '{print $1}' )/node_modules ]; then
+            if [ -d /tmp/local-ci/node-modules-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )/node_modules ]; then
               echo "node_modules is already cached, skipping";
             elif [ ! -d node_modules ]; then
               echo "node_modules does not exist, skipping caching";
             else
               echo "Saving node_modules to the cache";
-              mkdir -p /tmp/local-ci/node-modules-$( shasum "package-lock.json" | awk '{print $1}' )
-              cp -rn node_modules /tmp/local-ci/node-modules-$( shasum "package-lock.json" | awk '{print $1}' )/node_modules || cp -ru node_modules /tmp/local-ci/node-modules-$( shasum "package-lock.json" | awk '{print $1}' )/node_modules;
+              mkdir -p /tmp/local-ci/node-modules-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )
+              cp -rn node_modules /tmp/local-ci/node-modules-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )/node_modules || cp -ru node_modules /tmp/local-ci/node-modules-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )/node_modules;
             fi
   run-linter:
     executor: default-executor
@@ -132,7 +132,7 @@ jobs:
       - run:
           name: Restore cache
           command: >
-            restore_from_directories=("/tmp/local-ci/v2-deps-$( shasum "package-lock.json" | awk '{print $1}' )*/.npm" "/tmp/local-ci/v2-deps*/.npm" "/tmp/local-ci/node-modules-$( shasum "package-lock.json" | awk '{print $1}' )*/.npm");
+            restore_from_directories=("/tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )*/.npm" "/tmp/local-ci/v2-deps*/.npm" "/tmp/local-ci/node-modules-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )*/.npm");
               for directory_candidate in $restore_from_directories; do
                 if [ $(ls -ard $directory_candidate 2>/dev/null) ]; then
                   verified_directory=$(ls -ard $directory_candidate | tail -n1)
@@ -141,7 +141,7 @@ jobs:
                   break;
                 fi
               done;
-            restore_from_directories=("/tmp/local-ci/v2-deps-$( shasum "package-lock.json" | awk '{print $1}' )*/.cache" "/tmp/local-ci/v2-deps*/.cache" "/tmp/local-ci/node-modules-$( shasum "package-lock.json" | awk '{print $1}' )*/.cache");
+            restore_from_directories=("/tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )*/.cache" "/tmp/local-ci/v2-deps*/.cache" "/tmp/local-ci/node-modules-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )*/.cache");
             for directory_candidate in $restore_from_directories; do
               if [ $(ls -ard $directory_candidate 2>/dev/null) ]; then
                 verified_directory=$(ls -ard $directory_candidate | tail -n1)

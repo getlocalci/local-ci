@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import * as vscode from 'vscode';
-import { getBinaryPath } from '../../node/binary.js';
+import { getBinaryPath } from '../../node/binary';
 import areTerminalsClosed from './areTerminalsClosed';
 import cleanUpCommittedImages from './cleanUpCommittedImages';
 import commitContainer from './commitContainer';
@@ -17,16 +17,35 @@ import getProcessFilePath from './getProcessFilePath';
 import getTerminalName from './getTerminalName';
 import showMainTerminalHelperMessages from './showMainTerminalHelperMessages';
 import showFinalTerminalHelperMessages from './showFinalTerminalHelperMessages';
+import JobClass from '../classes/Job';
 import {
   GET_RUNNING_CONTAINER_FUNCTION,
   COMMITTED_IMAGE_NAMESPACE,
   CONTAINER_STORAGE_DIRECTORY,
+  CONTINUE_PIPELINE_STEP_NAME,
 } from '../constants';
 import uncommittedWarning from './uncommittedWarning';
+import getDynamicConfigFilePath from './getDynamicConfigFilePath';
+import JobProvider from '../classes/JobProvider';
+
+// Whether this job creates a dynamic config: https://circleci.com/docs/2.0/dynamic-config/
+function doesJobCreateDynamicConfig(job: Job | undefined): boolean {
+  return (
+    !!job?.steps &&
+    job?.steps.some(
+      (step) =>
+        typeof step !== 'string' &&
+        typeof step.run !== 'string' &&
+        CONTINUE_PIPELINE_STEP_NAME === step?.run?.name
+    )
+  );
+}
 
 export default async function runJob(
   context: vscode.ExtensionContext,
-  jobName: string
+  jobName: string,
+  jobProvider: JobProvider,
+  job: JobClass | undefined
 ): Promise<void> {
   const configFilePath = await getConfigFilePath(context);
   const repoPath = path.dirname(path.dirname(configFilePath));
@@ -44,9 +63,22 @@ export default async function runJob(
 
   const processFilePath = getProcessFilePath(configFilePath);
   const parsedProcessFile = getConfigFromPath(processFilePath);
+
+  const dynamicConfigFilePath = getDynamicConfigFilePath(configFilePath);
+  const parsedDynamicConfigFile = getConfigFromPath(dynamicConfigFilePath);
   const checkoutJobs = getCheckoutJobs(parsedProcessFile);
   const localVolume = getLocalVolumePath(configFilePath);
-  const job = parsedProcessFile?.jobs[jobName];
+  let jobInConfig = parsedProcessFile?.jobs[jobName];
+  const isJobInDynamicConfig =
+    !!parsedDynamicConfigFile && !!parsedDynamicConfigFile?.jobs[jobName];
+
+  // If there's a dynamic config, this should look for the job in
+  // the generated dynamic config file.
+  // https://circleci.com/docs/2.0/dynamic-config/
+  if (!jobInConfig && isJobInDynamicConfig) {
+    jobInConfig = parsedDynamicConfigFile?.jobs[jobName];
+  }
+
   uncommittedWarning(context, repoPath, jobName, checkoutJobs);
 
   // If this is the only checkout job, it's probably at the beginning of the workflow.
@@ -65,13 +97,19 @@ export default async function runJob(
 
   // @todo: maybe don't have a volume at all if there's no persist_to_workspace or attach_workspace.
   terminal.sendText(
-    `${getBinaryPath()} local execute --job ${jobName} --config ${processFilePath} --debug -v ${volume}`
+    `${getBinaryPath()} local execute --job ${jobName} --config ${
+      isJobInDynamicConfig ? dynamicConfigFilePath : processFilePath
+    } -v ${volume} --debug`
   );
 
-  showMainTerminalHelperMessages();
+  const helperMessagesProcess = showMainTerminalHelperMessages(
+    jobProvider,
+    job,
+    doesJobCreateDynamicConfig(jobInConfig)
+  );
   const committedImageRepo = `${COMMITTED_IMAGE_NAMESPACE}/${jobName}`;
 
-  const jobImage = getImageFromJob(job);
+  const jobImage = getImageFromJob(jobInConfig);
   const commitProcess = commitContainer(jobImage, committedImageRepo);
 
   const debuggingTerminal = vscode.window.createTerminal({
@@ -145,6 +183,7 @@ export default async function runJob(
   vscode.window.onDidCloseTerminal(() => {
     if (areTerminalsClosed(terminal, debuggingTerminal, finalTerminal)) {
       commitProcess.kill();
+      helperMessagesProcess.kill();
       cleanUpCommittedImages(committedImageRepo);
     }
   });

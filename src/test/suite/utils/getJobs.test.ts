@@ -1,54 +1,52 @@
 import * as assert from 'assert';
-import * as yaml from 'js-yaml';
+import * as fs from 'fs';
+import getConfig from '../../../utils/getConfig';
 import getJobs from '../../../utils/getJobs';
+import { getTestFilePath } from '../../helpers';
 
 suite('getJobs', () => {
   test('Single job', () => {
     assert.strictEqual(
-      getJobs(
-        yaml.dump({
-          jobs: {},
-          workflows: {
-            'test-deploy': {
-              jobs: [{ test: {} }],
-              workflows: {
-                'test-deploy': {
-                  jobs: [
-                    {
-                      test: {
-                        docker: [{ image: 'cimg/node:16.8.0-browsers' }],
-                      },
-                    },
-                  ],
-                },
-              },
-            },
+      getJobs({
+        jobs: {},
+        workflows: {
+          'test-deploy': {
+            jobs: [{ test: {} }],
           },
-        })
-      ).size,
+        },
+      }).size,
       1
     );
   });
 
   test('Multiple jobs', () => {
     assert.strictEqual(
-      getJobs(
-        yaml.dump({
-          jobs: [{ lint: {}, test: {}, deploy: {} }],
-          workflows: {
-            'test-deploy': {
-              jobs: [
-                { lint: { docker: [{ image: 'cimg/node:16.8.0' }] } },
-                { test: { docker: [{ image: 'cimg/node:16.8.0-browsers' }] } },
-                {
-                  deploy: { docker: [{ image: 'cimg/node:16.8.0-browsers' }] },
-                },
-              ],
-            },
+      getJobs({
+        jobs: { lint: {}, test: {}, deploy: {} },
+        workflows: {
+          'test-deploy': {
+            jobs: [
+              { lint: { docker: [{ image: 'cimg/node:16.8.0' }] } },
+              { test: { docker: [{ image: 'cimg/node:16.8.0-browsers' }] } },
+              {
+                deploy: { docker: [{ image: 'cimg/node:16.8.0-browsers' }] },
+              },
+            ],
           },
-        })
-      ).size,
+        },
+      }).size,
       3
+    );
+  });
+
+  test('Multiple jobs from fixture', () => {
+    assert.strictEqual(
+      getJobs(
+        getConfig(
+          fs.readFileSync(getTestFilePath('fixture', 'with-cache.yml'), 'utf8')
+        )
+      ).size,
+      8
     );
   });
 });

@@ -23,6 +23,6 @@
   if (document.readyState === 'complete' || document.readyState === 'interactive') {
     addLicenseHandlers();
   } else {
-    document.addEventListener( 'DOMContentLoaded', addLicenseHandlers );
+    document.addEventListener('DOMContentLoaded', addLicenseHandlers);
   }
 })();
