@@ -31,12 +31,9 @@ export default function showMainTerminalHelperMessages(
       return;
     }
 
-    // 'Sucess!' should be near the end of the output, to find the final job 'Success!' message.
-    // There can be lot of other 'Success!' messages that can trigger this incorrectly.
-    if (
-      output?.includes('Success!') &&
-      output.length - output.indexOf('Success!') < 15
-    ) {
+    // This should be the final 'Success!' message when a job succeeds.
+    // There can be lot of other 'Success!' messages that might trigger this incorrectly.
+    if (output?.includes(`[32mSuccess![0m`)) {
       job?.setIsSuccess();
 
       if (doesJobCreateDynamicConfig) {
