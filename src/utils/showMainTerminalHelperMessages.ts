@@ -46,12 +46,12 @@ export default function showMainTerminalHelperMessages(
       }
     }
 
-    if (output.includes('Task failed')) {
+    if (output?.includes('Task failed')) {
       job?.setIsFailure();
       jobProvider.refresh(job);
     }
 
-    if (output.includes(memoryMessage)) {
+    if (output?.includes(memoryMessage)) {
       vscode.window.showInformationMessage(
         `This may have failed from a lack of Docker memory. You can increase it via Docker Desktop > Preferences > Resources > Advanced > Memory`
       );
