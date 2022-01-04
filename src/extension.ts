@@ -8,6 +8,7 @@ import JobProvider from './classes/JobProvider';
 import LicenseProvider from './classes/LicenseProvider';
 import {
   COMMITTED_IMAGE_NAMESPACE,
+  CONFIG_LEARN_MORE_URL,
   ENTER_LICENSE_COMMAND,
   EXIT_JOB_COMMAND,
   EXTENSION_ID,
@@ -16,6 +17,7 @@ import {
   HELP_URL,
   HOST_TMP_DIRECTORY,
   JOB_TREE_VIEW_ID,
+  OPEN_LEARN_MORE_COMMAND,
   RUN_JOB_COMMAND,
   SELECTED_CONFIG_PATH,
   TELEMETRY_KEY,
@@ -122,6 +124,8 @@ export function activate(context: vscode.ExtensionContext): void {
       `${JOB_TREE_VIEW_ID}.selectRepo`,
       async () => {
         reporter.sendTelemetryEvent('selectRepo');
+
+        const learnMoreText = 'Learn more';
         const quickPick = vscode.window.createQuickPick();
         const configFilePaths = await getAllConfigFilePaths(context);
         quickPick.title = 'Repo to run CI on';
@@ -133,8 +137,14 @@ export function activate(context: vscode.ExtensionContext): void {
                 description:
                   'Please add a .circleci/config.yml file so Local CI can run',
               },
+              {
+                label: learnMoreText,
+              },
             ];
         quickPick.onDidChangeSelection((selection) => {
+          if (selection.length && selection[0].label === learnMoreText) {
+            vscode.commands.executeCommand(OPEN_LEARN_MORE_COMMAND);
+          }
           if (
             selection?.length &&
             (selection[0] as ConfigFileQuickPick)?.fsPath
@@ -286,6 +296,10 @@ export function activate(context: vscode.ExtensionContext): void {
         licenseCompletedCallback,
         licenseSuccessCallback
       );
+    }),
+    vscode.commands.registerCommand(OPEN_LEARN_MORE_COMMAND, () => {
+      reporter.sendTelemetryEvent('click.config.learnMore');
+      vscode.env.openExternal(vscode.Uri.parse(CONFIG_LEARN_MORE_URL));
     })
   );
 
