@@ -27,7 +27,7 @@ export default function showMainTerminalHelperMessages(
 
   process.stdout.on('data', (data) => {
     const output = data?.toString();
-    if (!output.length) {
+    if (!output?.length) {
       return;
     }
 
