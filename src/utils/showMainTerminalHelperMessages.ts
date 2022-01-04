@@ -26,7 +26,14 @@ export default function showMainTerminalHelperMessages(
   );
 
   process.stdout.on('data', (data) => {
-    if (data?.toString()?.includes('Success!')) {
+    const output = data?.toString();
+    if (!output?.length) {
+      return;
+    }
+
+    // This should be the final 'Success!' message when a job succeeds.
+    // There can be lot of other 'Success!' messages that might trigger this incorrectly.
+    if (output?.includes(`[32mSuccess![0m`)) {
       job?.setIsSuccess();
 
       if (doesJobCreateDynamicConfig) {
@@ -39,12 +46,12 @@ export default function showMainTerminalHelperMessages(
       }
     }
 
-    if (data?.toString()?.includes('Task failed')) {
+    if (output?.includes('Task failed')) {
       job?.setIsFailure();
       jobProvider.refresh(job);
     }
 
-    if (data?.toString()?.includes(memoryMessage)) {
+    if (output?.includes(memoryMessage)) {
       vscode.window.showInformationMessage(
         `This may have failed from a lack of Docker memory. You can increase it via Docker Desktop > Preferences > Resources > Advanced > Memory`
       );

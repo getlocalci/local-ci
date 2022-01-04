@@ -43,6 +43,9 @@ export const HOST_TMP_DIRECTORY = '/tmp/local-ci'; // Also hard-coded in node/un
 export const PROCESS_FILE_DIRECTORY = `${HOST_TMP_DIRECTORY}/process`;
 export const LOCAL_VOLUME_DIRECTORY = `${HOST_TMP_DIRECTORY}/volume`;
 export const RUN_JOB_COMMAND = 'local-ci.job.run';
+export const OPEN_LEARN_MORE_COMMAND = 'local-ci.open.learn-more.config';
+export const CONFIG_LEARN_MORE_URL =
+  'https://circleci.com/docs/2.0/config-intro/';
 export const CONTINUE_PIPELINE_STEP_NAME = 'Continue the pipeline';
 export const SCHEDULE_INTERVIEW_URL =
   'https://tidycal.com/localci/30-minute-meeting';

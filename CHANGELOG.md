@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.4.1 - 3 January 2022
+
+### Added
+- Improve detection of job success. [#67](https://github.com/getlocalci/local-ci/pull/67/)
+- Add a 'Learn more' link when there's no `.circleci/config.yml`. [#67](https://github.com/getlocalci/local-ci/pull/67/)
+
 ## 1.4.0 - 2 January 2022
 
 ### Added
