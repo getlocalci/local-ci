@@ -14,10 +14,10 @@ import isTrialExpired from '../utils/isTrialExpired';
 import getDockerError from '../utils/getDockerError';
 import prepareConfig from '../utils/prepareConfig';
 import {
+  CREATE_CONFIG_FILE_COMMAND,
   ENTER_LICENSE_COMMAND,
   GET_LICENSE_COMMAND,
   JOB_TREE_VIEW_ID,
-  OPEN_LEARN_MORE_COMMAND,
   TRIAL_STARTED_TIMESTAMP,
 } from '../constants';
 
@@ -171,11 +171,8 @@ export default class JobProvider
         ];
       case JobError.noConfigFilePathInWorkspace:
         return [
-          new Warning('Error: No jobs found'),
-          new vscode.TreeItem(
-            'Please add a .circleci/config.yml to this workspace'
-          ),
-          new Command('Learn more', OPEN_LEARN_MORE_COMMAND),
+          new Warning('Error: No .circleci/config.yml found'),
+          new Command('Create a config for me', CREATE_CONFIG_FILE_COMMAND),
         ];
       case JobError.noConfigFilePathSelected:
         return [

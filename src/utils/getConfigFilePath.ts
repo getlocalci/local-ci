@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { OPEN_LEARN_MORE_COMMAND, SELECTED_CONFIG_PATH } from '../constants';
+import { CREATE_CONFIG_FILE_COMMAND, SELECTED_CONFIG_PATH } from '../constants';
 import getAllConfigFilePaths from './getAllConfigFilePaths';
 
 // Gets the path of the selected .circleci/config.yml to run the jobs on.
@@ -19,16 +19,16 @@ export default async function getConfigFilePath(
 
   const allConfigFilePaths = await getAllConfigFilePaths(context);
   if (!allConfigFilePaths.length) {
-    const learnMoreText = 'Learn more';
+    const createConfigText = 'Create a config for me';
     vscode.window
       .showInformationMessage(
-        'Please add a .circleci/config.yml file so Local CI can run it',
+        `Let's get you started with a .circleci/config.yml file so you can use Local CI`,
         { detail: 'There is no config file for Local CI to run' },
-        learnMoreText
+        createConfigText
       )
       .then((clicked) => {
-        if (clicked === learnMoreText) {
-          vscode.commands.executeCommand(OPEN_LEARN_MORE_COMMAND);
+        if (clicked === createConfigText) {
+          vscode.commands.executeCommand(CREATE_CONFIG_FILE_COMMAND);
         }
       });
 

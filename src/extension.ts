@@ -1,3 +1,4 @@
+import * as path from 'path';
 import * as fs from 'fs';
 import * as vscode from 'vscode';
 import TelemetryReporter from 'vscode-extension-telemetry';
@@ -8,7 +9,7 @@ import JobProvider from './classes/JobProvider';
 import LicenseProvider from './classes/LicenseProvider';
 import {
   COMMITTED_IMAGE_NAMESPACE,
-  CONFIG_LEARN_MORE_URL,
+  CREATE_CONFIG_FILE_COMMAND,
   ENTER_LICENSE_COMMAND,
   EXIT_JOB_COMMAND,
   EXTENSION_ID,
@@ -17,7 +18,6 @@ import {
   HELP_URL,
   HOST_TMP_DIRECTORY,
   JOB_TREE_VIEW_ID,
-  OPEN_LEARN_MORE_COMMAND,
   RUN_JOB_COMMAND,
   SELECTED_CONFIG_PATH,
   TELEMETRY_KEY,
@@ -31,6 +31,7 @@ import getConfig from './utils/getConfig';
 import getConfigFilePath from './utils/getConfigFilePath';
 import getDebuggingTerminalName from './utils/getDebuggingTerminalName';
 import getFinalTerminalName from './utils/getFinalTerminalName';
+import getStarterConfig from './utils/getStarterConfig';
 import getRepoBasename from './utils/getRepoBasename';
 import prepareConfig from './utils/prepareConfig';
 import runJob from './utils/runJob';
@@ -125,7 +126,7 @@ export function activate(context: vscode.ExtensionContext): void {
       async () => {
         reporter.sendTelemetryEvent('selectRepo');
 
-        const learnMoreText = 'Learn more';
+        const createConfigText = 'Create a config for me';
         const quickPick = vscode.window.createQuickPick();
         const configFilePaths = await getAllConfigFilePaths(context);
         quickPick.title = 'Repo to run CI on';
@@ -135,15 +136,15 @@ export function activate(context: vscode.ExtensionContext): void {
               {
                 label: 'No config file found',
                 description:
-                  'Please add a .circleci/config.yml file so Local CI can run',
+                  'A .circleci/config.yml file is needed to run Local CI',
               },
               {
-                label: learnMoreText,
+                label: createConfigText,
               },
             ];
         quickPick.onDidChangeSelection((selection) => {
-          if (selection.length && selection[0].label === learnMoreText) {
-            vscode.commands.executeCommand(OPEN_LEARN_MORE_COMMAND);
+          if (selection.length && selection[0].label === createConfigText) {
+            vscode.commands.executeCommand(CREATE_CONFIG_FILE_COMMAND);
           }
           if (
             selection?.length &&
@@ -297,9 +298,29 @@ export function activate(context: vscode.ExtensionContext): void {
         licenseSuccessCallback
       );
     }),
-    vscode.commands.registerCommand(OPEN_LEARN_MORE_COMMAND, () => {
-      reporter.sendTelemetryEvent('click.config.learnMore');
-      vscode.env.openExternal(vscode.Uri.parse(CONFIG_LEARN_MORE_URL));
+    vscode.commands.registerCommand(CREATE_CONFIG_FILE_COMMAND, async () => {
+      reporter.sendTelemetryEvent('createConfigFile');
+      const folderUri = vscode.workspace.workspaceFolders?.length
+        ? vscode.workspace.workspaceFolders[0].uri
+        : null;
+      if (!folderUri) {
+        return;
+      }
+
+      const configUri = folderUri.with({
+        path: path.posix.join(folderUri.path, '.circleci', 'config.yml'),
+      });
+      await vscode.workspace.fs.writeFile(
+        configUri,
+        Buffer.from(getStarterConfig(), 'utf8')
+      );
+      vscode.window.showTextDocument(configUri);
+
+      vscode.window.showInformationMessage(
+        `👆 Here's a starter config file that you can edit`,
+        { detail: 'Starter config file' }
+      );
+      jobProvider.refresh();
     })
   );
 
