@@ -303,6 +303,7 @@ export function activate(context: vscode.ExtensionContext): void {
       const folderUri = vscode.workspace.workspaceFolders?.length
         ? vscode.workspace.workspaceFolders[0].uri
         : null;
+
       if (!folderUri) {
         return;
       }
