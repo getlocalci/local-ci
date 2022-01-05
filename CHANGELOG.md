@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.4.2 - 4 January 2022
+
+### Added
+- Optionally create a config file when none exists. [#69](https://github.com/getlocalci/local-ci/pull/69/)
+- Bump `vsce` package to the latest version. [#68](https://github.com/getlocalci/local-ci/pull/68/)
+
 ## 1.4.1 - 3 January 2022
 
 ### Added
