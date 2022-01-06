@@ -42,12 +42,12 @@ export default function showMainTerminalHelperMessages(
 
       if (doesJobCreateDynamicConfig) {
         jobProvider.refresh();
-        const config = getConfigFromPath(
+        const dynamicConfig = getConfigFromPath(
           getDynamicConfigFilePath(await getConfigFilePath(context))
         );
 
         vscode.window.showInformationMessage(
-          config?.jobs
+          dynamicConfig?.jobs
             ? `Success! You can now run the dynamic config jobs`
             : `The step succeeded, but it didn't create any dynamic job`
         );
