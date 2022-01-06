@@ -7,7 +7,6 @@ import getConfigFilePath from './getConfigFilePath';
 import getConfigFromPath from './getConfigFromPath';
 import getDynamicConfigFilePath from './getDynamicConfigFilePath';
 import getSpawnOptions from './getSpawnOptions';
-import isMac from './isMac';
 
 export default function showMainTerminalHelperMessages(
   context: vscode.ExtensionContext,
