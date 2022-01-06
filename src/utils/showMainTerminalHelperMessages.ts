@@ -7,6 +7,7 @@ import getConfigFilePath from './getConfigFilePath';
 import getConfigFromPath from './getConfigFromPath';
 import getDynamicConfigFilePath from './getDynamicConfigFilePath';
 import getSpawnOptions from './getSpawnOptions';
+import isMac from './isMac';
 
 export default function showMainTerminalHelperMessages(
   context: vscode.ExtensionContext,
@@ -59,6 +60,12 @@ export default function showMainTerminalHelperMessages(
     if (output?.includes('Task failed')) {
       job?.setIsFailure();
       jobProvider.refresh(job);
+
+      if (output?.includes('error looking up cgroup')) {
+        vscode.window.showErrorMessage(
+          'You can probably fix this failed build with rm ~/.circleci/build_agent_settings.json'
+        );
+      }
     }
 
     if (output?.includes(memoryMessage)) {
