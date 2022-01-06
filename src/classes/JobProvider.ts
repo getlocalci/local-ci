@@ -18,6 +18,7 @@ import {
   ENTER_LICENSE_COMMAND,
   GET_LICENSE_COMMAND,
   JOB_TREE_VIEW_ID,
+  PROCESS_TRY_AGAIN_COMMAND,
   TRIAL_STARTED_TIMESTAMP,
 } from '../constants';
 
@@ -183,7 +184,7 @@ export default class JobProvider
         return [
           new Warning('Error processing the CircleCI config:'),
           new vscode.TreeItem(this.getJobErrorMessage()),
-          new Command('Try Again', `${JOB_TREE_VIEW_ID}.refresh`),
+          new Command('Try Again', PROCESS_TRY_AGAIN_COMMAND),
         ];
       default:
         return [];

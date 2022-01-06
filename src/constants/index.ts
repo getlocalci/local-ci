@@ -5,6 +5,7 @@ export const LICENSE_ERROR = 'localCiLicenseKeyError';
 export const GET_LICENSE_COMMAND = 'local-ci.license.get';
 export const ENTER_LICENSE_COMMAND = 'local-ci.license.enter';
 export const EXIT_JOB_COMMAND = 'local-ci.job.exit';
+export const PROCESS_TRY_AGAIN_COMMAND = 'local-ci.process-error.try-again';
 
 export const GET_RUNNING_CONTAINER_FUNCTION = `get_running_container() {
   IMAGE=$1

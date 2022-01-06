@@ -3,9 +3,13 @@ import * as vscode from 'vscode';
 import Job from '../classes/Job';
 import JobProvider from '../classes/JobProvider';
 import { GET_PICARD_CONTAINER_FUNCTION } from '../constants';
+import getConfigFilePath from './getConfigFilePath';
+import getConfigFromPath from './getConfigFromPath';
+import getDynamicConfigFilePath from './getDynamicConfigFilePath';
 import getSpawnOptions from './getSpawnOptions';
 
 export default function showMainTerminalHelperMessages(
+  context: vscode.ExtensionContext,
   jobProvider: JobProvider,
   job: Job | undefined,
   doesJobCreateDynamicConfig: boolean
@@ -25,7 +29,7 @@ export default function showMainTerminalHelperMessages(
     getSpawnOptions()
   );
 
-  process.stdout.on('data', (data) => {
+  process.stdout.on('data', async (data) => {
     const output = data?.toString();
     if (!output?.length) {
       return;
@@ -38,8 +42,14 @@ export default function showMainTerminalHelperMessages(
 
       if (doesJobCreateDynamicConfig) {
         jobProvider.refresh();
+        const dynamicConfig = getConfigFromPath(
+          getDynamicConfigFilePath(await getConfigFilePath(context))
+        );
+
         vscode.window.showInformationMessage(
-          'Success, you can now run the dynamic config jobs'
+          dynamicConfig?.jobs
+            ? `Success! You can now run the dynamic config jobs.`
+            : `The step succeeded, but it didn't create any dynamic job`
         );
       } else {
         jobProvider.refresh(job);

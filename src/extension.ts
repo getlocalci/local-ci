@@ -18,6 +18,7 @@ import {
   HELP_URL,
   HOST_TMP_DIRECTORY,
   JOB_TREE_VIEW_ID,
+  PROCESS_TRY_AGAIN_COMMAND,
   RUN_JOB_COMMAND,
   SELECTED_CONFIG_PATH,
   TELEMETRY_KEY,
@@ -30,6 +31,7 @@ import getCheckoutJobs from './utils/getCheckoutJobs';
 import getConfig from './utils/getConfig';
 import getConfigFilePath from './utils/getConfigFilePath';
 import getDebuggingTerminalName from './utils/getDebuggingTerminalName';
+import getDynamicConfigFilePath from './utils/getDynamicConfigFilePath';
 import getFinalTerminalName from './utils/getFinalTerminalName';
 import getRepoBasename from './utils/getRepoBasename';
 import getStarterConfig from './utils/getStarterConfig';
@@ -79,6 +81,17 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand(`${JOB_TREE_VIEW_ID}.refresh`, () =>
       jobProvider.refresh()
     ),
+    vscode.commands.registerCommand(PROCESS_TRY_AGAIN_COMMAND, async () => {
+      // There might have been a problem with the dynamic config file, so remove it.
+      const dynamicConfig = getDynamicConfigFilePath(
+        await getConfigFilePath(context)
+      );
+      if (fs.existsSync(dynamicConfig)) {
+        fs.rmSync(dynamicConfig);
+      }
+
+      jobProvider.refresh();
+    }),
     vscode.commands.registerCommand(`${JOB_TREE_VIEW_ID}.enterToken`, () => {
       const terminal = vscode.window.createTerminal({
         name: 'Enter CircleCI® API Token',
