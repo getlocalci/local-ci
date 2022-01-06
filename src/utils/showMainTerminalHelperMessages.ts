@@ -70,7 +70,7 @@ export default function showMainTerminalHelperMessages(
 
     if (output?.includes(memoryMessage)) {
       vscode.window.showInformationMessage(
-        `This may have failed from a lack of Docker memory. You can increase it via Docker Desktop > Preferences > Resources > Advanced > Memory`
+        'This may have failed from a lack of Docker memory. You can increase it via Docker Desktop > Preferences > Resources > Advanced > Memory'
       );
     }
   });
