@@ -48,7 +48,7 @@ export default function showMainTerminalHelperMessages(
 
         vscode.window.showInformationMessage(
           dynamicConfig?.jobs
-            ? `Success! You can now run the dynamic config jobs`
+            ? `Success! You can now run the dynamic config jobs.`
             : `The step succeeded, but it didn't create any dynamic job`
         );
       } else {
