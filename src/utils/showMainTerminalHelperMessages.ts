@@ -15,7 +15,6 @@ export default function showMainTerminalHelperMessages(
   doesJobCreateDynamicConfig: boolean
 ): cp.ChildProcessWithoutNullStreams {
   const memoryMessage = 'Exited with code exit status 127';
-
   const process = cp.spawn(
     '/bin/sh',
     [
@@ -37,7 +36,7 @@ export default function showMainTerminalHelperMessages(
 
     // This should be the final 'Success!' message when a job succeeds.
     // There can be lot of other 'Success!' messages that might trigger this incorrectly.
-    // @todo: look for a less brittle way to detect success.
+    // @todo: look for a more reliable way to detect success.
     if (output?.includes(`[32mSuccess![0m`)) {
       job?.setIsSuccess();
 
@@ -63,7 +62,7 @@ export default function showMainTerminalHelperMessages(
 
       if (output?.includes('error looking up cgroup')) {
         vscode.window.showErrorMessage(
-          'You can probably fix this failed build by running this on your local machine: rm ~/.circleci/build_agent_settings.json'
+          'You can probably fix this failed job by running this on your local machine: rm ~/.circleci/build_agent_settings.json'
         );
       }
     }
