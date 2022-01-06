@@ -103,6 +103,7 @@ export default async function runJob(
   );
 
   const helperMessagesProcess = showMainTerminalHelperMessages(
+    context,
     jobProvider,
     job,
     doesJobCreateDynamicConfig(jobInConfig)
