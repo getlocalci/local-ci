@@ -98,14 +98,11 @@ export default async function runJob(
   // @todo: maybe don't have a volume at all if there's no persist_to_workspace or attach_workspace.
   terminal.sendText(
     `${getBinaryPath()} local execute --job ${jobName} --config ${
-      isJobInDynamicConfig && fs.existsSync(dynamicConfigFilePath)
-        ? dynamicConfigFilePath
-        : processFilePath
+      isJobInDynamicConfig ? dynamicConfigFilePath : processFilePath
     } -v ${volume} --debug`
   );
 
   const helperMessagesProcess = showMainTerminalHelperMessages(
-    context,
     jobProvider,
     job,
     doesJobCreateDynamicConfig(jobInConfig)
