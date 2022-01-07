@@ -30,7 +30,7 @@ export default function uncommittedWarning(
       .filter(
         (line: string) =>
           !!line?.trim() &&
-          !line.includes('.circleci/config.yml') &&
+          !line.startsWith('.circleci/config.yml') &&
           !line.includes('.vscode/')
       )
       .join(', ');

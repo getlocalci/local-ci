@@ -8,10 +8,11 @@ import getConfigFromPath from './getConfigFromPath';
 import getDynamicConfigFilePath from './getDynamicConfigFilePath';
 import getSpawnOptions from './getSpawnOptions';
 
-export default function showMainTerminalHelperMessages(
+export default function handleSuccessAndFailure(
   context: vscode.ExtensionContext,
   jobProvider: JobProvider,
   job: Job | undefined,
+  commitProcess: cp.ChildProcess,
   doesJobCreateDynamicConfig: boolean
 ): cp.ChildProcessWithoutNullStreams {
   const memoryMessage = 'Exited with code exit status 127';
@@ -39,6 +40,7 @@ export default function showMainTerminalHelperMessages(
     // @todo: look for a more reliable way to detect success.
     if (output?.includes(`[32mSuccess![0m`)) {
       job?.setIsSuccess();
+      commitProcess.kill();
 
       if (doesJobCreateDynamicConfig) {
         jobProvider.refresh();
@@ -59,6 +61,7 @@ export default function showMainTerminalHelperMessages(
     if (output?.includes('Task failed')) {
       job?.setIsFailure();
       jobProvider.refresh(job);
+      commitProcess.kill();
 
       if (output?.includes('error looking up cgroup')) {
         vscode.window.showErrorMessage(

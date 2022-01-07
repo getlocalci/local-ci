@@ -15,7 +15,7 @@ import getLatestCommittedImage from './getLatestCommittedImage';
 import getLocalVolumePath from './getLocalVolumePath';
 import getProcessFilePath from './getProcessFilePath';
 import getTerminalName from './getTerminalName';
-import showMainTerminalHelperMessages from './showMainTerminalHelperMessages';
+import handleSuccessAndFailure from './handleSuccessAndFailure';
 import showFinalTerminalHelperMessages from './showFinalTerminalHelperMessages';
 import JobClass from '../classes/Job';
 import {
@@ -102,16 +102,18 @@ export default async function runJob(
     } -v ${volume} --debug`
   );
 
-  const helperMessagesProcess = showMainTerminalHelperMessages(
-    context,
-    jobProvider,
-    job,
-    doesJobCreateDynamicConfig(jobInConfig)
-  );
   const committedImageRepo = `${COMMITTED_IMAGE_NAMESPACE}/${jobName}`;
 
   const jobImage = getImageFromJob(jobInConfig);
   const commitProcess = commitContainer(jobImage, committedImageRepo);
+
+  const helperMessagesProcess = handleSuccessAndFailure(
+    context,
+    jobProvider,
+    job,
+    commitProcess,
+    doesJobCreateDynamicConfig(jobInConfig)
+  );
 
   const debuggingTerminal = vscode.window.createTerminal({
     name: getDebuggingTerminalName(jobName),
@@ -138,6 +140,8 @@ export default async function runJob(
 
   let finalTerminal: vscode.Terminal;
   vscode.window.onDidCloseTerminal(async (closedTerminal) => {
+    commitProcess.kill();
+
     if (
       closedTerminal.name !== debuggingTerminal.name ||
       !closedTerminal?.exitStatus?.code
@@ -145,7 +149,6 @@ export default async function runJob(
       return;
     }
 
-    commitProcess.kill();
     if (finalTerminal || areTerminalsClosed(terminal, debuggingTerminal)) {
       return;
     }
