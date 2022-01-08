@@ -139,9 +139,19 @@ export default async function runJob(
   debuggingTerminal.sendText('cd ~/');
 
   let finalTerminal: vscode.Terminal;
-  vscode.window.onDidCloseTerminal(async (closedTerminal) => {
-    commitProcess.kill();
+  vscode.window.onDidCloseTerminal((closedTerminal) => {
+    const terminalNames = [
+      getTerminalName(jobName),
+      debuggingTerminal.name,
+      finalTerminal?.name,
+    ];
 
+    if (terminalNames.includes(closedTerminal.name)) {
+      commitProcess.kill();
+    }
+  });
+
+  vscode.window.onDidCloseTerminal(async (closedTerminal) => {
     if (
       closedTerminal.name !== debuggingTerminal.name ||
       !closedTerminal?.exitStatus?.code
@@ -186,7 +196,6 @@ export default async function runJob(
 
   vscode.window.onDidCloseTerminal(() => {
     if (areTerminalsClosed(terminal, debuggingTerminal, finalTerminal)) {
-      commitProcess.kill();
       helperMessagesProcess.kill();
       cleanUpCommittedImages(committedImageRepo);
     }
