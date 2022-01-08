@@ -30,7 +30,7 @@ export default function uncommittedWarning(
       .filter(
         (line: string) =>
           !!line?.trim() &&
-          !line.includes('.circleci/config.yml') &&
+          !line.match(/\s\.circleci\/config\.yml/) && // The file should not start with .circleci/config.yml, as edits to that will appear in Local CI.
           !line.includes('.vscode/')
       )
       .join(', ');
