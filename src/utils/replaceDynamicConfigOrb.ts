@@ -4,7 +4,11 @@ import {
   CONTINUE_PIPELINE_STEP_NAME,
 } from '../constants';
 
-function replaceDynamicConfigInJobs(jobs: Jobs): Jobs {
+function replaceDynamicConfigInJobs(jobs: Jobs | undefined): Jobs | undefined {
+  if (!jobs) {
+    return jobs;
+  }
+
   return Object.keys(jobs).reduce((accumulator: Jobs, jobName: string) => {
     if (!jobs[jobName]?.steps) {
       return {
@@ -56,7 +60,7 @@ export default function replaceDynamicConfigOrb(config: CiConfig): CiConfig {
 
   const newConfig = {
     ...config,
-    jobs: replaceDynamicConfigInJobs(config.jobs),
+    jobs: replaceDynamicConfigInJobs(config?.jobs),
   };
 
   const newOrbs: Orbs = {};
@@ -66,7 +70,7 @@ export default function replaceDynamicConfigOrb(config: CiConfig): CiConfig {
     } else {
       newOrbs[orbName] = {
         ...config.orbs[orbName],
-        jobs: replaceDynamicConfigInJobs(config.orbs[orbName]?.jobs ?? {}),
+        jobs: replaceDynamicConfigInJobs(config.orbs[orbName]?.jobs),
       };
     }
   }

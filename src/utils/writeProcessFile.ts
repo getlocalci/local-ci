@@ -49,14 +49,16 @@ export default function writeProcessFile(
     return;
   }
 
+  const configJobs = config?.jobs ?? {};
+
   const newConfig = {
     ...config,
-    jobs: Object.keys(config.jobs).reduce(
+    jobs: Object.keys(configJobs).reduce(
       (accumulator: Jobs | Record<string, unknown>, jobName: string) => {
-        if (!config || !config.jobs[jobName]?.steps) {
+        if (!config || !configJobs[jobName]?.steps) {
           return {
             ...accumulator,
-            [jobName]: config?.jobs[jobName],
+            [jobName]: configJobs[jobName],
           };
         }
 
@@ -64,8 +66,8 @@ export default function writeProcessFile(
         return {
           ...accumulator,
           [jobName]: {
-            ...config.jobs[jobName],
-            steps: config.jobs[jobName].steps?.map((step: Step) => {
+            ...configJobs[jobName],
+            steps: configJobs[jobName].steps?.map((step: Step) => {
               if (typeof step === 'string') {
                 return step;
               }
