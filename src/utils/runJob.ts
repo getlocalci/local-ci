@@ -68,7 +68,9 @@ export default async function runJob(
   const parsedDynamicConfigFile = getConfigFromPath(dynamicConfigFilePath);
   const checkoutJobs = getCheckoutJobs(parsedProcessFile);
   const localVolume = getLocalVolumePath(configFilePath);
-  let jobInConfig = parsedProcessFile?.jobs ? parsedProcessFile?.jobs[jobName] : undefined;
+  let jobInConfig = parsedProcessFile?.jobs
+    ? parsedProcessFile?.jobs[jobName]
+    : undefined;
   const isJobInDynamicConfig =
     !!parsedDynamicConfigFile?.jobs && !!parsedDynamicConfigFile?.jobs[jobName];
 
