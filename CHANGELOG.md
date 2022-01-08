@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.4.3 - 7 January 2022
+
+### Added
+- Add several helper notices, like for internet connection. [#73](https://github.com/getlocalci/local-ci/pull/73/)
+
+### Fixed
+- Stop committing images when the job succeeds or fails. [#73](https://github.com/getlocalci/local-ci/pull/73/)
+
 ## 1.4.2 - 4 January 2022
 
 ### Added
