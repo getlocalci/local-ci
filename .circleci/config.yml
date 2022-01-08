@@ -14,9 +14,9 @@ jobs:
     executor:
       name: node
     steps:
+      - checkout
       - browser-tools/install-browser-tools
       - node/install-npm
-      - checkout
       - node/install-packages
       - run: npm test
 
