@@ -15,15 +15,16 @@ export default function handleSuccessAndFailure(
   commitProcess: cp.ChildProcess,
   doesJobCreateDynamicConfig: boolean
 ): cp.ChildProcessWithoutNullStreams {
+  const jobName = job?.getJobName();
   const process = cp.spawn(
     '/bin/sh',
     [
       '-c',
       `${GET_PICARD_CONTAINER_FUNCTION}
-      until [[ -n $(get_picard_container ${job?.getJobName()}) ]]; do
+      until [[ -n $(get_picard_container ${jobName}) ]]; do
         sleep 2
       done
-      docker logs --follow $(get_picard_container ${job?.getJobName()})`,
+      docker logs --follow $(get_picard_container ${jobName})`,
     ],
     getSpawnOptions()
   );

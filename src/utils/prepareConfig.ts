@@ -47,11 +47,11 @@ export default function prepareConfig(
     processError = (e as ErrorWithMessage)?.message;
     if (!suppressMessage) {
       const message = (e as ErrorWithMessage)?.message;
-      const internetMessage = message?.includes('connection refused')
+      const internetErrorMessage = message?.includes('connection refused')
         ? 'Is your machine connected to the internet? '
         : '';
       vscode.window.showErrorMessage(
-        `${internetMessage}There was an error processing the CircleCI config: ${message}`
+        `${internetErrorMessage}There was an error processing the CircleCI config: ${message}`
       );
     }
 
