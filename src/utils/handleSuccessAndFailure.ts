@@ -81,23 +81,19 @@ export default function handleSuccessAndFailure(
             }
           });
       }
+    }
 
-      if (
-        output?.includes(
-          'mkdir /host_mnt/private/tmp/local-ci/volume: no such file or directory'
-        )
-      ) {
-        vscode.window.showErrorMessage(
-          `Restarting Docker Desktop should fix that error 'no such file or directory' error, though that's not fun`,
-          { detail: 'Possible solution' }
-        );
-      }
+    if (output?.includes('failed to create runner binary')) {
+      vscode.window.showErrorMessage(
+        `Restarting Docker Desktop should fix that error 'failed to create runner binary', though that's not fun`,
+        { detail: 'Possible solution' }
+      );
     }
 
     if (output?.includes('compinit: insecure directories')) {
       const possibleSolutionText = 'See a possible solution';
       vscode.window
-        .showInformationMessage(
+        .showErrorMessage(
           `Here's a possible solution to the compinit error:`,
           { detail: 'Possible solution' },
           possibleSolutionText
@@ -114,7 +110,7 @@ export default function handleSuccessAndFailure(
     }
 
     if (output?.includes('Exited with code exit status 127')) {
-      vscode.window.showInformationMessage(
+      vscode.window.showErrorMessage(
         'This may have failed from a lack of Docker memory. You can increase it via Docker Desktop > Preferences > Resources > Advanced > Memory'
       );
     }
