@@ -158,9 +158,6 @@ export default class JobProvider
 
   getErrorTreeItems(): vscode.TreeItem[] {
     const errorMessage = this.getJobErrorMessage();
-    const internetMessage = errorMessage?.includes('connection refused')
-      ? 'Is your machine connected to the internet? '
-      : '';
 
     switch (this.jobErrorType) {
       case JobError.dockerNotRunning:
@@ -188,7 +185,16 @@ export default class JobProvider
       case JobError.processFile:
         return [
           new Warning('Error processing the CircleCI config:'),
-          new vscode.TreeItem(`${internetMessage}${errorMessage}`),
+          new vscode.TreeItem(
+            [
+              errorMessage?.includes('connection refused')
+                ? 'Is your machine connected to the internet?'
+                : '',
+              errorMessage,
+            ]
+              .filter((message) => !!message)
+              .join(' ')
+          ),
           new Command('Try Again', PROCESS_TRY_AGAIN_COMMAND),
         ];
       default:
