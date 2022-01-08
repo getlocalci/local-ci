@@ -64,38 +64,52 @@ export default function handleSuccessAndFailure(
 
       if (output?.includes('error looking up cgroup')) {
         const moreInformationText = 'More information';
-        vscode.window.showErrorMessage(
-          'You can probably fix this failed job by running this on your local machine: rm ~/.circleci/build_agent_settings.json',
-          { detail: 'Possible solution' },
-          moreInformationText
-        ).then((clicked) => {
-          if (clicked === moreInformationText) {
-            vscode.env.openExternal(vscode.Uri.parse('https://github.com/CircleCI-Public/circleci-cli/issues/589#issuecomment-1005865018'));
-          }
-        });
+        vscode.window
+          .showErrorMessage(
+            'You can probably fix this failed job by running this on your local machine: rm ~/.circleci/build_agent_settings.json',
+            { detail: 'Possible solution' },
+            moreInformationText
+          )
+          .then((clicked) => {
+            if (clicked === moreInformationText) {
+              vscode.env.openExternal(
+                vscode.Uri.parse(
+                  'https://github.com/CircleCI-Public/circleci-cli/issues/589#issuecomment-1005865018'
+                )
+              );
+            }
+          });
       }
 
-      if (output?.includes('mkdir /host_mnt/private/tmp/local-ci/volume: no such file or directory')) {
+      if (
+        output?.includes(
+          'mkdir /host_mnt/private/tmp/local-ci/volume: no such file or directory'
+        )
+      ) {
         vscode.window.showErrorMessage(
           `Restarting Docker Desktop should fix that error 'no such file or directory' error, though that's not fun`,
-          { detail: 'Possible solution' },
+          { detail: 'Possible solution' }
         );
       }
-
     }
 
     if (output?.includes('compinit: insecure directories')) {
       const possibleSolutionText = 'See a possible solution';
-      vscode.window.showInformationMessage(
-        `Here's a possible solution to the compinit error:`,
-        { detail: 'Possible solution' },
-        possibleSolutionText
-      )
-      .then((clicked) => {
-        if (clicked === possibleSolutionText) {
-          vscode.env.openExternal(vscode.Uri.parse('https://github.com/zsh-users/zsh-completions/issues/680#issuecomment-864906013'));
-        }
-      });
+      vscode.window
+        .showInformationMessage(
+          `Here's a possible solution to the compinit error:`,
+          { detail: 'Possible solution' },
+          possibleSolutionText
+        )
+        .then((clicked) => {
+          if (clicked === possibleSolutionText) {
+            vscode.env.openExternal(
+              vscode.Uri.parse(
+                'https://github.com/zsh-users/zsh-completions/issues/680#issuecomment-864906013'
+              )
+            );
+          }
+        });
     }
 
     if (output?.includes('Exited with code exit status 127')) {
