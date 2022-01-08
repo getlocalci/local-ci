@@ -68,14 +68,14 @@ export default async function runJob(
   const parsedDynamicConfigFile = getConfigFromPath(dynamicConfigFilePath);
   const checkoutJobs = getCheckoutJobs(parsedProcessFile);
   const localVolume = getLocalVolumePath(configFilePath);
-  let jobInConfig = parsedProcessFile?.jobs[jobName];
+  let jobInConfig = parsedProcessFile?.jobs ? parsedProcessFile?.jobs[jobName] : undefined;
   const isJobInDynamicConfig =
-    !!parsedDynamicConfigFile && !!parsedDynamicConfigFile?.jobs[jobName];
+    !!parsedDynamicConfigFile?.jobs && !!parsedDynamicConfigFile?.jobs[jobName];
 
   // If there's a dynamic config, this should look for the job in
   // the generated dynamic config file.
   // https://circleci.com/docs/2.0/dynamic-config/
-  if (!jobInConfig && isJobInDynamicConfig) {
+  if (!jobInConfig && isJobInDynamicConfig && parsedDynamicConfigFile?.jobs) {
     jobInConfig = parsedDynamicConfigFile?.jobs[jobName];
   }
 
