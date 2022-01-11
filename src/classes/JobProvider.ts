@@ -68,7 +68,7 @@ export default class JobProvider
 
   async loadJobs(
     skipConfigProcessing?: boolean,
-    suppressMessage?: boolean
+    skipMessage?: boolean
   ): Promise<void> {
     this.jobs = [];
     this.jobErrorType = undefined;
@@ -95,7 +95,7 @@ export default class JobProvider
       const { processedConfig, processError } = prepareConfig(
         configFilePath,
         this.reporter,
-        suppressMessage
+        skipMessage
       );
 
       this.processedConfig = processedConfig;
