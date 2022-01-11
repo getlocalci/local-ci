@@ -189,7 +189,7 @@ export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
     vscode.commands.registerCommand(
       RUN_JOB_COMMAND,
-      async (jobName: string, job?: Job) => {
+      (jobName: string, job?: Job) => {
         if (!jobName) {
           vscode.window.showWarningMessage(
             `Please click a specific job to run it`
@@ -205,7 +205,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
         if (job instanceof Job) {
           job.setIsRunning();
-          await jobProvider.refresh(job);
+          jobProvider.refresh(job);
         }
 
         runJob(context, jobName, jobProvider, job);

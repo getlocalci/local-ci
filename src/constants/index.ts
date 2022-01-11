@@ -1,3 +1,5 @@
+import * as path from 'path';
+
 export const EXTENSION_ID = 'LocalCI.local-ci';
 export const COMMITTED_IMAGE_NAMESPACE = 'local-ci';
 export const SELECTED_CONFIG_PATH = 'local-ci.config.path';
@@ -40,6 +42,10 @@ export const HAS_EXTENDED_TRIAL = 'local-ci.license.trial-extended.survey';
 export const TRIAL_STARTED_TIMESTAMP =
   'local-ci.license.trial-started.timestamp';
 export const CONTAINER_STORAGE_DIRECTORY = '/tmp/local-ci';
+export const DYNAMIC_CONFIG_PATH_IN_CONTAINER = path.join(
+  CONTAINER_STORAGE_DIRECTORY,
+  'config.yml'
+);
 export const HOST_TMP_DIRECTORY = '/tmp/local-ci'; // Also hard-coded in node/uninstall.js, change that if this changes. Be careful changing this, as there's an rm -rf for it.
 export const PROCESS_FILE_DIRECTORY = `${HOST_TMP_DIRECTORY}/process`;
 export const LOCAL_VOLUME_DIRECTORY = `${HOST_TMP_DIRECTORY}/volume`;

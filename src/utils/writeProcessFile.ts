@@ -9,6 +9,7 @@ import getSaveCacheSteps from './getSaveCacheSteps';
 import {
   CONTAINER_STORAGE_DIRECTORY,
   CONTINUE_PIPELINE_STEP_NAME,
+  DYNAMIC_CONFIG_PATH_IN_CONTAINER,
 } from '../constants';
 
 function getPersistToWorkspaceCommand(step: FullStep): string | undefined {
@@ -46,12 +47,15 @@ function getEnvVarStep() {
   };
 }
 
-// Overwrites parts of the process.yml file.
-// When there's a persist_to_workspace value in a checkout job, this copies
-// the files inside the container to the volume shared with the local machine.
-// This way, they can persist between jobs.
-// Likewise, on attach_workspace, it copies from the volume.
-// The processedConfig was already compiled by the CircleCI® CLI binary.
+/**
+ * Overwrites parts of the process.yml file.
+ *
+ * When there's a persist_to_workspace value in a checkout job, this copies
+ * the files inside the container to the volume shared with the local machine.
+ * This way, they can persist between jobs.
+ * Likewise, on attach_workspace, it copies from the volume.
+ * The processedConfig was already compiled by the CircleCI® CLI binary.
+ */
 export default function writeProcessFile(
   processedConfig: string,
   processFilePath: string
@@ -119,20 +123,23 @@ export default function writeProcessFile(
             };
           }
 
+          // Look for the circleci/continuation orb, which continues a dynamic config.
+          // That orb is also in the circleci/path-filtering orb.
+          // https://circleci.com/developer/orbs/orb/circleci/continuation
+          // https://circleci.com/developer/orbs/orb/circleci/path-filtering
           if (
             typeof step?.run !== 'string' &&
             step?.run?.command?.includes('$CIRCLE_CONTINUATION_KEY') &&
             step?.run?.environment &&
             step?.run?.environment['CONFIG_PATH']
           ) {
-            const dynamicConfigPath = path.join(
-              CONTAINER_STORAGE_DIRECTORY,
-              'config.yml'
-            );
             return {
               run: {
                 name: CONTINUE_PIPELINE_STEP_NAME,
-                command: `if [ -f ${dynamicConfigPath} ]; then rm ${dynamicConfigPath}; fi; cp ${step?.run?.environment['CONFIG_PATH']} ${dynamicConfigPath};`,
+                command: `if [ -f ${DYNAMIC_CONFIG_PATH_IN_CONTAINER} ]; then
+                  rm ${DYNAMIC_CONFIG_PATH_IN_CONTAINER}
+                fi;
+                cp ${step?.run?.environment['CONFIG_PATH']} ${DYNAMIC_CONFIG_PATH_IN_CONTAINER};`,
               },
             };
           }
