@@ -42,8 +42,6 @@ export default class JobProvider
   private jobErrorMessage: string | undefined;
   private runningJob: string | undefined;
   private jobDependencies: Map<string, string[] | null> | undefined;
-  private processError: string | undefined;
-  private processedConfig: string | undefined;
 
   constructor(
     private readonly context: vscode.ExtensionContext,
@@ -75,6 +73,9 @@ export default class JobProvider
     this.jobErrorMessage = undefined;
     this.runningJob = undefined;
 
+    let processedConfig;
+    let processError;
+
     const configFilePath = await getConfigFilePath(this.context);
     if (!configFilePath || !fs.existsSync(configFilePath)) {
       this.reporter.sendTelemetryEvent('configFilePath');
@@ -92,14 +93,14 @@ export default class JobProvider
     }
 
     if (!skipConfigProcessing) {
-      const { processedConfig, processError } = prepareConfig(
+      const configResult = prepareConfig(
         configFilePath,
         this.reporter,
         skipMessage
       );
 
-      this.processedConfig = processedConfig;
-      this.processError = processError;
+      processedConfig = configResult.processedConfig;
+      processError = configResult.processError;
     }
 
     const shouldEnableExtension =
@@ -121,17 +122,17 @@ export default class JobProvider
       return;
     }
 
-    if (this.processError) {
+    if (processError) {
       this.jobErrorType = JobError.processFile;
-      this.jobErrorMessage = this.processError;
+      this.jobErrorMessage = processError;
       return;
     }
 
-    if (!this.processedConfig) {
+    if (!processedConfig) {
       return;
     }
 
-    this.jobDependencies = getAllJobs(this.processedConfig, configFilePath);
+    this.jobDependencies = getAllJobs(processedConfig, configFilePath);
     for (const jobName of this.jobDependencies.keys()) {
       this.jobs.push(jobName);
     }
