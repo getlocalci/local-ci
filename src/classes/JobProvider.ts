@@ -51,8 +51,8 @@ export default class JobProvider
   /**
    * Refreshes the TreeView, without processing the config file.
    */
-  async refresh(job?: Job, suppressMessage?: boolean): Promise<void> {
-    await this.loadJobs(true, suppressMessage);
+  async refresh(job?: Job, skipMessage?: boolean): Promise<void> {
+    await this.loadJobs(true, skipMessage);
     this._onDidChangeTreeData.fire(job);
   }
 
@@ -231,7 +231,9 @@ export default class JobProvider
     return this.jobErrorMessage || '';
   }
 
-  // A job has a child job if any other job has it as the last value in its requires array.
+  /**
+   * A job has a child job if any other job has it as the last value in its requires array.
+   */
   hasChildJob(jobName: string): boolean {
     for (const [, dependecies] of this?.jobDependencies ?? []) {
       if (
