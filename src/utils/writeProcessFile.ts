@@ -39,7 +39,7 @@ function getPersistToWorkspaceCommand(step: FullStep): string | undefined {
 function getEnvVarStep() {
   return {
     run: {
-      name: 'Set $CIRCLE_SHA1 environment variable',
+      name: 'Set more environment variables',
       command: `echo 'export CIRCLE_SHA1=$(git rev-parse HEAD)' >> $BASH_ENV
         echo 'export CIRCLE_BRANCH=$(git rev-parse --abbrev-ref HEAD)' >> $BASH_ENV`,
     },
