@@ -23,6 +23,9 @@ interface FullStep {
   run?: {
     command: string;
     name?: string;
+    environment?: {
+      [key: string]: string;
+    };
   } | string;
   'continuation/continue'?: {
     configuration_path: string;

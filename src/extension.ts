@@ -71,7 +71,7 @@ export function activate(context: vscode.ExtensionContext): void {
   reporter.sendTelemetryEvent('activate');
   const jobProvider = new JobProvider(context, reporter);
   jobProvider
-    .loadJobs()
+    .loadJobs(true)
     .then(() =>
       vscode.window.registerTreeDataProvider(JOB_TREE_VIEW_ID, jobProvider)
     );
@@ -79,7 +79,7 @@ export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
     reporter,
     vscode.commands.registerCommand(`${JOB_TREE_VIEW_ID}.refresh`, () =>
-      jobProvider.refresh()
+      jobProvider.hardRefresh()
     ),
     vscode.commands.registerCommand(PROCESS_TRY_AGAIN_COMMAND, async () => {
       // There might have been a problem with the dynamic config file, so remove it.
@@ -90,7 +90,7 @@ export function activate(context: vscode.ExtensionContext): void {
         fs.rmSync(dynamicConfig);
       }
 
-      jobProvider.refresh();
+      jobProvider.hardRefresh();
     }),
     vscode.commands.registerCommand(`${JOB_TREE_VIEW_ID}.enterToken`, () => {
       const terminal = vscode.window.createTerminal({
@@ -168,7 +168,7 @@ export function activate(context: vscode.ExtensionContext): void {
             context.globalState
               .update(SELECTED_CONFIG_PATH, selectedFsPath)
               .then(() => {
-                jobProvider.refresh();
+                jobProvider.hardRefresh();
                 vscode.window.showInformationMessage(
                   `The repo ${getRepoBasename(selectedFsPath)} is now selected`
                 );
@@ -189,7 +189,7 @@ export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
     vscode.commands.registerCommand(
       RUN_JOB_COMMAND,
-      (jobName: string, job?: Job) => {
+      async (jobName: string, job?: Job) => {
         if (!jobName) {
           vscode.window.showWarningMessage(
             `Please click a specific job to run it`
@@ -201,12 +201,13 @@ export function activate(context: vscode.ExtensionContext): void {
           return;
         }
 
+        reporter.sendTelemetryEvent('runJob');
+
         if (job instanceof Job) {
           job.setIsRunning();
-          jobProvider.refresh(job);
+          await jobProvider.refresh(job);
         }
 
-        reporter.sendTelemetryEvent('runJob');
         runJob(context, jobName, jobProvider, job);
       }
     ),
@@ -233,7 +234,7 @@ export function activate(context: vscode.ExtensionContext): void {
           context.globalState
             .update(SELECTED_CONFIG_PATH, clickedFile.fsPath)
             .then(() => {
-              jobProvider.refresh();
+              jobProvider.hardRefresh();
               vscode.commands.executeCommand(
                 'workbench.view.extension.localCiDebugger'
               );
@@ -286,13 +287,13 @@ export function activate(context: vscode.ExtensionContext): void {
         textDocument.uri.fsPath.endsWith('.circleci/config.yml') &&
         textDocument.uri.fsPath === (await getConfigFilePath(context))
       ) {
-        delayer.trigger(() => jobProvider.refresh(undefined, true));
+        delayer.trigger(() => jobProvider.hardRefresh(undefined, true));
       }
     }
   );
 
   const licenseCompletedCallback = () => licenseProvider.load();
-  const licenseSuccessCallback = () => jobProvider.refresh();
+  const licenseSuccessCallback = () => jobProvider.hardRefresh();
   const licenseTreeViewId = 'localCiLicense';
   const licenseProvider = new LicenseProvider(context, licenseSuccessCallback);
   vscode.window.registerWebviewViewProvider(licenseTreeViewId, licenseProvider);
@@ -334,7 +335,7 @@ export function activate(context: vscode.ExtensionContext): void {
         `👆 Here's a starter config file that you can edit`,
         { detail: 'Starter config file' }
       );
-      jobProvider.refresh();
+      jobProvider.hardRefresh();
     })
   );
 

@@ -43,7 +43,7 @@ export default function handleSuccessAndFailure(
       commitProcess.kill();
 
       if (doesJobCreateDynamicConfig) {
-        jobProvider.refresh();
+        jobProvider.hardRefresh();
         const dynamicConfig = getConfigFromPath(
           getDynamicConfigFilePath(await getConfigFilePath(context))
         );
@@ -107,12 +107,6 @@ export default function handleSuccessAndFailure(
             );
           }
         });
-    }
-
-    if (output?.includes('Exited with code exit status 127')) {
-      vscode.window.showErrorMessage(
-        'This may have failed from a lack of Docker memory. You can increase it via Docker Desktop > Preferences > Resources > Advanced > Memory'
-      );
     }
   });
 

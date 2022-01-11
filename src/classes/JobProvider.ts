@@ -42,6 +42,8 @@ export default class JobProvider
   private jobErrorMessage: string | undefined;
   private runningJob: string | undefined;
   private jobDependencies: Map<string, string[] | null> | undefined;
+  private processError: string | undefined;
+  private processedConfig: string | undefined;
   private suppressMessage: boolean | undefined;
 
   constructor(
@@ -49,13 +51,25 @@ export default class JobProvider
     private readonly reporter: TelemetryReporter
   ) {}
 
+  /**
+   * Refreshes the TreeView, without processing the config file.
+   */
   async refresh(job?: Job, suppressMessage?: boolean): Promise<void> {
     await this.loadJobs();
     this.suppressMessage = suppressMessage;
     this._onDidChangeTreeData.fire(job);
   }
 
-  async loadJobs(): Promise<void> {
+  /**
+   * Processes the config file(s) in addition to refreshing.
+   */
+  async hardRefresh(job?: Job, suppressMessage?: boolean): Promise<void> {
+    await this.loadJobs(true);
+    this.suppressMessage = suppressMessage;
+    this._onDidChangeTreeData.fire(job);
+  }
+
+  async loadJobs(shouldPrepareConfig?: boolean): Promise<void> {
     this.jobs = [];
     this.jobErrorType = undefined;
     this.jobErrorMessage = undefined;
@@ -76,11 +90,17 @@ export default class JobProvider
 
       return;
     }
-    const { processedConfig, processError } = prepareConfig(
-      configFilePath,
-      this.reporter,
-      this.suppressMessage
-    );
+
+    if (shouldPrepareConfig) {
+      const { processedConfig, processError } = prepareConfig(
+        configFilePath,
+        this.reporter,
+        this.suppressMessage
+      );
+
+      this.processedConfig = processedConfig;
+      this.processError = processError;
+    }
 
     const shouldEnableExtension =
       (await isLicenseValid(this.context)) ||
@@ -101,13 +121,17 @@ export default class JobProvider
       return;
     }
 
-    if (processError) {
+    if (this.processError) {
       this.jobErrorType = JobError.processFile;
-      this.jobErrorMessage = processError;
+      this.jobErrorMessage = this.processError;
       return;
     }
 
-    this.jobDependencies = getAllJobs(processedConfig, configFilePath);
+    if (!this.processedConfig) {
+      return;
+    }
+
+    this.jobDependencies = getAllJobs(this.processedConfig, configFilePath);
     for (const jobName of this.jobDependencies.keys()) {
       this.jobs.push(jobName);
     }
