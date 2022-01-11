@@ -44,7 +44,6 @@ export default class JobProvider
   private jobDependencies: Map<string, string[] | null> | undefined;
   private processError: string | undefined;
   private processedConfig: string | undefined;
-  private suppressMessage: boolean | undefined;
 
   constructor(
     private readonly context: vscode.ExtensionContext,
@@ -55,8 +54,7 @@ export default class JobProvider
    * Refreshes the TreeView, without processing the config file.
    */
   async refresh(job?: Job, suppressMessage?: boolean): Promise<void> {
-    await this.loadJobs();
-    this.suppressMessage = suppressMessage;
+    await this.loadJobs(true, suppressMessage);
     this._onDidChangeTreeData.fire(job);
   }
 
@@ -64,12 +62,14 @@ export default class JobProvider
    * Processes the config file(s) in addition to refreshing.
    */
   async hardRefresh(job?: Job, suppressMessage?: boolean): Promise<void> {
-    await this.loadJobs(true);
-    this.suppressMessage = suppressMessage;
+    await this.loadJobs(false, suppressMessage);
     this._onDidChangeTreeData.fire(job);
   }
 
-  async loadJobs(shouldPrepareConfig?: boolean): Promise<void> {
+  async loadJobs(
+    skipConfigProcessing?: boolean,
+    suppressMessage?: boolean
+  ): Promise<void> {
     this.jobs = [];
     this.jobErrorType = undefined;
     this.jobErrorMessage = undefined;
@@ -91,11 +91,11 @@ export default class JobProvider
       return;
     }
 
-    if (shouldPrepareConfig) {
+    if (!skipConfigProcessing) {
       const { processedConfig, processError } = prepareConfig(
         configFilePath,
         this.reporter,
-        this.suppressMessage
+        suppressMessage
       );
 
       this.processedConfig = processedConfig;
