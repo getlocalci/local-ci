@@ -50,8 +50,8 @@ function getEnvVarStep() {
 /**
  * Overwrites parts of the process.yml file.
  *
- * When there's a persist_to_workspace value in a checkout job, this copies
- * the files inside the container to the volume shared with the local machine.
+ * For example, when there's a persist_to_workspace value in a checkout job,
+ * this copies the files inside the container to the volume shared with the local machine.
  * This way, they can persist between jobs.
  * Likewise, on attach_workspace, it copies from the volume.
  * The processedConfig was already compiled by the CircleCI® CLI binary.
@@ -147,7 +147,7 @@ export default function writeProcessFile(
           return step;
         });
 
-        // If a 'checkout' step exists, insert an env var right after it.
+        // If a 'checkout' step exists, insert env vars right after it.
         if (newSteps?.includes('checkout')) {
           newSteps?.splice(
             newSteps?.indexOf('checkout') + 1,
@@ -156,7 +156,6 @@ export default function writeProcessFile(
           );
         }
 
-        // Simulate attach_workspace and persist_to_workspace.
         return {
           ...accumulator,
           [jobName]: {
