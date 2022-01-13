@@ -1,4 +1,4 @@
-//@ts-check
+// @ts-check
 
 'use strict';
 
@@ -6,23 +6,25 @@ const path = require('path');
 
 /**@type {import('webpack').Configuration}*/
 const config = {
-  target: 'node', // vscode extensions run in a Node.js-context 📖 -> https://webpack.js.org/configuration/node/
+  target: 'node',
   mode: 'none', // this leaves the source code as close as possible to the original (when packaging we set this to 'production')
 
   entry: './src/extension.ts',
   output: {
-    // the bundle is stored in the 'dist' folder (check package.json), 📖 -> https://webpack.js.org/configuration/output/
     path: path.resolve(__dirname, 'dist'),
     filename: 'extension.js',
     libraryTarget: 'commonjs2'
   },
   devtool: 'nosources-source-map',
   externals: {
-    vscode: 'commonjs vscode' // the vscode-module is created on-the-fly and must be excluded. Add other modules that cannot be webpack'ed, 📖 -> https://webpack.js.org/configuration/externals/
-    // modules added here also need to be added in the .vsceignore file
+    vscode: 'commonjs vscode',
+
+    // Copied from https://github.com/microsoft/powerplatform-vscode/pull/61/files#diff-1fb26bc12ac780c7ad7325730ed09fc4c2c3d757c276c3dacc44bfe20faf166fR28
+    // To avoid a webpack warning from vscode-extension-telemetry.
+    'applicationinsights-native-metrics': 'commonjs applicationinsights-native-metrics',
+    '@opentelemetry/tracing': "commonjs @opentelemetry/tracing"
   },
   resolve: {
-    // support reading TypeScript and JavaScript files, 📖 -> https://github.com/TypeStrong/ts-loader
     extensions: ['.ts', '.js']
   },
   module: {

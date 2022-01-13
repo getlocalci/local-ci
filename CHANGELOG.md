@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.4.4 - 13 January 2022
+
+### Fixed
+- Improved handling of dynamic configs, especially with the continuation orb. [#75](https://github.com/getlocalci/local-ci/pull/75/)
+- Prevent error from no job. [#75](https://github.com/getlocalci/local-ci/pull/75/)
+
 ## 1.4.3 - 7 January 2022
 
 ### Added

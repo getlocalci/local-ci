@@ -2,7 +2,9 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import TelemetryReporter from 'vscode-extension-telemetry';
-import getDynamicConfigFilePath from './getDynamicConfigFilePath';
+import applyPipelineParameters from './applyPipelineParameters';
+import getDynamicConfigParametersPath from './getDynamicConfigParametersPath';
+import getDynamicConfigPath from './getDynamicConfigPath';
 import getProcessedConfig from './getProcessedConfig';
 import getProcessFilePath from './getProcessFilePath';
 import writeProcessFile from './writeProcessFile';
@@ -25,8 +27,13 @@ export default function prepareConfig(
     processedConfig = getProcessedConfig(configFilePath);
     writeProcessFile(processedConfig, processFilePath);
 
-    const dynamicConfigFilePath = getDynamicConfigFilePath(configFilePath);
+    const dynamicConfigFilePath = getDynamicConfigPath(configFilePath);
     if (fs.existsSync(dynamicConfigFilePath)) {
+      applyPipelineParameters(
+        getDynamicConfigParametersPath(configFilePath),
+        dynamicConfigFilePath
+      );
+
       writeProcessFile(
         getProcessedConfig(dynamicConfigFilePath),
         dynamicConfigFilePath

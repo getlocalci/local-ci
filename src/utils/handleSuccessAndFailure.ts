@@ -5,7 +5,7 @@ import JobProvider from '../classes/JobProvider';
 import { GET_PICARD_CONTAINER_FUNCTION } from '../constants';
 import getConfigFilePath from './getConfigFilePath';
 import getConfigFromPath from './getConfigFromPath';
-import getDynamicConfigFilePath from './getDynamicConfigFilePath';
+import getDynamicConfigPath from './getDynamicConfigPath';
 import getSpawnOptions from './getSpawnOptions';
 
 export default function handleSuccessAndFailure(
@@ -45,7 +45,7 @@ export default function handleSuccessAndFailure(
       if (doesJobCreateDynamicConfig) {
         jobProvider.hardRefresh();
         const dynamicConfig = getConfigFromPath(
-          getDynamicConfigFilePath(await getConfigFilePath(context))
+          getDynamicConfigPath(await getConfigFilePath(context))
         );
 
         vscode.window.showInformationMessage(

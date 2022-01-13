@@ -25,7 +25,7 @@ import {
   CONTINUE_PIPELINE_STEP_NAME,
 } from '../constants';
 import uncommittedWarning from './uncommittedWarning';
-import getDynamicConfigFilePath from './getDynamicConfigFilePath';
+import getDynamicConfigPath from './getDynamicConfigPath';
 import JobProvider from '../classes/JobProvider';
 
 // Whether this job creates a dynamic config: https://circleci.com/docs/2.0/dynamic-config/
@@ -64,7 +64,7 @@ export default async function runJob(
   const processFilePath = getProcessFilePath(configFilePath);
   const parsedProcessFile = getConfigFromPath(processFilePath);
 
-  const dynamicConfigFilePath = getDynamicConfigFilePath(configFilePath);
+  const dynamicConfigFilePath = getDynamicConfigPath(configFilePath);
   const parsedDynamicConfigFile = getConfigFromPath(dynamicConfigFilePath);
   const checkoutJobs = getCheckoutJobs(parsedProcessFile);
   const localVolume = getLocalVolumePath(configFilePath);
@@ -97,9 +97,8 @@ export default async function runJob(
   // This allows persisting files between jobs with persist_to_workspace and attach_workspace.
   const volume = `${localVolume}:${CONTAINER_STORAGE_DIRECTORY}`;
 
-  // @todo: maybe don't have a volume at all if there's no persist_to_workspace or attach_workspace.
   terminal.sendText(
-    `${getBinaryPath()} local execute --job "${jobName}" --config ${
+    `${getBinaryPath()} local execute --job '${jobName}' --config ${
       isJobInDynamicConfig ? dynamicConfigFilePath : processFilePath
     } -v ${volume} --debug`
   );

@@ -31,7 +31,7 @@ import getCheckoutJobs from './utils/getCheckoutJobs';
 import getConfig from './utils/getConfig';
 import getConfigFilePath from './utils/getConfigFilePath';
 import getDebuggingTerminalName from './utils/getDebuggingTerminalName';
-import getDynamicConfigFilePath from './utils/getDynamicConfigFilePath';
+import getDynamicConfigPath from './utils/getDynamicConfigPath';
 import getFinalTerminalName from './utils/getFinalTerminalName';
 import getRepoBasename from './utils/getRepoBasename';
 import getStarterConfig from './utils/getStarterConfig';
@@ -83,7 +83,7 @@ export function activate(context: vscode.ExtensionContext): void {
     ),
     vscode.commands.registerCommand(PROCESS_TRY_AGAIN_COMMAND, async () => {
       // There might have been a problem with the dynamic config file, so remove it.
-      const dynamicConfig = getDynamicConfigFilePath(
+      const dynamicConfig = getDynamicConfigPath(
         await getConfigFilePath(context)
       );
       if (fs.existsSync(dynamicConfig)) {
@@ -111,7 +111,7 @@ export function activate(context: vscode.ExtensionContext): void {
     }),
     vscode.commands.registerCommand(`${JOB_TREE_VIEW_ID}.exitAllJobs`, () => {
       reporter.sendTelemetryEvent('exitAllJobs');
-      jobProvider.refresh();
+      jobProvider.hardRefresh();
 
       const confirmText = 'Yes';
       vscode.window

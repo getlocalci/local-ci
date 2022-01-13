@@ -34,7 +34,7 @@ interface FullStep {
   [key: string]: unknown;
 }
 
-type Step = FullStep | 'checkout' | string;
+type Step = FullStep | string | 'checkout';
 
 interface Job {
   docker?: Array<Record<string, string>>;

@@ -9,6 +9,7 @@ import getSaveCacheSteps from './getSaveCacheSteps';
 import {
   CONTAINER_STORAGE_DIRECTORY,
   CONTINUE_PIPELINE_STEP_NAME,
+  DYNAMIC_CONFIG_PARAMETERS_FILE_NAME,
   DYNAMIC_CONFIG_PATH_IN_CONTAINER,
 } from '../constants';
 
@@ -45,6 +46,28 @@ function getEnvVarStep() {
         echo 'export CIRCLE_BRANCH=$(git rev-parse --abbrev-ref HEAD)' >> $BASH_ENV`,
     },
   };
+}
+
+/**
+ * Gets the output-path environment variable from the path-filtering orb.
+ *
+ * https://circleci.com/developer/orbs/orb/circleci/path-filtering#commands
+ */
+function getOutputPath(steps: Job['steps']): string | undefined {
+  if (!steps) {
+    return;
+  }
+
+  for (const step of steps) {
+    if (
+      typeof step !== 'string' &&
+      typeof step?.run !== 'string' &&
+      step?.run?.environment &&
+      step?.run?.environment['OUTPUT_PATH']
+    ) {
+      return step?.run?.environment['OUTPUT_PATH'];
+    }
+  }
 }
 
 /**
@@ -133,13 +156,29 @@ export default function writeProcessFile(
             step?.run?.environment &&
             step?.run?.environment['CONFIG_PATH']
           ) {
+            const outputPath = getOutputPath(configJobs[jobName].steps);
+
             return {
               run: {
                 name: CONTINUE_PIPELINE_STEP_NAME,
-                command: `if [ -f ${DYNAMIC_CONFIG_PATH_IN_CONTAINER} ]; then
+                command: `if [ -f ${DYNAMIC_CONFIG_PATH_IN_CONTAINER} ]
+                then
                   rm ${DYNAMIC_CONFIG_PATH_IN_CONTAINER}
                 fi;
-                cp ${step?.run?.environment['CONFIG_PATH']} ${DYNAMIC_CONFIG_PATH_IN_CONTAINER};`,
+                cp ${
+                  step?.run?.environment['CONFIG_PATH']
+                } ${DYNAMIC_CONFIG_PATH_IN_CONTAINER}
+                ${
+                  outputPath
+                    ? `if [ -f ${outputPath} ]
+                      then
+                        cp ${outputPath} ${path.join(
+                        CONTAINER_STORAGE_DIRECTORY,
+                        DYNAMIC_CONFIG_PARAMETERS_FILE_NAME
+                      )}
+                      fi`
+                    : ``
+                }`,
               },
             };
           }

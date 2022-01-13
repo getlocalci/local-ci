@@ -212,7 +212,8 @@ export default class JobProvider
           new Warning('Error processing the CircleCI config:'),
           new vscode.TreeItem(
             [
-              errorMessage?.includes('connection refused')
+              errorMessage?.includes('connection refused') ||
+              errorMessage?.includes('timeout')
                 ? 'Is your machine connected to the internet?'
                 : '',
               errorMessage,

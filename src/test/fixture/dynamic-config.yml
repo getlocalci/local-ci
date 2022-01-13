@@ -1,22 +1,29 @@
 version: 2.1
 
 setup: true
-orbs:
-  continuation: circleci/continuation@0.1.2
 
 jobs:
-  setup:
+  set-up-config:
     executor: continuation/default
     steps:
       - checkout
       - run:
           name: Create config
-          command: |
-            ./create-config > created_config.yml
-      - continuation/continue:
-          configuration_path: created_config.yml
+          command: echo "Creating the dynamic config here"
+          environment:
+            BASE_REVISION: main
+            MAPPING: |
+              .*\.php$ run-php true
+              .*\.js$ run-js true
+              .*\.(php|js|json|yml)$ run-e2e true
+            OUTPUT_PATH: /tmp/pipeline-parameters.json
+      - run:
+          name: Very simplified compiled circleci/continuation orb
+          environment:
+            CONFIG_PATH: .circleci/continue_config.yml
+          command: $CIRCLE_CONTINUATION_KEY
 
 workflows:
   setup:
     jobs:
-      - setup
+      - set-up-config

@@ -1,6 +1,6 @@
 import getConfig from './getConfig';
 import getConfigFromPath from './getConfigFromPath';
-import getDynamicConfigFilePath from './getDynamicConfigFilePath';
+import getDynamicConfigPath from './getDynamicConfigPath';
 import getJobs from './getJobs';
 
 export default function getAllJobs(
@@ -9,7 +9,7 @@ export default function getAllJobs(
 ): Map<string, string[] | null> {
   // https://circleci.com/docs/2.0/dynamic-config/
   const dynamicConfigJobs = getJobs(
-    getConfigFromPath(getDynamicConfigFilePath(configFilePath))
+    getConfigFromPath(getDynamicConfigPath(configFilePath))
   );
   const originalJobs = getJobs(getConfig(processedConfig));
 
