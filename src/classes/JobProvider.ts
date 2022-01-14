@@ -42,24 +42,39 @@ export default class JobProvider
   private jobErrorMessage: string | undefined;
   private runningJob: string | undefined;
   private jobDependencies: Map<string, string[] | null> | undefined;
-  private suppressMessage: boolean | undefined;
 
   constructor(
     private readonly context: vscode.ExtensionContext,
     private readonly reporter: TelemetryReporter
   ) {}
 
-  async refresh(job?: Job, suppressMessage?: boolean): Promise<void> {
-    await this.loadJobs();
-    this.suppressMessage = suppressMessage;
+  /**
+   * Refreshes the TreeView, without processing the config file.
+   */
+  async refresh(job?: Job, skipMessage?: boolean): Promise<void> {
+    await this.loadJobs(true, skipMessage);
     this._onDidChangeTreeData.fire(job);
   }
 
-  async loadJobs(): Promise<void> {
+  /**
+   * Processes the config file(s) in addition to refreshing.
+   */
+  async hardRefresh(job?: Job, suppressMessage?: boolean): Promise<void> {
+    await this.loadJobs(false, suppressMessage);
+    this._onDidChangeTreeData.fire(job);
+  }
+
+  async loadJobs(
+    skipConfigProcessing?: boolean,
+    skipMessage?: boolean
+  ): Promise<void> {
     this.jobs = [];
     this.jobErrorType = undefined;
     this.jobErrorMessage = undefined;
     this.runningJob = undefined;
+
+    let processedConfig;
+    let processError;
 
     const configFilePath = await getConfigFilePath(this.context);
     if (!configFilePath || !fs.existsSync(configFilePath)) {
@@ -76,11 +91,17 @@ export default class JobProvider
 
       return;
     }
-    const { processedConfig, processError } = prepareConfig(
-      configFilePath,
-      this.reporter,
-      this.suppressMessage
-    );
+
+    if (!skipConfigProcessing) {
+      const configResult = prepareConfig(
+        configFilePath,
+        this.reporter,
+        skipMessage
+      );
+
+      processedConfig = configResult.processedConfig;
+      processError = configResult.processError;
+    }
 
     const shouldEnableExtension =
       (await isLicenseValid(this.context)) ||
@@ -104,6 +125,10 @@ export default class JobProvider
     if (processError) {
       this.jobErrorType = JobError.processFile;
       this.jobErrorMessage = processError;
+      return;
+    }
+
+    if (!processedConfig) {
       return;
     }
 
@@ -187,7 +212,8 @@ export default class JobProvider
           new Warning('Error processing the CircleCI config:'),
           new vscode.TreeItem(
             [
-              errorMessage?.includes('connection refused')
+              errorMessage?.includes('connection refused') ||
+              errorMessage?.includes('timeout')
                 ? 'Is your machine connected to the internet?'
                 : '',
               errorMessage,
@@ -206,7 +232,9 @@ export default class JobProvider
     return this.jobErrorMessage || '';
   }
 
-  // A job has a child job if any other job has it as the last value in its requires array.
+  /**
+   * A job has a child job if any other job has it as the last value in its requires array.
+   */
   hasChildJob(jobName: string): boolean {
     for (const [, dependecies] of this?.jobDependencies ?? []) {
       if (

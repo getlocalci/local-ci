@@ -1,7 +1,7 @@
 interface Orb {
   orbs?: Record<string, unknown>;
   commands?: Record<string, unknown>;
-  jobs: Jobs;
+  jobs?: Jobs;
 }
 
 interface Orbs {
@@ -14,7 +14,7 @@ interface Jobs {
 
 interface CiConfigWithJobs {
   orbs?: Orbs;
-  jobs: Jobs;
+  jobs?: Jobs;
   workflows: {
     [key: string]: {
       jobs: (Record<string, Record<string, unknown>>|string)[];

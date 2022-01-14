@@ -1,13 +1,12 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import * as yaml from 'js-yaml';
 import TelemetryReporter from 'vscode-extension-telemetry';
-import getConfigFromPath from './getConfigFromPath';
-import getDynamicConfigFilePath from './getDynamicConfigFilePath';
+import applyPipelineParameters from './applyPipelineParameters';
+import getDynamicConfigParametersPath from './getDynamicConfigParametersPath';
+import getDynamicConfigPath from './getDynamicConfigPath';
 import getProcessedConfig from './getProcessedConfig';
 import getProcessFilePath from './getProcessFilePath';
-import replaceDynamicConfigOrb from './replaceDynamicConfigOrb';
 import writeProcessFile from './writeProcessFile';
 
 export default function prepareConfig(
@@ -25,19 +24,16 @@ export default function prepareConfig(
       fs.mkdirSync(path.dirname(processFilePath), { recursive: true });
     }
 
-    // This runs before writeProcessFile(), as circleci config process
-    // will compile the continuation orb, making it unrecognizable.
-    // Then, this wouldn't be able to replace that orb with something that works locally.
-    fs.writeFileSync(
-      processFilePath,
-      yaml.dump(replaceDynamicConfigOrb(getConfigFromPath(configFilePath)))
-    );
-
-    processedConfig = getProcessedConfig(processFilePath);
+    processedConfig = getProcessedConfig(configFilePath);
     writeProcessFile(processedConfig, processFilePath);
 
-    const dynamicConfigFilePath = getDynamicConfigFilePath(configFilePath);
+    const dynamicConfigFilePath = getDynamicConfigPath(configFilePath);
     if (fs.existsSync(dynamicConfigFilePath)) {
+      applyPipelineParameters(
+        getDynamicConfigParametersPath(configFilePath),
+        dynamicConfigFilePath
+      );
+
       writeProcessFile(
         getProcessedConfig(dynamicConfigFilePath),
         dynamicConfigFilePath

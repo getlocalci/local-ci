@@ -15,26 +15,42 @@ suite('writeProcessFile', () => {
     writeProcessFile('', '/foo/baz');
   });
 
-  test('Full config file', () => {
-    const processFilePath = '/foo/baz/';
+  test('Full config file with cache', () => {
+    const fileName = 'with-cache.yml';
     sinon.mock(fs).expects('mkdirSync').once();
 
     const writeFileSyncSpy = sinon.spy();
     sinon.stub(fs, 'writeFileSync').value(writeFileSyncSpy);
 
     writeProcessFile(
-      fs
-        .readFileSync(getTestFilePath('fixture', 'with-cache.yml'), 'utf8')
-        .toString(),
-      processFilePath
+      fs.readFileSync(getTestFilePath('fixture', fileName), 'utf8').toString(),
+      '/foo/baz/'
     );
 
     assert.strictEqual(
       normalize(writeFileSyncSpy.firstCall.lastArg),
       normalize(
-        fs
-          .readFileSync(getTestFilePath('expected', 'with-cache.yml'))
-          .toString()
+        fs.readFileSync(getTestFilePath('expected', fileName)).toString()
+      )
+    );
+  });
+
+  test('Dynamic config', () => {
+    const fileName = 'dynamic-config.yml';
+    sinon.mock(fs).expects('mkdirSync').once();
+
+    const writeFileSyncSpy = sinon.spy();
+    sinon.stub(fs, 'writeFileSync').value(writeFileSyncSpy);
+
+    writeProcessFile(
+      fs.readFileSync(getTestFilePath('fixture', fileName), 'utf8').toString(),
+      '/foo/baz/'
+    );
+
+    assert.strictEqual(
+      normalize(writeFileSyncSpy.firstCall.lastArg),
+      normalize(
+        fs.readFileSync(getTestFilePath('expected', fileName)).toString()
       )
     );
   });

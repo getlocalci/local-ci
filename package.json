@@ -2,7 +2,7 @@
   "name": "local-ci",
   "displayName": "Local CI",
   "description": "Debug CircleCI® workflows locally, with Bash access during and after. Free preview, then paid.",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "publisher": "LocalCI",
   "contributors": [
     "Ryan Kienstra"
@@ -310,6 +310,6 @@
   "dependencies": {
     "axios": "^0.21.4",
     "js-md5": "0.7.3",
-    "vscode-extension-telemetry": "^0.4.3"
+    "vscode-extension-telemetry": "^0.4.5"
   }
 }

@@ -5,7 +5,7 @@ import JobProvider from '../classes/JobProvider';
 import { GET_PICARD_CONTAINER_FUNCTION } from '../constants';
 import getConfigFilePath from './getConfigFilePath';
 import getConfigFromPath from './getConfigFromPath';
-import getDynamicConfigFilePath from './getDynamicConfigFilePath';
+import getDynamicConfigPath from './getDynamicConfigPath';
 import getSpawnOptions from './getSpawnOptions';
 
 export default function handleSuccessAndFailure(
@@ -43,9 +43,9 @@ export default function handleSuccessAndFailure(
       commitProcess.kill();
 
       if (doesJobCreateDynamicConfig) {
-        jobProvider.refresh();
+        jobProvider.hardRefresh();
         const dynamicConfig = getConfigFromPath(
-          getDynamicConfigFilePath(await getConfigFilePath(context))
+          getDynamicConfigPath(await getConfigFilePath(context))
         );
 
         vscode.window.showInformationMessage(
@@ -81,23 +81,19 @@ export default function handleSuccessAndFailure(
             }
           });
       }
+    }
 
-      if (
-        output?.includes(
-          'mkdir /host_mnt/private/tmp/local-ci/volume: no such file or directory'
-        )
-      ) {
-        vscode.window.showErrorMessage(
-          `Restarting Docker Desktop should fix that error 'no such file or directory' error, though that's not fun`,
-          { detail: 'Possible solution' }
-        );
-      }
+    if (output?.includes('failed to create runner binary')) {
+      vscode.window.showErrorMessage(
+        `Restarting Docker Desktop should fix that error 'failed to create runner binary', though that's not fun`,
+        { detail: 'Possible solution' }
+      );
     }
 
     if (output?.includes('compinit: insecure directories')) {
       const possibleSolutionText = 'See a possible solution';
       vscode.window
-        .showInformationMessage(
+        .showErrorMessage(
           `Here's a possible solution to the compinit error:`,
           { detail: 'Possible solution' },
           possibleSolutionText
@@ -111,12 +107,6 @@ export default function handleSuccessAndFailure(
             );
           }
         });
-    }
-
-    if (output?.includes('Exited with code exit status 127')) {
-      vscode.window.showInformationMessage(
-        'This may have failed from a lack of Docker memory. You can increase it via Docker Desktop > Preferences > Resources > Advanced > Memory'
-      );
     }
   });
 

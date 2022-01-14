@@ -1,23 +1,38 @@
 version: 2.1
-
 setup: true
-orbs:
-  continuation: circleci/continuation@0.1.2
-
 jobs:
-  setup:
+  set-up-config:
     executor: continuation/default
     steps:
       - checkout
       - run:
+          name: Set more environment variables
+          command: |-
+            echo 'export CIRCLE_SHA1=$(git rev-parse HEAD)' >> $BASH_ENV
+                    echo 'export CIRCLE_BRANCH=$(git rev-parse --abbrev-ref HEAD)' >> $BASH_ENV
+      - run:
           name: Create config
-          command: |
-            ./create-config > created_config.yml
+          command: echo "Creating the dynamic config here"
+          environment:
+            BASE_REVISION: main
+            MAPPING: |
+              .*\.php$ run-php true
+              .*\.js$ run-js true
+              .*\.(php|js|json|yml)$ run-e2e true
+            OUTPUT_PATH: /tmp/pipeline-parameters.json
       - run:
           name: Continue the pipeline
-          command: if [ -f /tmp/local-ci/config.yml ]; then rm /tmp/local-ci/config.yml; fi; cp created_config.yml /tmp/local-ci/config.yml;
-
+          command: |-
+            if [ -f /tmp/local-ci/dynamic-config.yml ]
+            then
+              rm /tmp/local-ci/dynamic-config.yml
+            fi;
+            cp .circleci/continue_config.yml /tmp/local-ci/dynamic-config.yml
+            if [ -f /tmp/pipeline-parameters.json ]
+                  then
+                    cp /tmp/pipeline-parameters.json /tmp/local-ci/dynamic-config-parameters.json
+                  fi
 workflows:
   setup:
     jobs:
-      - setup
+      - set-up-config
