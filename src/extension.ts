@@ -189,7 +189,7 @@ export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
     vscode.commands.registerCommand(
       RUN_JOB_COMMAND,
-      (jobName: string, job?: Job) => {
+      async (jobName: string, job?: Job) => {
         if (!jobName) {
           vscode.window.showWarningMessage(
             `Please click a specific job to run it`
@@ -205,7 +205,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
         if (job instanceof Job) {
           job.setIsRunning();
-          jobProvider.refresh(job);
+          await jobProvider.hardRefresh(job);
         }
 
         runJob(context, jobName, jobProvider, job);
@@ -217,9 +217,9 @@ export function activate(context: vscode.ExtensionContext): void {
       jobProvider.refresh(job);
       disposeTerminalsForJob(jobName);
     }),
-    vscode.commands.registerCommand('local-ci.job.rerun', (job: Job) => {
+    vscode.commands.registerCommand('local-ci.job.rerun', async (job: Job) => {
       job.setIsRunning();
-      jobProvider.refresh(job);
+      await jobProvider.hardRefresh(job);
       const jobName = job.getJobName();
       disposeTerminalsForJob(jobName);
 
