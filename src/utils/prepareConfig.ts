@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import TelemetryReporter from 'vscode-extension-telemetry';
+import TelemetryReporter from '@vscode/extension-telemetry';
 import applyPipelineParameters from './applyPipelineParameters';
 import getDynamicConfigParametersPath from './getDynamicConfigParametersPath';
 import getDynamicConfigPath from './getDynamicConfigPath';
