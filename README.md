@@ -45,9 +45,9 @@ CircleCI® is a registered trademark of Circle Internet Services, Inc.
 
 ## Dynamic Configs
 
-You can run most [dyanmic configs](https://getlocalci.com/circleci-dynamic-config/) with Local CI.
+You can run most [dynamic configs](https://getlocalci.com/circleci-dynamic-config/) with Local CI.
 
-Find out in minutes whether the config is right, all in your local.
+Find out in seconds whether the setup is right, all in your local.
 
 ## License Key
 
