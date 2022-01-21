@@ -43,9 +43,15 @@ Thanks to [CirleCI-Public/cirlceci-cli](https://github.com/circleci-public/circl
 
 CircleCI® is a registered trademark of Circle Internet Services, Inc.
 
-## License
+## Dynamic Configs
 
-Local CI requires a [license](https://getlocalci.com/pricing/?utm_medium=extension&utm_source=readme) for $70 per month.
+You can run most [dyanmic configs](https://getlocalci.com/circleci-dynamic-config/) with Local CI.
+
+Find out in minutes whether the config is right, all in your local.
+
+## License Key
+
+Local CI requires a [license key](https://getlocalci.com/pricing/?utm_medium=extension&utm_source=readme) for $50 per month.
 
 But first you'll get a free 2-day preview, no sign-up or credit card needed.
 

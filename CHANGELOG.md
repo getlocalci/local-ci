@@ -1,5 +1,10 @@
 # Change Log
 
+## 1.4.5 - 20 January 2022
+
+### Fixed
+- Ensure jobs have most recent config. [#77](https://github.com/getlocalci/local-ci/pull/77)
+
 ## 1.4.4 - 13 January 2022
 
 ### Fixed
