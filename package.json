@@ -308,8 +308,8 @@
     "webpack-cli": "^4.7.0"
   },
   "dependencies": {
+    "@vscode/extension-telemetry": "^0.4.6",
     "axios": "^0.21.4",
-    "js-md5": "0.7.3",
-    "vscode-extension-telemetry": "^0.4.5"
+    "js-md5": "0.7.3"
   }
 }
