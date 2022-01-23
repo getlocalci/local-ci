@@ -15,9 +15,11 @@ export default function getSaveCacheCommand(
       path.basename(directory)
     );
 
-    return `${accumulator} if [ -d ${destinationWhenCopied} ]; then
+    return `${accumulator} if [ -d ${destinationWhenCopied} ]
+      then
       echo "${directory} is already cached, skipping";
-    elif [ ! -d ${directory} ]; then
+    elif [ ! -d ${directory} ]
+      then
       echo "${directory} does not exist, skipping caching";
     else
       echo "Saving ${directory} to the cache";

@@ -18,17 +18,22 @@ export default function commitContainer(
       '-c',
       `${GET_RUNNING_CONTAINER_FUNCTION}
 
-      while [[ true ]]; do
+      while [[ true ]]
+        do
         running_container=$(get_running_container ${dockerImage})
-        if [[ -n $running_container ]]; then
+        if [[ -n $running_container ]]
+          then
           committed_image=$(docker commit --pause=false $running_container ${imageRepo}:$(date +"%s"))
-          if [[ -n $committed_image ]]; then
+          if [[ -n $committed_image ]]
+            then
             latest_committed_image=$(docker images ${imageRepo} --format "{{.ID}} {{.Tag}}" | sort -k 2 -h | tail -n1 | awk '{print $1}')
-            for previous_image in $(docker images -q "${imageRepo}"); do
-              if [[ $previous_image != $latest_committed_image ]]; then
+            for previous_image in $(docker images -q "${imageRepo}")
+              do
+              if [[ $previous_image != $latest_committed_image ]]
+                then
                 docker rmi $previous_image
               fi
-            done;
+            done
           fi
         fi
 

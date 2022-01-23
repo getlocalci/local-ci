@@ -21,7 +21,8 @@ export default function handleSuccessAndFailure(
     [
       '-c',
       `${GET_PICARD_CONTAINER_FUNCTION}
-      until [[ -n $(get_picard_container ${jobName}) ]]; do
+      until [[ -n $(get_picard_container ${jobName}) ]]
+      do
         sleep 2
       done
       docker logs --follow $(get_picard_container ${jobName})`,
@@ -36,7 +37,7 @@ export default function handleSuccessAndFailure(
     }
 
     // This should be the final 'Success!' message when a job succeeds.
-    // There can be lot of other 'Success!' messages that might trigger this incorrectly.
+    // There are a lot of other 'Success!' messages that might trigger this incorrectly.
     // @todo: look for a more reliable way to detect success.
     if (output?.includes(`[32mSuccess![0m`)) {
       job?.setIsSuccess();
