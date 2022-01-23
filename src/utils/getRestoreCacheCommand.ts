@@ -34,7 +34,7 @@ export default function getRestoreCacheCommand(
             path.basename(saveCachePath)
           )}"`
       )
-      .join(' ')});
+      .join(' ')})
     for directory_candidate in $restore_from_directories
       do
       if [ $(ls -ard $directory_candidate 2>/dev/null) ]
