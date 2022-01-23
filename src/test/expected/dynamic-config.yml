@@ -26,12 +26,12 @@ jobs:
             if [ -f /tmp/local-ci/dynamic-config.yml ]
             then
               rm /tmp/local-ci/dynamic-config.yml
-            fi;
+            fi
             cp .circleci/continue_config.yml /tmp/local-ci/dynamic-config.yml
             if [ -f /tmp/pipeline-parameters.json ]
-                  then
-                    cp /tmp/pipeline-parameters.json /tmp/local-ci/dynamic-config-parameters.json
-                  fi
+            then
+              cp /tmp/pipeline-parameters.json /tmp/local-ci/dynamic-config-parameters.json
+            fi
 workflows:
   setup:
     jobs:
