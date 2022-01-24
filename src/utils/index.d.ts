@@ -4,16 +4,12 @@ interface Orb {
   jobs?: Jobs;
 }
 
-interface Orbs {
-  [key: string]: Orb;
-}
-
 interface Jobs {
   [key: string]: Job;
 }
 
 interface CiConfigWithJobs {
-  orbs?: Orbs;
+  orbs?: { [key: string]: Orb };
   jobs?: Jobs;
   workflows: {
     [key: string]: {
