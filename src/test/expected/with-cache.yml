@@ -46,25 +46,25 @@ jobs:
           command: |2
              if [ -d /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )/.npm ]
                   then
-                  echo "~/.npm is already cached, skipping";
+                  echo "~/.npm is already cached, skipping"
                 elif [ ! -d ~/.npm ]
                   then
-                  echo "~/.npm does not exist, skipping caching";
+                  echo "~/.npm does not exist, skipping caching"
                 else
                   echo "Saving ~/.npm to the cache";
                   mkdir -p /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )
-                  cp -rn ~/.npm /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )/.npm || cp -ru ~/.npm /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )/.npm;
+                  cp -rn ~/.npm /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )/.npm || cp -ru ~/.npm /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )/.npm
                 fi
              if [ -d /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )/.cache ]
                   then
-                  echo "~/.cache is already cached, skipping";
+                  echo "~/.cache is already cached, skipping"
                 elif [ ! -d ~/.cache ]
                   then
-                  echo "~/.cache does not exist, skipping caching";
+                  echo "~/.cache does not exist, skipping caching"
                 else
-                  echo "Saving ~/.cache to the cache";
+                  echo "Saving ~/.cache to the cache"
                   mkdir -p /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )
-                  cp -rn ~/.cache /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )/.cache || cp -ru ~/.cache /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )/.cache;
+                  cp -rn ~/.cache /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )/.cache || cp -ru ~/.cache /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )/.cache
                 fi
       - run:
           name: Persist to workspace
@@ -92,14 +92,14 @@ jobs:
           command: |2
             if [ -d /tmp/local-ci/node-modules-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )/node_modules ]
               then
-              echo "node_modules is already cached, skipping";
+              echo "node_modules is already cached, skipping"
             elif [ ! -d node_modules ]
               then
-              echo "node_modules does not exist, skipping caching";
+              echo "node_modules does not exist, skipping caching"
             else
-              echo "Saving node_modules to the cache";
+              echo "Saving node_modules to the cache"
               mkdir -p /tmp/local-ci/node-modules-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )
-              cp -rn node_modules /tmp/local-ci/node-modules-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )/node_modules || cp -ru node_modules /tmp/local-ci/node-modules-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )/node_modules;
+              cp -rn node_modules /tmp/local-ci/node-modules-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )/node_modules || cp -ru node_modules /tmp/local-ci/node-modules-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )/node_modules
             fi
   run-linter:
     executor: default-executor
