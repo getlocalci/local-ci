@@ -51,7 +51,7 @@ jobs:
                   then
                   echo "~/.npm does not exist, skipping caching"
                 else
-                  echo "Saving ~/.npm to the cache";
+                  echo "Saving ~/.npm to the cache"
                   mkdir -p /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )
                   cp -rn ~/.npm /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )/.npm || cp -ru ~/.npm /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )/.npm
                 fi
