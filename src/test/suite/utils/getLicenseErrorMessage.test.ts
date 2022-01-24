@@ -9,9 +9,13 @@ mocha.afterEach(() => {
 
 suite('getLicenseErrorMessage', () => {
   test('errors', () => {
-    assert(getLicenseErrorMessage('missing'), 'License does not exist.');
-    assert(getLicenseErrorMessage('missing_url'), 'URL not provided.');
-    assert(getLicenseErrorMessage('disabled'), 'License key revoked.');
-    assert(getLicenseErrorMessage('non_existent_code'), 'Unknown error.');
+    assert.equal(getLicenseErrorMessage(undefined), 'Unknown error');
+    assert.equal(getLicenseErrorMessage('missing'), 'License does not exist.');
+    assert.equal(getLicenseErrorMessage('missing_url'), 'URL not provided.');
+    assert.equal(getLicenseErrorMessage('disabled'), 'License key revoked.');
+    assert.equal(
+      getLicenseErrorMessage('non_existent_code'),
+      'non_existent_code'
+    );
   });
 });

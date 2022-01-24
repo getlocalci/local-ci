@@ -38,7 +38,7 @@ export default async function showLicenseInput(
     completedCallback();
     const warningMessage = enteredLicenseKey
       ? `Sorry, there was a problem activating the Local CI license key: ${getLicenseErrorMessage(
-          (await context.secrets.get(LICENSE_ERROR)) || ''
+          await context.secrets.get(LICENSE_ERROR)
         )}`
       : 'Please enter a Local CI license key';
     const clicked = await vscode.window.showWarningMessage(
