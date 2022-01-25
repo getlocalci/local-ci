@@ -9,7 +9,7 @@ jobs:
           name: Set more environment variables
           command: |-
             echo 'export CIRCLE_SHA1=$(git rev-parse HEAD)' >> $BASH_ENV
-                    echo 'export CIRCLE_BRANCH=$(git rev-parse --abbrev-ref HEAD)' >> $BASH_ENV
+            echo 'export CIRCLE_BRANCH=$(git rev-parse --abbrev-ref HEAD)' >> $BASH_ENV
       - run:
           name: Create config
           command: echo "Creating the dynamic config here"
@@ -26,12 +26,12 @@ jobs:
             if [ -f /tmp/local-ci/dynamic-config.yml ]
             then
               rm /tmp/local-ci/dynamic-config.yml
-            fi;
+            fi
             cp .circleci/continue_config.yml /tmp/local-ci/dynamic-config.yml
             if [ -f /tmp/pipeline-parameters.json ]
-                  then
-                    cp /tmp/pipeline-parameters.json /tmp/local-ci/dynamic-config-parameters.json
-                  fi
+            then
+              cp /tmp/pipeline-parameters.json /tmp/local-ci/dynamic-config-parameters.json
+            fi
 workflows:
   setup:
     jobs:

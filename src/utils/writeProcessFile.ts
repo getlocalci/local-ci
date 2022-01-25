@@ -164,7 +164,7 @@ export default function writeProcessFile(
                 command: `if [ -f ${DYNAMIC_CONFIG_PATH_IN_CONTAINER} ]
                 then
                   rm ${DYNAMIC_CONFIG_PATH_IN_CONTAINER}
-                fi;
+                fi
                 cp ${
                   step?.run?.environment['CONFIG_PATH']
                 } ${DYNAMIC_CONFIG_PATH_IN_CONTAINER}

@@ -104,7 +104,8 @@ jobs:
       - run:
           name: 'Firebase deploy'
           command: |
-            if [[ "$CIRCLE_BRANCH" == "master" ]]; then
+            if [[ "$CIRCLE_BRANCH" == "master" ]]
+              then
               npm run firebase:deploy:ci
             fi
 

@@ -34,9 +34,11 @@ export default function getRestoreCacheCommand(
             path.basename(saveCachePath)
           )}"`
       )
-      .join(' ')});
-    for directory_candidate in $restore_from_directories; do
-      if [ $(ls -ard $directory_candidate 2>/dev/null) ]; then
+      .join(' ')})
+    for directory_candidate in $restore_from_directories
+      do
+      if [ $(ls -ard $directory_candidate 2>/dev/null) ]
+        then
         verified_directory=$(ls -ard $directory_candidate | tail -n1)
         echo "Restoring cached directory $verified_directory";
         cp -rn $verified_directory ${dirname} || cp -ru $verified_directory ${dirname};

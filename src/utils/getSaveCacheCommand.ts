@@ -15,14 +15,16 @@ export default function getSaveCacheCommand(
       path.basename(directory)
     );
 
-    return `${accumulator} if [ -d ${destinationWhenCopied} ]; then
-      echo "${directory} is already cached, skipping";
-    elif [ ! -d ${directory} ]; then
-      echo "${directory} does not exist, skipping caching";
+    return `${accumulator} if [ -d ${destinationWhenCopied} ]
+      then
+      echo "${directory} is already cached, skipping"
+    elif [ ! -d ${directory} ]
+      then
+      echo "${directory} does not exist, skipping caching"
     else
-      echo "Saving ${directory} to the cache";
+      echo "Saving ${directory} to the cache"
       mkdir -p ${destination}
-      cp -rn ${directory} ${destinationWhenCopied} || cp -ru ${directory} ${destinationWhenCopied};
+      cp -rn ${directory} ${destinationWhenCopied} || cp -ru ${directory} ${destinationWhenCopied}
     fi \n`;
   }, '');
 }

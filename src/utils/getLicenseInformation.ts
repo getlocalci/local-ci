@@ -56,9 +56,7 @@ export default async function getLicenseInformation(
 
   if (isPreviewExpired && !!licenseKey && !isValid) {
     return `<p>There was an error validating the license key.</p>
-    <p>${getLicenseErrorMessage(
-      String(await context.secrets.get(LICENSE_ERROR))
-    )}</p>
+    <p>${getLicenseErrorMessage(await context.secrets.get(LICENSE_ERROR))}</p>
     <p>${getLicenseLink}</p>
     <p>${enterLicenseButton}</p>
     ${hasExtendedTrial ? '' : `<p>${takeSurveyButton}</p>`}

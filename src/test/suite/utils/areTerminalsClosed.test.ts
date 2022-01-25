@@ -16,6 +16,7 @@ const baseTerminal = {
   show: sinon.mock(),
   hide: sinon.mock(),
   dispose: sinon.mock(),
+  state: { isInteractedWith: false },
 };
 
 suite('areTerminalsClosed', () => {
