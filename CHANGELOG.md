@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.4.6 - 28 January 2022
+
+### Fixed
+- Improve bash script formatting, bump npm packages. [#79](https://github.com/getlocalci/local-ci/pull/79), [#81](https://github.com/getlocalci/local-ci/pull/81)
+- Fix a bug where the env var wasn't echoed. [#82](https://github.com/getlocalci/local-ci/pull/82)
+
 ## 1.4.5 - 20 January 2022
 
 ### Fixed
