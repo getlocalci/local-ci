@@ -6,7 +6,7 @@ version: 2.1
 jobs:
   test:
     docker:
-      - image: cimg/node:16.8.0-browsers:
+      - image: cimg/node:16.8.0-browsers
     steps:
       - checkout
       - run: echo "Running example step, please edit this file"
