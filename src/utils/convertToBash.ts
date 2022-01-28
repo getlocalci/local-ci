@@ -2,8 +2,8 @@
 // arch doesn't need to be replaced.
 // @todo: implement .Revision
 const dynamicCache: DynamicCache = {
-  '.Branch': '$CIRCLE_BRANCH',
-  '.BuildNum': '$CIRCLE_BUILD_NUM',
+  '.Branch': 'echo $CIRCLE_BRANCH',
+  '.BuildNum': 'echo $CIRCLE_BUILD_NUM',
   '.Environment.variableName': '',
   '.Revision': '',
   epoch: 'date +%s',

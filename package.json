@@ -75,6 +75,10 @@
         "title": "Local CI: Run Jobs Locally"
       },
       {
+        "command": "local-ci.create.config",
+        "title": "Local CI: Create A Config File"
+      },
+      {
         "command": "localCiJobs.exitAllJobs",
         "title": "Local CI: Exit All Jobs",
         "icon": "$(notebook-delete-cell)"
