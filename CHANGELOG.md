@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.4.7 - 7 February 2022
+
+### Fixed
+- Fix a bug where `save_cache` wasn't recognized. [#85](https://github.com/getlocalci/local-ci/pull/85)
+- Bump npm dependencies to the latest. [#84](https://github.com/getlocalci/local-ci/pull/84)
+
 ## 1.4.6 - 28 January 2022
 
 ### Fixed
