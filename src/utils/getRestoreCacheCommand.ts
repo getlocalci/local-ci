@@ -2,21 +2,21 @@ import * as path from 'path';
 import convertToBash from './convertToBash';
 import { CONTAINER_STORAGE_DIRECTORY } from '../constants';
 
-// @todo: handle restore_cache having .keys.
 export default function getRestoreCacheCommand(
   restoreCacheStep: FullStep,
   saveCacheSteps: (SaveCache | undefined)[]
 ): string | undefined {
   const originalSaveCacheStep = saveCacheSteps.find(
     (saveCacheStep) =>
-      saveCacheStep?.key === restoreCacheStep?.restore_cache?.key ||
-      restoreCacheStep?.restore_cache?.keys?.some(
-        (restoreCacheKey) => restoreCacheKey === saveCacheStep?.key
+      (!!restoreCacheStep?.restore_cache?.key &&
+        saveCacheStep?.key.includes(restoreCacheStep?.restore_cache?.key)) ||
+      restoreCacheStep?.restore_cache?.keys?.some((restoreCacheKey) =>
+        saveCacheStep?.key.includes(restoreCacheKey)
       )
   );
 
   if (!originalSaveCacheStep) {
-    return '';
+    return `echo "No save_cache directory found, so nothing to restore"`;
   }
 
   return originalSaveCacheStep?.paths.reduce((accumulator, saveCachePath) => {
