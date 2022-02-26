@@ -313,7 +313,7 @@
     "webpack-cli": "^4.9.2"
   },
   "dependencies": {
-    "axios": "^0.25.0",
+    "axios": "^0.26.0",
     "js-md5": "0.7.3"
   }
 }
