@@ -2,7 +2,7 @@
   "name": "local-ci",
   "displayName": "Local CI",
   "description": "Debug CircleCI® workflows locally, with Bash access during and after. Free preview, then paid.",
-  "version": "1.4.7",
+  "version": "1.4.8",
   "publisher": "LocalCI",
   "contributors": [
     "Ryan Kienstra"
@@ -289,7 +289,7 @@
     "@types/mocha": "^9.1.0",
     "@types/node": "^17.0.21",
     "@types/sinon": "^10.0.11",
-    "@types/vscode": "^1.64.0",
+    "@types/vscode": "^1.59.0",
     "@typescript-eslint/eslint-plugin": "^5.12.1",
     "@typescript-eslint/parser": "^5.12.1",
     "@vscode/extension-telemetry": "^0.4.9",

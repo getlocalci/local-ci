@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.4.8 - 26 February 2022
+
+### Fixed
+- Update the binary and npm packages. [#89](https://github.com/getlocalci/local-ci/pull/89)
+- Bump follow-redirects from `1.14.7` to `1.14.8`. [#88](https://github.com/getlocalci/local-ci/pull/88)
+
 ## 1.4.7 - 7 February 2022
 
 ### Fixed
