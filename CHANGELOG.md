@@ -1,5 +1,10 @@
 # Change Log
 
+## 1.4.9 - 5 March 2022
+
+### Fixed
+- Update npm packages. [#91](https://github.com/getlocalci/local-ci/pull/91)
+
 ## 1.4.8 - 26 February 2022
 
 ### Fixed
