@@ -103,9 +103,12 @@ export default async function runJob(
   const volume = `${localVolume}:${CONTAINER_STORAGE_DIRECTORY}`;
 
   terminal.sendText(
-    `${getBinaryPath()} local execute --job '${jobName}' --config ${
+    `cat ${
       isJobInDynamicConfig ? dynamicConfigFilePath : processFilePath
-    } -v ${volume} --debug`
+    } | docker run -i --rm mikefarah/yq -C
+    ${getBinaryPath()} local execute --job '${jobName}' --config ${
+      isJobInDynamicConfig ? dynamicConfigFilePath : processFilePath
+    } -v ${volume}`
   );
 
   const committedImageRepo = `${COMMITTED_IMAGE_NAMESPACE}/${jobName}`;
