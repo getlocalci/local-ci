@@ -243,6 +243,19 @@ export function activate(context: vscode.ExtensionContext): void {
       const confirmText = 'Yes';
       const doNotAskAgainText = `Don't ask again`;
 
+      async function rerunJob() {
+        job.setIsRunning();
+        await jobProvider.hardRefresh(job);
+        disposeTerminalsForJob(jobName);
+
+        reporter.sendTelemetryEvent('rerunJob');
+        runJob(context, jobName, jobProvider, job);
+      }
+
+      if (context.globalState.get(doNotConfirmRunJob)) {
+        rerunJob();
+      }
+
       vscode.window
         .showInformationMessage(
           `Do you want to rerun the job ${jobName}?`,
@@ -255,12 +268,7 @@ export function activate(context: vscode.ExtensionContext): void {
             selection?.title === confirmText ||
             selection?.title === doNotAskAgainText
           ) {
-            job.setIsRunning();
-            await jobProvider.hardRefresh(job);
-            disposeTerminalsForJob(jobName);
-
-            reporter.sendTelemetryEvent('rerunJob');
-            runJob(context, jobName, jobProvider, job);
+            rerunJob();
           }
 
           if (selection?.title === doNotAskAgainText) {
