@@ -45,6 +45,8 @@ const reporter = new TelemetryReporter(
   TELEMETRY_KEY
 );
 
+const doNotConfirmRunJob = 'local-ci.job.do-not-confirm';
+
 export function activate(context: vscode.ExtensionContext): void {
   if (!context.globalState.get(TRIAL_STARTED_TIMESTAMP)) {
     context.globalState.update(TRIAL_STARTED_TIMESTAMP, new Date().getTime());
@@ -208,7 +210,31 @@ export function activate(context: vscode.ExtensionContext): void {
           await jobProvider.hardRefresh(job);
         }
 
-        runJob(context, jobName, jobProvider, job);
+        if (context.globalState.get(doNotConfirmRunJob)) {
+          runJob(context, jobName, jobProvider, job);
+        }
+
+        const confirmText = 'Yes';
+        const doNotAskAgainText = `Don't ask again`;
+        vscode.window
+          .showInformationMessage(
+            `Do you want to run the job ${jobName}?`,
+            { modal: true },
+            { title: confirmText },
+            { title: doNotAskAgainText }
+          )
+          .then((selection) => {
+            if (
+              selection?.title === confirmText ||
+              selection?.title === doNotAskAgainText
+            ) {
+              runJob(context, jobName, jobProvider, job);
+            }
+
+            if (selection?.title === doNotAskAgainText) {
+              context.globalState.update(doNotConfirmRunJob, true);
+            }
+          });
       }
     ),
     vscode.commands.registerCommand(EXIT_JOB_COMMAND, (job: Job) => {
@@ -218,13 +244,34 @@ export function activate(context: vscode.ExtensionContext): void {
       disposeTerminalsForJob(jobName);
     }),
     vscode.commands.registerCommand('local-ci.job.rerun', async (job: Job) => {
-      job.setIsRunning();
-      await jobProvider.hardRefresh(job);
       const jobName = job.getJobName();
-      disposeTerminalsForJob(jobName);
+      const confirmText = 'Yes';
+      const doNotAskAgainText = `Don't ask again`;
 
-      reporter.sendTelemetryEvent('rerunJob');
-      runJob(context, jobName, jobProvider, job);
+      vscode.window
+        .showInformationMessage(
+          `Do you want to rerun the job ${jobName}?`,
+          { modal: true },
+          { title: confirmText },
+          { title: doNotAskAgainText }
+        )
+        .then(async (selection) => {
+          if (
+            selection?.title === confirmText ||
+            selection?.title === doNotAskAgainText
+          ) {
+            job.setIsRunning();
+            await jobProvider.hardRefresh(job);
+            disposeTerminalsForJob(jobName);
+
+            reporter.sendTelemetryEvent('rerunJob');
+            runJob(context, jobName, jobProvider, job);
+          }
+
+          if (selection?.title === doNotAskAgainText) {
+            context.globalState.update(doNotConfirmRunJob, true);
+          }
+        });
     }),
     vscode.commands.registerCommand(
       'local-ci.debug.repo',
