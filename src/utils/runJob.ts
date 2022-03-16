@@ -47,6 +47,11 @@ export default async function runJob(
   jobProvider: JobProvider,
   job: JobClass | undefined
 ): Promise<void> {
+  if (job && job instanceof JobClass) {
+    job.setIsRunning();
+    await jobProvider.hardRefresh(job);
+  }
+
   const configFilePath = await getConfigFilePath(context);
   const repoPath = path.dirname(path.dirname(configFilePath));
   const terminal = vscode.window.createTerminal({

@@ -205,11 +205,6 @@ export function activate(context: vscode.ExtensionContext): void {
 
         reporter.sendTelemetryEvent('runJob');
 
-        if (job instanceof Job) {
-          job.setIsRunning();
-          await jobProvider.hardRefresh(job);
-        }
-
         if (context.globalState.get(doNotConfirmRunJob)) {
           runJob(context, jobName, jobProvider, job);
         }
