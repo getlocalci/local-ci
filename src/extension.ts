@@ -207,6 +207,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
         if (context.globalState.get(doNotConfirmRunJob)) {
           runJob(context, jobName, jobProvider, job);
+          return;
         }
 
         const confirmText = 'Yes';

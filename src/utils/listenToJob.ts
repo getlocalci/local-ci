@@ -8,24 +8,27 @@ import getConfigFromPath from './getConfigFromPath';
 import getDynamicConfigPath from './getDynamicConfigPath';
 import getSpawnOptions from './getSpawnOptions';
 
-export default function handleSuccessAndFailure(
+export default function listenToJob(
   context: vscode.ExtensionContext,
   jobProvider: JobProvider,
   job: Job | undefined,
   commitProcess: cp.ChildProcess,
-  doesJobCreateDynamicConfig: boolean
+  doesJobCreateDynamicConfig: boolean,
+  jobConfigPath: string,
+  jobResultFilePath: string
 ): cp.ChildProcessWithoutNullStreams {
   const jobName = job?.getJobName();
   const process = cp.spawn(
     '/bin/sh',
     [
       '-c',
-      `${GET_PICARD_CONTAINER_FUNCTION}
+      `cat ${jobConfigPath} > ${jobResultFilePath}
+      ${GET_PICARD_CONTAINER_FUNCTION}
       until [[ -n $(get_picard_container ${jobName}) ]]
       do
         sleep 2
       done
-      docker logs --follow $(get_picard_container ${jobName})`,
+      docker logs --follow $(get_picard_container ${jobName}) >> ${jobResultFilePath}`,
     ],
     getSpawnOptions()
   );

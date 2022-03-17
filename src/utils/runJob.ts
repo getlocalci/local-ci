@@ -10,12 +10,13 @@ import getConfigFilePath from './getConfigFilePath';
 import getConfigFromPath from './getConfigFromPath';
 import getDebuggingTerminalName from './getDebuggingTerminalName';
 import getFinalDebuggingTerminalName from './getFinalTerminalName';
+import getResultFilePath from './getResultFilePath';
 import getImageFromJob from './getImageFromJob';
 import getLatestCommittedImage from './getLatestCommittedImage';
 import getLocalVolumePath from './getLocalVolumePath';
 import getProcessFilePath from './getProcessFilePath';
 import getTerminalName from './getTerminalName';
-import handleSuccessAndFailure from './handleSuccessAndFailure';
+import listenToJob from './listenToJob';
 import showFinalTerminalHelperMessages from './showFinalTerminalHelperMessages';
 import JobClass from '../classes/Job';
 import {
@@ -101,14 +102,13 @@ export default async function runJob(
 
   // This allows persisting files between jobs with persist_to_workspace and attach_workspace.
   const volume = `${localVolume}:${CONTAINER_STORAGE_DIRECTORY}`;
+  const jobConfigPath = isJobInDynamicConfig
+    ? dynamicConfigFilePath
+    : processFilePath;
 
   terminal.sendText(
-    `cat ${
-      isJobInDynamicConfig ? dynamicConfigFilePath : processFilePath
-    } | docker run -i --rm mikefarah/yq -C
-    ${getBinaryPath()} local execute --job '${jobName}' --config ${
-      isJobInDynamicConfig ? dynamicConfigFilePath : processFilePath
-    } -v ${volume}`
+    `cat ${jobConfigPath} | docker run -i --rm mikefarah/yq -C
+    ${getBinaryPath()} local execute --job '${jobName}' --config ${jobConfigPath} -v ${volume}`
   );
 
   const committedImageRepo = `${COMMITTED_IMAGE_NAMESPACE}/${jobName}`;
@@ -116,12 +116,19 @@ export default async function runJob(
   const jobImage = getImageFromJob(jobInConfig);
   const commitProcess = commitContainer(jobImage, committedImageRepo);
 
-  const helperMessagesProcess = handleSuccessAndFailure(
+  const resultFilePath = getResultFilePath(configFilePath, jobName);
+  if (!fs.existsSync(path.dirname(resultFilePath))) {
+    fs.mkdirSync(path.dirname(resultFilePath), { recursive: true });
+  }
+
+  const listeningProcess = listenToJob(
     context,
     jobProvider,
     job,
     commitProcess,
-    doesJobCreateDynamicConfig(jobInConfig)
+    doesJobCreateDynamicConfig(jobInConfig),
+    jobConfigPath,
+    resultFilePath
   );
 
   const debuggingTerminal = vscode.window.createTerminal({
@@ -200,12 +207,33 @@ export default async function runJob(
 
       finalTerminal.sendText('cd ~/');
       finalTerminal.show();
+
+      const folderUri = vscode.workspace.workspaceFolders?.length
+        ? vscode.workspace.workspaceFolders[0].uri
+        : null;
+
+      if (!folderUri) {
+        return;
+      }
+
+      const showJobOutput = 'Show job output';
+      vscode.window
+        .showInformationMessage('The job ended', { title: showJobOutput })
+        .then(async (clicked) => {
+          if (clicked?.title === showJobOutput) {
+            vscode.window.showTextDocument(
+              folderUri.with({
+                path: resultFilePath,
+              })
+            );
+          }
+        });
     }
   });
 
   vscode.window.onDidCloseTerminal(() => {
     if (areTerminalsClosed(terminal, debuggingTerminal, finalTerminal)) {
-      helperMessagesProcess.kill();
+      listeningProcess.kill();
       cleanUpCommittedImages(committedImageRepo);
     }
   });
