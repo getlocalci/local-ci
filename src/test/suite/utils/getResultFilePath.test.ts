@@ -13,7 +13,7 @@ suite('getResultFilePath', () => {
     sinon.stub(vscode, 'workspace').value({});
     assert.strictEqual(
       getResultFilePath('foo/baz/something/.circleci/config.yml', 'test-js'),
-      '/tmp/local-ci/something/result/test-js.log'
+      '/tmp/local-ci/something/result/test-js/result.log'
     );
   });
 
@@ -28,7 +28,7 @@ suite('getResultFilePath', () => {
         'example/another/your-repo/.circleci/config.yml ',
         'test-php'
       ),
-      '/tmp/local-ci/your-repo/result/test-php.log'
+      '/tmp/local-ci/your-repo/result/test-php/result.log'
     );
   });
 });
