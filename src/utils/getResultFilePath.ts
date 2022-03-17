@@ -12,7 +12,6 @@ export default function getResultFilePath(
     getRepoPath(fullPathToConfigFile),
     'result',
     jobName,
-    'result',
-    '.log'
+    'result.log'
   );
 }
