@@ -211,23 +211,23 @@ export function activate(context: vscode.ExtensionContext): void {
         }
 
         const confirmText = 'Yes';
-        const doNotAskAgainText = `Don't ask again`;
+        const dontAskAgainText = `Yes, don't ask again`;
         vscode.window
           .showInformationMessage(
             `Do you want to run the job ${jobName}?`,
             { modal: true },
             { title: confirmText },
-            { title: doNotAskAgainText }
+            { title: dontAskAgainText }
           )
           .then((selection) => {
             if (
               selection?.title === confirmText ||
-              selection?.title === doNotAskAgainText
+              selection?.title === dontAskAgainText
             ) {
               runJob(context, jobName, jobProvider, job);
             }
 
-            if (selection?.title === doNotAskAgainText) {
+            if (selection?.title === dontAskAgainText) {
               context.globalState.update(doNotConfirmRunJob, true);
             }
           });
@@ -242,7 +242,7 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand('local-ci.job.rerun', async (job: Job) => {
       const jobName = job.getJobName();
       const confirmText = 'Yes';
-      const doNotAskAgainText = `Don't ask again`;
+      const dontAskAgainText = `Yes, don't ask again`;
 
       async function rerunJob() {
         job.setIsRunning();
@@ -255,6 +255,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
       if (context.globalState.get(doNotConfirmRunJob)) {
         rerunJob();
+        return;
       }
 
       vscode.window
@@ -262,17 +263,17 @@ export function activate(context: vscode.ExtensionContext): void {
           `Do you want to rerun the job ${jobName}?`,
           { modal: true },
           { title: confirmText },
-          { title: doNotAskAgainText }
+          { title: dontAskAgainText }
         )
         .then(async (selection) => {
           if (
             selection?.title === confirmText ||
-            selection?.title === doNotAskAgainText
+            selection?.title === dontAskAgainText
           ) {
             rerunJob();
           }
 
-          if (selection?.title === doNotAskAgainText) {
+          if (selection?.title === dontAskAgainText) {
             context.globalState.update(doNotConfirmRunJob, true);
           }
         });
