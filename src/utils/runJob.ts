@@ -101,11 +101,13 @@ export default async function runJob(
 
   // This allows persisting files between jobs with persist_to_workspace and attach_workspace.
   const volume = `${localVolume}:${CONTAINER_STORAGE_DIRECTORY}`;
+  const jobConfigPath = isJobInDynamicConfig
+    ? dynamicConfigFilePath
+    : processFilePath;
 
   terminal.sendText(
-    `${getBinaryPath()} local execute --job '${jobName}' --config ${
-      isJobInDynamicConfig ? dynamicConfigFilePath : processFilePath
-    } -v ${volume} --debug`
+    `cat ${jobConfigPath} | docker run -i --rm mikefarah/yq -C
+    ${getBinaryPath()} local execute --job '${jobName}' --config ${jobConfigPath} -v ${volume}`
   );
 
   const committedImageRepo = `${COMMITTED_IMAGE_NAMESPACE}/${jobName}`;
