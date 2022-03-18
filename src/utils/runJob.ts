@@ -216,9 +216,11 @@ export default async function runJob(
         return;
       }
 
-      const showJobOutput = 'Show job output';
+      const showJobOutput = 'Show job log';
       vscode.window
-        .showInformationMessage('The job ended', { title: showJobOutput })
+        .showInformationMessage(`The job ${jobName} completed`, {
+          title: showJobOutput,
+        })
         .then(async (clicked) => {
           if (clicked?.title === showJobOutput) {
             vscode.window.showTextDocument(
