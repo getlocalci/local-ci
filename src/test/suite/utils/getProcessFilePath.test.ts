@@ -13,7 +13,7 @@ suite('getProcessFilePath', () => {
     sinon.stub(vscode, 'workspace').value({});
     assert.strictEqual(
       getProcessFilePath('foo/baz/something/.circleci/config.yml'),
-      '/tmp/local-ci/process/something.yml'
+      '/tmp/local-ci/something/process.yml'
     );
   });
 
@@ -29,7 +29,7 @@ suite('getProcessFilePath', () => {
 
     assert.strictEqual(
       getProcessFilePath('example/another/local-ci/.circleci/config.yml '),
-      '/tmp/local-ci/process/local-ci.yml'
+      '/tmp/local-ci/local-ci/process.yml'
     );
   });
 });

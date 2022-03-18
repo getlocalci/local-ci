@@ -10,7 +10,7 @@ import getConfigFilePath from './getConfigFilePath';
 import getConfigFromPath from './getConfigFromPath';
 import getDebuggingTerminalName from './getDebuggingTerminalName';
 import getFinalDebuggingTerminalName from './getFinalTerminalName';
-import getResultFilePath from './getResultFilePath';
+import getLogFilePath from './getLogFilePath';
 import getImageFromJob from './getImageFromJob';
 import getLatestCommittedImage from './getLatestCommittedImage';
 import getLocalVolumePath from './getLocalVolumePath';
@@ -116,9 +116,9 @@ export default async function runJob(
   const jobImage = getImageFromJob(jobInConfig);
   const commitProcess = commitContainer(jobImage, committedImageRepo);
 
-  const resultFilePath = getResultFilePath(configFilePath, jobName);
-  if (!fs.existsSync(path.dirname(resultFilePath))) {
-    fs.mkdirSync(path.dirname(resultFilePath), { recursive: true });
+  const logFilePath = getLogFilePath(configFilePath, jobName);
+  if (!fs.existsSync(path.dirname(logFilePath))) {
+    fs.mkdirSync(path.dirname(logFilePath), { recursive: true });
   }
 
   const listeningProcess = listenToJob(
@@ -128,7 +128,7 @@ export default async function runJob(
     commitProcess,
     doesJobCreateDynamicConfig(jobInConfig),
     jobConfigPath,
-    resultFilePath
+    logFilePath
   );
 
   const debuggingTerminal = vscode.window.createTerminal({
@@ -225,7 +225,7 @@ export default async function runJob(
           if (clicked?.title === showJobOutput) {
             vscode.window.showTextDocument(
               folderUri.with({
-                path: resultFilePath,
+                path: logFilePath,
               })
             );
           }
