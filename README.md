@@ -39,7 +39,7 @@ CI jobs can fail because of wrong dependency versions, or flaky combinations of 
 
 You'll get local Bash access to jobs, so you'll usually be able to see what's wrong and fix it.
 
-Thanks to [CirleCI-Public/cirlceci-cli](https://github.com/circleci-public/circleci-cli), which this uses.
+Thanks to [CirleCI-Public/cirlceci-cli](https://github.com/circleci-public/circleci-cli) and [mikefarah/yq](https://github.com/mikefarah/yq), which this uses.
 
 CircleCI® is a registered trademark of Circle Internet Services, Inc.
 
