@@ -8,17 +8,12 @@ mocha.afterEach(() => {
   sinon.restore();
 });
 
-suite('getResultFilePath', () => {
+suite('getLogFilePath', () => {
   test('With no root path', () => {
     sinon.stub(vscode, 'workspace').value({});
-    const actual = getLogFilePath(
-      'foo/baz/something/.circleci/config.yml',
-      'test-js'
-    );
+    const actual = getLogFilePath('.circleci/config.yml', 'test-js');
 
-    assert.ok(
-      actual.match(/\/tmp\/local-ci\/something\/logs\/test-js\/\d+.log/)
-    );
+    assert.ok(actual.match(/\/tmp\/local-ci\/test-js\/logs\/\d+\.log/));
   });
 
   test('With root path', () => {
@@ -32,7 +27,7 @@ suite('getResultFilePath', () => {
     );
 
     assert.ok(
-      actual.match(/\/tmp\/local-ci\/your-repo\/logs\/lint-php\/1234.log/)
+      actual.match(/\/tmp\/local-ci\/your-repo\/lint-php\/logs\/\d+\.log/)
     );
   });
 });
