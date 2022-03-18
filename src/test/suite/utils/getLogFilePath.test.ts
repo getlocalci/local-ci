@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as vscode from 'vscode';
-import getResultFilePath from '../../../utils/getLogFilePath';
+import getLogFilePath from '../../../utils/getLogFilePath';
 
 mocha.afterEach(() => {
   sinon.restore();
@@ -11,9 +11,13 @@ mocha.afterEach(() => {
 suite('getResultFilePath', () => {
   test('With no root path', () => {
     sinon.stub(vscode, 'workspace').value({});
-    assert.strictEqual(
-      getResultFilePath('foo/baz/something/.circleci/config.yml', 'test-js'),
-      '/tmp/local-ci/something/result/test-js/result.log'
+    const actual = getLogFilePath(
+      'foo/baz/something/.circleci/config.yml',
+      'test-js'
+    );
+
+    assert.ok(
+      actual.match(/\/tmp\/local-ci\/something\/logs\/test-js\/\d+.log/)
     );
   });
 
@@ -22,13 +26,13 @@ suite('getResultFilePath', () => {
     sinon.stub(vscode, 'workspace').value({
       workspaceFolders: [{ uri: { path } }],
     });
+    const actual = getLogFilePath(
+      'example/another/your-repo/.circleci/config.yml  ',
+      'lint-php'
+    );
 
-    assert.strictEqual(
-      getResultFilePath(
-        'example/another/your-repo/.circleci/config.yml ',
-        'test-php'
-      ),
-      '/tmp/local-ci/your-repo/result/test-php/result.log'
+    assert.ok(
+      actual.match(/\/tmp\/local-ci\/your-repo\/logs\/lint-php\/1234.log/)
     );
   });
 });
