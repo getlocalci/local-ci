@@ -245,11 +245,8 @@ export function activate(context: vscode.ExtensionContext): void {
       const dontAskAgainText = `Yes, don't ask again`;
 
       async function rerunJob() {
-        job.setIsRunning();
-        await jobProvider.hardRefresh(job);
-        disposeTerminalsForJob(jobName);
-
         reporter.sendTelemetryEvent('rerunJob');
+        disposeTerminalsForJob(jobName);
         runJob(context, jobName, jobProvider, job);
       }
 
