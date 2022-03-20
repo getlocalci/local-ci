@@ -1,5 +1,14 @@
 # Change Log
 
+## 1.5.0 - 17 March 2022
+
+### Added
+- Use of `yq` for cleaner terminal output. [#96](https://github.com/getlocalci/local-ci/pull/96)
+- Add a confirmation dialog to run a job. [#93](https://github.com/getlocalci/local-ci/pull/93)
+
+### Fixed
+- Update most npm packages to the latest. [#94](https://github.com/getlocalci/local-ci/pull/94)
+
 ## 1.4.9 - 5 March 2022
 
 ### Fixed
