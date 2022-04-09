@@ -27,7 +27,7 @@ suite('getLogFilePath', () => {
     );
 
     assert.ok(
-      actual.match(/\/tmp\/local-ci\/your-repo\/logs\/test-js\/\d+\.log/)
+      actual.match(/\/tmp\/local-ci\/your-repo\/logs\/lint-php\/\d+\.log/)
     );
   });
 });
