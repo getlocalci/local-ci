@@ -13,7 +13,7 @@ suite('getLogFilePath', () => {
     sinon.stub(vscode, 'workspace').value({});
     const actual = getLogFilePath('.circleci/config.yml', 'test-js');
 
-    assert.ok(actual.match(/\/tmp\/local-ci\/test-js\/logs\/\d+\.log/));
+    assert.ok(actual.match(/\/tmp\/local-ci\/logs\/test-js\/\d+\.log/));
   });
 
   test('With root path', () => {
@@ -27,7 +27,7 @@ suite('getLogFilePath', () => {
     );
 
     assert.ok(
-      actual.match(/\/tmp\/local-ci\/your-repo\/lint-php\/logs\/\d+\.log/)
+      actual.match(/\/tmp\/local-ci\/your-repo\/logs\/test-js\/\d+\.log/)
     );
   });
 });

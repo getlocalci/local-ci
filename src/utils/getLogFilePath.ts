@@ -10,8 +10,8 @@ export default function getlogFilePath(
   return path.join(
     HOST_TMP_DIRECTORY,
     getRepoPath(fullPathToConfigFile),
-    jobName,
     'logs',
+    jobName,
     `${Date.now()}.log`
   );
 }
