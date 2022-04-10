@@ -11,6 +11,7 @@ mocha.afterEach(() => {
   sinon.restore();
 });
 
+const dayInMilliseconds = 86400000;
 const extendedTrial =
   TRIAL_LENGTH_IN_MILLISECONDS + EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS;
 
@@ -22,10 +23,10 @@ suite('isTrialExpired', () => {
     );
   });
 
-  test('preview began 2 days and 1 millisecond ago', () => {
+  test('preview began 5 days and 1 millisecond ago', () => {
     assert.strictEqual(
       isTrialExpired(
-        new Date().getTime() - 172800001,
+        new Date().getTime() - (5 * dayInMilliseconds + 1),
         TRIAL_LENGTH_IN_MILLISECONDS
       ),
       true
@@ -35,7 +36,7 @@ suite('isTrialExpired', () => {
   test('preview began a week ago', () => {
     assert.strictEqual(
       isTrialExpired(
-        new Date().getTime() - 604800000,
+        new Date().getTime() - 7 * dayInMilliseconds,
         TRIAL_LENGTH_IN_MILLISECONDS
       ),
       true
@@ -49,23 +50,32 @@ suite('isTrialExpired', () => {
     );
   });
 
-  test('preview began 2 days and 10 milliseconds ago and was extended', () => {
+  test('preview began 5 days and 10 milliseconds ago and was extended', () => {
     assert.strictEqual(
-      isTrialExpired(new Date().getTime() - 172800010, extendedTrial),
+      isTrialExpired(
+        new Date().getTime() - (5 * dayInMilliseconds + 10),
+        extendedTrial
+      ),
       false
     );
   });
 
   test('preview began a week ago and was extended', () => {
     assert.strictEqual(
-      isTrialExpired(new Date().getTime() - 604800000, extendedTrial),
+      isTrialExpired(
+        new Date().getTime() - 7 * dayInMilliseconds,
+        extendedTrial
+      ),
       false
     );
   });
 
-  test('preview began 17 days and 1 millisecond ago and was extended', () => {
+  test('preview began 20 days and 1 millisecond ago and was extended', () => {
     assert.strictEqual(
-      isTrialExpired(new Date().getTime() - 1468800001, extendedTrial),
+      isTrialExpired(
+        new Date().getTime() - 20 * dayInMilliseconds,
+        extendedTrial
+      ),
       true
     );
   });

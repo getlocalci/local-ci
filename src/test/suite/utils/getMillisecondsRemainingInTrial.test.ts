@@ -3,16 +3,18 @@ import { TRIAL_LENGTH_IN_MILLISECONDS } from '../../../constants';
 import getMillisecondsRemainingInTrial from '../../../utils/getMillisecondsRemainingInTrial';
 
 const hourInMilliseconds = 3600000;
+const dayInMilliseconds = 86400000;
+
 suite('getMillisecondsRemainingInTrial', () => {
   test('entire trial remaining', () => {
     const time = new Date().getTime();
     assert.strictEqual(
       getMillisecondsRemainingInTrial(time, time, TRIAL_LENGTH_IN_MILLISECONDS),
-      172800000
+      TRIAL_LENGTH_IN_MILLISECONDS
     );
   });
 
-  test('1 day remaining', () => {
+  test('4 days remaining', () => {
     const time = new Date().getTime();
     assert.strictEqual(
       getMillisecondsRemainingInTrial(
@@ -20,7 +22,7 @@ suite('getMillisecondsRemainingInTrial', () => {
         time - 24 * hourInMilliseconds,
         TRIAL_LENGTH_IN_MILLISECONDS
       ),
-      86400000
+      4 * dayInMilliseconds
     );
   });
 
@@ -29,10 +31,10 @@ suite('getMillisecondsRemainingInTrial', () => {
     assert.strictEqual(
       getMillisecondsRemainingInTrial(
         time,
-        time - 47 * hourInMilliseconds,
+        time - (4 * dayInMilliseconds + 23 * hourInMilliseconds),
         TRIAL_LENGTH_IN_MILLISECONDS
       ),
-      3600000
+      hourInMilliseconds
     );
   });
 
@@ -41,7 +43,7 @@ suite('getMillisecondsRemainingInTrial', () => {
     assert.strictEqual(
       getMillisecondsRemainingInTrial(
         time,
-        time - 48 * hourInMilliseconds,
+        time - 5 * dayInMilliseconds,
         TRIAL_LENGTH_IN_MILLISECONDS
       ),
       0
