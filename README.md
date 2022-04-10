@@ -1,4 +1,4 @@
-[![5 day free preview](https://img.shields.io/badge/trial-2%20day-orange)](https://getlocalci.com/pricing/?utm_medium=extension&utm_source=readme)
+[![5 day free preview](https://img.shields.io/badge/trial-5%20day-orange)](https://getlocalci.com/pricing/?utm_medium=extension&utm_source=readme)
 [![Buy license key](https://img.shields.io/badge/%24-paid-orange)](https://getlocalci.com/pricing/?utm_medium=extension&utm_source=readme)
 [![Platform: macOS](https://img.shields.io/badge/platform-macOS-yellow)](https://en.wikipedia.org/wiki/MacOS)
 [![Requires CircleCI®](https://img.shields.io/badge/requires-CirlcleCI%C2%AE-yellow)](https://circleci.com/docs/2.0/first-steps/)
