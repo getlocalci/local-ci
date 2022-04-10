@@ -27,3 +27,20 @@
 `npm run lint`
 
 This will also run on a pre-commit hook that will install on `npm i`
+
+## Downloading A Build
+
+You may want to install a development `.vsix` file, instead of installing this extension via the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=LocalCI.local-ci).
+
+1. Click the commit check you want to download the `.vsix` for. This could be in a PR, or simply the `develop` branch.
+2. For the package job, click Details.
+3. Click the Artifacts tab
+4. Click the `.vsix` file to download it:
+
+https://user-images.githubusercontent.com/4063887/162601777-d12a00f2-6a27-47c7-bc8c-b505e77ca3dc.mp4
+
+## Testing A Build Locally
+
+1. Enter the Command Palette, either through a shortcut, or View > Command Palette
+2. Type 'Extensions: Install from VSIX'
+3. Select the Local CI `.vsix` file, maybe the one you [downloaded](#downloading-a-build)
