@@ -30,7 +30,7 @@ This will also run on a pre-commit hook that will install on `npm i`
 
 ## Downloading A Build From A Commit
 
-You may want to install a development `.vsix` file, instead of installing this extension via the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=LocalCI.local-ci).
+You may want to downlod and install a development `.vsix` file, instead of installing this extension via the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=LocalCI.local-ci).
 
 1. Click the commit check you want to download the `.vsix` for. This could be in a PR, or simply the `develop` branch.
 2. For the package job, click Details
