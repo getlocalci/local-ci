@@ -3,9 +3,7 @@ import * as vscode from 'vscode';
 export default class Log extends vscode.TreeItem {
   private jobName: string;
 
-  constructor(
-    public readonly label: string
-  ) {
+  constructor(public readonly label: string) {
     super(label);
     const tooltip = `Log for the CircleCI® job ${this.label}`;
     this.jobName = label;

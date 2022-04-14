@@ -12,6 +12,7 @@ export default async function getAllLogFilePaths(
       HOST_TMP_DIRECTORY,
       getRepoPath(fullPathToConfigFile),
       'logs',
-      jobName)}/**`
+      jobName
+    )}/**`
   );
 }
