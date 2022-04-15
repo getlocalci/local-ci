@@ -70,4 +70,8 @@ export default class Job extends vscode.TreeItem {
   setIsFailure(): void {
     this.description = '❌';
   }
+
+  setExpanded(): void {
+    this.collapsibleState = vscode.TreeItemCollapsibleState.Expanded;
+  }
 }

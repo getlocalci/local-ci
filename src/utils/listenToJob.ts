@@ -1,4 +1,5 @@
 import * as cp from 'child_process';
+import * as fs from 'fs';
 import * as vscode from 'vscode';
 import Job from '../classes/Job';
 import JobProvider from '../classes/JobProvider';
@@ -18,11 +19,16 @@ export default function listenToJob(
   jobResultFilePath: string
 ): cp.ChildProcessWithoutNullStreams {
   const jobName = job?.getJobName();
+  fs.writeFileSync(
+    jobResultFilePath,
+    `Log for CircleCI® Job ${jobName} \n${new Date()} \n\n`
+  );
+
   const process = cp.spawn(
     '/bin/sh',
     [
       '-c',
-      `cat ${jobConfigPath} > ${jobResultFilePath}
+      `cat ${jobConfigPath} >> ${jobResultFilePath}
       ${GET_PICARD_CONTAINER_FUNCTION}
       until [[ -n $(get_picard_container ${jobName}) ]]
       do
@@ -44,6 +50,7 @@ export default function listenToJob(
     // @todo: look for a more reliable way to detect success.
     if (output?.includes(`[32mSuccess![0m`)) {
       job?.setIsSuccess();
+      job?.setExpanded();
       commitProcess.kill();
 
       if (doesJobCreateDynamicConfig) {
@@ -64,6 +71,7 @@ export default function listenToJob(
 
     if (output?.includes('Task failed')) {
       job?.setIsFailure();
+      job?.setExpanded();
       jobProvider.refresh(job);
       commitProcess.kill();
 

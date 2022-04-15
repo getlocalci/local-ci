@@ -216,6 +216,8 @@ export default async function runJob(
         return;
       }
 
+      job?.setExpanded();
+      jobProvider.refresh(job);
       const showJobOutput = 'Show job log';
       vscode.window
         .showInformationMessage(`The job ${jobName} completed`, {
