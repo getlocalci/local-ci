@@ -3,7 +3,6 @@ import { EXIT_JOB_COMMAND, RUN_JOB_COMMAND } from '../constants';
 
 export default class Job extends vscode.TreeItem {
   private jobName: string;
-  public readonly logJobName: string;
 
   constructor(
     public readonly label: string,
@@ -11,7 +10,6 @@ export default class Job extends vscode.TreeItem {
     hasChildJob: boolean
   ) {
     super(label);
-    this.logJobName = '';
     const tooltip = `Run the CircleCI® job ${this.label}`;
     this.jobName = label;
     this.collapsibleState = hasChildJob
