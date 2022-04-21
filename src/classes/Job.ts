@@ -73,7 +73,7 @@ export default class Job extends vscode.TreeItem {
     this.description = '❌';
   }
 
-  reveal(): void {
+  setExpanded(): void {
     this.collapsibleState = vscode.TreeItemCollapsibleState.Expanded;
   }
 }

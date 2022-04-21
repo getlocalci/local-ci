@@ -190,35 +190,6 @@ export default class JobProvider
     ];
   }
 
-  getParent(element: vscode.TreeItem): vscode.TreeItem | null {
-    const treeViewItem = element;
-    if (!treeViewItem) {
-      return null;
-    }
-
-    const jobName = treeViewItem?.getJobName();
-    if (jobName) {
-      const jobDependencies = this?.jobDependencies?.get(jobName) ?? [];
-      const dependencyLength = jobDependencies?.length;
-      // This element's parent should be its last dependency in the requires array.
-      if (dependencyLength) {
-        const parentJobName = jobDependencies[dependencyLength - 1];
-        return new Job(
-          parentJobName,
-          parentJobName === this.runningJob,
-          this.hasChild(parentJobName)
-        );
-      }
-    }
-
-    const logJobName = treeViewItem?.logJobName ?? null;
-    return new Job(
-      logJobName,
-      logJobName === this.runningJob,
-      this.hasChild(logJobName)
-    );
-  }
-
   getLogTreeItems(jobName: string): Log[] {
     return (
       this.logs[jobName]?.map(

@@ -188,7 +188,7 @@ export default async function runJob(
       4000
     );
 
-    job?.reveal();
+    job?.setExpanded();
     jobProvider.refresh(job);
 
     const folderUri = vscode.workspace.workspaceFolders?.length
