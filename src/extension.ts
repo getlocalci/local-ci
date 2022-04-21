@@ -185,11 +185,10 @@ export function activate(context: vscode.ExtensionContext): void {
     )
   );
 
-  const jobTreeView = vscode.window.createTreeView(JOB_TREE_VIEW_ID, {
-    treeDataProvider: jobProvider,
-  });
   context.subscriptions.push(
-    jobTreeView,
+    vscode.window.createTreeView(JOB_TREE_VIEW_ID, {
+      treeDataProvider: jobProvider,
+    }),
     vscode.commands.registerCommand(
       RUN_JOB_COMMAND,
       async (jobName: string, job?: Job) => {
