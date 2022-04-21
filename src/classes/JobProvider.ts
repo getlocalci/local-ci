@@ -52,16 +52,16 @@ export default class JobProvider
     private readonly reporter: TelemetryReporter
   ) {}
 
+  async init() {
+    await this.loadJobs();
+    await this.loadLogs();
+  }
+
   /** Refreshes the TreeView. */
   async refresh(job?: Job, skipMessage?: boolean): Promise<void> {
     await this.loadJobs(true, skipMessage);
     await this.loadLogs();
     this._onDidChangeTreeData.fire(job);
-  }
-
-  async init() {
-    await this.loadJobs();
-    await this.loadLogs();
   }
 
   async loadJobs(
