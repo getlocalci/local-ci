@@ -1,5 +1,5 @@
-import * as path from 'path';
 import * as fs from 'fs';
+import * as path from 'path';
 import * as vscode from 'vscode';
 import TelemetryReporter from '@vscode/extension-telemetry';
 import { getBinaryPath } from '../node/binary';
@@ -73,7 +73,7 @@ export function activate(context: vscode.ExtensionContext): void {
   reporter.sendTelemetryEvent('activate');
   const jobProvider = new JobProvider(context, reporter);
   jobProvider
-    .loadJobs()
+    .init()
     .then(() =>
       vscode.window.registerTreeDataProvider(JOB_TREE_VIEW_ID, jobProvider)
     );
@@ -81,7 +81,7 @@ export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
     reporter,
     vscode.commands.registerCommand(`${JOB_TREE_VIEW_ID}.refresh`, () =>
-      jobProvider.hardRefresh()
+      jobProvider.refresh()
     ),
     vscode.commands.registerCommand(PROCESS_TRY_AGAIN_COMMAND, async () => {
       // There might have been a problem with the dynamic config file, so remove it.
@@ -92,7 +92,7 @@ export function activate(context: vscode.ExtensionContext): void {
         fs.rmSync(dynamicConfig);
       }
 
-      jobProvider.hardRefresh();
+      jobProvider.refresh();
     }),
     vscode.commands.registerCommand(`${JOB_TREE_VIEW_ID}.enterToken`, () => {
       const terminal = vscode.window.createTerminal({
@@ -113,7 +113,7 @@ export function activate(context: vscode.ExtensionContext): void {
     }),
     vscode.commands.registerCommand(`${JOB_TREE_VIEW_ID}.exitAllJobs`, () => {
       reporter.sendTelemetryEvent('exitAllJobs');
-      jobProvider.hardRefresh();
+      jobProvider.refresh();
 
       const confirmText = 'Yes';
       vscode.window
@@ -170,7 +170,7 @@ export function activate(context: vscode.ExtensionContext): void {
             context.globalState
               .update(SELECTED_CONFIG_PATH, selectedFsPath)
               .then(() => {
-                jobProvider.hardRefresh();
+                jobProvider.refresh();
                 vscode.window.showInformationMessage(
                   `The repo ${getRepoBasename(selectedFsPath)} is now selected`
                 );
@@ -185,10 +185,11 @@ export function activate(context: vscode.ExtensionContext): void {
     )
   );
 
-  vscode.window.createTreeView(JOB_TREE_VIEW_ID, {
+  const jobTreeView = vscode.window.createTreeView(JOB_TREE_VIEW_ID, {
     treeDataProvider: jobProvider,
   });
   context.subscriptions.push(
+    jobTreeView,
     vscode.commands.registerCommand(
       RUN_JOB_COMMAND,
       async (jobName: string, job?: Job) => {
@@ -283,7 +284,7 @@ export function activate(context: vscode.ExtensionContext): void {
           context.globalState
             .update(SELECTED_CONFIG_PATH, clickedFile.fsPath)
             .then(() => {
-              jobProvider.hardRefresh();
+              jobProvider.refresh();
               vscode.commands.executeCommand(
                 'workbench.view.extension.localCiDebugger'
               );
@@ -336,13 +337,13 @@ export function activate(context: vscode.ExtensionContext): void {
         textDocument.uri.fsPath.endsWith('.circleci/config.yml') &&
         textDocument.uri.fsPath === (await getConfigFilePath(context))
       ) {
-        delayer.trigger(() => jobProvider.hardRefresh(undefined, true));
+        delayer.trigger(() => jobProvider.refresh(undefined, true));
       }
     }
   );
 
   const licenseCompletedCallback = () => licenseProvider.load();
-  const licenseSuccessCallback = () => jobProvider.hardRefresh();
+  const licenseSuccessCallback = () => jobProvider.refresh();
   const licenseTreeViewId = 'localCiLicense';
   const licenseProvider = new LicenseProvider(context, licenseSuccessCallback);
   vscode.window.registerWebviewViewProvider(licenseTreeViewId, licenseProvider);
@@ -384,7 +385,7 @@ export function activate(context: vscode.ExtensionContext): void {
         `👆 Here's a starter config file that you can edit`,
         { detail: 'Starter config file' }
       );
-      jobProvider.hardRefresh();
+      jobProvider.refresh();
     })
   );
 

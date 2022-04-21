@@ -1,5 +1,5 @@
-import * as path from 'path';
 import * as fs from 'fs';
+import * as path from 'path';
 import * as vscode from 'vscode';
 import TelemetryReporter from '@vscode/extension-telemetry';
 import Command from './Command';
@@ -52,18 +52,16 @@ export default class JobProvider
     private readonly reporter: TelemetryReporter
   ) {}
 
-  /** Refreshes the TreeView without processing the config file. */
+  /** Refreshes the TreeView. */
   async refresh(job?: Job, skipMessage?: boolean): Promise<void> {
     await this.loadJobs(true, skipMessage);
     await this.loadLogs();
     this._onDidChangeTreeData.fire(job);
   }
 
-  /** Processes the config file(s) in addition to refreshing. */
-  async hardRefresh(job?: Job, suppressMessage?: boolean): Promise<void> {
-    await this.loadJobs(false, suppressMessage);
+  async init() {
+    await this.loadJobs();
     await this.loadLogs();
-    this._onDidChangeTreeData.fire(job);
   }
 
   async loadJobs(
@@ -74,9 +72,6 @@ export default class JobProvider
     this.jobErrorType = undefined;
     this.jobErrorMessage = undefined;
     this.runningJob = undefined;
-
-    let processedConfig;
-    let processError;
 
     const configFilePath = await getConfigFilePath(this.context);
     if (!configFilePath || !fs.existsSync(configFilePath)) {
@@ -93,6 +88,9 @@ export default class JobProvider
 
       return;
     }
+
+    let processedConfig;
+    let processError;
 
     if (!skipConfigProcessing) {
       const configResult = prepareConfig(
@@ -143,7 +141,7 @@ export default class JobProvider
   async loadLogs() {
     const configFilePath = await getConfigFilePath(this.context);
 
-    for (const jobName of this.jobs) {
+    for (const jobName of this.jobDependencies?.keys() ?? []) {
       const logDirectory = getLogFilesDirectory(configFilePath, jobName);
       if (fs.existsSync(logDirectory)) {
         this.logs[jobName] = fs.readdirSync(logDirectory).map((logFile) => {
@@ -192,10 +190,39 @@ export default class JobProvider
     ];
   }
 
+  getParent(element: vscode.TreeItem): vscode.TreeItem | null {
+    const treeViewItem = element;
+    if (!treeViewItem) {
+      return null;
+    }
+
+    const jobName = treeViewItem?.getJobName();
+    if (jobName) {
+      const jobDependencies = this?.jobDependencies?.get(jobName) ?? [];
+      const dependencyLength = jobDependencies?.length;
+      // This element's parent should be its last dependency in the requires array.
+      if (dependencyLength) {
+        const parentJobName = jobDependencies[dependencyLength - 1];
+        return new Job(
+          parentJobName,
+          parentJobName === this.runningJob,
+          this.hasChild(parentJobName)
+        );
+      }
+    }
+
+    const logJobName = treeViewItem?.logJobName ?? null;
+    return new Job(
+      logJobName,
+      logJobName === this.runningJob,
+      this.hasChild(logJobName)
+    );
+  }
+
   getLogTreeItems(jobName: string): Log[] {
     return (
       this.logs[jobName]?.map(
-        (logFile) => new Log(path.basename(logFile), logFile)
+        (logFile) => new Log(path.basename(logFile), logFile, jobName)
       ) ?? []
     );
   }

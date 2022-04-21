@@ -1,7 +1,11 @@
 import * as vscode from 'vscode';
 
 export default class Log extends vscode.TreeItem {
-  constructor(public readonly label: string, public readonly filePath: string) {
+  constructor(
+    public readonly label: string,
+    public readonly filePath: string,
+    public readonly jogJobName: string
+  ) {
     super(label);
     const tooltip = `Log for CircleCI® job`;
     this.collapsibleState = vscode.TreeItemCollapsibleState.None;

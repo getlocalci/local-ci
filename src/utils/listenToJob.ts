@@ -21,7 +21,7 @@ export default function listenToJob(
   const jobName = job?.getJobName();
   fs.writeFileSync(
     jobResultFilePath,
-    `Log for CircleCI® Job ${jobName} \n${new Date()} \n\n`
+    `Log for CircleCI® job ${jobName} \n${new Date()} \n\n`
   );
 
   const process = cp.spawn(
@@ -50,11 +50,10 @@ export default function listenToJob(
     // @todo: look for a more reliable way to detect success.
     if (output?.includes(`[32mSuccess![0m`)) {
       job?.setIsSuccess();
-      job?.setExpanded();
       commitProcess.kill();
 
       if (doesJobCreateDynamicConfig) {
-        jobProvider.hardRefresh();
+        jobProvider.refresh();
         const dynamicConfig = getConfigFromPath(
           getDynamicConfigPath(await getConfigFilePath(context))
         );
@@ -71,7 +70,6 @@ export default function listenToJob(
 
     if (output?.includes('Task failed')) {
       job?.setIsFailure();
-      job?.setExpanded();
       jobProvider.refresh(job);
       commitProcess.kill();
 

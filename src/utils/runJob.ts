@@ -50,7 +50,7 @@ export default async function runJob(
 ): Promise<void> {
   if (job && job instanceof JobClass) {
     job.setIsRunning();
-    await jobProvider.hardRefresh(job);
+    await jobProvider.refresh(job);
   }
 
   const configFilePath = await getConfigFilePath(context);
@@ -188,6 +188,32 @@ export default async function runJob(
       4000
     );
 
+    job?.reveal();
+    jobProvider.refresh(job);
+
+    const folderUri = vscode.workspace.workspaceFolders?.length
+      ? vscode.workspace.workspaceFolders[0].uri
+      : null;
+
+    if (!folderUri) {
+      return;
+    }
+
+    const showJobOutput = 'Show job log';
+    vscode.window
+      .showInformationMessage(`The job ${jobName} completed`, {
+        title: showJobOutput,
+      })
+      .then(async (clicked) => {
+        if (clicked?.title === showJobOutput) {
+          vscode.window.showTextDocument(
+            folderUri.with({
+              path: logFilePath,
+            })
+          );
+        }
+      });
+
     if (latestCommmittedImageId) {
       finalTerminal = vscode.window.createTerminal({
         name: getFinalDebuggingTerminalName(jobName),
@@ -207,31 +233,6 @@ export default async function runJob(
 
       finalTerminal.sendText('cd ~/');
       finalTerminal.show();
-
-      const folderUri = vscode.workspace.workspaceFolders?.length
-        ? vscode.workspace.workspaceFolders[0].uri
-        : null;
-
-      if (!folderUri) {
-        return;
-      }
-
-      job?.setExpanded();
-      jobProvider.refresh(job);
-      const showJobOutput = 'Show job log';
-      vscode.window
-        .showInformationMessage(`The job ${jobName} completed`, {
-          title: showJobOutput,
-        })
-        .then(async (clicked) => {
-          if (clicked?.title === showJobOutput) {
-            vscode.window.showTextDocument(
-              folderUri.with({
-                path: logFilePath,
-              })
-            );
-          }
-        });
     }
   });
 
