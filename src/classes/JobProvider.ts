@@ -260,7 +260,7 @@ export default class JobProvider
    * A job has a child if either:
    *
    * 1. It has a log
-   * 2. Any other job has it as the last value in its requires array
+   * 2. It's a dependency of another job (another job has it as the last value in its requires array)
    */
   hasChild(jobName: string): boolean {
     if (this.logs[jobName]) {
