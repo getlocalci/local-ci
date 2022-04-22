@@ -1,5 +1,14 @@
 # Change Log
 
+## 1.6.0 - 22 April 2022
+
+### Added
+- Show job logs after jobs finish. [#95](https://github.com/getlocalci/local-ci/pull/95)
+- Extend the free trial to 5 days. [#101](https://github.com/getlocalci/local-ci/pull/101)
+
+### Fixed
+- Update npm dependencies that npm outdated shows. [#99](https://github.com/getlocalci/local-ci/pull/99)
+
 ## 1.5.0 - 17 March 2022
 
 ### Added
