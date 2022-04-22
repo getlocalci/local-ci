@@ -54,8 +54,6 @@ export const DYNAMIC_CONFIG_PATH_IN_CONTAINER = path.join(
   DYNAMIC_CONFIG_FILE_NAME
 );
 export const HOST_TMP_DIRECTORY = '/tmp/local-ci'; // Also hard-coded in node/uninstall.js, change that if this changes. Be careful changing this, as there's an rm -rf for it.
-export const PROCESS_FILE_DIRECTORY = path.join(HOST_TMP_DIRECTORY, 'process');
-export const LOCAL_VOLUME_DIRECTORY = path.join(HOST_TMP_DIRECTORY, 'volume');
 export const RUN_JOB_COMMAND = 'local-ci.job.run';
 export const CREATE_CONFIG_FILE_COMMAND = 'local-ci.create.config';
 export const CONTINUE_PIPELINE_STEP_NAME = 'Continue the pipeline';

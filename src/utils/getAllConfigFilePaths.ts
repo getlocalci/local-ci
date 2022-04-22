@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { SELECTED_CONFIG_PATH } from '../constants';
-import getRepoPath from './getRepoBasename';
+import getRepoBasename from './getRepoBasename';
 
 // A workspace might have multiple .circleci/config.yml files.
 // This gets all of those files.
@@ -30,7 +30,7 @@ export default async function getAllConfigFilePaths(
       return 0;
     })
     .map((configFile) => ({
-      label: getRepoPath(configFile.fsPath),
+      label: getRepoBasename(configFile.fsPath),
       description: vscode.workspace.asRelativePath(configFile.fsPath),
       fsPath: configFile.fsPath,
     }));

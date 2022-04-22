@@ -10,12 +10,13 @@ import getConfigFilePath from './getConfigFilePath';
 import getConfigFromPath from './getConfigFromPath';
 import getDebuggingTerminalName from './getDebuggingTerminalName';
 import getFinalDebuggingTerminalName from './getFinalTerminalName';
+import getLogFilePath from './getLogFilePath';
 import getImageFromJob from './getImageFromJob';
 import getLatestCommittedImage from './getLatestCommittedImage';
 import getLocalVolumePath from './getLocalVolumePath';
 import getProcessFilePath from './getProcessFilePath';
 import getTerminalName from './getTerminalName';
-import handleSuccessAndFailure from './handleSuccessAndFailure';
+import listenToJob from './listenToJob';
 import showFinalTerminalHelperMessages from './showFinalTerminalHelperMessages';
 import JobClass from '../classes/Job';
 import {
@@ -115,12 +116,19 @@ export default async function runJob(
   const jobImage = getImageFromJob(jobInConfig);
   const commitProcess = commitContainer(jobImage, committedImageRepo);
 
-  const helperMessagesProcess = handleSuccessAndFailure(
+  const logFilePath = getLogFilePath(configFilePath, jobName);
+  if (!fs.existsSync(path.dirname(logFilePath))) {
+    fs.mkdirSync(path.dirname(logFilePath), { recursive: true });
+  }
+
+  const listeningProcess = listenToJob(
     context,
     jobProvider,
     job,
     commitProcess,
-    doesJobCreateDynamicConfig(jobInConfig)
+    doesJobCreateDynamicConfig(jobInConfig),
+    jobConfigPath,
+    logFilePath
   );
 
   const debuggingTerminal = vscode.window.createTerminal({
@@ -204,7 +212,7 @@ export default async function runJob(
 
   vscode.window.onDidCloseTerminal(() => {
     if (areTerminalsClosed(terminal, debuggingTerminal, finalTerminal)) {
-      helperMessagesProcess.kill();
+      listeningProcess.kill();
       cleanUpCommittedImages(committedImageRepo);
     }
   });

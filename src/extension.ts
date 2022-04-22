@@ -1,5 +1,5 @@
-import * as path from 'path';
 import * as fs from 'fs';
+import * as path from 'path';
 import * as vscode from 'vscode';
 import TelemetryReporter from '@vscode/extension-telemetry';
 import { getBinaryPath } from '../node/binary';
@@ -73,7 +73,7 @@ export function activate(context: vscode.ExtensionContext): void {
   reporter.sendTelemetryEvent('activate');
   const jobProvider = new JobProvider(context, reporter);
   jobProvider
-    .loadJobs()
+    .init()
     .then(() =>
       vscode.window.registerTreeDataProvider(JOB_TREE_VIEW_ID, jobProvider)
     );
@@ -185,10 +185,10 @@ export function activate(context: vscode.ExtensionContext): void {
     )
   );
 
-  vscode.window.createTreeView(JOB_TREE_VIEW_ID, {
-    treeDataProvider: jobProvider,
-  });
   context.subscriptions.push(
+    vscode.window.createTreeView(JOB_TREE_VIEW_ID, {
+      treeDataProvider: jobProvider,
+    }),
     vscode.commands.registerCommand(
       RUN_JOB_COMMAND,
       async (jobName: string, job?: Job) => {

@@ -1,12 +1,15 @@
 import * as fs from 'fs';
+import * as path from 'path';
 import * as vscode from 'vscode';
 import TelemetryReporter from '@vscode/extension-telemetry';
 import Command from './Command';
 import Job from './Job';
+import Log from './Log';
 import Warning from './Warning';
 import getAllConfigFilePaths from '../utils/getAllConfigFilePaths';
 import getAllJobs from '../utils/getAllJobs';
 import getConfigFilePath from '../utils/getConfigFilePath';
+import getLogFilesDirectory from '../utils/getLogFilesDirectory';
 import getTrialLength from '../utils/getTrialLength';
 import isDockerRunning from '../utils/isDockerRunning';
 import isLicenseValid from '../utils/isLicenseValid';
@@ -23,11 +26,11 @@ import {
 } from '../constants';
 
 enum JobError {
-  dockerNotRunning,
-  licenseKey,
-  noConfigFilePathInWorkspace,
-  noConfigFilePathSelected,
-  processFile,
+  DockerNotRunning,
+  LicenseKey,
+  NoConfigFilePathInWorkspace,
+  NoConfigFilePathSelected,
+  ProcessFile,
 }
 
 export default class JobProvider
@@ -42,25 +45,29 @@ export default class JobProvider
   private jobErrorMessage: string | undefined;
   private runningJob: string | undefined;
   private jobDependencies: Map<string, string[] | null> | undefined;
+  private logs: Record<string, string[]> = {};
 
   constructor(
     private readonly context: vscode.ExtensionContext,
     private readonly reporter: TelemetryReporter
   ) {}
 
-  /**
-   * Refreshes the TreeView, without processing the config file.
-   */
+  async init() {
+    await this.loadJobs();
+    await this.loadLogs();
+  }
+
+  /** Refreshes the TreeView, without processing the config file. */
   async refresh(job?: Job, skipMessage?: boolean): Promise<void> {
     await this.loadJobs(true, skipMessage);
+    await this.loadLogs();
     this._onDidChangeTreeData.fire(job);
   }
 
-  /**
-   * Processes the config file(s) in addition to refreshing.
-   */
+  /** Processes the config file(s) in addition to refreshing. */
   async hardRefresh(job?: Job, suppressMessage?: boolean): Promise<void> {
     await this.loadJobs(false, suppressMessage);
+    await this.loadLogs();
     this._onDidChangeTreeData.fire(job);
   }
 
@@ -73,9 +80,6 @@ export default class JobProvider
     this.jobErrorMessage = undefined;
     this.runningJob = undefined;
 
-    let processedConfig;
-    let processError;
-
     const configFilePath = await getConfigFilePath(this.context);
     if (!configFilePath || !fs.existsSync(configFilePath)) {
       this.reporter.sendTelemetryEvent('configFilePath');
@@ -83,14 +87,17 @@ export default class JobProvider
       const doExistConfigPaths = !!(await getAllConfigFilePaths(this.context))
         .length;
       if (doExistConfigPaths) {
-        this.jobErrorType = JobError.noConfigFilePathSelected;
+        this.jobErrorType = JobError.NoConfigFilePathSelected;
       } else {
         this.reporter.sendTelemetryErrorEvent('noConfigFile');
-        this.jobErrorType = JobError.noConfigFilePathInWorkspace;
+        this.jobErrorType = JobError.NoConfigFilePathInWorkspace;
       }
 
       return;
     }
+
+    let processedConfig;
+    let processError;
 
     if (!skipConfigProcessing) {
       const configResult = prepareConfig(
@@ -111,19 +118,19 @@ export default class JobProvider
       );
 
     if (!shouldEnableExtension) {
-      this.jobErrorType = JobError.licenseKey;
+      this.jobErrorType = JobError.LicenseKey;
       return;
     }
 
     if (!isDockerRunning()) {
       this.reporter.sendTelemetryErrorEvent('dockerNotRunning');
-      this.jobErrorType = JobError.dockerNotRunning;
+      this.jobErrorType = JobError.DockerNotRunning;
       this.jobErrorMessage = getDockerError();
       return;
     }
 
     if (processError) {
-      this.jobErrorType = JobError.processFile;
+      this.jobErrorType = JobError.ProcessFile;
       this.jobErrorMessage = processError;
       return;
     }
@@ -138,11 +145,24 @@ export default class JobProvider
     }
   }
 
+  async loadLogs() {
+    const configFilePath = await getConfigFilePath(this.context);
+
+    for (const jobName of this.jobDependencies?.keys() ?? []) {
+      const logDirectory = getLogFilesDirectory(configFilePath, jobName);
+      if (fs.existsSync(logDirectory)) {
+        this.logs[jobName] = fs.readdirSync(logDirectory).map((logFile) => {
+          return path.join(logDirectory, logFile);
+        });
+      }
+    }
+  }
+
   getTreeItem(treeItem: vscode.TreeItem): vscode.TreeItem {
     return treeItem;
   }
 
-  getChildren(parentElement: vscode.TreeItem): vscode.TreeItem[] {
+  getChildren(parentElement: Job | Log): vscode.TreeItem[] {
     if (!parentElement) {
       return this.jobs.length
         ? this.getJobTreeItems(
@@ -154,7 +174,10 @@ export default class JobProvider
     }
 
     const jobNames = this.jobDependencies?.keys();
-    if (!jobNames) {
+    if (
+      !jobNames ||
+      ('getJobName' in parentElement && !parentElement.getJobName())
+    ) {
       return [];
     }
 
@@ -162,7 +185,7 @@ export default class JobProvider
     for (const jobName of jobNames) {
       const jobDependencies = this?.jobDependencies?.get(jobName) ?? [];
       const dependencyLength = jobDependencies?.length;
-      // This element's children should be the jobs that list it as their last dependency in the requires array.
+      // This element's children include the jobs that list it as their last dependency in the requires array.
       if (
         dependencyLength &&
         parentElement.label === jobDependencies[dependencyLength - 1]
@@ -171,13 +194,26 @@ export default class JobProvider
       }
     }
 
-    return this.getJobTreeItems(children);
+    return [
+      ...this.getLogTreeItems(
+        'getJobName' in parentElement ? parentElement.getJobName() : ''
+      ),
+      ...this.getJobTreeItems(children),
+    ];
+  }
+
+  getLogTreeItems(jobName: string): Log[] {
+    return (
+      this.logs[jobName]?.map(
+        (logFile) => new Log(path.basename(logFile), logFile)
+      ) ?? []
+    );
   }
 
   getJobTreeItems(jobs: string[]): Job[] {
     return jobs.map(
       (jobName) =>
-        new Job(jobName, jobName === this.runningJob, this.hasChildJob(jobName))
+        new Job(jobName, jobName === this.runningJob, this.hasChild(jobName))
     );
   }
 
@@ -185,29 +221,29 @@ export default class JobProvider
     const errorMessage = this.getJobErrorMessage();
 
     switch (this.jobErrorType) {
-      case JobError.dockerNotRunning:
+      case JobError.DockerNotRunning:
         return [
           new Warning('Error: is Docker running?'),
           new vscode.TreeItem(errorMessage),
           new Command('Try Again', `${JOB_TREE_VIEW_ID}.refresh`),
         ];
-      case JobError.licenseKey:
+      case JobError.LicenseKey:
         return [
           new Warning('Please enter a Local CI license key.'),
           new Command('Get License', GET_LICENSE_COMMAND),
           new Command('Enter License', ENTER_LICENSE_COMMAND),
         ];
-      case JobError.noConfigFilePathInWorkspace:
+      case JobError.NoConfigFilePathInWorkspace:
         return [
           new Warning('Error: No .circleci/config.yml found'),
           new Command('Create a config for me', CREATE_CONFIG_FILE_COMMAND),
         ];
-      case JobError.noConfigFilePathSelected:
+      case JobError.NoConfigFilePathSelected:
         return [
           new Warning('Error: No jobs found'),
           new Command('Select repo', 'localCiJobs.selectRepo'),
         ];
-      case JobError.processFile:
+      case JobError.ProcessFile:
         return [
           new Warning('Error processing the CircleCI config:'),
           new vscode.TreeItem(
@@ -233,9 +269,16 @@ export default class JobProvider
   }
 
   /**
-   * A job has a child job if any other job has it as the last value in its requires array.
+   * A job has a child if either:
+   *
+   * 1. It has a log
+   * 2. It's a dependency of another job (another job has it as the last value in its requires array)
    */
-  hasChildJob(jobName: string): boolean {
+  hasChild(jobName: string): boolean {
+    if (this.logs[jobName]) {
+      return true;
+    }
+
     for (const [, dependecies] of this?.jobDependencies ?? []) {
       if (
         dependecies?.length &&
