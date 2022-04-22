@@ -26,11 +26,11 @@ import {
 } from '../constants';
 
 enum JobError {
-  dockerNotRunning,
-  licenseKey,
-  noConfigFilePathInWorkspace,
-  noConfigFilePathSelected,
-  processFile,
+  DockerNotRunning,
+  LicenseKey,
+  NoConfigFilePathInWorkspace,
+  NoConfigFilePathSelected,
+  ProcessFile,
 }
 
 export default class JobProvider
@@ -87,10 +87,10 @@ export default class JobProvider
       const doExistConfigPaths = !!(await getAllConfigFilePaths(this.context))
         .length;
       if (doExistConfigPaths) {
-        this.jobErrorType = JobError.noConfigFilePathSelected;
+        this.jobErrorType = JobError.NoConfigFilePathSelected;
       } else {
         this.reporter.sendTelemetryErrorEvent('noConfigFile');
-        this.jobErrorType = JobError.noConfigFilePathInWorkspace;
+        this.jobErrorType = JobError.NoConfigFilePathInWorkspace;
       }
 
       return;
@@ -118,19 +118,19 @@ export default class JobProvider
       );
 
     if (!shouldEnableExtension) {
-      this.jobErrorType = JobError.licenseKey;
+      this.jobErrorType = JobError.LicenseKey;
       return;
     }
 
     if (!isDockerRunning()) {
       this.reporter.sendTelemetryErrorEvent('dockerNotRunning');
-      this.jobErrorType = JobError.dockerNotRunning;
+      this.jobErrorType = JobError.DockerNotRunning;
       this.jobErrorMessage = getDockerError();
       return;
     }
 
     if (processError) {
-      this.jobErrorType = JobError.processFile;
+      this.jobErrorType = JobError.ProcessFile;
       this.jobErrorMessage = processError;
       return;
     }
@@ -205,7 +205,7 @@ export default class JobProvider
   getLogTreeItems(jobName: string): Log[] {
     return (
       this.logs[jobName]?.map(
-        (logFile) => new Log(path.basename(logFile), logFile, jobName)
+        (logFile) => new Log(path.basename(logFile), logFile)
       ) ?? []
     );
   }
@@ -221,29 +221,29 @@ export default class JobProvider
     const errorMessage = this.getJobErrorMessage();
 
     switch (this.jobErrorType) {
-      case JobError.dockerNotRunning:
+      case JobError.DockerNotRunning:
         return [
           new Warning('Error: is Docker running?'),
           new vscode.TreeItem(errorMessage),
           new Command('Try Again', `${JOB_TREE_VIEW_ID}.refresh`),
         ];
-      case JobError.licenseKey:
+      case JobError.LicenseKey:
         return [
           new Warning('Please enter a Local CI license key.'),
           new Command('Get License', GET_LICENSE_COMMAND),
           new Command('Enter License', ENTER_LICENSE_COMMAND),
         ];
-      case JobError.noConfigFilePathInWorkspace:
+      case JobError.NoConfigFilePathInWorkspace:
         return [
           new Warning('Error: No .circleci/config.yml found'),
           new Command('Create a config for me', CREATE_CONFIG_FILE_COMMAND),
         ];
-      case JobError.noConfigFilePathSelected:
+      case JobError.NoConfigFilePathSelected:
         return [
           new Warning('Error: No jobs found'),
           new Command('Select repo', 'localCiJobs.selectRepo'),
         ];
-      case JobError.processFile:
+      case JobError.ProcessFile:
         return [
           new Warning('Error processing the CircleCI config:'),
           new vscode.TreeItem(
