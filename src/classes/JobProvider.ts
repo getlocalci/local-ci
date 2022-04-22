@@ -64,6 +64,15 @@ export default class JobProvider
     this._onDidChangeTreeData.fire(job);
   }
 
+  /**
+   * Processes the config file(s) in addition to refreshing.
+   */
+  async hardRefresh(job?: Job, suppressMessage?: boolean): Promise<void> {
+    await this.loadJobs(false, suppressMessage);
+    await this.loadLogs();
+    this._onDidChangeTreeData.fire(job);
+  }
+
   async loadJobs(
     skipConfigProcessing?: boolean,
     skipMessage?: boolean
