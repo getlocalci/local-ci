@@ -9,6 +9,38 @@ import getConfigFromPath from './getConfigFromPath';
 import getDynamicConfigPath from './getDynamicConfigPath';
 import getSpawnOptions from './getSpawnOptions';
 
+function handleExit(
+  job: Job | undefined,
+  logFilePath: string,
+  didSucceed: boolean
+): void {
+  const folderUri = vscode.workspace.workspaceFolders?.length
+    ? vscode.workspace.workspaceFolders[0].uri
+    : null;
+
+  if (!folderUri) {
+    return;
+  }
+
+  const showJobOutput = 'Show job log';
+  vscode.window
+    .showInformationMessage(
+      `The job ${job?.getJobName()} ${didSucceed ? 'succeeded' : 'failed'}`,
+      {
+        title: showJobOutput,
+      }
+    )
+    .then(async (clicked) => {
+      if (clicked?.title === showJobOutput) {
+        vscode.window.showTextDocument(
+          folderUri.with({
+            path: logFilePath,
+          })
+        );
+      }
+    });
+}
+
 export default function listenToJob(
   context: vscode.ExtensionContext,
   jobProvider: JobProvider,
@@ -16,11 +48,11 @@ export default function listenToJob(
   commitProcess: cp.ChildProcess,
   doesJobCreateDynamicConfig: boolean,
   jobConfigPath: string,
-  jobResultFilePath: string
+  logFilePath: string
 ): cp.ChildProcessWithoutNullStreams {
   const jobName = job?.getJobName();
   fs.writeFileSync(
-    jobResultFilePath,
+    logFilePath,
     `Log for CircleCI® job ${jobName} \n${new Date()} \n\n`
   );
 
@@ -28,13 +60,13 @@ export default function listenToJob(
     '/bin/sh',
     [
       '-c',
-      `cat ${jobConfigPath} >> ${jobResultFilePath}
+      `cat ${jobConfigPath} >> ${logFilePath}
       ${GET_PICARD_CONTAINER_FUNCTION}
       until [[ -n $(get_picard_container ${jobName}) ]]
       do
         sleep 2
       done
-      docker logs --follow $(get_picard_container ${jobName}) >> ${jobResultFilePath}`,
+      docker logs --follow $(get_picard_container ${jobName})`,
     ],
     getSpawnOptions()
   );
@@ -45,11 +77,17 @@ export default function listenToJob(
       return;
     }
 
+    fs.appendFileSync(logFilePath, output);
+
     // This should be the final 'Success!' message when a job succeeds.
     // There are a lot of other 'Success!' messages that might trigger this incorrectly.
     // @todo: look for a more reliable way to detect success.
     if (output?.includes(`[32mSuccess![0m`)) {
       job?.setIsSuccess();
+      job?.setExpanded();
+      jobProvider.refresh(job);
+
+      handleExit(job, logFilePath, true);
       commitProcess.kill();
 
       if (doesJobCreateDynamicConfig) {
@@ -70,7 +108,10 @@ export default function listenToJob(
 
     if (output?.includes('Task failed')) {
       job?.setIsFailure();
+      job?.setExpanded();
       jobProvider.refresh(job);
+
+      handleExit(job, logFilePath, false);
       commitProcess.kill();
 
       if (output?.includes('error looking up cgroup')) {

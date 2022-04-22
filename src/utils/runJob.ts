@@ -188,32 +188,6 @@ export default async function runJob(
       4000
     );
 
-    job?.setExpanded();
-    jobProvider.refresh(job);
-
-    const folderUri = vscode.workspace.workspaceFolders?.length
-      ? vscode.workspace.workspaceFolders[0].uri
-      : null;
-
-    if (!folderUri) {
-      return;
-    }
-
-    const showJobOutput = 'Show job log';
-    vscode.window
-      .showInformationMessage(`The job ${jobName} completed`, {
-        title: showJobOutput,
-      })
-      .then(async (clicked) => {
-        if (clicked?.title === showJobOutput) {
-          vscode.window.showTextDocument(
-            folderUri.with({
-              path: logFilePath,
-            })
-          );
-        }
-      });
-
     if (latestCommmittedImageId) {
       finalTerminal = vscode.window.createTerminal({
         name: getFinalDebuggingTerminalName(jobName),

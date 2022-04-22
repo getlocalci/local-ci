@@ -185,7 +185,7 @@ export default class JobProvider
     for (const jobName of jobNames) {
       const jobDependencies = this?.jobDependencies?.get(jobName) ?? [];
       const dependencyLength = jobDependencies?.length;
-      // This element's children should be the jobs that list it as their last dependency in the requires array.
+      // This element's children include the jobs that list it as their last dependency in the requires array.
       if (
         dependencyLength &&
         parentElement.label === jobDependencies[dependencyLength - 1]
