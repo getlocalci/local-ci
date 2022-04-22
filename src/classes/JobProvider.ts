@@ -57,16 +57,14 @@ export default class JobProvider
     await this.loadLogs();
   }
 
-  /** Refreshes the TreeView. */
+  /** Refreshes the TreeView, without processing the config file. */
   async refresh(job?: Job, skipMessage?: boolean): Promise<void> {
     await this.loadJobs(true, skipMessage);
     await this.loadLogs();
     this._onDidChangeTreeData.fire(job);
   }
 
-  /**
-   * Processes the config file(s) in addition to refreshing.
-   */
+  /** Processes the config file(s) in addition to refreshing. */
   async hardRefresh(job?: Job, suppressMessage?: boolean): Promise<void> {
     await this.loadJobs(false, suppressMessage);
     await this.loadLogs();
@@ -164,7 +162,7 @@ export default class JobProvider
     return treeItem;
   }
 
-  getChildren(parentElement: Job): vscode.TreeItem[] {
+  getChildren(parentElement: Job | Log): vscode.TreeItem[] {
     if (!parentElement) {
       return this.jobs.length
         ? this.getJobTreeItems(
@@ -176,7 +174,10 @@ export default class JobProvider
     }
 
     const jobNames = this.jobDependencies?.keys();
-    if (!jobNames || !parentElement?.getJobName()) {
+    if (
+      !jobNames ||
+      ('getJobName' in parentElement && !parentElement.getJobName())
+    ) {
       return [];
     }
 
@@ -194,7 +195,9 @@ export default class JobProvider
     }
 
     return [
-      ...this.getLogTreeItems(parentElement.getJobName()),
+      ...this.getLogTreeItems(
+        'getJobName' in parentElement ? parentElement.getJobName() : ''
+      ),
       ...this.getJobTreeItems(children),
     ];
   }
