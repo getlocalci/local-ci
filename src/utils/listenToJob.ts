@@ -53,7 +53,7 @@ export default function listenToJob(
       commitProcess.kill();
 
       if (doesJobCreateDynamicConfig) {
-        jobProvider.refresh();
+        jobProvider.hardRefresh();
         const dynamicConfig = getConfigFromPath(
           getDynamicConfigPath(await getConfigFilePath(context))
         );

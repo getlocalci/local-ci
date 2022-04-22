@@ -50,7 +50,7 @@ export default async function runJob(
 ): Promise<void> {
   if (job && job instanceof JobClass) {
     job.setIsRunning();
-    await jobProvider.refresh(job);
+    await jobProvider.hardRefresh(job);
   }
 
   const configFilePath = await getConfigFilePath(context);
