@@ -162,7 +162,9 @@ export default class JobProvider
     return treeItem;
   }
 
-  getChildren(parentElement?: Job | Log): Array<Job | Log | vscode.TreeItem> {
+  getChildren(
+    parentElement?: Job | Log
+  ): Array<Job | Log | Command | Warning | vscode.TreeItem> {
     if (!parentElement) {
       return this.jobs.length
         ? this.getJobTreeItems(
