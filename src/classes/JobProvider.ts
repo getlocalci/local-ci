@@ -41,15 +41,15 @@ export default class JobProvider
   readonly onDidChangeTreeData: vscode.Event<Job | undefined> =
     this._onDidChangeTreeData.event;
   private jobs: string[] = [];
-  private jobErrorType: JobError | undefined;
-  private jobErrorMessage: string | undefined;
-  private runningJob: string | undefined;
-  private jobDependencies: Map<string, string[] | null> | undefined;
+  private jobErrorType?: JobError;
+  private jobErrorMessage?: string;
+  private runningJob?: string;
   private logs: Record<string, string[]> = {};
 
   constructor(
     private readonly context: vscode.ExtensionContext,
-    private readonly reporter: TelemetryReporter
+    private readonly reporter: TelemetryReporter,
+    private jobDependencies?: Map<string, string[] | null>
   ) {}
 
   async init() {
@@ -162,7 +162,9 @@ export default class JobProvider
     return treeItem;
   }
 
-  getChildren(parentElement: Job | Log): vscode.TreeItem[] {
+  getChildren(
+    parentElement?: Job | Log
+  ): Array<Job | Log | Command | Warning | vscode.TreeItem> {
     if (!parentElement) {
       return this.jobs.length
         ? this.getJobTreeItems(
@@ -217,7 +219,7 @@ export default class JobProvider
     );
   }
 
-  getErrorTreeItems(): vscode.TreeItem[] {
+  getErrorTreeItems(): Array<vscode.TreeItem | Command | Warning> {
     const errorMessage = this.getJobErrorMessage();
 
     switch (this.jobErrorType) {
