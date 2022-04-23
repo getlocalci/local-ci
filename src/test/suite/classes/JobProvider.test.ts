@@ -5,26 +5,22 @@ import TelemetryReporter from '@vscode/extension-telemetry';
 import JobProvider from '../../../classes/JobProvider';
 import Job from '../../../classes/Job';
 
+function getStubs(): [vscode.ExtensionContext, TelemetryReporter] {
+  return [
+    Substitute.for<vscode.ExtensionContext>(),
+    Substitute.for<TelemetryReporter>(),
+  ];
+}
+
 suite('JobProvider', () => {
   test('No element passed', () => {
-    const context = Substitute.for<vscode.ExtensionContext>();
-    const reporter = Substitute.for<TelemetryReporter>();
-
-    assert.deepStrictEqual(
-      [],
-      new JobProvider(context, reporter).getChildren()
-    );
+    assert.deepStrictEqual([], new JobProvider(...getStubs()).getChildren());
   });
 
   test('No child', () => {
-    const context = Substitute.for<vscode.ExtensionContext>();
-    const reporter = Substitute.for<TelemetryReporter>();
-
     assert.deepStrictEqual(
       [],
-      new JobProvider(context, reporter).getChildren(
-        new Job('foo', false, false)
-      )
+      new JobProvider(...getStubs()).getChildren(new Job('foo', false, false))
     );
   });
 
@@ -34,11 +30,7 @@ suite('JobProvider', () => {
     allJobs.set('baz', ['foo']);
     allJobs.set('example', ['foo']);
 
-    const jobProvider = new JobProvider(
-      Substitute.for<vscode.ExtensionContext>(),
-      Substitute.for<TelemetryReporter>(),
-      allJobs
-    );
+    const jobProvider = new JobProvider(...getStubs(), allJobs);
 
     const children = jobProvider.getChildren(new Job('foo', false, false));
     assert.strictEqual(2, children.length);
