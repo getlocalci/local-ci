@@ -77,7 +77,7 @@ export default function listenToJob(
       return;
     }
 
-    fs.appendFileSync(logFilePath, output);
+    fs.appendFileSync(logFilePath, output.replace(/\[[0-9]+m/g, '')); // eslint-disable-line no-control-regex
 
     // This should be the final 'Success!' message when a job succeeds.
     // There are a lot of other 'Success!' messages that might trigger this incorrectly.
