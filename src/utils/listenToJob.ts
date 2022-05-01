@@ -77,7 +77,13 @@ export default function listenToJob(
       return;
     }
 
-    fs.appendFileSync(logFilePath, output);
+    fs.appendFileSync(
+      logFilePath,
+      // Remove terminal color encoding, like [32m
+      // Convert this: [32mSuccess![0m
+      // To: Success!
+      output.replace(/\[[0-9]+m/g, '') // eslint-disable-line no-control-regex
+    );
 
     // This should be the final 'Success!' message when a job succeeds.
     // There are a lot of other 'Success!' messages that might trigger this incorrectly.
