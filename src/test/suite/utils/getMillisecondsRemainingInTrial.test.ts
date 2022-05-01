@@ -14,7 +14,7 @@ suite('getMillisecondsRemainingInTrial', () => {
     );
   });
 
-  test('4 days remaining', () => {
+  test('1 day remaining', () => {
     const time = new Date().getTime();
     assert.strictEqual(
       getMillisecondsRemainingInTrial(
@@ -22,7 +22,7 @@ suite('getMillisecondsRemainingInTrial', () => {
         time - 24 * hourInMilliseconds,
         TRIAL_LENGTH_IN_MILLISECONDS
       ),
-      4 * dayInMilliseconds
+      14 * dayInMilliseconds
     );
   });
 
@@ -31,7 +31,7 @@ suite('getMillisecondsRemainingInTrial', () => {
     assert.strictEqual(
       getMillisecondsRemainingInTrial(
         time,
-        time - (4 * dayInMilliseconds + 23 * hourInMilliseconds),
+        time - (14 * dayInMilliseconds + 23 * hourInMilliseconds),
         TRIAL_LENGTH_IN_MILLISECONDS
       ),
       hourInMilliseconds
@@ -43,7 +43,7 @@ suite('getMillisecondsRemainingInTrial', () => {
     assert.strictEqual(
       getMillisecondsRemainingInTrial(
         time,
-        time - 5 * dayInMilliseconds,
+        time - 15 * dayInMilliseconds,
         TRIAL_LENGTH_IN_MILLISECONDS
       ),
       0
