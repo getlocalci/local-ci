@@ -1,5 +1,16 @@
 # Change Log
 
+## 1.6.1 - 3 May 2022
+
+### Added
+- Bump the free preview from 5 to 15 days. [#108](https://github.com/getlocalci/local-ci/pull/108)
+- Add unit tests for `Job` and `JobProvider`. [#105](https://github.com/getlocalci/local-ci/pull/105)
+
+### Fixed
+- Remove terminal characters from logs. [#110](https://github.com/getlocalci/local-ci/pull/110)
+- Move the paid badge to the beginning. [#109](https://github.com/getlocalci/local-ci/pull/109)
+- Remove the boilerplate extension test. [#106](https://github.com/getlocalci/local-ci/pull/106)
+
 ## 1.6.0 - 22 April 2022
 
 ### Added
