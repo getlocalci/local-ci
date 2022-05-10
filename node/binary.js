@@ -22,6 +22,11 @@ const supportedPlatforms = [
     architecture: "x64",
     url: "https://github.com/CircleCI-Public/circleci-cli/releases/download/v0.1.17087/circleci-cli_0.1.17087_darwin_amd64.tar.gz",
   },
+  {
+    type: "Darwin",
+    architecture: "arm64",
+    url: "https://github.com/CircleCI-Public/circleci-cli/releases/download/v0.1.17554/circleci-cli_0.1.17554_darwin_amd64.tar.gz",
+  },
 ];
 
 function getSupportedPlatform() {
