@@ -37,15 +37,21 @@ function getSupportedPlatform() {
   );
 }
 
-function getBinaryPath() {
+function getBinaryPath(platform) {
+  const machinePlatform = platform || getSupportedPlatform();
+
   return path.join(
     __dirname,
-    `../bin/circleci/${getSupportedPlatform().type}/bin/circleci`
+    '../bin/circleci',
+    machinePlatform.type,
+    machinePlatform.architecture,
+    'bin',
+    'circleci'
   );
 }
 
-function getBinaryUrl() {
-  const supportedPlatform = getSupportedPlatform();
+function getBinaryUrl(platform) {
+  const supportedPlatform = platform || getSupportedPlatform();
 
   if (supportedPlatform) {
     return supportedPlatform.url;
@@ -59,18 +65,15 @@ function getBinaryUrl() {
 }
 
 function getBinary(platform) {
-  const url = getBinaryUrl();
+  const url = getBinaryUrl(platform);
   return new Binary(url, {
     name: "cirlceci",
-    installDirectory: path.join(
-      __dirname,
-      `../bin/circleci/${platform}`
-    ),
+    installDirectory: getBinaryPath(platform),
   });
 }
 
 function install() {
-  supportedPlatforms.forEach((platform) => getBinary(platform.type).install());
+  supportedPlatforms.forEach((platform) => getBinary(platform).install());
 }
 
 function uninstall() {
