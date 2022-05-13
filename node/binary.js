@@ -15,7 +15,7 @@ const supportedPlatforms = [
   {
     type: "Linux",
     architecture: "x64",
-    url: "https://github.com/CircleCI-Public/circleci-cli/releases/download/v0.1.17087/circleci-cli_0.1.17087_linux_amd64.tar.gz",
+    url: "https://github.com/CircleCI-Public/circleci-cli/releases/download/v0.1.17554/circleci-cli_0.1.17554_linux_amd64.tar.gz",
   },
   {
     type: "Darwin",
