@@ -292,7 +292,6 @@
     "@types/vscode": "^1.59.0",
     "@typescript-eslint/eslint-plugin": "^5.17.0",
     "@typescript-eslint/parser": "^5.17.0",
-    "@vscode/extension-telemetry": "^0.5.1",
     "console.table": "^0.10.0",
     "eslint": "^8.12.0",
     "eslint-config-prettier": "^8.5.0",
@@ -314,6 +313,7 @@
   },
   "dependencies": {
     "axios": "^0.26.1",
-    "js-md5": "0.7.3"
+    "js-md5": "0.7.3",
+    "@vscode/extension-telemetry": "^0.5.1"
   }
 }
