@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.6.2 - 12 May 2022
+
+### Added
+- Possibly add support for Mac M1. [#112](https://github.com/getlocalci/local-ci/pull/112)
+- Update npm packages. [#113](https://github.com/getlocalci/local-ci/pull/113)
+
 ## 1.6.1 - 3 May 2022
 
 ### Added
