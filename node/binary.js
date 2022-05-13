@@ -15,12 +15,17 @@ const supportedPlatforms = [
   {
     type: "Linux",
     architecture: "x64",
-    url: "https://github.com/CircleCI-Public/circleci-cli/releases/download/v0.1.17087/circleci-cli_0.1.17087_linux_amd64.tar.gz",
+    url: "https://github.com/CircleCI-Public/circleci-cli/releases/download/v0.1.17554/circleci-cli_0.1.17554_linux_amd64.tar.gz",
   },
   {
     type: "Darwin",
     architecture: "x64",
     url: "https://github.com/CircleCI-Public/circleci-cli/releases/download/v0.1.17087/circleci-cli_0.1.17087_darwin_amd64.tar.gz",
+  },
+  {
+    type: "Darwin",
+    architecture: "arm64",
+    url: "https://github.com/CircleCI-Public/circleci-cli/releases/download/v0.1.17554/circleci-cli_0.1.17554_darwin_amd64.tar.gz",
   },
 ];
 
@@ -35,7 +40,13 @@ function getSupportedPlatform() {
 function getBinaryPath() {
   return path.join(
     __dirname,
-    `../bin/circleci/${getSupportedPlatform().type}/bin/circleci`
+    '../',
+    'bin',
+    'circleci',
+    getSupportedPlatform().type,
+    getSupportedPlatform().architecture,
+    'bin',
+    'circleci'
   );
 }
 
@@ -59,17 +70,21 @@ function getBinary(platform) {
     name: "cirlceci",
     installDirectory: path.join(
       __dirname,
-      `../bin/circleci/${platform}`
+      '../',
+      'bin',
+      'circleci',
+      platform.type,
+      platform.architecture
     ),
   });
 }
 
 function install() {
-  supportedPlatforms.forEach((platform) => getBinary(platform.type).install());
+  supportedPlatforms.forEach((platform) => getBinary(platform).install());
 }
 
 function uninstall() {
-  getBinary().uninstall();
+  getBinary(getSupportedPlatform()).uninstall();
 }
 
 module.exports = {
