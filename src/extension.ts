@@ -7,6 +7,7 @@ import Delayer from './classes/Delayer';
 import Job from './classes/Job';
 import JobProvider from './classes/JobProvider';
 import LicenseProvider from './classes/LicenseProvider';
+import LogProvider from './classes/LogProvider';
 import {
   COMMITTED_IMAGE_NAMESPACE,
   CREATE_CONFIG_FILE_COMMAND,
@@ -82,6 +83,10 @@ export function activate(context: vscode.ExtensionContext): void {
     reporter,
     vscode.commands.registerCommand(`${JOB_TREE_VIEW_ID}.refresh`, () =>
       jobProvider.hardRefresh()
+    ),
+    vscode.workspace.registerTextDocumentContentProvider(
+      'local-ci.log',
+      new LogProvider()
     ),
     vscode.commands.registerCommand(PROCESS_TRY_AGAIN_COMMAND, async () => {
       // There might have been a problem with the dynamic config file, so remove it.

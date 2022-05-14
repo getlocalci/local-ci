@@ -96,6 +96,11 @@ export default function listenToJob(
       handleExit(job, logFilePath, true);
       commitProcess.kill();
 
+      const doc = await vscode.workspace.openTextDocument(
+        vscode.Uri.parse(`local-ci.log:${logFilePath}`)
+      );
+      await vscode.window.showTextDocument(doc, { preview: true });
+
       if (doesJobCreateDynamicConfig) {
         jobProvider.hardRefresh();
         const dynamicConfig = getConfigFromPath(
