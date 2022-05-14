@@ -89,7 +89,9 @@ function install() {
 }
 
 function uninstall() {
-  getBinary(getSupportedPlatform()).uninstall();
+  supportedPlatforms.forEach((platform) => {
+    getBinary(platform).uninstall();
+  });
 }
 
 module.exports = {
