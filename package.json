@@ -247,11 +247,6 @@
       "description": "15 day free preview"
     },
     {
-      "url": "https://vsmarketplacebadge.apphb.com/trending-monthly/LocalCI.local-ci.svg?logo=tinder&color=orange&logoColor=white&label=trending%20monthly",
-      "href": "https://marketplace.visualstudio.com/items?itemName=LocalCI.local-ci",
-      "description": "Trending Monthly"
-    },
-    {
       "url": "https://img.shields.io/badge/platform-macOS-yellow",
       "href": "https://en.wikipedia.org/wiki/MacOS",
       "description": "Platform: macOS"
@@ -277,8 +272,7 @@
     "pretest": "npm run test-compile && npm run lint",
     "lint": "eslint src --ext ts",
     "lint:fix": "eslint src --ext ts --fix",
-    "test": "node ./out/test/runTest.js",
-    "vscode:uninstall": "node ./node/uninstall"
+    "test": "node ./out/test/runTest.js"
   },
   "devDependencies": {
     "@cloudflare/binary-install": "^0.2.0",

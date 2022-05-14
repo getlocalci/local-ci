@@ -8,6 +8,7 @@ import getConfigFilePath from './getConfigFilePath';
 import getConfigFromPath from './getConfigFromPath';
 import getDynamicConfigPath from './getDynamicConfigPath';
 import getSpawnOptions from './getSpawnOptions';
+import showLogFile from './showLogFile';
 
 function handleExit(
   job: Job | undefined,
@@ -30,13 +31,9 @@ function handleExit(
         title: showJobOutput,
       }
     )
-    .then(async (clicked) => {
+    .then((clicked) => {
       if (clicked?.title === showJobOutput) {
-        vscode.window.showTextDocument(
-          folderUri.with({
-            path: logFilePath,
-          })
-        );
+        showLogFile(logFilePath);
       }
     });
 }

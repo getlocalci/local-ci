@@ -7,6 +7,7 @@ import Delayer from './classes/Delayer';
 import Job from './classes/Job';
 import JobProvider from './classes/JobProvider';
 import LicenseProvider from './classes/LicenseProvider';
+import LogProvider from './classes/LogProvider';
 import {
   COMMITTED_IMAGE_NAMESPACE,
   CREATE_CONFIG_FILE_COMMAND,
@@ -18,9 +19,11 @@ import {
   HELP_URL,
   HOST_TMP_DIRECTORY,
   JOB_TREE_VIEW_ID,
+  LOG_FILE_SCHEME,
   PROCESS_TRY_AGAIN_COMMAND,
   RUN_JOB_COMMAND,
   SELECTED_CONFIG_PATH,
+  SHOW_LOG_FILE_COMMAND,
   TELEMETRY_KEY,
   TRIAL_STARTED_TIMESTAMP,
 } from './constants';
@@ -38,6 +41,7 @@ import getStarterConfig from './utils/getStarterConfig';
 import prepareConfig from './utils/prepareConfig';
 import runJob from './utils/runJob';
 import showLicenseInput from './utils/showLicenseInput';
+import showLogFile from './utils/showLogFile';
 
 const reporter = new TelemetryReporter(
   EXTENSION_ID,
@@ -82,6 +86,10 @@ export function activate(context: vscode.ExtensionContext): void {
     reporter,
     vscode.commands.registerCommand(`${JOB_TREE_VIEW_ID}.refresh`, () =>
       jobProvider.hardRefresh()
+    ),
+    vscode.workspace.registerTextDocumentContentProvider(
+      LOG_FILE_SCHEME,
+      new LogProvider()
     ),
     vscode.commands.registerCommand(PROCESS_TRY_AGAIN_COMMAND, async () => {
       // There might have been a problem with the dynamic config file, so remove it.
@@ -385,6 +393,9 @@ export function activate(context: vscode.ExtensionContext): void {
         { detail: 'Starter config file' }
       );
       jobProvider.hardRefresh();
+    }),
+    vscode.commands.registerCommand(SHOW_LOG_FILE_COMMAND, (logFilePath) => {
+      showLogFile(logFilePath);
     })
   );
 
