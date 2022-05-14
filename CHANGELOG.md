@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.6.3 - 13 May 2022
+
+### Added
+- Improve log file UI, prevent editing. [#115](https://github.com/getlocalci/local-ci/pull/115)
+- Possibly add support for Linux arm64. [#116](https://github.com/getlocalci/local-ci/pull/116)
+
 ## 1.6.2 - 12 May 2022
 
 ### Added
