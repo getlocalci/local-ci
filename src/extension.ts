@@ -22,6 +22,7 @@ import {
   PROCESS_TRY_AGAIN_COMMAND,
   RUN_JOB_COMMAND,
   SELECTED_CONFIG_PATH,
+  SHOW_LOG_FILE_COMMAND,
   TELEMETRY_KEY,
   TRIAL_STARTED_TIMESTAMP,
 } from './constants';
@@ -39,6 +40,7 @@ import getStarterConfig from './utils/getStarterConfig';
 import prepareConfig from './utils/prepareConfig';
 import runJob from './utils/runJob';
 import showLicenseInput from './utils/showLicenseInput';
+import showLogFile from './utils/showLogFile';
 
 const reporter = new TelemetryReporter(
   EXTENSION_ID,
@@ -390,6 +392,9 @@ export function activate(context: vscode.ExtensionContext): void {
         { detail: 'Starter config file' }
       );
       jobProvider.hardRefresh();
+    }),
+    vscode.commands.registerCommand(SHOW_LOG_FILE_COMMAND, (logFilePath) => {
+      showLogFile(logFilePath);
     })
   );
 

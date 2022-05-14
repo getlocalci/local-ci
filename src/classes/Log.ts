@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { SHOW_LOG_FILE_COMMAND } from '../constants';
 
 export default class Log extends vscode.TreeItem {
   constructor(public readonly label: string, public readonly filePath: string) {
@@ -7,7 +8,7 @@ export default class Log extends vscode.TreeItem {
     this.collapsibleState = vscode.TreeItemCollapsibleState.None;
     this.command = {
       title: label,
-      command: 'vscode.open',
+      command: SHOW_LOG_FILE_COMMAND,
       tooltip,
       arguments: [filePath],
     };
