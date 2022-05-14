@@ -19,6 +19,7 @@ import {
   HELP_URL,
   HOST_TMP_DIRECTORY,
   JOB_TREE_VIEW_ID,
+  LOG_SCHEME,
   PROCESS_TRY_AGAIN_COMMAND,
   RUN_JOB_COMMAND,
   SELECTED_CONFIG_PATH,
@@ -87,7 +88,7 @@ export function activate(context: vscode.ExtensionContext): void {
       jobProvider.hardRefresh()
     ),
     vscode.workspace.registerTextDocumentContentProvider(
-      'local-ci.log',
+      LOG_SCHEME,
       new LogProvider()
     ),
     vscode.commands.registerCommand(PROCESS_TRY_AGAIN_COMMAND, async () => {
