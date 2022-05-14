@@ -1,5 +1,10 @@
 # Change Log
 
+## 1.6.4 - 14 May 2022
+
+### Fixed
+- Address a bug processing the config file in Linux. [#118](https://github.com/getlocalci/local-ci/pull/118)
+
 ## 1.6.3 - 13 May 2022
 
 ### Added
