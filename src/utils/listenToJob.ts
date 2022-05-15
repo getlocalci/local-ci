@@ -148,7 +148,7 @@ export default function listenToJob(
       const moreInformationText = 'Get Bash command';
       vscode.window
         .showErrorMessage(
-          `You can probably fix this failed job with a Bash command`,
+          'You can probably fix this failed job with a Bash command',
           { detail: 'Possible solution' },
           moreInformationText
         )
