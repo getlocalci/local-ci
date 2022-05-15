@@ -116,25 +116,6 @@ export default function listenToJob(
 
       handleExit(job, logFilePath, false);
       commitProcess.kill();
-
-      if (output?.includes('error looking up cgroup')) {
-        const moreInformationText = 'More information';
-        vscode.window
-          .showErrorMessage(
-            'You can probably fix this failed job by running this on your local machine: rm ~/.circleci/build_agent_settings.json',
-            { detail: 'Possible solution' },
-            moreInformationText
-          )
-          .then((clicked) => {
-            if (clicked === moreInformationText) {
-              vscode.env.openExternal(
-                vscode.Uri.parse(
-                  'https://github.com/CircleCI-Public/circleci-cli/issues/589#issuecomment-1005865018'
-                )
-              );
-            }
-          });
-      }
     }
 
     if (output?.includes('failed to create runner binary')) {
@@ -157,6 +138,25 @@ export default function listenToJob(
             vscode.env.openExternal(
               vscode.Uri.parse(
                 'https://github.com/zsh-users/zsh-completions/issues/680#issuecomment-864906013'
+              )
+            );
+          }
+        });
+    }
+
+    if (output?.includes('OCI runtime create failed')) {
+      const moreInformationText = 'Get Bash command';
+      vscode.window
+        .showErrorMessage(
+          `You can probably fix this failed job with a Bash command`,
+          { detail: 'Possible solution' },
+          moreInformationText
+        )
+        .then((clicked) => {
+          if (clicked === moreInformationText) {
+            vscode.env.openExternal(
+              vscode.Uri.parse(
+                'https://github.com/getlocalci/local-ci/discussions/121#discussion-4075651'
               )
             );
           }
