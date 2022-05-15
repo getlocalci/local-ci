@@ -1,8 +1,5 @@
-import * as jsSHA from 'jssha';
+import { sha256 } from 'cross-sha256';
 
 export default function getHash(toHash: string): string {
-  // @ts-ignore The declaration file is wrong.
-  const hash = new jsSHA('SHA-256', 'TEXT', { encoding: 'UTF8' });
-  hash.update(toHash);
-  return hash.getHash('HEX');
+  return new sha256().update(toHash).digest('hex');
 }

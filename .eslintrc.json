@@ -17,7 +17,6 @@
             }
         ],
         "@typescript-eslint/naming-convention": "off",
-        "@typescript-eslint/ban-ts-comment": "off",
         "@typescript-eslint/semi": "warn",
         "curly": "warn",
         "eqeqeq": "warn",
