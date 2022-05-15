@@ -10,7 +10,6 @@ suite('getAttachWorkspaceCommand', () => {
   test('With attach_workspace', () => {
     assert.strictEqual(
       normalize(
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         getAttachWorkspaceCommand({ attach_workspace: { at: '/foo/baz' } })
       ),
       normalize(

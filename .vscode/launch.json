@@ -4,7 +4,6 @@
     {
       "name": "Run Extension",
       "type": "extensionHost",
-      "problemMatcher": "$tsc",
       "request": "launch",
       "args": [
         "--extensionDevelopmentPath=${workspaceFolder}"
