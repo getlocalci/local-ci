@@ -4,21 +4,18 @@ import getImageFromJob from '../../../utils/getImageFromJob';
 suite('getImageFromJob', () => {
   test('No docker value', () => {
     assert.deepStrictEqual(
-      getImageFromJob({ working_directory: 'foo/baz' }), // eslint-disable-line @typescript-eslint/naming-convention
+      getImageFromJob({ working_directory: 'foo/baz' }),
       ''
     );
   });
 
   test('Empty docker array', () => {
-    assert.deepStrictEqual(
-      getImageFromJob({ docker: [] }), // eslint-disable-line @typescript-eslint/naming-convention
-      ''
-    );
+    assert.deepStrictEqual(getImageFromJob({ docker: [] }), '');
   });
 
   test('With docker image', () => {
     assert.deepStrictEqual(
-      getImageFromJob({ docker: [{ image: 'foo-image' }] }), // eslint-disable-line @typescript-eslint/naming-convention
+      getImageFromJob({ docker: [{ image: 'foo-image' }] }),
       'foo-image'
     );
   });

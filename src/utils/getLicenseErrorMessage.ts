@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 const errors = {
   missing: 'License does not exist.',
   missing_url: 'URL not provided.',

@@ -83,7 +83,7 @@ But the jobs still only run locally.
 
 Local CI has no server that runs jobs, so the site has no knowledge of the jobs or any data from them.
 
-If you have entered a license key, it only sends to the [Local CI site](https://getlocalci.com) a `GET` request with the license key and an `md5` hash of your VS Code [machineId](https://code.visualstudio.com/api/references/vscode-api#env).
+If you have entered a license key, it only sends to the [Local CI site](https://getlocalci.com) a `GET` request with the license key and a `SHA-256` hash of your VS Code [machineId](https://code.visualstudio.com/api/references/vscode-api#env).
 
 This is to verify that the license key is only used on 1 machine.
 

@@ -6,7 +6,7 @@ export default function getSpawnOptions(cwd?: string): SpawnOptions {
     cwd: cwd || getFirstWorkspaceRootPath(),
     env: {
       ...process.env,
-      PATH: getPath(), // eslint-disable-line @typescript-eslint/naming-convention
+      PATH: getPath(),
     },
   };
 }

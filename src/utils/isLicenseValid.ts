@@ -1,5 +1,4 @@
 import axios from 'axios';
-import * as md5 from 'js-md5';
 import * as vscode from 'vscode';
 import {
   LICENSE_ERROR,
@@ -8,6 +7,7 @@ import {
   LICENSE_VALIDITY,
   LICENSE_VALIDITY_CACHE_EXPIRATION,
 } from '../constants';
+import getHash from './getHash';
 
 const licenseValidationEndpoint = 'https://getlocalci.com';
 const fiveMinutesInMilliseconds = 300000;
@@ -41,12 +41,12 @@ export default async function isLicenseValid(
     response = await axios.get(licenseValidationEndpoint, {
       params: {
         headers: {
-          'Cache-Control': 'no-cache', // eslint-disable-line @typescript-eslint/naming-convention
+          'Cache-Control': 'no-cache',
         },
         license: encodeURI(String(trimmedLicenseKey)),
-        edd_action: 'activate_license', // eslint-disable-line @typescript-eslint/naming-convention
-        item_id: LICENSE_ITEM_ID, // eslint-disable-line @typescript-eslint/naming-convention
-        url: md5(vscode.env.machineId),
+        edd_action: 'activate_license',
+        item_id: LICENSE_ITEM_ID,
+        url: getHash(vscode.env.machineId),
       },
     });
   } catch (e) {

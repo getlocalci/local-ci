@@ -14,7 +14,6 @@ suite('getRestoreCacheCommand', () => {
       normalize(
         getRestoreCacheCommand(
           {
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             restore_cache: {
               key: 'v2-deps-{{ checksum "package-lock.json" }}',
             },
@@ -62,7 +61,6 @@ suite('getRestoreCacheCommand', () => {
       normalize(
         getRestoreCacheCommand(
           {
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             restore_cache: {
               keys: ['v2-deps-{{ checksum "package-lock.json" }}', 'v2-deps'],
             },
