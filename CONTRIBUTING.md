@@ -43,4 +43,4 @@ https://user-images.githubusercontent.com/4063887/162601777-d12a00f2-6a27-47c7-b
 
 1. Enter the Command Palette, either through a shortcut, or View > Command Palette
 2. Type 'Extensions: Install from VSIX'
-3. Select the Local CI `.vsix` file, maybe the one you [downloaded](#downloading-a-build)
+3. Select the Local CI `.vsix` file, maybe the one you [downloaded](#downloading-a-build-from-a-commit)
