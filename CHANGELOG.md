@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.6.5 - 15 May 2022
+
+### Fixed
+- Add a message for the message 'OCI runtime create failed'. [#122](https://github.com/getlocalci/local-ci/pull/122)
+- Use `SHA-256` hashing with license key verification. [#123](https://github.com/getlocalci/local-ci/pull/123)
+
 ## 1.6.4 - 14 May 2022
 
 ### Fixed
