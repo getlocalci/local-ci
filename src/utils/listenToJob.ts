@@ -145,10 +145,10 @@ export default function listenToJob(
     }
 
     if (output?.includes('OCI runtime create failed')) {
-      const moreInformationText = 'Get Bash command';
+      const moreInformationText = 'Get Bash commands';
       vscode.window
         .showErrorMessage(
-          'You can probably fix this failed job with a Bash command',
+          'You can probably fix this failed job with Bash commands',
           { detail: 'Possible solution' },
           moreInformationText
         )
