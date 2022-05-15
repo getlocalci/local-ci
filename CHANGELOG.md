@@ -1,5 +1,10 @@
 # Change Log
 
+## 1.6.6 - 15 May 2022
+
+### Fixed
+- Fix a problem in the build process where this didn't work in macOS.
+
 ## 1.6.5 - 15 May 2022
 
 ### Fixed
