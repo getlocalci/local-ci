@@ -17,7 +17,7 @@ export default function sendEnteredEmail(
     },
     {
       headers: {
-        Authorization: EMAIL_AUTHORIZATION_HEADER,
+        Authorization: `Basic ${EMAIL_AUTHORIZATION_HEADER}`,
       },
     }
   );
