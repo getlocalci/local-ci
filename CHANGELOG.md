@@ -1,9 +1,15 @@
 # Change Log
 
+## 1.6.7 - 29 May 2022
+
+### Fixed
+- Fix a bug where this didn't get the right binary for other platforms. [#129](https://github.com/getlocalci/local-ci/pull/129)
+- Only show the survey link when the preview expires. [#128](https://github.com/getlocalci/local-ci/pull/128)
+
 ## 1.6.6 - 15 May 2022
 
 ### Fixed
-- Fix a problem in the build process where this didn't work in macOS.
+- Fix a problem in the build process where this didn't work in macOS. [#118](https://github.com/getlocalci/local-ci/pull/118)
 
 ## 1.6.5 - 15 May 2022
 
