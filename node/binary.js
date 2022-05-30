@@ -3,8 +3,6 @@ const { Binary } = require('@cloudflare/binary-install');
 const { type, arch } = require('os');
 const path = require('path');
 
-const { cTable } = require('console.table');
-
 // File mainly copied from https://github.com/cloudflare/binary-install/blob/a1dc431b2c9b318d21d7f0b2f1abfb27526a2384/packages/binary-install-example/binary.js
 function error(msg) {
   console.error(msg);
