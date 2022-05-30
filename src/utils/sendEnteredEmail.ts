@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { EMAIL_AUTHORIZATION_HEADER, EMAIL_ENDPOINT } from '../constants';
+import { EMAIL_ENDPOINT } from '../constants';
 
 export default function sendEnteredEmail(
   email: string,
@@ -17,7 +17,7 @@ export default function sendEnteredEmail(
     },
     {
       headers: {
-        Authorization: `Basic ${EMAIL_AUTHORIZATION_HEADER}`,
+        Authorization: `Basic`,
       },
     }
   );
