@@ -55,23 +55,8 @@ function getBinaryPath() {
   );
 }
 
-function getBinaryUrl() {
-  const supportedPlatform = getSupportedPlatform();
-
-  if (supportedPlatform) {
-    return supportedPlatform.url;
-  }
-
-  error(
-    `Platform with type "${platformType}" and architecture "${architecture}" is not supported.\nYour system must be one of the following:\n\n${cTable.getTable(
-      supportedPlatforms
-    )}`
-  );
-}
-
 function getBinary(platform) {
-  const url = getBinaryUrl();
-  return new Binary(url, {
+  return new Binary(platform.url, {
     name: "cirlceci",
     installDirectory: path.join(
       __dirname,
