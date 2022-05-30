@@ -33,6 +33,9 @@ export const GET_PICARD_CONTAINER_FUNCTION = `get_picard_container() {
 }`;
 export const GET_LICENSE_KEY_URL =
   'https://getlocalci.com/pricing/?utm_medium=extension&utm_source=ui';
+export const EMAIL_ENDPOINT = 'https://getlocalci.com/wp-json/gf/v2/entries';
+export const EMAIL_AUTHORIZATION_HEADER =
+  'Basic Y2tfYThkZmRlYzcxYTNkNTUxM2I1NmI5N2I0NzdhODk0ODU4NTg1ZWUzZjpjc19hYzNlNWFiNjMzNGRlNjcyOTZjYmNhNmVjYmM3MDVjYzMwMzU4ZTUw';
 export const HELP_URL = 'https://github.com/getlocalci/local-ci/discussions';
 export const JOB_TREE_VIEW_ID = 'localCiJobs';
 export const LICENSE_ITEM_ID = 43;
