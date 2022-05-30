@@ -53,7 +53,7 @@ const reporter = new TelemetryReporter(
 const doNotConfirmRunJob = 'local-ci.job.do-not-confirm';
 
 export function activate(context: vscode.ExtensionContext): void {
-  if (context.globalState.get(TRIAL_STARTED_TIMESTAMP)) {
+  if (!context.globalState.get(TRIAL_STARTED_TIMESTAMP)) {
     context.globalState.update(TRIAL_STARTED_TIMESTAMP, new Date().getTime());
     reporter.sendTelemetryEvent('firstActivation');
     askForEmail();
