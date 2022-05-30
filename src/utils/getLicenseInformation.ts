@@ -12,6 +12,7 @@ import {
   LICENSE_KEY,
   LICENSE_VALIDITY,
   SCHEDULE_INTERVIEW_URL,
+  TRIAL_LENGTH_IN_MILLISECONDS,
   TRIAL_STARTED_TIMESTAMP,
 } from '../constants';
 
@@ -29,8 +30,9 @@ export default async function getLicenseInformation(
   const changeLicenseButton = `<button class="secondary" id="enter-license">Change license key</button>`;
   const retryValidationButton = `<button class="secondary" id="retry-license-validation">Retry license validation</button>`;
   const takeSurveyButton = `<button class="button primary" id="take-survey">Get ${
-    EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS / dayInMilliseconds
-  } more free days by taking a 2-minute anonymous survey</button>`;
+    (TRIAL_LENGTH_IN_MILLISECONDS + EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS) /
+    dayInMilliseconds
+  } more free days by taking a 2-minute survey</button>`;
   const scheduleInterviewLink = `<a class="button primary" href="${SCHEDULE_INTERVIEW_URL}" target="_blank">Get a free lifetime license by doing a 30-minute Zoom user research interview</a>`;
   const complainUri = 'mailto:ryan@getlocalci.com';
   const complainLink = `<a class="button secondary" href="${complainUri}" target="_blank">Complain to me</a>`;
@@ -45,8 +47,15 @@ export default async function getLicenseInformation(
 
   const shouldOfferInterview = isTrialExpired(
     previewStartedTimeStamp,
-    trialLengthInMilliseconds + 5 * dayInMilliseconds
+    trialLengthInMilliseconds + 3 * dayInMilliseconds
   );
+
+  const shouldOfferSurvey =
+    !hasExtendedTrial &&
+    isTrialExpired(
+      previewStartedTimeStamp,
+      trialLengthInMilliseconds + 1 * dayInMilliseconds
+    );
 
   if (isValid) {
     return `<p>Your Local CI license key is valid!</p>
@@ -59,7 +68,7 @@ export default async function getLicenseInformation(
     <p>${getLicenseErrorMessage(await context.secrets.get(LICENSE_ERROR))}</p>
     <p>${getLicenseLink}</p>
     <p>${enterLicenseButton}</p>
-    ${hasExtendedTrial ? '' : `<p>${takeSurveyButton}</p>`}
+    ${shouldOfferSurvey ? `<p>${takeSurveyButton}</p>` : ''}
     <p>${retryValidationButton}</p>
     <p>${complainLink}</p>`;
   }
@@ -73,7 +82,7 @@ export default async function getLicenseInformation(
   if (isPreviewExpired) {
     return `<p>Thanks for previewing Local CI! The free preview is over.</p>
       <p>Please enter a Local CI license key to keep using this.</p>
-      ${hasExtendedTrial ? '' : `<p>${takeSurveyButton}</p>`}
+      ${shouldOfferSurvey ? `<p>${takeSurveyButton}</p>` : ''}
       <p>${getLicenseLink}</p>
       <p>${enterLicenseButton}</p>
       <p>${complainLink}</p>`;
@@ -85,7 +94,6 @@ export default async function getLicenseInformation(
       context.globalState.get(TRIAL_STARTED_TIMESTAMP),
       trialLengthInMilliseconds
     )} left in this free preview.</p>
-    ${hasExtendedTrial ? '' : `<p>${takeSurveyButton}</p>`}
     <p>${getLicenseLink}</p>
     <p>${enterLicenseButton}</p>
     <p>${complainLink}</p>`;

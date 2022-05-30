@@ -4,6 +4,7 @@ import {
   HAS_EXTENDED_TRIAL,
   LICENSE_ERROR,
   SURVEY_URL,
+  TRIAL_LENGTH_IN_MILLISECONDS,
   TRIAL_STARTED_TIMESTAMP,
 } from '../constants';
 import getLicenseErrorMessage from '../utils/getLicenseErrorMessage';
@@ -88,7 +89,7 @@ export default class LicenseProvider implements vscode.WebviewViewProvider {
         vscode.env.openExternal(vscode.Uri.parse(SURVEY_URL));
         vscode.window.showInformationMessage(
           `Thanks, your free preview is now ${getPrettyPrintedTimeRemaining(
-            EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS
+            TRIAL_LENGTH_IN_MILLISECONDS + EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS
           )} longer`
         );
       }
