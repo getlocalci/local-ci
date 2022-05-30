@@ -4,7 +4,7 @@ import sendEnteredEmail from './sendEnteredEmail';
 export default function askForEmail(): void {
   vscode.window
     .showInputBox({
-      title: 'Local CI Extension',
+      title: 'Email',
       prompt:
         'Could you please enter your email for your free preview of Local CI?',
     })
@@ -15,8 +15,8 @@ export default function askForEmail(): void {
 
       vscode.window
         .showInputBox({
-          title: 'Local CI license key',
-          prompt: 'Thanks! Could you please enter your first name?',
+          title: 'Name',
+          prompt: `Thanks a lot! What's your first name?`,
         })
         .then((enteredName) => {
           if (enteredName === undefined) {
