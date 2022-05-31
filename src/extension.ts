@@ -56,7 +56,7 @@ export function activate(context: vscode.ExtensionContext): void {
   if (!context.globalState.get(TRIAL_STARTED_TIMESTAMP)) {
     context.globalState.update(TRIAL_STARTED_TIMESTAMP, new Date().getTime());
     reporter.sendTelemetryEvent('firstActivation');
-    askForEmail();
+    askForEmail(reporter);
 
     const getStartedText = 'Get started debugging faster';
     vscode.window
