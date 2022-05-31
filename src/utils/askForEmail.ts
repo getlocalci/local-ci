@@ -27,7 +27,7 @@ export default function askForEmail(): void {
           const yesText = 'Yes';
           vscode.window
             .showQuickPick(['No', yesText], {
-              title: `Thanks a lot! Can I send you occasional emails with CI/CD tips? You can unsubscribe any time. I'll never share your email.`,
+              title: `Thanks so much! Can I send you occasional emails with CI/CD tips? You can unsubscribe any time. I'll never share your email.`,
             })
             .then(async (selection) => {
               const optedIntoNewsletter = selection === yesText;
