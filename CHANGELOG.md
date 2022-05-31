@@ -1,5 +1,10 @@
 # Change Log
 
+## 1.6.8 - 30 May 2022
+
+### Added
+- Ask new users for an email, though this still works without it. [#130](https://github.com/getlocalci/local-ci/pull/131)
+
 ## 1.6.7 - 29 May 2022
 
 ### Fixed
