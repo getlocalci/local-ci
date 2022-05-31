@@ -42,6 +42,7 @@ import prepareConfig from './utils/prepareConfig';
 import runJob from './utils/runJob';
 import showLicenseInput from './utils/showLicenseInput';
 import showLogFile from './utils/showLogFile';
+import askForEmail from './utils/askForEmail';
 
 const reporter = new TelemetryReporter(
   EXTENSION_ID,
@@ -55,6 +56,7 @@ export function activate(context: vscode.ExtensionContext): void {
   if (!context.globalState.get(TRIAL_STARTED_TIMESTAMP)) {
     context.globalState.update(TRIAL_STARTED_TIMESTAMP, new Date().getTime());
     reporter.sendTelemetryEvent('firstActivation');
+    askForEmail();
 
     const getStartedText = 'Get started debugging faster';
     vscode.window
