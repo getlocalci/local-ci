@@ -11,25 +11,23 @@ mocha.afterEach(() => {
 });
 
 suite('sendEnteredEmail', () => {
-  test('only email', () => {
+  test('only email', async () => {
     const email = 'a@example.com';
 
     const spy = sinon.spy();
     sinon.stub(axios, 'post').value(spy);
 
-    sendEnteredEmail(email);
+    await sendEnteredEmail(email);
     assert(
       spy.calledOnceWith(EMAIL_ENDPOINT, {
-        form_id: 5,
-        '1': undefined,
-        '3': email,
-        '4.1': undefined,
-        '4.2': undefined,
+        name: undefined,
+        email,
+        optedIn: undefined,
       })
     );
   });
 
-  test('all fields', () => {
+  test('all fields', async () => {
     const email = 'a@example.com';
     const name = 'Jane';
     const optedIn = true;
@@ -37,14 +35,12 @@ suite('sendEnteredEmail', () => {
     const spy = sinon.spy();
     sinon.stub(axios, 'post').value(spy);
 
-    sendEnteredEmail(email, name, optedIn);
+    await sendEnteredEmail(email, name, optedIn);
     assert(
       spy.calledOnceWith(EMAIL_ENDPOINT, {
-        form_id: 5,
-        '1': name,
-        '3': email,
-        '4.1': '1',
-        '4.2': 'yes',
+        name,
+        email,
+        optedIn,
       })
     );
   });

@@ -20,7 +20,8 @@ export default function askForEmail(): void {
         })
         .then((enteredName) => {
           if (enteredName === undefined) {
-            sendEnteredEmail(enteredEmail);
+            sendEnteredEmail(enteredEmail); // They pressed Escape or exited the input box.
+            return;
           }
 
           const yesText = 'Yes';
