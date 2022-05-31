@@ -19,6 +19,7 @@ export default async function askForEmail(
     title: 'Name',
     prompt: `Thanks a lot! What's your first name?`,
   });
+
   if (enteredName === undefined) {
     sendEnteredEmail(enteredEmail); // They pressed Escape or exited the input box.
     return;
