@@ -51,10 +51,6 @@ jobs:
       - run:
           name: Save cache
           command: |2
-             if [ $(ls -l /tmp/local-ci | awk '{print $3}') != $(whoami) ]
-               then
-               sudo chown $(whoami) /tmp/local-ci
-             fi
              if [ -d /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )/.npm ]
                   then
                   echo "~/.npm is already cached, skipping"
@@ -80,10 +76,6 @@ jobs:
       - run:
           name: Persist to workspace
           command: |-
-            if [ $(ls -l /tmp/local-ci | awk '{print $3}') != $(whoami) ]
-              then
-              sudo chown $(whoami) /tmp/local-ci
-            fi
             cp -rn . /tmp/local-ci || cp -ru . /tmp/local-ci
   run-prettier:
     executor: default-executor
@@ -113,10 +105,6 @@ jobs:
       - run:
           name: Save cache
           command: |2
-            if [ $(ls -l /tmp/local-ci | awk '{print $3}') != $(whoami) ]
-              then
-              sudo chown $(whoami) /tmp/local-ci
-            fi
             if [ -d /tmp/local-ci/node-modules-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )/node_modules ]
               then
               echo "node_modules is already cached, skipping"
@@ -255,12 +243,7 @@ jobs:
           command: npm run build
       - run:
           name: Persist to workspace
-          command: |-
-            if [ $(ls -l /tmp/local-ci | awk '{print $3}') != $(whoami) ]
-              then
-              sudo chown $(whoami) /tmp/local-ci
-            fi
-            cp -rn . /tmp/local-ci || cp -ru . /tmp/local-ci
+          command: cp -rn . /tmp/local-ci || cp -ru . /tmp/local-ci
   verify-bundles-sizes:
     executor: default-executor
     steps:

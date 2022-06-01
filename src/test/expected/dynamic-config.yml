@@ -9,7 +9,7 @@ jobs:
           command: |-
             if [ $(ls -l /tmp/local-ci | awk '{print $3}') != $(whoami) ]
               then
-              sudo chown $(whoami) /local-ci
+              sudo chown $(whoami) /tmp/local-ci
             fi
       - checkout
       - run:
