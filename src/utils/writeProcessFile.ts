@@ -211,11 +211,11 @@ export default function writeProcessFile(
           ...accumulator,
           [jobName]: {
             ...configJobs[jobName],
-            steps: newSteps,
+            steps: [getEnsureVolumeIsWritableStep(), ...(newSteps ?? [])],
           },
         };
       },
-      getEnsureVolumeIsWritableStep()
+      {}
     ),
   };
 

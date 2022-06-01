@@ -10,9 +10,9 @@ jobs:
       - run:
           name: Ensure volume is writable
           command: |-
-            if [ $(ls -l /local-ci | awk '{print $3}') != $(whoami) ]
+            if [ $(ls -l /tmp/local-ci | awk '{print $3}') != $(whoami) ]
               then
-              sudo chown $(whoami) /local-ci
+              sudo chown $(whoami) /tmp/local-ci
             fi
       - checkout
       - run:
@@ -91,9 +91,9 @@ jobs:
       - run:
           name: Ensure volume is writable
           command: |-
-            if [ $(ls -l /local-ci | awk '{print $3}') != $(whoami) ]
+            if [ $(ls -l /tmp/local-ci | awk '{print $3}') != $(whoami) ]
               then
-              sudo chown $(whoami) /local-ci
+              sudo chown $(whoami) /tmp/local-ci
             fi
       - run:
           name: Attach workspace
@@ -134,9 +134,9 @@ jobs:
       - run:
           name: Ensure volume is writable
           command: |-
-            if [ $(ls -l /local-ci | awk '{print $3}') != $(whoami) ]
+            if [ $(ls -l /tmp/local-ci | awk '{print $3}') != $(whoami) ]
               then
-              sudo chown $(whoami) /local-ci
+              sudo chown $(whoami) /tmp/local-ci
             fi
       - run:
           name: Attach workspace
@@ -159,9 +159,9 @@ jobs:
       - run:
           name: Ensure volume is writable
           command: |-
-            if [ $(ls -l /local-ci | awk '{print $3}') != $(whoami) ]
+            if [ $(ls -l /tmp/local-ci | awk '{print $3}') != $(whoami) ]
               then
-              sudo chown $(whoami) /local-ci
+              sudo chown $(whoami) /tmp/local-ci
             fi
       - run:
           name: Attach workspace
@@ -184,9 +184,9 @@ jobs:
       - run:
           name: Ensure volume is writable
           command: |-
-            if [ $(ls -l /local-ci | awk '{print $3}') != $(whoami) ]
+            if [ $(ls -l /tmp/local-ci | awk '{print $3}') != $(whoami) ]
               then
-              sudo chown $(whoami) /local-ci
+              sudo chown $(whoami) /tmp/local-ci
             fi
       - run:
           name: Attach workspace
@@ -234,9 +234,9 @@ jobs:
       - run:
           name: Ensure volume is writable
           command: |-
-            if [ $(ls -l /local-ci | awk '{print $3}') != $(whoami) ]
+            if [ $(ls -l /tmp/local-ci | awk '{print $3}') != $(whoami) ]
               then
-              sudo chown $(whoami) /local-ci
+              sudo chown $(whoami) /tmp/local-ci
             fi
       - run:
           name: Attach workspace
@@ -267,9 +267,9 @@ jobs:
       - run:
           name: Ensure volume is writable
           command: |-
-            if [ $(ls -l /local-ci | awk '{print $3}') != $(whoami) ]
+            if [ $(ls -l /tmp/local-ci | awk '{print $3}') != $(whoami) ]
               then
-              sudo chown $(whoami) /local-ci
+              sudo chown $(whoami) /tmp/local-ci
             fi
       - run:
           name: Attach workspace
@@ -292,9 +292,9 @@ jobs:
       - run:
           name: Ensure volume is writable
           command: |-
-            if [ $(ls -l /local-ci | awk '{print $3}') != $(whoami) ]
+            if [ $(ls -l /tmp/local-ci | awk '{print $3}') != $(whoami) ]
               then
-              sudo chown $(whoami) /local-ci
+              sudo chown $(whoami) /tmp/local-ci
             fi
       - run:
           name: Attach workspace
