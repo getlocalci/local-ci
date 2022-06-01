@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 import { SUPPRESS_UNCOMMITTED_FILE_WARNING } from '../constants';
 import getSpawnOptions from './getSpawnOptions';
 
-/*
+/**
  * Shows a warning if there are uncommitted files in the repo.
  *
  * Those won't be part of the build.
