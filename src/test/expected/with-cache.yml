@@ -75,8 +75,7 @@ jobs:
                 fi
       - run:
           name: Persist to workspace
-          command: |-
-            cp -rn . /tmp/local-ci || cp -ru . /tmp/local-ci
+          command: cp -rn . /tmp/local-ci || cp -ru . /tmp/local-ci
   run-prettier:
     executor: default-executor
     steps:
