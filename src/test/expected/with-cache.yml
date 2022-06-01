@@ -31,6 +31,10 @@ jobs:
                   break;
                 fi
               done;
+            if [ $(ls -l /tmp/local-ci | awk '{print $3}') != $(whoami) ]
+              then
+              sudo chown $(whoami) /tmp/local-ci
+            fi
             restore_from_directories=("/tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )*/.cache" "/tmp/local-ci/v2-deps*/.cache")
               for directory_candidate in $restore_from_directories
                 do
