@@ -69,7 +69,7 @@ export function activate(context: vscode.ExtensionContext): void {
         if (clicked === getStartedText) {
           vscode.commands.executeCommand(
             'workbench.action.openWalkthrough',
-            'LocalCI.local-ci#welcomeLocalCi'
+            `${EXTENSION_ID}#welcomeLocalCi`
           );
           reporter.sendTelemetryEvent('click.getStarted');
         }

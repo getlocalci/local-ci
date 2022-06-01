@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import TelemetryReporter from '@vscode/extension-telemetry';
 import sendEnteredEmail from './sendEnteredEmail';
+import { EXTENSION_ID } from '../constants';
 
 export default async function askForEmail(
   reporter: TelemetryReporter
@@ -42,7 +43,7 @@ export default async function askForEmail(
   if (buttonClicked === getStartedText) {
     vscode.commands.executeCommand(
       'workbench.action.openWalkthrough',
-      'LocalCI.local-ci#welcomeLocalCi'
+      `${EXTENSION_ID}#welcomeLocalCi`
     );
     reporter.sendTelemetryEvent('click.getStarted');
   }
