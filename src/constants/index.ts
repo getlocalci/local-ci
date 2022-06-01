@@ -8,6 +8,7 @@ export const GET_LICENSE_COMMAND = 'local-ci.license.get';
 export const ENTER_LICENSE_COMMAND = 'local-ci.license.enter';
 export const EXIT_JOB_COMMAND = 'local-ci.job.exit';
 export const PROCESS_TRY_AGAIN_COMMAND = 'local-ci.process-error.try-again';
+export const CONTAINER_STORAGE_DIRECTORY = '/tmp/local-ci';
 
 export const GET_RUNNING_CONTAINER_FUNCTION = `get_running_container() {
   IMAGE=$1
@@ -31,6 +32,10 @@ export const GET_PICARD_CONTAINER_FUNCTION = `get_picard_container() {
     fi
     done
 }`;
+export const ENSURE_VOLUME_IS_WRITABLE = `if [ $(ls -l ${CONTAINER_STORAGE_DIRECTORY} | awk '{print $3}') != $(whoami) ]
+  then
+  sudo chown $(whoami) ${CONTAINER_STORAGE_DIRECTORY}
+fi`;
 export const GET_LICENSE_KEY_URL =
   'https://getlocalci.com/pricing/?utm_medium=extension&utm_source=ui';
 export const EMAIL_ENDPOINT =
@@ -47,7 +52,6 @@ export const EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS = 1296000000; // 15 days.
 export const HAS_EXTENDED_TRIAL = 'local-ci.license.trial-extended.survey';
 export const TRIAL_STARTED_TIMESTAMP =
   'local-ci.license.trial-started.timestamp';
-export const CONTAINER_STORAGE_DIRECTORY = '/tmp/local-ci';
 export const DYNAMIC_CONFIG_FILE_NAME = 'dynamic-config.yml';
 export const DYNAMIC_CONFIG_PARAMETERS_FILE_NAME =
   'dynamic-config-parameters.json';

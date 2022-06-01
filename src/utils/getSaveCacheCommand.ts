@@ -1,6 +1,9 @@
 import * as path from 'path';
 import convertToBash from './convertToBash';
-import { CONTAINER_STORAGE_DIRECTORY } from '../constants';
+import {
+  CONTAINER_STORAGE_DIRECTORY,
+  ENSURE_VOLUME_IS_WRITABLE,
+} from '../constants';
 
 export default function getSaveCacheCommand(
   step: FullStep
@@ -26,5 +29,5 @@ export default function getSaveCacheCommand(
       mkdir -p ${destination}
       cp -rn ${directory} ${destinationWhenCopied} || cp -ru ${directory} ${destinationWhenCopied}
     fi \n`;
-  }, '');
+  }, ENSURE_VOLUME_IS_WRITABLE);
 }
