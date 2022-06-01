@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.6.9 - 1 June 2022
+
+### Added
+- Add a 'Getting Started' button after entering an email. [#133](https://github.com/getlocalci/local-ci/pull/133)
+
+### Fixed
+- Prevent an error from a lack of permissions to write to /tmp/local-ci. [#134](https://github.com/getlocalci/local-ci/pull/134)
+
 ## 1.6.8 - 30 May 2022
 
 ### Added
