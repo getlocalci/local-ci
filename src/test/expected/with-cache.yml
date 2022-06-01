@@ -16,10 +16,6 @@ jobs:
       - run:
           name: Restore cache
           command: >
-            if [ $(ls -l /tmp/local-ci | awk '{print $3}') != $(whoami) ]
-              then
-              sudo chown $(whoami) /tmp/local-ci
-            fi
             restore_from_directories=("/tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )*/.npm" "/tmp/local-ci/v2-deps*/.npm")
               for directory_candidate in $restore_from_directories
                 do
@@ -31,10 +27,6 @@ jobs:
                   break;
                 fi
               done;
-            if [ $(ls -l /tmp/local-ci | awk '{print $3}') != $(whoami) ]
-              then
-              sudo chown $(whoami) /tmp/local-ci
-            fi
             restore_from_directories=("/tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )*/.cache" "/tmp/local-ci/v2-deps*/.cache")
               for directory_candidate in $restore_from_directories
                 do
@@ -52,6 +44,10 @@ jobs:
       - run:
           name: Save cache
           command: |2
+             if [ $(ls -l /tmp/local-ci | awk '{print $3}') != $(whoami) ]
+               then
+               sudo chown $(whoami) /tmp/local-ci
+             fi
              if [ -d /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )/.npm ]
                   then
                   echo "~/.npm is already cached, skipping"
@@ -103,6 +99,10 @@ jobs:
       - run:
           name: Save cache
           command: |2
+            if [ $(ls -l /tmp/local-ci | awk '{print $3}') != $(whoami) ]
+              then
+              sudo chown $(whoami) /tmp/local-ci
+            fi
             if [ -d /tmp/local-ci/node-modules-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )/node_modules ]
               then
               echo "node_modules is already cached, skipping"
@@ -168,10 +168,6 @@ jobs:
       - run:
           name: Restore cache
           command: >
-            if [ $(ls -l /tmp/local-ci | awk '{print $3}') != $(whoami) ]
-              then
-              sudo chown $(whoami) /tmp/local-ci
-            fi
             restore_from_directories=("/tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )*/.npm" "/tmp/local-ci/v2-deps*/.npm" "/tmp/local-ci/node-modules-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )*/.npm")
             for directory_candidate in $restore_from_directories
               do
@@ -183,10 +179,6 @@ jobs:
                 break;
               fi
             done;
-            if [ $(ls -l /tmp/local-ci | awk '{print $3}') != $(whoami) ]
-              then
-              sudo chown $(whoami) /tmp/local-ci
-            fi
             restore_from_directories=("/tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )*/.cache" "/tmp/local-ci/v2-deps*/.cache" "/tmp/local-ci/node-modules-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" | awk '{print $1}'; fi )*/.cache")
             for directory_candidate in $restore_from_directories
               do
