@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 
 /**
- * Gets the absolute path to this 1st VS Code workspace folder.
+ * Gets the absolute path to the 1st VS Code workspace folder.
  *
  * Though there could be several workspace folders.
  */
