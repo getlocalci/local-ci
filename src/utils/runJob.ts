@@ -29,7 +29,7 @@ import uncommittedWarning from './uncommittedWarning';
 import getDynamicConfigPath from './getDynamicConfigPath';
 import JobProvider from '../classes/JobProvider';
 
-// Whether this job creates a dynamic config: https://circleci.com/docs/2.0/dynamic-config/
+/** Whether this job creates a dynamic config: https://circleci.com/docs/2.0/dynamic-config/ */
 function doesJobCreateDynamicConfig(job: Job | undefined): boolean {
   return (
     !!job?.steps &&
