@@ -38,6 +38,18 @@ function getPersistToWorkspaceCommand(step: FullStep): string | undefined {
   );
 }
 
+function getEnsureVolumeIsWritableStep() {
+  return {
+    run: {
+      name: 'Ensure volume is writable',
+      command: `if [ "$(ls -ld ${CONTAINER_STORAGE_DIRECTORY} | awk '{print $3}')" != "$(whoami)" ]
+        then
+        sudo chown $(whoami) ${CONTAINER_STORAGE_DIRECTORY}
+      fi`,
+    },
+  };
+}
+
 function getEnvVarStep() {
   return {
     run: {
@@ -199,7 +211,7 @@ export default function writeProcessFile(
           ...accumulator,
           [jobName]: {
             ...configJobs[jobName],
-            steps: newSteps,
+            steps: [getEnsureVolumeIsWritableStep(), ...(newSteps ?? [])],
           },
         };
       },

@@ -3,7 +3,7 @@ import getTerminalName from './getTerminalName';
 import getDebuggingTerminalName from './getDebuggingTerminalName';
 import getFinalTerminalName from './getFinalTerminalName';
 
-// Closes VS Code terminals for a job.
+/** Closes VS Code terminals for a job. */
 export default function disposeTerminalsForJob(jobName: string): void {
   const terminalNames = [
     getTerminalName(jobName),
