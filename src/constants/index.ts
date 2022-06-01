@@ -8,7 +8,6 @@ export const GET_LICENSE_COMMAND = 'local-ci.license.get';
 export const ENTER_LICENSE_COMMAND = 'local-ci.license.enter';
 export const EXIT_JOB_COMMAND = 'local-ci.job.exit';
 export const PROCESS_TRY_AGAIN_COMMAND = 'local-ci.process-error.try-again';
-export const CONTAINER_STORAGE_DIRECTORY = '/tmp/local-ci';
 
 export const GET_RUNNING_CONTAINER_FUNCTION = `get_running_container() {
   IMAGE=$1
@@ -48,6 +47,7 @@ export const EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS = 1296000000; // 15 days.
 export const HAS_EXTENDED_TRIAL = 'local-ci.license.trial-extended.survey';
 export const TRIAL_STARTED_TIMESTAMP =
   'local-ci.license.trial-started.timestamp';
+export const CONTAINER_STORAGE_DIRECTORY = '/tmp/local-ci';
 export const DYNAMIC_CONFIG_FILE_NAME = 'dynamic-config.yml';
 export const DYNAMIC_CONFIG_PARAMETERS_FILE_NAME =
   'dynamic-config-parameters.json';
