@@ -32,7 +32,7 @@ This will also run on a pre-commit hook that will install on `npm i`
 
 You may want to downlod and install a development `.vsix` file, instead of installing this extension via the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=LocalCI.local-ci).
 
-You'll need a CircleCI account for this. Otherwise, all of the [releases](https://github.com/getlocalci/local-ci/releases) on GitHub have a built `.vsix` file.
+You'll need a CircleCI account for this.
 
 Also, it'd be good to use Firefox instead of Chrome. It looks like Chrome converts the `.vsix` file into an unusable `.zip` file on downloading it.
 
