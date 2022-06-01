@@ -32,10 +32,6 @@ export const GET_PICARD_CONTAINER_FUNCTION = `get_picard_container() {
     fi
     done
 }`;
-export const ENSURE_VOLUME_IS_WRITABLE = `if [ $(ls -l ${CONTAINER_STORAGE_DIRECTORY} | awk '{print $3}') != $(whoami) ]
-  then
-  sudo chown $(whoami) ${CONTAINER_STORAGE_DIRECTORY}
-fi`;
 export const GET_LICENSE_KEY_URL =
   'https://getlocalci.com/pricing/?utm_medium=extension&utm_source=ui';
 export const EMAIL_ENDPOINT =

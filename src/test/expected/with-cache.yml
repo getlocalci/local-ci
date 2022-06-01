@@ -7,6 +7,13 @@ jobs:
   set-up-dependencies:
     executor: default-executor
     steps:
+      - run:
+          name: Ensure volume is writable
+          command: |-
+            if [ $(ls -l /local-ci | awk '{print $3}') != $(whoami) ]
+              then
+              sudo chown $(whoami) /local-ci
+            fi
       - checkout
       - run:
           name: Set more environment variables
@@ -82,6 +89,13 @@ jobs:
     executor: default-executor
     steps:
       - run:
+          name: Ensure volume is writable
+          command: |-
+            if [ $(ls -l /local-ci | awk '{print $3}') != $(whoami) ]
+              then
+              sudo chown $(whoami) /local-ci
+            fi
+      - run:
           name: Attach workspace
           command: |-
             if [ ! -d /tmp/local-ci ]
@@ -118,6 +132,13 @@ jobs:
     executor: default-executor
     steps:
       - run:
+          name: Ensure volume is writable
+          command: |-
+            if [ $(ls -l /local-ci | awk '{print $3}') != $(whoami) ]
+              then
+              sudo chown $(whoami) /local-ci
+            fi
+      - run:
           name: Attach workspace
           command: |-
             if [ ! -d /tmp/local-ci ]
@@ -136,6 +157,13 @@ jobs:
     executor: default-executor
     steps:
       - run:
+          name: Ensure volume is writable
+          command: |-
+            if [ $(ls -l /local-ci | awk '{print $3}') != $(whoami) ]
+              then
+              sudo chown $(whoami) /local-ci
+            fi
+      - run:
           name: Attach workspace
           command: |-
             if [ ! -d /tmp/local-ci ]
@@ -153,6 +181,13 @@ jobs:
   e2e-tests:
     executor: default-executor
     steps:
+      - run:
+          name: Ensure volume is writable
+          command: |-
+            if [ $(ls -l /local-ci | awk '{print $3}') != $(whoami) ]
+              then
+              sudo chown $(whoami) /local-ci
+            fi
       - run:
           name: Attach workspace
           command: |-
@@ -197,6 +232,13 @@ jobs:
     executor: default-executor
     steps:
       - run:
+          name: Ensure volume is writable
+          command: |-
+            if [ $(ls -l /local-ci | awk '{print $3}') != $(whoami) ]
+              then
+              sudo chown $(whoami) /local-ci
+            fi
+      - run:
           name: Attach workspace
           command: |-
             if [ ! -d /tmp/local-ci ]
@@ -223,6 +265,13 @@ jobs:
     executor: default-executor
     steps:
       - run:
+          name: Ensure volume is writable
+          command: |-
+            if [ $(ls -l /local-ci | awk '{print $3}') != $(whoami) ]
+              then
+              sudo chown $(whoami) /local-ci
+            fi
+      - run:
           name: Attach workspace
           command: |-
             if [ ! -d /tmp/local-ci ]
@@ -240,6 +289,13 @@ jobs:
   deploy:
     executor: default-executor
     steps:
+      - run:
+          name: Ensure volume is writable
+          command: |-
+            if [ $(ls -l /local-ci | awk '{print $3}') != $(whoami) ]
+              then
+              sudo chown $(whoami) /local-ci
+            fi
       - run:
           name: Attach workspace
           command: |-

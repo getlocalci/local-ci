@@ -11,7 +11,6 @@ import {
   CONTINUE_PIPELINE_STEP_NAME,
   DYNAMIC_CONFIG_PARAMETERS_FILE_NAME,
   DYNAMIC_CONFIG_PATH_IN_CONTAINER,
-  ENSURE_VOLUME_IS_WRITABLE,
 } from '../constants';
 
 function getPersistToWorkspaceCommand(step: FullStep): string | undefined {
@@ -35,8 +34,20 @@ function getPersistToWorkspaceCommand(step: FullStep): string | undefined {
       // BusyBox doesn't have the -n option.
       return `${accumulator} cp -rn ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY} || cp -ru ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY} \n`;
     },
-    ENSURE_VOLUME_IS_WRITABLE
+    ''
   );
+}
+
+function getEnsureVolumeIsWritableStep() {
+  return {
+    run: {
+      name: 'Ensure volume is writable',
+      command: `if [ $(ls -l ${CONTAINER_STORAGE_DIRECTORY} | awk '{print $3}') != $(whoami) ]
+        then
+        sudo chown $(whoami) ${CONTAINER_STORAGE_DIRECTORY}
+      fi`,
+    },
+  };
 }
 
 function getEnvVarStep() {
@@ -204,7 +215,7 @@ export default function writeProcessFile(
           },
         };
       },
-      {}
+      getEnsureVolumeIsWritableStep()
     ),
   };
 

@@ -4,6 +4,13 @@ jobs:
   set-up-config:
     executor: continuation/default
     steps:
+      - run:
+          name: Ensure volume is writable
+          command: |-
+            if [ $(ls -l /local-ci | awk '{print $3}') != $(whoami) ]
+              then
+              sudo chown $(whoami) /local-ci
+            fi
       - checkout
       - run:
           name: Set more environment variables
