@@ -76,7 +76,12 @@ jobs:
                 fi
       - run:
           name: Persist to workspace
-          command: cp -rn . /tmp/local-ci || cp -ru . /tmp/local-ci
+          command: |-
+            if [ $(ls -l /tmp/local-ci | awk '{print $3}') != $(whoami) ]
+              then
+              sudo chown $(whoami) /tmp/local-ci
+            fi
+            cp -rn . /tmp/local-ci || cp -ru . /tmp/local-ci
   run-prettier:
     executor: default-executor
     steps:
@@ -216,7 +221,12 @@ jobs:
           command: npm run build
       - run:
           name: Persist to workspace
-          command: cp -rn . /tmp/local-ci || cp -ru . /tmp/local-ci
+          command: |-
+            if [ $(ls -l /tmp/local-ci | awk '{print $3}') != $(whoami) ]
+              then
+              sudo chown $(whoami) /tmp/local-ci
+            fi
+            cp -rn . /tmp/local-ci || cp -ru . /tmp/local-ci
   verify-bundles-sizes:
     executor: default-executor
     steps:
