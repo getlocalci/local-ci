@@ -225,8 +225,13 @@ export default class JobProvider
     );
   }
 
-  getErrorTreeItems(): Array<vscode.TreeItem | Command | Warning | null> {
+  getErrorTreeItems(): Array<vscode.TreeItem | Command | Warning> {
     const errorMessage = this.getJobErrorMessage();
+    const licenseKeyTreeItems = [
+      new Warning('Please enter a Local CI license key.'),
+      new Command('Get License', GET_LICENSE_COMMAND),
+      new Command('Enter License', ENTER_LICENSE_COMMAND),
+    ];
 
     switch (this.jobErrorType) {
       case JobError.DockerNotRunning:
@@ -236,21 +241,19 @@ export default class JobProvider
           new Command('Try Again', `${JOB_TREE_VIEW_ID}.refresh`),
         ];
       case JobError.LicenseKey:
-        return [
-          shouldOfferSurvey(this.context)
-            ? new Command(
+        return shouldOfferSurvey(this.context)
+          ? [
+              new Command(
                 `Get ${
                   (TRIAL_LENGTH_IN_MILLISECONDS +
                     EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS) /
                   dayInMilliseconds
                 } more free days by taking a 2-minute survey`,
                 TAKE_SURVEY_COMMAND
-              )
-            : null,
-          new Warning('Please enter a Local CI license key.'),
-          new Command('Get License', GET_LICENSE_COMMAND),
-          new Command('Enter License', ENTER_LICENSE_COMMAND),
-        ].filter((treeItem) => treeItem);
+              ),
+              ...licenseKeyTreeItems,
+            ]
+          : licenseKeyTreeItems;
       case JobError.NoConfigFilePathInWorkspace:
         return [
           new Warning('Error: No .circleci/config.yml found'),
