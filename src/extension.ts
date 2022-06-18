@@ -24,6 +24,8 @@ import {
   RUN_JOB_COMMAND,
   SELECTED_CONFIG_PATH,
   SHOW_LOG_FILE_COMMAND,
+  SURVEY_URL,
+  TAKE_SURVEY_COMMAND,
   TELEMETRY_KEY,
   TRIAL_STARTED_TIMESTAMP,
 } from './constants';
@@ -86,6 +88,9 @@ export function activate(context: vscode.ExtensionContext): void {
 
   context.subscriptions.push(
     reporter,
+    vscode.commands.registerCommand(TAKE_SURVEY_COMMAND, () => {
+      vscode.env.openExternal(vscode.Uri.parse(SURVEY_URL));
+    }),
     vscode.commands.registerCommand(`${JOB_TREE_VIEW_ID}.refresh`, () =>
       jobProvider.hardRefresh()
     ),

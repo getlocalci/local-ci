@@ -19,11 +19,15 @@ import prepareConfig from '../utils/prepareConfig';
 import {
   CREATE_CONFIG_FILE_COMMAND,
   ENTER_LICENSE_COMMAND,
+  EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS,
   GET_LICENSE_COMMAND,
   JOB_TREE_VIEW_ID,
   PROCESS_TRY_AGAIN_COMMAND,
+  TAKE_SURVEY_COMMAND,
   TRIAL_STARTED_TIMESTAMP,
+  TRIAL_LENGTH_IN_MILLISECONDS,
 } from '../constants';
+import shouldOfferSurvey from '../utils/shouldOfferSurvey';
 
 enum JobError {
   DockerNotRunning,
@@ -32,6 +36,8 @@ enum JobError {
   NoConfigFilePathSelected,
   ProcessFile,
 }
+
+const dayInMilliseconds = 86400000;
 
 export default class JobProvider
   implements vscode.TreeDataProvider<vscode.TreeItem>
@@ -219,7 +225,7 @@ export default class JobProvider
     );
   }
 
-  getErrorTreeItems(): Array<vscode.TreeItem | Command | Warning> {
+  getErrorTreeItems(): Array<vscode.TreeItem | Command | Warning | null> {
     const errorMessage = this.getJobErrorMessage();
 
     switch (this.jobErrorType) {
@@ -231,10 +237,20 @@ export default class JobProvider
         ];
       case JobError.LicenseKey:
         return [
+          shouldOfferSurvey(this.context)
+            ? new Command(
+                `Get ${
+                  (TRIAL_LENGTH_IN_MILLISECONDS +
+                    EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS) /
+                  dayInMilliseconds
+                } more free days by taking a 2-minute survey`,
+                TAKE_SURVEY_COMMAND
+              )
+            : null,
           new Warning('Please enter a Local CI license key.'),
           new Command('Get License', GET_LICENSE_COMMAND),
           new Command('Enter License', ENTER_LICENSE_COMMAND),
-        ];
+        ].filter((treeItem) => treeItem);
       case JobError.NoConfigFilePathInWorkspace:
         return [
           new Warning('Error: No .circleci/config.yml found'),
