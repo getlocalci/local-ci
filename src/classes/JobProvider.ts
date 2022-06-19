@@ -28,6 +28,7 @@ import {
   TRIAL_LENGTH_IN_MILLISECONDS,
 } from '../constants';
 import shouldOfferSurvey from '../utils/shouldOfferSurvey';
+import SurveyButton from './SurveyButton';
 
 enum JobError {
   DockerNotRunning,
@@ -244,7 +245,7 @@ export default class JobProvider
         return shouldOfferSurvey(this.context)
           ? [
               ...licenseKeyTreeItems,
-              new Command(
+              new SurveyButton(
                 `Get ${
                   (TRIAL_LENGTH_IN_MILLISECONDS +
                     EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS) /
