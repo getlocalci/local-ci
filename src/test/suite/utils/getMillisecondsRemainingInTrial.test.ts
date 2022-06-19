@@ -1,9 +1,11 @@
 import * as assert from 'assert';
-import { TRIAL_LENGTH_IN_MILLISECONDS } from '../../../constants';
+import {
+  DAY_IN_MILLISECONDS,
+  TRIAL_LENGTH_IN_MILLISECONDS,
+} from '../../../constants';
 import getMillisecondsRemainingInTrial from '../../../utils/getMillisecondsRemainingInTrial';
 
 const hourInMilliseconds = 3600000;
-const dayInMilliseconds = 86400000;
 
 suite('getMillisecondsRemainingInTrial', () => {
   test('entire trial remaining', () => {
@@ -22,7 +24,7 @@ suite('getMillisecondsRemainingInTrial', () => {
         time - 24 * hourInMilliseconds,
         TRIAL_LENGTH_IN_MILLISECONDS
       ),
-      14 * dayInMilliseconds
+      14 * DAY_IN_MILLISECONDS
     );
   });
 
@@ -31,7 +33,7 @@ suite('getMillisecondsRemainingInTrial', () => {
     assert.strictEqual(
       getMillisecondsRemainingInTrial(
         time,
-        time - (14 * dayInMilliseconds + 23 * hourInMilliseconds),
+        time - (14 * DAY_IN_MILLISECONDS + 23 * hourInMilliseconds),
         TRIAL_LENGTH_IN_MILLISECONDS
       ),
       hourInMilliseconds
@@ -43,7 +45,7 @@ suite('getMillisecondsRemainingInTrial', () => {
     assert.strictEqual(
       getMillisecondsRemainingInTrial(
         time,
-        time - 15 * dayInMilliseconds,
+        time - 15 * DAY_IN_MILLISECONDS,
         TRIAL_LENGTH_IN_MILLISECONDS
       ),
       0

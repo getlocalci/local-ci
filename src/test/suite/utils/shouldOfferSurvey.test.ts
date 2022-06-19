@@ -4,6 +4,7 @@ import * as sinon from 'sinon';
 import * as vscode from 'vscode';
 import { Substitute } from '@fluffy-spoon/substitute';
 import {
+  DAY_IN_MILLISECONDS,
   HAS_EXTENDED_TRIAL,
   TRIAL_STARTED_TIMESTAMP,
 } from '../../../constants';
@@ -39,8 +40,6 @@ mocha.afterEach(() => {
   sinon.restore();
 });
 
-const dayInMilliseconds = 86400000;
-
 suite('shouldOfferSurvey', () => {
   test('preview just began', () => {
     assert.strictEqual(
@@ -52,7 +51,7 @@ suite('shouldOfferSurvey', () => {
   test('preview expired, and has not been extended', () => {
     assert.strictEqual(
       shouldOfferSurvey(
-        getMockContext(false, new Date().getTime() - 50 * dayInMilliseconds)
+        getMockContext(false, new Date().getTime() - 50 * DAY_IN_MILLISECONDS)
       ),
       true
     );
@@ -61,7 +60,7 @@ suite('shouldOfferSurvey', () => {
   test('preview expired, but already extended it', () => {
     assert.strictEqual(
       shouldOfferSurvey(
-        getMockContext(true, new Date().getTime() - 50 * dayInMilliseconds)
+        getMockContext(true, new Date().getTime() - 50 * DAY_IN_MILLISECONDS)
       ),
       false
     );

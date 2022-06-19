@@ -1,6 +1,7 @@
 import axios from 'axios';
 import * as vscode from 'vscode';
 import {
+  DAY_IN_MILLISECONDS,
   LICENSE_ERROR,
   LICENSE_ITEM_ID,
   LICENSE_KEY,
@@ -11,7 +12,6 @@ import getHash from './getHash';
 
 const licenseValidationEndpoint = 'https://getlocalci.com';
 const fiveMinutesInMilliseconds = 300000;
-const dayInMilliseconds = 86400000;
 
 function isCachedValidityExpired(context: vscode.ExtensionContext): boolean {
   const expiration = context.globalState.get(LICENSE_VALIDITY_CACHE_EXPIRATION);
@@ -58,7 +58,7 @@ export default async function isLicenseValid(
   context.globalState.update(
     LICENSE_VALIDITY_CACHE_EXPIRATION,
     new Date().getTime() +
-      (isValid ? dayInMilliseconds : fiveMinutesInMilliseconds)
+      (isValid ? DAY_IN_MILLISECONDS : fiveMinutesInMilliseconds)
   );
 
   if (!isValid && response?.data?.error) {

@@ -6,6 +6,7 @@ import isLicenseValid from './isLicenseValid';
 import isTrialExpired from './isTrialExpired';
 import shouldOfferSurvey from './shouldOfferSurvey';
 import {
+  DAY_IN_MILLISECONDS,
   EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS,
   GET_LICENSE_KEY_URL,
   LICENSE_ERROR,
@@ -23,7 +24,6 @@ export default async function getLicenseInformation(
   const previewStartedTimeStamp = context.globalState.get(
     TRIAL_STARTED_TIMESTAMP
   );
-  const dayInMilliseconds = 86400000;
   const licenseKey = await context.secrets.get(LICENSE_KEY);
   const getLicenseLink = `<a class="button secondary" href="${GET_LICENSE_KEY_URL}" target="_blank">Buy license</a>`;
   const enterLicenseButton = `<button class="secondary" id="enter-license">Enter license key</button>`;
@@ -31,7 +31,7 @@ export default async function getLicenseInformation(
   const retryValidationButton = `<button class="secondary" id="retry-license-validation">Retry license validation</button>`;
   const takeSurveyButton = `<button class="button primary" id="take-survey">Get ${
     (TRIAL_LENGTH_IN_MILLISECONDS + EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS) /
-    dayInMilliseconds
+    DAY_IN_MILLISECONDS
   } more free days by taking a 2-minute survey</button>`;
   const scheduleInterviewLink = `<a class="button primary" href="${SCHEDULE_INTERVIEW_URL}" target="_blank">Get a free lifetime license by doing a 30-minute Zoom user research interview</a>`;
   const complainUri = 'mailto:ryan@getlocalci.com';
@@ -46,7 +46,7 @@ export default async function getLicenseInformation(
 
   const shouldOfferInterview = isTrialExpired(
     previewStartedTimeStamp,
-    trialLengthInMilliseconds + 3 * dayInMilliseconds
+    trialLengthInMilliseconds + 3 * DAY_IN_MILLISECONDS
   );
 
   if (isValid) {

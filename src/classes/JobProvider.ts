@@ -18,6 +18,7 @@ import getDockerError from '../utils/getDockerError';
 import prepareConfig from '../utils/prepareConfig';
 import {
   CREATE_CONFIG_FILE_COMMAND,
+  DAY_IN_MILLISECONDS,
   ENTER_LICENSE_COMMAND,
   EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS,
   GET_LICENSE_COMMAND,
@@ -37,8 +38,6 @@ enum JobError {
   NoConfigFilePathSelected,
   ProcessFile,
 }
-
-const dayInMilliseconds = 86400000;
 
 export default class JobProvider
   implements vscode.TreeDataProvider<vscode.TreeItem>
@@ -249,7 +248,7 @@ export default class JobProvider
                 `Get ${
                   (TRIAL_LENGTH_IN_MILLISECONDS +
                     EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS) /
-                  dayInMilliseconds
+                  DAY_IN_MILLISECONDS
                 } more free days by taking a 2-minute survey`,
                 TAKE_SURVEY_COMMAND,
                 'rocket'
