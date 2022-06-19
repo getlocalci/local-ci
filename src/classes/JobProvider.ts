@@ -28,7 +28,7 @@ import {
   TRIAL_LENGTH_IN_MILLISECONDS,
 } from '../constants';
 import shouldOfferSurvey from '../utils/shouldOfferSurvey';
-import SurveyButton from './SurveyButton';
+import IconCommand from './IconCommand';
 
 enum JobError {
   DockerNotRunning,
@@ -245,13 +245,14 @@ export default class JobProvider
         return shouldOfferSurvey(this.context)
           ? [
               ...licenseKeyTreeItems,
-              new SurveyButton(
+              new IconCommand(
                 `Get ${
                   (TRIAL_LENGTH_IN_MILLISECONDS +
                     EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS) /
                   dayInMilliseconds
                 } more free days by taking a 2-minute survey`,
-                TAKE_SURVEY_COMMAND
+                TAKE_SURVEY_COMMAND,
+                'rocket'
               ),
             ]
           : licenseKeyTreeItems;
