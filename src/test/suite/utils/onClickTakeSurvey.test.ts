@@ -39,7 +39,7 @@ function getMockContext(hasExtendedTrial: boolean) {
 }
 
 suite('onClickTakeSurvey', () => {
-  test('already took survey', async () => {
+  test('has taken survey', async () => {
     const successCallbackSpy = sinon.spy();
     await onClickTakeSurvey(getMockContext(true), successCallbackSpy);
 

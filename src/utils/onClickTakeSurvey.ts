@@ -16,6 +16,8 @@ export default async function onClickTakeSurvey(
     return;
   }
 
+  vscode.env.openExternal(vscode.Uri.parse(SURVEY_URL));
+
   await context.globalState.update(HAS_EXTENDED_TRIAL, true);
   await context.globalState.update(
     TRIAL_STARTED_TIMESTAMP,
@@ -23,7 +25,6 @@ export default async function onClickTakeSurvey(
   );
   successCallback();
 
-  vscode.env.openExternal(vscode.Uri.parse(SURVEY_URL));
   vscode.window.showInformationMessage(
     `Thanks, your free preview is now ${getPrettyPrintedTimeRemaining(
       TRIAL_LENGTH_IN_MILLISECONDS + EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS
