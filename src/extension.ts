@@ -20,7 +20,6 @@ import {
   HELP_URL,
   HOST_TMP_DIRECTORY,
   JOB_TREE_VIEW_ID,
-  LICENSE_KEY,
   LOG_FILE_SCHEME,
   PROCESS_TRY_AGAIN_COMMAND,
   RUN_JOB_COMMAND,
@@ -57,15 +56,6 @@ const reporter = new TelemetryReporter(
 const doNotConfirmRunJob = 'local-ci.job.do-not-confirm';
 
 export function activate(context: vscode.ExtensionContext): void {
-  const dayInMilliseconds = 86400000;
-
-  context.globalState.update(LICENSE_KEY, null);
-  context.globalState.update(HAS_EXTENDED_TRIAL, false);
-  context.globalState.update(
-    TRIAL_STARTED_TIMESTAMP,
-    new Date().getTime() - 50 * dayInMilliseconds
-  );
-
   if (!context.globalState.get(TRIAL_STARTED_TIMESTAMP)) {
     context.globalState.update(TRIAL_STARTED_TIMESTAMP, new Date().getTime());
     reporter.sendTelemetryEvent('firstActivation');
