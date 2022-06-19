@@ -10,7 +10,7 @@ import getPrettyPrintedTimeRemaining from './getPrettyPrintedTimeRemaining';
 
 export default async function onClickTakeSurvey(
   context: vscode.ExtensionContext,
-  successCallback: function
+  successCallback: () => void
 ) {
   if (context.globalState.get(HAS_EXTENDED_TRIAL)) {
     return;

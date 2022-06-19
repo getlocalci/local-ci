@@ -102,7 +102,7 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand(TAKE_SURVEY_COMMAND, () => {
       onClickTakeSurvey(context, () => {
         licenseProvider.load();
-        jobProvider.refresh();
+        jobProvider.hardRefresh();
       });
     }),
     vscode.commands.registerCommand(`${JOB_TREE_VIEW_ID}.refresh`, () =>
