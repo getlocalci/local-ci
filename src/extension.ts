@@ -16,15 +16,16 @@ import {
   EXTENSION_ID,
   GET_LICENSE_COMMAND,
   GET_LICENSE_KEY_URL,
+  HAS_EXTENDED_TRIAL,
   HELP_URL,
   HOST_TMP_DIRECTORY,
   JOB_TREE_VIEW_ID,
+  LICENSE_KEY,
   LOG_FILE_SCHEME,
   PROCESS_TRY_AGAIN_COMMAND,
   RUN_JOB_COMMAND,
   SELECTED_CONFIG_PATH,
   SHOW_LOG_FILE_COMMAND,
-  SURVEY_URL,
   TAKE_SURVEY_COMMAND,
   TELEMETRY_KEY,
   TRIAL_STARTED_TIMESTAMP,
@@ -40,6 +41,7 @@ import getDynamicConfigPath from './utils/getDynamicConfigPath';
 import getFinalTerminalName from './utils/getFinalTerminalName';
 import getRepoBasename from './utils/getRepoBasename';
 import getStarterConfig from './utils/getStarterConfig';
+import onClickTakeSurvey from './utils/onClickTakeSurvey';
 import prepareConfig from './utils/prepareConfig';
 import runJob from './utils/runJob';
 import showLicenseInput from './utils/showLicenseInput';
@@ -55,6 +57,15 @@ const reporter = new TelemetryReporter(
 const doNotConfirmRunJob = 'local-ci.job.do-not-confirm';
 
 export function activate(context: vscode.ExtensionContext): void {
+  const dayInMilliseconds = 86400000;
+
+  context.globalState.update(LICENSE_KEY, null);
+  context.globalState.update(HAS_EXTENDED_TRIAL, false);
+  context.globalState.update(
+    TRIAL_STARTED_TIMESTAMP,
+    new Date().getTime() - 50 * dayInMilliseconds
+  );
+
   if (!context.globalState.get(TRIAL_STARTED_TIMESTAMP)) {
     context.globalState.update(TRIAL_STARTED_TIMESTAMP, new Date().getTime());
     reporter.sendTelemetryEvent('firstActivation');
@@ -89,7 +100,10 @@ export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
     reporter,
     vscode.commands.registerCommand(TAKE_SURVEY_COMMAND, () => {
-      vscode.env.openExternal(vscode.Uri.parse(SURVEY_URL));
+      onClickTakeSurvey(context, () => {
+        licenseProvider.load();
+        jobProvider.refresh();
+      });
     }),
     vscode.commands.registerCommand(`${JOB_TREE_VIEW_ID}.refresh`, () =>
       jobProvider.hardRefresh()

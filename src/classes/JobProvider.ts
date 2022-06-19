@@ -243,6 +243,7 @@ export default class JobProvider
       case JobError.LicenseKey:
         return shouldOfferSurvey(this.context)
           ? [
+              ...licenseKeyTreeItems,
               new Command(
                 `Get ${
                   (TRIAL_LENGTH_IN_MILLISECONDS +
@@ -251,7 +252,6 @@ export default class JobProvider
                 } more free days by taking a 2-minute survey`,
                 TAKE_SURVEY_COMMAND
               ),
-              ...licenseKeyTreeItems,
             ]
           : licenseKeyTreeItems;
       case JobError.NoConfigFilePathInWorkspace:
