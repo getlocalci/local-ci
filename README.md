@@ -53,7 +53,7 @@ Find out in seconds whether the setup is right, all in your local.
 
 Local CI requires a [license key](https://getlocalci.com/pricing/?utm_medium=extension&utm_source=readme) for $15 per month.
 
-But first you'll get a free 15-day preview, no sign-up or credit card needed.
+But first you'll get a free 15-day preview, no credit card needed.
 
 ## Requirements
 

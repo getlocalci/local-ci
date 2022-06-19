@@ -6,6 +6,8 @@ export const SELECTED_CONFIG_PATH = 'local-ci.config.path';
 export const LICENSE_ERROR = 'localCiLicenseKeyError';
 export const GET_LICENSE_COMMAND = 'local-ci.license.get';
 export const ENTER_LICENSE_COMMAND = 'local-ci.license.enter';
+export const SURVEY_URL = 'https://www.surveymonkey.com/r/J2HWF5S';
+export const TAKE_SURVEY_COMMAND = 'local-ci.survey.take';
 export const EXIT_JOB_COMMAND = 'local-ci.job.exit';
 export const PROCESS_TRY_AGAIN_COMMAND = 'local-ci.process-error.try-again';
 
@@ -42,8 +44,9 @@ export const LICENSE_KEY = 'local-ci.license.key';
 export const LICENSE_VALIDITY = 'local-ci.license.validity';
 export const LICENSE_VALIDITY_CACHE_EXPIRATION =
   'local-ci.license.cache.expiration';
-export const TRIAL_LENGTH_IN_MILLISECONDS = 1296000000; // 15 days.
-export const EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS = 1296000000; // 15 days.
+export const DAY_IN_MILLISECONDS = 86400000;
+export const TRIAL_LENGTH_IN_MILLISECONDS = 15 * DAY_IN_MILLISECONDS;
+export const EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS = 15 * DAY_IN_MILLISECONDS;
 export const HAS_EXTENDED_TRIAL = 'local-ci.license.trial-extended.survey';
 export const TRIAL_STARTED_TIMESTAMP =
   'local-ci.license.trial-started.timestamp';
@@ -65,5 +68,4 @@ export const SCHEDULE_INTERVIEW_URL =
   'https://tidycal.com/localci/30-minute-meeting';
 export const SUPPRESS_UNCOMMITTED_FILE_WARNING =
   'local-ci.suppress-warning.uncommitted';
-export const SURVEY_URL = 'https://www.surveymonkey.com/r/J2HWF5S';
 export const TELEMETRY_KEY = '90189d4e-b560-4a92-aa2c-5a9df190b66a'; // Microsoft.AppInsights Instrumentation Key.

@@ -1,6 +1,7 @@
+import { DAY_IN_MILLISECONDS } from '../constants';
+
 const minuteInMilliseconds = 60000;
 const hourInMilliseconds = 3600000;
-const dayInMilliseconds = 86400000;
 
 function getTextForNumber(singular: string, plural: string, count: number) {
   if (!count) {
@@ -29,10 +30,10 @@ export default function getPrettyPrintedTimeRemaining(
     );
   }
 
-  const daysRemaining = Math.round(millisecondsRemaining / dayInMilliseconds);
+  const daysRemaining = Math.round(millisecondsRemaining / DAY_IN_MILLISECONDS);
   const hoursRemaining = Math.floor(
     Math.max(
-      (millisecondsRemaining - daysRemaining * dayInMilliseconds) /
+      (millisecondsRemaining - daysRemaining * DAY_IN_MILLISECONDS) /
         hourInMilliseconds,
       0
     )

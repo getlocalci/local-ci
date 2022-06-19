@@ -1,10 +1,12 @@
 import * as assert from 'assert';
-import { TRIAL_LENGTH_IN_MILLISECONDS } from '../../../constants';
+import {
+  DAY_IN_MILLISECONDS,
+  TRIAL_LENGTH_IN_MILLISECONDS,
+} from '../../../constants';
 import getTimeRemainingInTrial from '../../../utils/getTimeRemainingInTrial';
 
 const minuteInMilliseconds = 60000;
 const hourInMilliseconds = 3600000;
-const dayInMilliseconds = 86400000;
 
 suite('getTimeRemainingInTrial', () => {
   const time = new Date().getTime();
@@ -20,7 +22,7 @@ suite('getTimeRemainingInTrial', () => {
       getTimeRemainingInTrial(
         time,
         time,
-        14 * dayInMilliseconds + 13 * hourInMilliseconds
+        14 * DAY_IN_MILLISECONDS + 13 * hourInMilliseconds
       ),
       '15 days'
     );
@@ -31,7 +33,7 @@ suite('getTimeRemainingInTrial', () => {
       getTimeRemainingInTrial(
         time,
         time,
-        14 * dayInMilliseconds + 11 * hourInMilliseconds
+        14 * DAY_IN_MILLISECONDS + 11 * hourInMilliseconds
       ),
       '14 days, 11 hours'
     );
@@ -39,14 +41,14 @@ suite('getTimeRemainingInTrial', () => {
 
   test('14 days remaining', () => {
     assert.strictEqual(
-      getTimeRemainingInTrial(time, time, 14 * dayInMilliseconds),
+      getTimeRemainingInTrial(time, time, 14 * DAY_IN_MILLISECONDS),
       '14 days'
     );
   });
 
   test('2 hours remaining', () => {
     assert.strictEqual(
-      getTimeRemainingInTrial(time, time, dayInMilliseconds * 2),
+      getTimeRemainingInTrial(time, time, DAY_IN_MILLISECONDS * 2),
       '2 days'
     );
   });
@@ -56,7 +58,7 @@ suite('getTimeRemainingInTrial', () => {
       getTimeRemainingInTrial(
         time,
         time - 10 * hourInMilliseconds,
-        dayInMilliseconds * 2
+        DAY_IN_MILLISECONDS * 2
       ),
       '2 days'
     );
@@ -67,7 +69,7 @@ suite('getTimeRemainingInTrial', () => {
       getTimeRemainingInTrial(
         time,
         time - 24 * hourInMilliseconds,
-        dayInMilliseconds * 2
+        DAY_IN_MILLISECONDS * 2
       ),
       '1 day'
     );
@@ -78,7 +80,7 @@ suite('getTimeRemainingInTrial', () => {
       getTimeRemainingInTrial(
         time,
         time - 43 * hourInMilliseconds,
-        dayInMilliseconds * 2
+        DAY_IN_MILLISECONDS * 2
       ),
       '5 hours'
     );
@@ -89,7 +91,7 @@ suite('getTimeRemainingInTrial', () => {
       getTimeRemainingInTrial(
         time,
         time - 47 * hourInMilliseconds,
-        dayInMilliseconds * 2
+        DAY_IN_MILLISECONDS * 2
       ),
       '1 hour'
     );
@@ -100,7 +102,7 @@ suite('getTimeRemainingInTrial', () => {
       getTimeRemainingInTrial(
         time,
         time - 47 * hourInMilliseconds - 37 * minuteInMilliseconds,
-        dayInMilliseconds * 2
+        DAY_IN_MILLISECONDS * 2
       ),
       '23 minutes'
     );
@@ -111,7 +113,7 @@ suite('getTimeRemainingInTrial', () => {
       getTimeRemainingInTrial(
         time,
         time - 47 * hourInMilliseconds - 59 * minuteInMilliseconds,
-        dayInMilliseconds * 2
+        DAY_IN_MILLISECONDS * 2
       ),
       '1 minute'
     );
@@ -122,7 +124,7 @@ suite('getTimeRemainingInTrial', () => {
       getTimeRemainingInTrial(
         time,
         time - 47 * hourInMilliseconds - 59 * minuteInMilliseconds - 30000,
-        dayInMilliseconds * 2
+        DAY_IN_MILLISECONDS * 2
       ),
       'No time'
     );
@@ -133,7 +135,7 @@ suite('getTimeRemainingInTrial', () => {
       getTimeRemainingInTrial(
         time,
         time - 48 * hourInMilliseconds,
-        dayInMilliseconds * 2
+        DAY_IN_MILLISECONDS * 2
       ),
       'No time'
     );

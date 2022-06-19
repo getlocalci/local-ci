@@ -1,16 +1,9 @@
 import * as vscode from 'vscode';
-import {
-  EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS,
-  HAS_EXTENDED_TRIAL,
-  LICENSE_ERROR,
-  SURVEY_URL,
-  TRIAL_LENGTH_IN_MILLISECONDS,
-  TRIAL_STARTED_TIMESTAMP,
-} from '../constants';
+import { LICENSE_ERROR } from '../constants';
 import getLicenseErrorMessage from '../utils/getLicenseErrorMessage';
 import getLicenseInformation from '../utils/getLicenseInformation';
-import getPrettyPrintedTimeRemaining from '../utils/getPrettyPrintedTimeRemaining';
 import isLicenseValid from '../utils/isLicenseValid';
+import onClickTakeSurvey from '../utils/onClickTakeSurvey';
 import showLicenseInput from '../utils/showLicenseInput';
 
 function getNonce() {
@@ -76,22 +69,10 @@ export default class LicenseProvider implements vscode.WebviewViewProvider {
       }
 
       if (data.type === 'takeSurvey') {
-        if (this.context.globalState.get(HAS_EXTENDED_TRIAL)) {
-          return;
-        }
-
-        this.load();
-        this.context.globalState.update(HAS_EXTENDED_TRIAL, true);
-        this.context.globalState.update(
-          TRIAL_STARTED_TIMESTAMP,
-          new Date().getTime()
-        );
-        vscode.env.openExternal(vscode.Uri.parse(SURVEY_URL));
-        vscode.window.showInformationMessage(
-          `Thanks, your free preview is now ${getPrettyPrintedTimeRemaining(
-            TRIAL_LENGTH_IN_MILLISECONDS + EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS
-          )} longer`
-        );
+        onClickTakeSurvey(this.context, () => {
+          this.load();
+          this.licenseSuccessCallback();
+        });
       }
     });
   }
