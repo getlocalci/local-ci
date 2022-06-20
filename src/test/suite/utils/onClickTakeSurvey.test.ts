@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { Substitute } from '@fluffy-spoon/substitute';
 import * as assert from 'assert';
 import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as vscode from 'vscode';
+import { Substitute } from '@fluffy-spoon/substitute';
 import { HAS_EXTENDED_TRIAL } from '../../../constants';
 import onClickTakeSurvey from '../../../utils/onClickTakeSurvey';
 

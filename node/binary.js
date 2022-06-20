@@ -3,32 +3,29 @@ const { Binary } = require('@cloudflare/binary-install');
 const { type, arch } = require('os');
 const path = require('path');
 
-// File mainly copied from https://github.com/cloudflare/binary-install/blob/a1dc431b2c9b318d21d7f0b2f1abfb27526a2384/packages/binary-install-example/binary.js
-function error(msg) {
-  console.error(msg);
-  process.exit(1);
-};
+const binaryVersion = '0.1.18980';
+const intelMacBinaryVersion = '0.1.17087';
 
 const supportedPlatforms = [
   {
     type: "Linux",
     architecture: "x64",
-    url: "https://github.com/CircleCI-Public/circleci-cli/releases/download/v0.1.17554/circleci-cli_0.1.17554_linux_amd64.tar.gz",
+    url: `https://github.com/CircleCI-Public/circleci-cli/releases/download/v${binaryVersion}/circleci-cli_${binaryVersion}_linux_amd64.tar.gz`,
   },
   {
     type: "Linux",
     architecture: "arm64",
-    url: "https://github.com/CircleCI-Public/circleci-cli/releases/download/v0.1.17554/circleci-cli_0.1.17554_linux_arm64.tar.gz",
+    url: `https://github.com/CircleCI-Public/circleci-cli/releases/download/v${binaryVersion}/circleci-cli_${binaryVersion}_linux_arm64.tar.gz`,
   },
   {
     type: "Darwin",
     architecture: "x64",
-    url: "https://github.com/CircleCI-Public/circleci-cli/releases/download/v0.1.17087/circleci-cli_0.1.17087_darwin_amd64.tar.gz",
+    url: `https://github.com/CircleCI-Public/circleci-cli/releases/download/v${intelMacBinaryVersion}/circleci-cli_${intelMacBinaryVersion}_darwin_amd64.tar.gz`,
   },
   {
     type: "Darwin",
     architecture: "arm64",
-    url: "https://github.com/CircleCI-Public/circleci-cli/releases/download/v0.1.17554/circleci-cli_0.1.17554_darwin_amd64.tar.gz",
+    url: `https://github.com/CircleCI-Public/circleci-cli/releases/download/v${binaryVersion}/circleci-cli_${binaryVersion}_darwin_amd64.tar.gz`,
   },
 ];
 
