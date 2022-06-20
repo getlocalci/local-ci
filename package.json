@@ -2,7 +2,7 @@
   "name": "local-ci",
   "displayName": "Local CI",
   "description": "Debug CircleCI® workflows locally, with Bash access during and after. Free preview, then paid.",
-  "version": "1.6.9",
+  "version": "1.7.0",
   "publisher": "LocalCI",
   "contributors": [
     "Ryan Kienstra"

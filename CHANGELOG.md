@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.7.0 - 19 June 2022
+
+### Added
+- Bump the CircleCI® CLI binary versions. [#137](https://github.com/getlocalci/local-ci/pull/137)
+- Add another link for the survey. [#136](https://github.com/getlocalci/local-ci/pull/136)
+
 ## 1.6.9 - 1 June 2022
 
 ### Added
