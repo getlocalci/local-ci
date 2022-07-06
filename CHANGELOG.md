@@ -1,5 +1,10 @@
 # Change Log
 
+## 1.7.1 - 6 July 2022
+
+### Added
+- Bump the CLI version for everything but Intel Mac. [#139](https://github.com/getlocalci/local-ci/pull/139)
+
 ## 1.7.0 - 19 June 2022
 
 ### Added
