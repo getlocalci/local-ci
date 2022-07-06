@@ -17,6 +17,8 @@ jobs:
           command: |-
             echo 'export CIRCLE_SHA1=$(git rev-parse HEAD)' >> $BASH_ENV
             echo 'export CIRCLE_BRANCH=$(git rev-parse --abbrev-ref HEAD)' >> $BASH_ENV
+            echo 'export CIRCLE_PROJECT_REPONAME=$(basename `git rev-parse --show-toplevel`)' >> $BASH_ENV
+
       - run:
           name: Create config
           command: echo "Creating the dynamic config here"
