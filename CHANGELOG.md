@@ -1,5 +1,10 @@
 # Change Log
 
+## 1.7.2 - 8 July 2022
+
+### Added
+- Add a CIRCLE_PROJECT_REPONAME env var. [#141](https://github.com/getlocalci/local-ci/pull/141)
+
 ## 1.7.1 - 6 July 2022
 
 ### Added
