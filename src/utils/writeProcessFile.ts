@@ -55,7 +55,8 @@ function getEnvVarStep() {
     run: {
       name: 'Set more environment variables',
       command: `echo 'export CIRCLE_SHA1=$(git rev-parse HEAD)' >> $BASH_ENV
-        echo 'export CIRCLE_BRANCH=$(git rev-parse --abbrev-ref HEAD)' >> $BASH_ENV`,
+        echo 'export CIRCLE_BRANCH=$(git rev-parse --abbrev-ref HEAD)' >> $BASH_ENV
+        echo 'export CIRCLE_PROJECT_REPONAME=$(basename $(git remote get-url origin))' >> $BASH_ENV`,
     },
   };
 }
