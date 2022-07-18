@@ -1,5 +1,10 @@
 # Change Log
 
+## 1.7.3 - 18 July 2022
+
+### Added
+- Bump the CLI version to the latest: v0.1.19878. [#143](https://github.com/getlocalci/local-ci/pull/143)
+
 ## 1.7.2 - 8 July 2022
 
 ### Added
