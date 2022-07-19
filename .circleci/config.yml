@@ -21,6 +21,7 @@ jobs:
       - run: mkdir /tmp/artifacts && mv local-ci*.vsix /tmp/artifacts
       - store_artifacts:
           path: /tmp/artifacts
+    resource_class: large
 
 workflows:
   test-lint:
