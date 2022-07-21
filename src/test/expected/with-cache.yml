@@ -9,8 +9,8 @@ jobs:
     steps:
       - run:
           name: Ensure volume is writable
-          command: |-
-            if [ "$(ls -ld /tmp/local-ci | awk '{print $3}')" != "$(whoami)" ]
+          command: >-
+            if [ "$(ls -ld /tmp/local-ci | awk '{print $3}')" != "$(whoami)" ] && [ "$(sudo -V 2>/dev/null)" ]
               then
               sudo chown $(whoami) /tmp/local-ci
             fi
@@ -83,8 +83,8 @@ jobs:
     steps:
       - run:
           name: Ensure volume is writable
-          command: |-
-            if [ "$(ls -ld /tmp/local-ci | awk '{print $3}')" != "$(whoami)" ]
+          command: >-
+            if [ "$(ls -ld /tmp/local-ci | awk '{print $3}')" != "$(whoami)" ] && [ "$(sudo -V 2>/dev/null)" ]
               then
               sudo chown $(whoami) /tmp/local-ci
             fi
@@ -122,8 +122,8 @@ jobs:
     steps:
       - run:
           name: Ensure volume is writable
-          command: |-
-            if [ "$(ls -ld /tmp/local-ci | awk '{print $3}')" != "$(whoami)" ]
+          command: >-
+            if [ "$(ls -ld /tmp/local-ci | awk '{print $3}')" != "$(whoami)" ] && [ "$(sudo -V 2>/dev/null)" ]
               then
               sudo chown $(whoami) /tmp/local-ci
             fi
@@ -147,8 +147,8 @@ jobs:
     steps:
       - run:
           name: Ensure volume is writable
-          command: |-
-            if [ "$(ls -ld /tmp/local-ci | awk '{print $3}')" != "$(whoami)" ]
+          command: >-
+            if [ "$(ls -ld /tmp/local-ci | awk '{print $3}')" != "$(whoami)" ] && [ "$(sudo -V 2>/dev/null)" ]
               then
               sudo chown $(whoami) /tmp/local-ci
             fi
@@ -172,8 +172,8 @@ jobs:
     steps:
       - run:
           name: Ensure volume is writable
-          command: |-
-            if [ "$(ls -ld /tmp/local-ci | awk '{print $3}')" != "$(whoami)" ]
+          command: >-
+            if [ "$(ls -ld /tmp/local-ci | awk '{print $3}')" != "$(whoami)" ] && [ "$(sudo -V 2>/dev/null)" ]
               then
               sudo chown $(whoami) /tmp/local-ci
             fi
@@ -222,8 +222,8 @@ jobs:
     steps:
       - run:
           name: Ensure volume is writable
-          command: |-
-            if [ "$(ls -ld /tmp/local-ci | awk '{print $3}')" != "$(whoami)" ]
+          command: >-
+            if [ "$(ls -ld /tmp/local-ci | awk '{print $3}')" != "$(whoami)" ] && [ "$(sudo -V 2>/dev/null)" ]
               then
               sudo chown $(whoami) /tmp/local-ci
             fi
@@ -250,8 +250,8 @@ jobs:
     steps:
       - run:
           name: Ensure volume is writable
-          command: |-
-            if [ "$(ls -ld /tmp/local-ci | awk '{print $3}')" != "$(whoami)" ]
+          command: >-
+            if [ "$(ls -ld /tmp/local-ci | awk '{print $3}')" != "$(whoami)" ] && [ "$(sudo -V 2>/dev/null)" ]
               then
               sudo chown $(whoami) /tmp/local-ci
             fi
@@ -275,8 +275,8 @@ jobs:
     steps:
       - run:
           name: Ensure volume is writable
-          command: |-
-            if [ "$(ls -ld /tmp/local-ci | awk '{print $3}')" != "$(whoami)" ]
+          command: >-
+            if [ "$(ls -ld /tmp/local-ci | awk '{print $3}')" != "$(whoami)" ] && [ "$(sudo -V 2>/dev/null)" ]
               then
               sudo chown $(whoami) /tmp/local-ci
             fi

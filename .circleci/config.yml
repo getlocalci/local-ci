@@ -11,6 +11,7 @@ jobs:
       - checkout
       - node/install-packages
       - run: npm test
+    resource_class: large
   package:
     docker:
       - image: cimg/node:16.8.0-browsers
