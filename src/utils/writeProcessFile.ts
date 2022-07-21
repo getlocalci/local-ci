@@ -42,7 +42,7 @@ function getEnsureVolumeIsWritableStep() {
   return {
     run: {
       name: 'Ensure volume is writable',
-      command: `if [ "$(ls -ld ${CONTAINER_STORAGE_DIRECTORY} | awk '{print $3}')" != "$(whoami)" ] && [ "$(sudo -V 2>/dev/null)" ]
+      command: `if [ "$(ls -ld ${CONTAINER_STORAGE_DIRECTORY} | awk '{print $3}')" != "$(whoami)" ] && [ "$(sudo -V 2>/dev/null)" ] && [ "$(sudo -V 2>/dev/null)" ]
         then
         sudo chown $(whoami) ${CONTAINER_STORAGE_DIRECTORY}
       fi`,
