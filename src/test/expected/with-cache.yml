@@ -17,7 +17,7 @@ jobs:
       - checkout
       - run:
           name: Set more environment variables
-          command: |
+          command: |-
             echo 'export CIRCLE_SHA1=$(git rev-parse HEAD)' >> $BASH_ENV
             echo 'export CIRCLE_BRANCH=$(git rev-parse --abbrev-ref HEAD)' >> $BASH_ENV
             echo 'export CIRCLE_PROJECT_REPONAME=$(basename $(git remote get-url origin))' >> $BASH_ENV
@@ -90,7 +90,7 @@ jobs:
             fi
       - run:
           name: Attach workspace
-          command: |
+          command: |-
             if [ ! -d /tmp/local-ci ]
               then
                 echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's not a directory. It might require a job to run before it."
@@ -129,7 +129,7 @@ jobs:
             fi
       - run:
           name: Attach workspace
-          command: |
+          command: |-
             if [ ! -d /tmp/local-ci ]
             then
               echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's not a directory. It might require a job to run before it."
@@ -154,7 +154,7 @@ jobs:
             fi
       - run:
           name: Attach workspace
-          command: |
+          command: |-
             if [ ! -d /tmp/local-ci ]
             then
               echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's not a directory. It might require a job to run before it."
@@ -179,7 +179,7 @@ jobs:
             fi
       - run:
           name: Attach workspace
-          command: |
+          command: |-
             if [ ! -d /tmp/local-ci ]
             then
               echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's not a directory. It might require a job to run before it."
@@ -229,7 +229,7 @@ jobs:
             fi
       - run:
           name: Attach workspace
-          command: |
+          command: |-
             if [ ! -d /tmp/local-ci ]
             then
               echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's not a directory. It might require a job to run before it."
@@ -257,7 +257,7 @@ jobs:
             fi
       - run:
           name: Attach workspace
-          command: |
+          command: |-
             if [ ! -d /tmp/local-ci ]
             then
               echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's not a directory. It might require a job to run before it."
@@ -282,7 +282,7 @@ jobs:
             fi
       - run:
           name: Attach workspace
-          command: |
+          command: |-
             if [ ! -d /tmp/local-ci ]
             then
               echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's not a directory. It might require a job to run before it."
