@@ -1,5 +1,10 @@
 # Change Log
 
+## 1.7.4 - 20 July 2022
+
+### Fixed
+- Ensure sudo is installed before calling it. [#147](https://github.com/getlocalci/local-ci/pull/147)
+
 ## 1.7.3 - 18 July 2022
 
 ### Added
