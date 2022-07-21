@@ -192,6 +192,10 @@ export function activate(context: vscode.ExtensionContext): void {
                 vscode.window.showInformationMessage(
                   `The repo ${getRepoBasename(selectedFsPath)} is now selected`
                 );
+
+                vscode.commands.executeCommand(
+                  'workbench.view.extension.localCiDebugger'
+                );
               });
           }
 
@@ -212,7 +216,7 @@ export function activate(context: vscode.ExtensionContext): void {
       async (jobName: string, job?: Job) => {
         if (!jobName) {
           vscode.window.showWarningMessage(
-            `Please click a specific job to run it`
+            'Please click a specific job to run it'
           );
           vscode.commands.executeCommand(
             'workbench.view.extension.localCiDebugger'
