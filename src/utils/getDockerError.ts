@@ -3,7 +3,7 @@ import getSpawnOptions from './getSpawnOptions';
 
 export default function getDockerError(): string {
   try {
-    cp.execSync('docker -v', {
+    cp.execSync('docker info', {
       ...getSpawnOptions(),
       timeout: 2000,
     });
