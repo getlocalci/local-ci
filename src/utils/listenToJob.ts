@@ -3,7 +3,10 @@ import * as fs from 'fs';
 import * as vscode from 'vscode';
 import Job from '../classes/Job';
 import JobProvider from '../classes/JobProvider';
-import { GET_PICARD_CONTAINER_FUNCTION } from '../constants';
+import {
+  GET_PICARD_CONTAINER_FUNCTION,
+  SUPPRESS_JOB_COMPLETE_MESSAGE,
+} from '../constants';
 import getConfigFilePath from './getConfigFilePath';
 import getConfigFromPath from './getConfigFromPath';
 import getDynamicConfigPath from './getDynamicConfigPath';
@@ -11,6 +14,7 @@ import getSpawnOptions from './getSpawnOptions';
 import showLogFile from './showLogFile';
 
 function handleExit(
+  context: vscode.ExtensionContext,
   job: Job | undefined,
   logFilePath: string,
   didSucceed: boolean
@@ -19,21 +23,25 @@ function handleExit(
     ? vscode.workspace.workspaceFolders[0].uri
     : null;
 
-  if (!folderUri) {
+  if (!folderUri || context.globalState.get(SUPPRESS_JOB_COMPLETE_MESSAGE)) {
     return;
   }
 
   const showJobOutput = 'Show job log';
+  const dontShowAgain = `Don't show again`;
   vscode.window
     .showInformationMessage(
       `The job ${job?.getJobName()} ${didSucceed ? 'succeeded' : 'failed'}`,
-      {
-        title: showJobOutput,
-      }
+      showJobOutput,
+      dontShowAgain
     )
     .then((clicked) => {
-      if (clicked?.title === showJobOutput) {
+      if (clicked === showJobOutput) {
         showLogFile(logFilePath);
+      }
+
+      if (clicked === dontShowAgain) {
+        context.globalState.update(SUPPRESS_JOB_COMPLETE_MESSAGE, true);
       }
     });
 }
@@ -90,7 +98,7 @@ export default function listenToJob(
       job?.setExpanded();
       jobProvider.refresh(job);
 
-      handleExit(job, logFilePath, true);
+      handleExit(context, job, logFilePath, true);
       commitProcess.kill();
 
       if (doesJobCreateDynamicConfig) {
@@ -114,7 +122,7 @@ export default function listenToJob(
       job?.setExpanded();
       jobProvider.refresh(job);
 
-      handleExit(job, logFilePath, false);
+      handleExit(context, job, logFilePath, false);
       commitProcess.kill();
     }
 
