@@ -1,5 +1,15 @@
 # Change Log
 
+## 1.7.5 - 25 July 2022
+
+### Added
+- Open the extension tab on selecting a repo. [#149](https://github.com/getlocalci/local-ci/pull/149)
+
+### Fixed
+- Update binary version to the latest: v0.1.20239. [#150](https://github.com/getlocalci/local-ci/pull/150)
+- Fix the check for whether Docker is running. [#151](https://github.com/getlocalci/local-ci/pull/151)
+- Allow opting out of message that a job completed. [#153](https://github.com/getlocalci/local-ci/pull/153)
+
 ## 1.7.4 - 20 July 2022
 
 ### Fixed
