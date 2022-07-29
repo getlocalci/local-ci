@@ -75,7 +75,7 @@ You can opt out of all telemetry by adding this to your VS Code `settings.json`:
 
 If you haven't opted out, here are the [telemetry events](https://github.com/getlocalci/local-ci/search?q=reporter.send) sent via [VS Code telemetry](https://code.visualstudio.com/docs/getstarted/telemetry).
 
-If you haven't entered a license key, like during the free preview, the only interaction this extension has with Local CI's site is if you optionally enter your email on first activating the plugin.
+If you haven't entered a license key, like during the free preview, the only interaction this extension has with Local CI's site is if you optionally enter your email on first activating this extension.
 
 It does interact with CircleCI® and Docker to process and run the jobs.
 
