@@ -1,5 +1,10 @@
 # Change Log
 
+## 1.7.6 - 28 July 2022
+
+### Fixed
+- Update binary version to the latest: 0.1.20397. [#155](https://github.com/getlocalci/local-ci/pull/155)
+
 ## 1.7.5 - 25 July 2022
 
 ### Added
