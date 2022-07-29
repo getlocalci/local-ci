@@ -304,7 +304,7 @@
     "webpack-cli": "^4.9.2"
   },
   "dependencies": {
-    "@vscode/extension-telemetry": "^0.5.1",
+    "@vscode/extension-telemetry": "^0.6.2",
     "axios": "^0.26.1",
     "cross-sha256": "^1.2.0"
   }
