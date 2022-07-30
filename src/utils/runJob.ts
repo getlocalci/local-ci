@@ -145,13 +145,13 @@ export default async function runJob(
   // Once the container is available, run an interactive bash shell within the container.
   debuggingTerminal.sendText(`
     ${GET_RUNNING_CONTAINER_FUNCTION}
-    echo "You'll get bash access to the job once this conditional is true:\n"
-    until [[ -n $(get_running_container ${jobImage}) ]]
-    do
+    printf "You'll get bash access to the job once this conditional is true:\n"
+    until [ -n "$(get_running_container ${jobImage})" ]
+      do
       sleep 1
     done
     echo "Inside the job's container:"
-    docker exec -it $(get_running_container ${jobImage}) /bin/sh || exit 1`);
+    docker exec -it "$(get_running_container ${jobImage})" /bin/sh || exit 1`);
   debuggingTerminal.sendText('cd ~/');
 
   let finalTerminal: vscode.Terminal;
