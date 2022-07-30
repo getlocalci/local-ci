@@ -15,9 +15,9 @@ export const GET_RUNNING_CONTAINER_FUNCTION = `get_running_container() {
   IMAGE=$1
   for container in $(docker ps -q --filter status=running)
     do
-    if [[ $IMAGE == $(docker inspect --format '{{.Config.Image}}' $container) ]]
+    if [ "$IMAGE" = "$(docker inspect --format '{{.Config.Image}}' "$container")" ]
       then
-      echo $container
+      echo "$container"
       break
     fi
   done
