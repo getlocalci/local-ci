@@ -31,7 +31,7 @@ suite('getRestoreCacheCommand', () => {
         )
       ),
       normalize(
-        `restore_from_directories=("/tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" 2>/dev/null "package-lock.json" || sha256sum "package-lock.json" 2>/dev/null | awk '{print $1}'; fi )*/.npm")
+        `restore_from_directories=("/tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then shasum "package-lock.json" 2>/dev/null || sha256sum "package-lock.json" 2>/dev/null | awk '{print $1}'; fi )*/.npm")
         for directory_candidate in $restore_from_directories
           do
           if [ $(ls -ard $directory_candidate 2>/dev/null) ]
