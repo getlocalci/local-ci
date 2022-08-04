@@ -2,6 +2,7 @@ import * as assert from 'assert';
 import * as fs from 'fs';
 import * as mocha from 'mocha';
 import * as sinon from 'sinon';
+import * as yaml from 'js-yaml';
 import { getTestFilePath, normalize } from '../../helpers';
 import writeProcessFile from '../../../utils/writeProcessFile';
 
@@ -27,12 +28,15 @@ suite('writeProcessFile', () => {
       '/foo/baz/'
     );
 
-    assert.strictEqual(
-      normalize(writeFileSyncSpy.firstCall.lastArg),
-      normalize(
-        fs.readFileSync(getTestFilePath('expected', fileName)).toString()
-      )
-    );
+    const actual = writeFileSyncSpy.firstCall.lastArg;
+    const expected = fs
+      .readFileSync(getTestFilePath('expected', fileName))
+      .toString();
+
+    // Ensure there's no .yml error.
+    yaml.load(actual);
+
+    assert.strictEqual(normalize(actual), normalize(expected));
   });
 
   test('Dynamic config', () => {
@@ -47,11 +51,14 @@ suite('writeProcessFile', () => {
       '/foo/baz/'
     );
 
-    assert.strictEqual(
-      normalize(writeFileSyncSpy.firstCall.lastArg),
-      normalize(
-        fs.readFileSync(getTestFilePath('expected', fileName)).toString()
-      )
-    );
+    const actual = writeFileSyncSpy.firstCall.lastArg;
+    const expected = fs
+      .readFileSync(getTestFilePath('expected', fileName))
+      .toString();
+
+    // Ensure there's no .yml error.
+    yaml.load(actual);
+
+    assert.strictEqual(normalize(actual), normalize(expected));
   });
 });
