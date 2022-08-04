@@ -22,7 +22,6 @@ export default function getSaveCacheCommand(
       then
       echo "${directory} does not exist, skipping caching"
     else
-      echo "Saving ${directory} to the cache"
       mkdir -p ${destination}
       cp -rn ${directory} ${destinationWhenCopied} || cp -ru ${directory} ${destinationWhenCopied}
     fi \n`;
