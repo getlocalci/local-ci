@@ -15,14 +15,7 @@ export default function getSaveCacheCommand(
       path.basename(directory)
     );
 
-    return `${accumulator}
-    echo "key is ${step?.save_cache?.key}"
-    echo "the key converted to bash is ${convertToBash(step?.save_cache?.key ?? '')}"
-    echo "destinationWhenCopied is ${destinationWhenCopied}"
-    echo "destination is ${destination}"
-    echo "directory is ${directory}"
-    echo "the basename of directory is ${path.basename(directory)}"
-    if [ -d "${destinationWhenCopied}" ]
+    return `${accumulator} if [ -d ${destinationWhenCopied} ]
       then
       echo "${directory} is already cached, skipping"
     elif [ ! -d ${directory} ]
