@@ -150,14 +150,6 @@ export default function writeProcessFile(
             };
           }
 
-          if (step?.save_cache) {
-            return {
-              run: {
-                name: 'Save cache',
-                command: getSaveCacheCommand(step),
-              },
-            };
-          }
 
           // Look for the circleci/continuation orb, which continues a dynamic config.
           // That orb is also in the circleci/path-filtering orb.
