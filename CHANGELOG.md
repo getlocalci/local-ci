@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.7.7 - 7 August 2022
+- Use sha256sum if shasum doesn't produce anything. [#157](https://github.com/getlocalci/local-ci/pull/157)
+- Fix shellcheck issues. [#156](https://github.com/getlocalci/local-ci/pull/156)
+
 ## 1.7.6 - 28 July 2022
 
 ### Fixed
