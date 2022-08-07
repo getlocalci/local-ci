@@ -133,6 +133,13 @@ export default function listenToJob(
       );
     }
 
+    if (output?.includes('error while creating mount source path')) {
+      vscode.window.showErrorMessage(
+        `Restarting Docker Desktop should fix that error 'error while creating mount source path', though that's not fun`,
+        { detail: 'Possible solution' }
+      );
+    }
+
     if (output?.includes('compinit: insecure directories')) {
       const possibleSolutionText = 'See a possible solution';
       vscode.window
