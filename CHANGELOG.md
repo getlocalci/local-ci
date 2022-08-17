@@ -1,5 +1,8 @@
 # Change Log
 
+## 1.7.8 - 16 August 2022
+- Bump the version of the binary to the latest, v0.1.20500. [#161](https://github.com/getlocalci/local-ci/pull/161)
+
 ## 1.7.7 - 7 August 2022
 - Use sha256sum if shasum doesn't produce anything. [#157](https://github.com/getlocalci/local-ci/pull/157)
 - Fix shellcheck issues. [#156](https://github.com/getlocalci/local-ci/pull/156)
