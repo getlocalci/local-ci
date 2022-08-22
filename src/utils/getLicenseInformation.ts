@@ -36,7 +36,7 @@ export default async function getLicenseInformation(
   const complainLink = `<a class="button secondary" href="${complainUri}" target="_blank">Complain to me</a>`;
 
   const isValid = await isLicenseValid(context);
-  const hasExtendedTrial = !!context.globalState.get(HAS_EXTENDED_TRIAL);
+  const hasExtendedTrial = context.globalState.get(HAS_EXTENDED_TRIAL);
   const trialLengthInMilliseconds = getTrialLength(context);
   const isPreviewExpired = isTrialExpired(
     previewStartedTimeStamp,
