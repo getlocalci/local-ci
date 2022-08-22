@@ -45,7 +45,7 @@ export default async function getLicenseInformation(
 
   const shouldOfferInterview = isTrialExpired(
     previewStartedTimeStamp,
-    trialLengthInMilliseconds + 3 * DAY_IN_MILLISECONDS
+    trialLengthInMilliseconds + 5 * DAY_IN_MILLISECONDS
   );
 
   if (isValid) {
