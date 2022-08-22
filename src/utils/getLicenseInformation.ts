@@ -4,16 +4,15 @@ import getTimeRemainingInTrial from './getTimeRemainingInTrial';
 import getTrialLength from './getTrialLength';
 import isLicenseValid from './isLicenseValid';
 import isTrialExpired from './isTrialExpired';
-import shouldOfferSurvey from './shouldOfferSurvey';
 import {
   DAY_IN_MILLISECONDS,
   EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS,
   GET_LICENSE_KEY_URL,
+  HAS_EXTENDED_TRIAL,
   LICENSE_ERROR,
   LICENSE_KEY,
   LICENSE_VALIDITY,
   SCHEDULE_INTERVIEW_URL,
-  TRIAL_LENGTH_IN_MILLISECONDS,
   TRIAL_STARTED_TIMESTAMP,
 } from '../constants';
 
@@ -30,14 +29,14 @@ export default async function getLicenseInformation(
   const changeLicenseButton = `<button class="secondary" id="enter-license">Change license key</button>`;
   const retryValidationButton = `<button class="secondary" id="retry-license-validation">Retry license validation</button>`;
   const takeSurveyButton = `<button class="button primary" id="take-survey">Get ${
-    (TRIAL_LENGTH_IN_MILLISECONDS + EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS) /
-    DAY_IN_MILLISECONDS
-  } more free days by taking a 2-minute survey</button>`;
+    EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS / DAY_IN_MILLISECONDS
+  } more free days by taking a 2-minute anonymous survey</button>`;
   const scheduleInterviewLink = `<a class="button primary" href="${SCHEDULE_INTERVIEW_URL}" target="_blank">Get a free lifetime license by doing a 30-minute Zoom user research interview</a>`;
   const complainUri = 'mailto:ryan@getlocalci.com';
   const complainLink = `<a class="button secondary" href="${complainUri}" target="_blank">Complain to me</a>`;
 
   const isValid = await isLicenseValid(context);
+  const hasExtendedTrial = !!context.globalState.get(HAS_EXTENDED_TRIAL);
   const trialLengthInMilliseconds = getTrialLength(context);
   const isPreviewExpired = isTrialExpired(
     previewStartedTimeStamp,
@@ -60,7 +59,7 @@ export default async function getLicenseInformation(
     <p>${getLicenseErrorMessage(await context.secrets.get(LICENSE_ERROR))}</p>
     <p>${getLicenseLink}</p>
     <p>${enterLicenseButton}</p>
-    ${shouldOfferSurvey(context) ? `<p>${takeSurveyButton}</p>` : ''}
+    ${hasExtendedTrial ? '' : `<p>${takeSurveyButton}</p>`}
     <p>${retryValidationButton}</p>
     <p>${complainLink}</p>`;
   }
@@ -74,7 +73,7 @@ export default async function getLicenseInformation(
   if (isPreviewExpired) {
     return `<p>Thanks for previewing Local CI! The free preview is over.</p>
       <p>Please enter a Local CI license key to keep using this.</p>
-      ${shouldOfferSurvey(context) ? `<p>${takeSurveyButton}</p>` : ''}
+      ${hasExtendedTrial ? '' : `<p>${takeSurveyButton}</p>`}
       <p>${getLicenseLink}</p>
       <p>${enterLicenseButton}</p>
       <p>${complainLink}</p>`;
