@@ -26,9 +26,8 @@ import {
   PROCESS_TRY_AGAIN_COMMAND,
   TAKE_SURVEY_COMMAND,
   TRIAL_STARTED_TIMESTAMP,
-  TRIAL_LENGTH_IN_MILLISECONDS,
+  HAS_EXTENDED_TRIAL,
 } from '../constants';
-import shouldOfferSurvey from '../utils/shouldOfferSurvey';
 import IconCommand from './IconCommand';
 
 enum JobError {
@@ -241,14 +240,12 @@ export default class JobProvider
           new Command('Try Again', `${JOB_TREE_VIEW_ID}.refresh`),
         ];
       case JobError.LicenseKey:
-        return shouldOfferSurvey(this.context)
+        return !this.context.globalState.get(HAS_EXTENDED_TRIAL)
           ? [
               ...licenseKeyTreeItems,
               new IconCommand(
                 `Get ${
-                  (TRIAL_LENGTH_IN_MILLISECONDS +
-                    EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS) /
-                  DAY_IN_MILLISECONDS
+                  EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS / DAY_IN_MILLISECONDS
                 } more free days by taking a 2-minute survey`,
                 TAKE_SURVEY_COMMAND,
                 'rocket'

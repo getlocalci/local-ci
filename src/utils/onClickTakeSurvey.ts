@@ -3,7 +3,6 @@ import {
   EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS,
   HAS_EXTENDED_TRIAL,
   SURVEY_URL,
-  TRIAL_LENGTH_IN_MILLISECONDS,
   TRIAL_STARTED_TIMESTAMP,
 } from '../constants';
 import getPrettyPrintedTimeRemaining from './getPrettyPrintedTimeRemaining';
@@ -27,7 +26,7 @@ export default async function onClickTakeSurvey(
 
   vscode.window.showInformationMessage(
     `Thanks, your free preview is now ${getPrettyPrintedTimeRemaining(
-      TRIAL_LENGTH_IN_MILLISECONDS + EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS
+      EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS
     )} longer`
   );
 }
