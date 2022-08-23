@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.7.9 - 22 August 2022
+- Bump the binary version to v0.1.20688. [#167](https://github.com/getlocalci/local-ci/pull/167)
+- Allow extending the preview as soon as it starts. [#166](https://github.com/getlocalci/local-ci/pull/166)
+
 ## 1.7.8 - 16 August 2022
 - Bump the version of the binary to the latest, v0.1.20500. [#161](https://github.com/getlocalci/local-ci/pull/161)
 
