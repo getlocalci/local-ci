@@ -87,5 +87,6 @@ export default async function getLicenseInformation(
     )} left in this free preview.</p>
     <p>${getLicenseLink}</p>
     <p>${enterLicenseButton}</p>
+    ${hasExtendedTrial ? '' : `<p>${takeSurveyButton}</p>`}
     <p>${complainLink}</p>`;
 }
