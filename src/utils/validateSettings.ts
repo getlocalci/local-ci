@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 import getSpawnOptions from './getSpawnOptions';
 
 /**
- * Shows a warning the configuration is wrong.
+ * Validates settings.json, and shows an error message if it's invalid.
  */
 export default function validateSettings(): void {
   if (
@@ -22,7 +22,7 @@ export default function validateSettings(): void {
     });
   } catch (error) {
     vscode.window.showErrorMessage(
-      `doppler is not installed on your machine, but it's enabled in settings.json via the property localCi.environmentVariable.manager.
+      `Error: doppler is not installed on your machine, but it's enabled in settings.json via the property localCi.environmentVariable.manager.
       Please either install it, or remove that value from settings.json.`,
       { detail: 'Settings error' }
     );
