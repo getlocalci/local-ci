@@ -112,7 +112,7 @@ export default async function runJob(
     'doppler' ===
     vscode.workspace
       .getConfiguration('localCi')
-      .get('environmentVariable.manager')
+      .get('environmentVariables.manager')
       ? 'doppler run --'
       : '';
 
