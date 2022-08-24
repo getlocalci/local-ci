@@ -105,10 +105,23 @@ export default async function runJob(
   const jobConfigPath = isJobInDynamicConfig
     ? dynamicConfigFilePath
     : processFilePath;
+  const isDopplerEnabled =
+    'doppler' ===
+    vscode.workspace
+      .getConfiguration('localCi')
+      .get('environmentVariable.manager');
+  terminal.sendText(`if [ ! "$(doppler --version 2>/dev/null)" ]
+    then
+      echo
+      echo "doppler is not installed, but it's enabled in settings.json in the property localCi.environmentVariable.manager"
+      echo "Please either install it, or remove that from settings.json"
+    fi
+  `);
+  const dopplerCommand = isDopplerEnabled ? 'doppler run --' : '';
 
   terminal.sendText(
     `cat ${jobConfigPath} | docker run -i --rm mikefarah/yq -C
-    ${getBinaryPath()} local execute --job '${jobName}' --config ${jobConfigPath} -v ${volume}`
+    ${dopplerCommand} ${getBinaryPath()} local execute --job '${jobName}' --config ${jobConfigPath} -v ${volume}`
   );
 
   const committedImageRepo = `${COMMITTED_IMAGE_NAMESPACE}/${jobName}`;

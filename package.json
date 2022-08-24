@@ -54,6 +54,16 @@
   ],
   "main": "./dist/extension.js",
   "contributes": {
+    "configuration": {
+      "title": "Local CI Environment Variables",
+      "properties": {
+        "localCi.environmentVariable.manager": {
+          "type": "string",
+          "defaul": "",
+          "description": "The environemnt variable manager to use, if any"
+        }
+      }
+    },
     "commands": [
       {
         "command": "local-ci.job.run",
