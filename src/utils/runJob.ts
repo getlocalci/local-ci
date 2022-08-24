@@ -110,13 +110,16 @@ export default async function runJob(
     vscode.workspace
       .getConfiguration('localCi')
       .get('environmentVariable.manager');
-  terminal.sendText(`if [ ! "$(doppler --version 2>/dev/null)" ]
-    then
-      echo
-      echo "doppler is not installed, but it's enabled in settings.json in the property localCi.environmentVariable.manager"
-      echo "Please either install it, or remove that from settings.json"
-    fi
-  `);
+
+  if (isDopplerEnabled) {
+    terminal.sendText(`if [ ! "$(doppler --version 2>/dev/null)" ]
+      then
+        echo
+        echo "doppler is not installed, but it's enabled in settings.json in the property localCi.environmentVariable.manager"
+        echo "Please either install it, or remove that from settings.json"
+      fi
+    `);
+  }
   const dopplerCommand = isDopplerEnabled ? 'doppler run --' : '';
 
   terminal.sendText(
