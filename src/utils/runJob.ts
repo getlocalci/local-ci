@@ -18,6 +18,7 @@ import getProcessFilePath from './getProcessFilePath';
 import getTerminalName from './getTerminalName';
 import listenToJob from './listenToJob';
 import showFinalTerminalHelperMessages from './showFinalTerminalHelperMessages';
+import validateSettings from './validateSettings';
 import JobClass from '../classes/Job';
 import {
   GET_RUNNING_CONTAINER_FUNCTION,
@@ -87,6 +88,7 @@ export default async function runJob(
     jobInConfig = parsedDynamicConfigFile?.jobs[jobName];
   }
 
+  validateSettings();
   uncommittedWarning(context, repoPath, jobName, checkoutJobs);
 
   // If this is the only checkout job, it's probably at the beginning of the workflow.
@@ -105,22 +107,14 @@ export default async function runJob(
   const jobConfigPath = isJobInDynamicConfig
     ? dynamicConfigFilePath
     : processFilePath;
-  const isDopplerEnabled =
+
+  const dopplerCommand =
     'doppler' ===
     vscode.workspace
       .getConfiguration('localCi')
-      .get('environmentVariable.manager');
-
-  if (isDopplerEnabled) {
-    terminal.sendText(`if [ ! "$(doppler --version 2>/dev/null)" ]
-      then
-        echo
-        echo "doppler is not installed, but it's enabled in settings.json in the property localCi.environmentVariable.manager"
-        echo "Please either install it, or remove that from settings.json"
-      fi
-    `);
-  }
-  const dopplerCommand = isDopplerEnabled ? 'doppler run --' : '';
+      .get('environmentVariable.manager')
+      ? 'doppler run --'
+      : '';
 
   terminal.sendText(
     `cat ${jobConfigPath} | docker run -i --rm mikefarah/yq -C
