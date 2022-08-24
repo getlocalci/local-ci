@@ -126,57 +126,54 @@ export default function listenToJob(
       commitProcess.kill();
     }
 
-    if (output?.includes('failed to create runner binary')) {
-      vscode.window.showErrorMessage(
-        `Restarting Docker Desktop should fix that error 'failed to create runner binary', though that's not fun`,
-        { detail: 'Possible solution' }
-      );
-    }
+    const dockerRelatedErrors = [
+      'failed to create runner binary',
+      'error while creating mount source path',
+    ];
 
-    if (output?.includes('error while creating mount source path')) {
-      vscode.window.showErrorMessage(
-        `Restarting Docker Desktop should fix that error 'error while creating mount source path', though that's not fun`,
-        { detail: 'Possible solution' }
-      );
-    }
+    dockerRelatedErrors.forEach((errorMessage) => {
+      if (output?.includes(errorMessage)) {
+        vscode.window.showErrorMessage(
+          `Restarting Docker Desktop should fix that error '${errorMessage}', though that's not fun`,
+          { detail: 'Possible solution' }
+        );
+      }
+    });
 
-    if (output?.includes('compinit: insecure directories')) {
-      const possibleSolutionText = 'See a possible solution';
-      vscode.window
-        .showErrorMessage(
-          `Here's a possible solution to the compinit error:`,
-          { detail: 'Possible solution' },
-          possibleSolutionText
-        )
-        .then((clicked) => {
-          if (clicked === possibleSolutionText) {
-            vscode.env.openExternal(
-              vscode.Uri.parse(
-                'https://github.com/zsh-users/zsh-completions/issues/680#issuecomment-864906013'
-              )
-            );
-          }
-        });
-    }
+    const errors = [
+      {
+        message: 'compinit: insecure directories',
+        solutionUrl:
+          'https://github.com/zsh-users/zsh-completions/issues/680#issuecomment-864906013',
+      },
+      {
+        message: 'OCI runtime create failed',
+        solutionUrl:
+          'https://github.com/getlocalci/local-ci/discussions/121#discussion-4075651',
+      },
+      {
+        message: '--storage-opt is supported only for overlay',
+        solutionUrl:
+          'https://github.com/getlocalci/local-ci/discussions/165#discussioncomment-3458645',
+      },
+    ];
 
-    if (output?.includes('OCI runtime create failed')) {
-      const moreInformationText = 'Get Bash commands';
-      vscode.window
-        .showErrorMessage(
-          'You can probably fix this failed job with Bash commands',
-          { detail: 'Possible solution' },
-          moreInformationText
-        )
-        .then((clicked) => {
-          if (clicked === moreInformationText) {
-            vscode.env.openExternal(
-              vscode.Uri.parse(
-                'https://github.com/getlocalci/local-ci/discussions/121#discussion-4075651'
-              )
-            );
-          }
-        });
-    }
+    errors.forEach((error) => {
+      if (output?.includes(error.message)) {
+        const getBashCommandsText = 'Get Bash commands';
+        vscode.window
+          .showErrorMessage(
+            'You can probably fix this failed job with Bash commands',
+            { detail: 'Possible solution' },
+            getBashCommandsText
+          )
+          .then((clicked) => {
+            if (clicked === getBashCommandsText) {
+              vscode.env.openExternal(vscode.Uri.parse(error.solutionUrl));
+            }
+          });
+      }
+    });
   });
 
   return process;
