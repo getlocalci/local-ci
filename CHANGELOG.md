@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.7.10 - 27 August 2022
+- Add a notice for the --storage-opt error. [#174](https://github.com/getlocalci/local-ci/pull/174)
+- Bump the binary version to v0.1.20788. [#178](https://github.com/getlocalci/local-ci/pull/178)
+
 ## 1.7.9 - 22 August 2022
 - Bump the binary version to v0.1.20688. [#167](https://github.com/getlocalci/local-ci/pull/167)
 - Allow extending the preview as soon as it starts. [#166](https://github.com/getlocalci/local-ci/pull/166)
