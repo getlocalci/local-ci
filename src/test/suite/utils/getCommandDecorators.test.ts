@@ -9,7 +9,7 @@ mocha.afterEach(() => {
 });
 
 suite('getCommandDecorators', () => {
-  test('no pre or post command enabled', () => {
+  test('neither pre nor post command enabled', () => {
     sinon.stub(vscode, 'workspace').value({
       getConfiguration: () => {
         return { get: () => false };
