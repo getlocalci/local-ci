@@ -55,17 +55,17 @@
   "main": "./dist/extension.js",
   "contributes": {
     "configuration": {
-      "title": "Local CI Command",
+      "title": "Settings For Commands",
       "properties": {
         "local-ci.command.job.enable-pre-command": {
           "type": "boolean",
           "defaul": false,
-          "description": "Enable entering bash to run before the command that runs the job"
+          "description": "Enable entering bash to run before the command that runs the job, like doppler run --. When true, this will prompt you to enter the pre-command bash every time a job runs."
         },
         "local-ci.command.job.enable-post-command": {
           "type": "boolean",
           "defaul": false,
-          "description": "Enable entering bash to run after the command that runs the job, like -e FOO=123 -e BAR=321"
+          "description": "Enable entering bash to run after the command that runs the job, like -e FOO=123 -e BAR=321. When true, this will prompt you to enter the post-command bash every time a job runs."
         }
       }
     },
