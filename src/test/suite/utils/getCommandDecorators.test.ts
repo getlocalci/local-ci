@@ -27,7 +27,7 @@ suite('getCommandDecorators', () => {
   test('both pre and post command enabled', () => {
     sinon.stub(vscode, 'workspace').value({
       getConfiguration: (extension: string) => {
-        if (extension === 'localCi') {
+        if (extension === 'local-ci') {
           return {
             get: (configuration: string) => {
               return [

@@ -2,11 +2,11 @@ import * as vscode from 'vscode';
 
 export default function getCommandDecorators() {
   const isPreCommand = vscode.workspace
-    .getConfiguration('localCi')
+    .getConfiguration('local-ci')
     .get('command.job.enablePreCommand');
 
   const isPostCommand = vscode.workspace
-    .getConfiguration('localCi')
+    .getConfiguration('local-ci')
     .get('command.job.enablePostCommand');
 
   return {
