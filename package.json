@@ -57,12 +57,12 @@
     "configuration": {
       "title": "Local CI Command",
       "properties": {
-        "local-ci.command.job.enablePreCommand": {
+        "local-ci.command.job.enable-pre-command": {
           "type": "boolean",
           "defaul": false,
           "description": "Enable entering bash to run before the command that runs the job"
         },
-        "local-ci.command.job.enablePostCommand": {
+        "local-ci.command.job.enable-post-command": {
           "type": "boolean",
           "defaul": false,
           "description": "Enable entering bash to run after the command that runs the job, like -e FOO=123 -e BAR=321"

@@ -31,8 +31,8 @@ suite('getCommandDecorators', () => {
           return {
             get: (configuration: string) => {
               return [
-                'command.job.enablePreCommand',
-                'command.job.enablePostCommand',
+                'command.job.enable-pre-command',
+                'command.job.enable-post-command',
               ].includes(configuration);
             },
           };
