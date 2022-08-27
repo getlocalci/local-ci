@@ -24,7 +24,6 @@ import {
   RUN_JOB_COMMAND,
   SELECTED_CONFIG_PATH,
   SHOW_LOG_FILE_COMMAND,
-  TAKE_SURVEY_COMMAND,
   TELEMETRY_KEY,
   TRIAL_STARTED_TIMESTAMP,
 } from './constants';
@@ -39,7 +38,6 @@ import getDynamicConfigPath from './utils/getDynamicConfigPath';
 import getFinalTerminalName from './utils/getFinalTerminalName';
 import getRepoBasename from './utils/getRepoBasename';
 import getStarterConfig from './utils/getStarterConfig';
-import onClickTakeSurvey from './utils/onClickTakeSurvey';
 import prepareConfig from './utils/prepareConfig';
 import runJob from './utils/runJob';
 import showLicenseInput from './utils/showLicenseInput';
@@ -88,12 +86,6 @@ export function activate(context: vscode.ExtensionContext): void {
 
   context.subscriptions.push(
     reporter,
-    vscode.commands.registerCommand(TAKE_SURVEY_COMMAND, () => {
-      onClickTakeSurvey(context, () => {
-        licenseProvider.load();
-        jobProvider.hardRefresh();
-      });
-    }),
     vscode.commands.registerCommand(`${JOB_TREE_VIEW_ID}.refresh`, () =>
       jobProvider.hardRefresh()
     ),
