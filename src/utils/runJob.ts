@@ -18,7 +18,6 @@ import getProcessFilePath from './getProcessFilePath';
 import getTerminalName from './getTerminalName';
 import listenToJob from './listenToJob';
 import showFinalTerminalHelperMessages from './showFinalTerminalHelperMessages';
-import validateSettings from './validateSettings';
 import JobClass from '../classes/Job';
 import {
   GET_RUNNING_CONTAINER_FUNCTION,
@@ -88,7 +87,6 @@ export default async function runJob(
     jobInConfig = parsedDynamicConfigFile?.jobs[jobName];
   }
 
-  validateSettings();
   uncommittedWarning(context, repoPath, jobName, checkoutJobs);
 
   // If this is the only checkout job, it's probably at the beginning of the workflow.

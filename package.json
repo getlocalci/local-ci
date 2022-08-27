@@ -61,6 +61,11 @@
           "type": "boolean",
           "defaul": false,
           "description": "Enable entering bash to run before the command that runs the job"
+        },
+        "localCi.command.enablePostCommand": {
+          "type": "boolean",
+          "defaul": false,
+          "description": "Enable entering bash to run after the command that runs the job, like -d FOO=abc"
         }
       }
     },
