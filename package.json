@@ -55,12 +55,12 @@
   "main": "./dist/extension.js",
   "contributes": {
     "configuration": {
-      "title": "Local CI Environment Variables",
+      "title": "Local CI Command",
       "properties": {
-        "localCi.environmentVariables.manager": {
-          "type": "string",
-          "defaul": "",
-          "description": "The environemnt variable manager to use, if any"
+        "localCi.command.enablePreCommand": {
+          "type": "boolean",
+          "defaul": false,
+          "description": "Enable entering bash to run before the command that runs the job"
         }
       }
     },

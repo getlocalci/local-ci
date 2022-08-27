@@ -108,17 +108,27 @@ export default async function runJob(
     ? dynamicConfigFilePath
     : processFilePath;
 
-  const dopplerCommand =
-    'doppler' ===
-    vscode.workspace
-      .getConfiguration('localCi')
-      .get('environmentVariables.manager')
-      ? 'doppler run --'
-      : '';
+  const isPreCommand = vscode.workspace
+    .getConfiguration('localCi')
+    .get('command.enablePreCommand');
+
+  const isPostCommand = vscode.workspace
+    .getConfiguration('localCi')
+    .get('command.enablePostCommand');
+
+  const getPreCommand = isPreCommand
+    ? `echo "Please enter what you want to run before the job command (this will appear in stdout):"; read pre_command;`
+    : ``;
+  const getPostCommand = isPostCommand
+    ? `echo "Please enter what you want to run after the job command (this may still appear in stdout):"; read -s post_command;`
+    : ``;
+
+  const evalPreCommand = isPreCommand ? `eval $pre_command` : ``;
+  const evalPostCommand = isPostCommand ? `eval $post_command` : ``;
 
   terminal.sendText(
     `cat ${jobConfigPath} | docker run -i --rm mikefarah/yq -C
-    ${dopplerCommand} ${getBinaryPath()} local execute --job '${jobName}' --config ${jobConfigPath} -v ${volume}`
+    ${getPreCommand} ${getPostCommand} ${evalPreCommand} ${getBinaryPath()} local execute --job '${jobName}' --config ${jobConfigPath} -v ${volume} ${evalPostCommand}`
   );
 
   const committedImageRepo = `${COMMITTED_IMAGE_NAMESPACE}/${jobName}`;
