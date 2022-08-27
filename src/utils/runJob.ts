@@ -108,11 +108,11 @@ export default async function runJob(
 
   const isPreCommand = vscode.workspace
     .getConfiguration('localCi')
-    .get('command.enablePreCommand');
+    .get('command.job.enablePreCommand');
 
   const isPostCommand = vscode.workspace
     .getConfiguration('localCi')
-    .get('command.enablePostCommand');
+    .get('command.job.enablePostCommand');
 
   const getPreCommand = isPreCommand
     ? `echo "Please enter what you want to run before the job command (this will appear in stdout):"; read pre_command;`
