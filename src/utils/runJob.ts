@@ -6,6 +6,7 @@ import areTerminalsClosed from './areTerminalsClosed';
 import cleanUpCommittedImages from './cleanUpCommittedImages';
 import commitContainer from './commitContainer';
 import getCheckoutJobs from './getCheckoutJobs';
+import getCommandDecorators from './getCommandDecorators';
 import getConfigFilePath from './getConfigFilePath';
 import getConfigFromPath from './getConfigFromPath';
 import getDebuggingTerminalName from './getDebuggingTerminalName';
@@ -100,29 +101,13 @@ export default async function runJob(
     fs.mkdirSync(localVolume, { recursive: true });
   }
 
-  // This allows persisting files between jobs with persist_to_workspace and attach_workspace.
+  // This allows persisting files between jobs with persist_to_workspace and attach_workspace, and caching.
   const volume = `${localVolume}:${CONTAINER_STORAGE_DIRECTORY}`;
   const jobConfigPath = isJobInDynamicConfig
     ? dynamicConfigFilePath
     : processFilePath;
-
-  const isPreCommand = vscode.workspace
-    .getConfiguration('localCi')
-    .get('command.job.enablePreCommand');
-
-  const isPostCommand = vscode.workspace
-    .getConfiguration('localCi')
-    .get('command.job.enablePostCommand');
-
-  const getPreCommand = isPreCommand
-    ? `echo "Please enter what you want to run before the job command (this will appear in stdout):"; read pre_command;`
-    : ``;
-  const getPostCommand = isPostCommand
-    ? `echo "Please enter what you want to run after the job command (this may still appear in stdout):"; read -s post_command;`
-    : ``;
-
-  const evalPreCommand = isPreCommand ? `eval $pre_command` : ``;
-  const evalPostCommand = isPostCommand ? `eval $post_command` : ``;
+  const { getPreCommand, getPostCommand, evalPreCommand, evalPostCommand } =
+    getCommandDecorators();
 
   terminal.sendText(
     `cat ${jobConfigPath} | docker run -i --rm mikefarah/yq -C

@@ -65,7 +65,7 @@
         "localCi.command.job.enablePostCommand": {
           "type": "boolean",
           "defaul": false,
-          "description": "Enable entering bash to run after the command that runs the job, like -d FOO=abc"
+          "description": "Enable entering bash to run after the command that runs the job, like -e FOO=123 -e BAR=321"
         }
       }
     },
