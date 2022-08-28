@@ -41,10 +41,11 @@ export default class JobProvider
   readonly onDidChangeTreeData: vscode.Event<Job | undefined> =
     this._onDidChangeTreeData.event;
   private jobs: string[] = [];
-  private jobErrorType?: JobError;
+  private jobDependencies?: Map<string, string[] | null>;
   private jobErrorMessage?: string;
-  private runningJob?: string;
+  private jobErrorType?: JobError;
   private logs: Record<string, string[]> = {};
+  private runningJob?: string;
 
   constructor(
     private readonly context: vscode.ExtensionContext,
