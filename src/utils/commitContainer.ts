@@ -1,6 +1,6 @@
 import * as cp from 'child_process';
 import getSpawnOptions from './getSpawnOptions';
-import getRunningContainerFunction from '../scripts/getRunningContainerFunction.sh';
+import { getRunningContainerFunction } from '../scripts';
 
 /**
  * Commits the latest container so that this can open an interactive session when it finishes.

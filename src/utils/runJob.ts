@@ -28,7 +28,7 @@ import {
 import uncommittedWarning from './uncommittedWarning';
 import getDynamicConfigPath from './getDynamicConfigPath';
 import JobProvider from '../classes/JobProvider';
-import getRunningContainerFunction from '../scripts/getRunningContainerFunction.sh';
+import { getRunningContainerFunction } from '../scripts';
 
 /** Whether this job creates a dynamic config: https://circleci.com/docs/2.0/dynamic-config/ */
 function doesJobCreateDynamicConfig(job: Job | undefined): boolean {

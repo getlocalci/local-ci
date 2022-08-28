@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 import Job from '../classes/Job';
 import JobProvider from '../classes/JobProvider';
 import { SUPPRESS_JOB_COMPLETE_MESSAGE } from '../constants';
-import getPicardContainerFunction from '../scripts/getPicardContainerFunction.sh';
+import { getPicardContainerFunction } from '../scripts';
 import getConfigFilePath from './getConfigFilePath';
 import getConfigFromPath from './getConfigFromPath';
 import getDynamicConfigPath from './getDynamicConfigPath';
