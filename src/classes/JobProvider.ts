@@ -48,8 +48,7 @@ export default class JobProvider
 
   constructor(
     private readonly context: vscode.ExtensionContext,
-    private readonly reporter: TelemetryReporter,
-    private jobDependencies?: Map<string, string[] | null>
+    private readonly reporter: TelemetryReporter
   ) {}
 
   async init() {
@@ -114,7 +113,7 @@ export default class JobProvider
       (await isLicenseValid(this.context)) ||
       !isTrialExpired(
         this.context.globalState.get(TRIAL_STARTED_TIMESTAMP),
-        getTrialLength(this.context)
+        getTrialLength()
       );
 
     if (!shouldEnableExtension) {

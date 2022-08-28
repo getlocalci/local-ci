@@ -22,7 +22,7 @@ suite('isTrialExpired', () => {
   test('preview barely expired', () => {
     assert.strictEqual(
       isTrialExpired(
-        new Date().getTime() - (15 * DAY_IN_MILLISECONDS + 1),
+        new Date().getTime() - (30 * DAY_IN_MILLISECONDS + 1),
         TRIAL_LENGTH_IN_MILLISECONDS
       ),
       true
@@ -32,17 +32,10 @@ suite('isTrialExpired', () => {
   test('trial expired by 2 days', () => {
     assert.strictEqual(
       isTrialExpired(
-        new Date().getTime() - 17 * DAY_IN_MILLISECONDS,
+        new Date().getTime() - 32 * DAY_IN_MILLISECONDS,
         TRIAL_LENGTH_IN_MILLISECONDS
       ),
       true
-    );
-  });
-
-  test('preview just began and was extended', () => {
-    assert.strictEqual(
-      isTrialExpired(new Date().getTime(), TRIAL_LENGTH_IN_MILLISECONDS),
-      false
     );
   });
 });
