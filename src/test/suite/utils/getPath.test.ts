@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import * as os from 'os';
 import * as mocha from 'mocha';
 import * as sinon from 'sinon';
-import getPath from '../../../utils/getPath';
+import getPath from '../../../utils/common/getPath';
 
 mocha.afterEach(() => {
   sinon.restore();

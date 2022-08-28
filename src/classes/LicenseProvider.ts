@@ -1,9 +1,9 @@
 import * as vscode from 'vscode';
-import { LICENSE_ERROR } from '../constants';
-import getLicenseErrorMessage from '../utils/getLicenseErrorMessage';
+import { LICENSE_ERROR } from 'constants/';
+import getLicenseErrorMessage from '../utils/license/getLicenseErrorMessage';
 import getLicenseInformation from '../utils/getLicenseInformation';
 import isLicenseValid from '../utils/isLicenseValid';
-import onClickTakeSurvey from '../utils/onClickTakeSurvey';
+import onClickTakeSurvey from '../utils/license/onClickTakeSurvey';
 import showLicenseInput from '../utils/showLicenseInput';
 
 function getNonce() {

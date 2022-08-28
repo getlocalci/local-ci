@@ -12,7 +12,6 @@ import {
   DYNAMIC_CONFIG_PARAMETERS_FILE_NAME,
   DYNAMIC_CONFIG_PATH_IN_CONTAINER,
 } from '../constants';
-import { addEnvVars } from '../scripts';
 
 function getPersistToWorkspaceCommand(step: FullStep): string | undefined {
   if (typeof step?.persist_to_workspace?.paths === 'string') {
@@ -55,7 +54,9 @@ function getEnvVarStep() {
   return {
     run: {
       name: 'Set more environment variables',
-      command: addEnvVars,
+      command: `echo 'export CIRCLE_SHA1=$(git rev-parse HEAD)' >> $BASH_ENV
+        echo 'export CIRCLE_BRANCH=$(git rev-parse --abbrev-ref HEAD)' >> $BASH_ENV
+        echo 'export CIRCLE_PROJECT_REPONAME=$(basename $(git remote get-url origin))' >> $BASH_ENV`,
     },
   };
 }

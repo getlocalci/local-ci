@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import getLogFilesDirectory from '../../../utils/getLogFilesDirectory';
+import getLogFilesDirectory from '../../../utils/log/getLogFilesDirectory';
 
 suite('getLogFilePath', () => {
   test('with path to config file', () => {

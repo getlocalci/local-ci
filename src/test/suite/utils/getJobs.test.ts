@@ -1,6 +1,6 @@
 import * as assert from 'assert';
 import * as fs from 'fs';
-import getConfig from '../../../utils/getConfig';
+import getConfig from '../../../utils/config/getConfig';
 import getJobs from '../../../utils/getJobs';
 import { getTestFilePath } from '../../helpers';
 

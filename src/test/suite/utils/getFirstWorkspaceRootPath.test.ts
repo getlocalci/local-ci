@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as vscode from 'vscode';
-import getFirstWorkspaceRootPath from '../../../utils/getFirstWorkspaceRootPath';
+import getFirstWorkspaceRootPath from '../../../utils/common/getFirstWorkspaceRootPath';
 
 mocha.afterEach(() => {
   sinon.restore();

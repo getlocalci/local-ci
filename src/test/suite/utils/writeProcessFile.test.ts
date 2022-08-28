@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import { getTestFilePath, normalize } from '../../helpers';
-import writeProcessFile from '../../../utils/writeProcessFile';
+import writeProcessFile from '../../../utils/process/writeProcessFile';
 
 mocha.afterEach(() => {
   sinon.restore();

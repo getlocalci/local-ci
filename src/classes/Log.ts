@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { SHOW_LOG_FILE_COMMAND } from '../constants';
+import { SHOW_LOG_FILE_COMMAND } from 'constants/';
 
 export default class Log extends vscode.TreeItem {
   constructor(public readonly label: string, public readonly filePath: string) {

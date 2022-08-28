@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 import * as mocha from 'mocha';
 import * as sinon from 'sinon';
-import areTerminalsClosed from '../../../utils/areTerminalsClosed';
+import areTerminalsClosed from '../../../utils/terminal/areTerminalsClosed';
 
 mocha.afterEach(() => {
   sinon.restore();

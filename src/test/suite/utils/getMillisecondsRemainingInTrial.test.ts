@@ -3,7 +3,7 @@ import {
   DAY_IN_MILLISECONDS,
   TRIAL_LENGTH_IN_MILLISECONDS,
 } from '../../../constants';
-import getMillisecondsRemainingInTrial from '../../../utils/getMillisecondsRemainingInTrial';
+import getMillisecondsRemainingInTrial from '../../../utils/license/getMillisecondsRemainingInTrial';
 
 const hourInMilliseconds = 3600000;
 

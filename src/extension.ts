@@ -28,23 +28,23 @@ import {
   TELEMETRY_KEY,
   TRIAL_STARTED_TIMESTAMP,
 } from './constants';
-import cleanUpCommittedImages from './utils/cleanUpCommittedImages';
-import disposeTerminalsForJob from './utils/disposeTerminalsForJob';
+import cleanUpCommittedImages from './utils/containerization/cleanUpCommittedImages';
+import disposeTerminalsForJob from './utils/terminal/disposeTerminalsForJob';
 import getAllConfigFilePaths from './utils/getAllConfigFilePaths';
-import getCheckoutJobs from './utils/getCheckoutJobs';
-import getConfig from './utils/getConfig';
+import getCheckoutJobs from './utils/job/getCheckoutJobs';
+import getConfig from './utils/config/getConfig';
 import getConfigFilePath from './utils/getConfigFilePath';
-import getDebuggingTerminalName from './utils/getDebuggingTerminalName';
+import getDebuggingTerminalName from './utils/terminal/getDebuggingTerminalName';
 import getDynamicConfigPath from './utils/getDynamicConfigPath';
-import getFinalTerminalName from './utils/getFinalTerminalName';
-import getRepoBasename from './utils/getRepoBasename';
-import getStarterConfig from './utils/getStarterConfig';
-import onClickTakeSurvey from './utils/onClickTakeSurvey';
-import prepareConfig from './utils/prepareConfig';
+import getFinalTerminalName from './utils/terminal/getFinalTerminalName';
+import getRepoBasename from './utils/common/getRepoBasename';
+import getStarterConfig from './utils/config/getStarterConfig';
+import onClickTakeSurvey from './utils/license/onClickTakeSurvey';
+import prepareConfig from './utils/config/prepareConfig';
 import runJob from './utils/runJob';
 import showLicenseInput from './utils/showLicenseInput';
-import showLogFile from './utils/showLogFile';
-import askForEmail from './utils/askForEmail';
+import showLogFile from './utils/log/showLogFile';
+import askForEmail from './utils/license/askForEmail';
 
 const reporter = new TelemetryReporter(
   EXTENSION_ID,

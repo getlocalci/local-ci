@@ -3,7 +3,7 @@ import * as cp from 'child_process';
 import * as mocha from 'mocha';
 import * as os from 'os';
 import * as sinon from 'sinon';
-import setBuildAgentSettings from '../../../utils/setBuildAgentSettings';
+import setBuildAgentSettings from '../../../utils/config/setBuildAgentSettings';
 
 mocha.afterEach(() => {
   sinon.restore();

@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as yaml from 'js-yaml';
-import getConfig from '../../../utils/getConfig';
+import getConfig from '../../../utils/config/getConfig';
 
 mocha.afterEach(() => {
   sinon.restore();

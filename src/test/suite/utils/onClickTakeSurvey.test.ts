@@ -5,7 +5,7 @@ import * as sinon from 'sinon';
 import * as vscode from 'vscode';
 import { Substitute } from '@fluffy-spoon/substitute';
 import { HAS_EXTENDED_TRIAL } from '../../../constants';
-import onClickTakeSurvey from '../../../utils/onClickTakeSurvey';
+import onClickTakeSurvey from '../../../utils/license/onClickTakeSurvey';
 
 let openExternalSpy: sinon.SinonSpy;
 
