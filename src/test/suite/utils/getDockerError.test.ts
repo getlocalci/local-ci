@@ -9,12 +9,12 @@ mocha.afterEach(() => {
 });
 
 suite('getDockerError', () => {
-  test('No error', () => {
+  test('no error', () => {
     sinon.mock(cp).expects('execSync').once();
     assert.strictEqual(getDockerError(), '');
   });
 
-  test('With error', () => {
+  test('with error', () => {
     const message = 'Cannot connect to the Docker daemon';
     sinon.mock(cp).expects('execSync').once().throws({ message });
 

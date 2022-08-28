@@ -10,12 +10,12 @@ mocha.afterEach(() => {
 });
 
 suite('writeProcessFile', () => {
-  test('No config', () => {
+  test('no config', () => {
     sinon.mock(fs).expects('writeFileSync').once().withArgs({});
     writeProcessFile('', '/foo/baz');
   });
 
-  test('Full config file with cache', () => {
+  test('full config file with cache', () => {
     const fileName = 'with-cache.yml';
     sinon.mock(fs).expects('mkdirSync').once();
 
@@ -35,7 +35,7 @@ suite('writeProcessFile', () => {
     );
   });
 
-  test('Dynamic config', () => {
+  test('dynamic config', () => {
     const fileName = 'dynamic-config.yml';
     sinon.mock(fs).expects('mkdirSync').once();
 

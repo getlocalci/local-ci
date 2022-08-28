@@ -8,7 +8,7 @@ mocha.afterEach(() => {
 });
 
 suite('disposeTerminalsForJob', () => {
-  test('Terminal is not disposed', async () => {
+  test('terminal is not disposed', async () => {
     const jobName = 'build';
 
     sinon.stub(vscode, 'window').value({
@@ -23,7 +23,7 @@ suite('disposeTerminalsForJob', () => {
     disposeTerminalsForJob(jobName);
   });
 
-  test('Terminal is disposed', async () => {
+  test('terminal is disposed', async () => {
     const jobName = 'build';
 
     sinon.stub(vscode, 'window').value({

@@ -4,7 +4,7 @@ import getConfigFromPath from '../../../utils/getConfigFromPath';
 import getSaveCacheSteps from '../../../utils/getSaveCacheSteps';
 
 suite('getSaveCacheSteps', () => {
-  test('With 2 save_cache values', () => {
+  test('with 2 save_cache values', () => {
     assert.deepStrictEqual(
       getSaveCacheSteps(
         getConfigFromPath(getTestFilePath('fixture', 'with-cache.yml'))

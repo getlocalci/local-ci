@@ -3,11 +3,11 @@ import { normalize } from '../../helpers';
 import getAttachWorkspaceCommand from '../../../utils/getAttachWorkspaceCommand';
 
 suite('getAttachWorkspaceCommand', () => {
-  test('No attach_workspace', () => {
+  test('no attach_workspace', () => {
     assert.strictEqual(getAttachWorkspaceCommand({}), '');
   });
 
-  test('With attach_workspace', () => {
+  test('with attach_workspace', () => {
     assert.strictEqual(
       normalize(
         getAttachWorkspaceCommand({ attach_workspace: { at: '/foo/baz' } })

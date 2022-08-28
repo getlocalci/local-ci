@@ -5,7 +5,7 @@ import getJobs from '../../../utils/getJobs';
 import { getTestFilePath } from '../../helpers';
 
 suite('getJobs', () => {
-  test('Single job', () => {
+  test('single job', () => {
     assert.strictEqual(
       getJobs({
         jobs: {},
@@ -19,7 +19,7 @@ suite('getJobs', () => {
     );
   });
 
-  test('Multiple jobs', () => {
+  test('multiple jobs', () => {
     assert.strictEqual(
       getJobs({
         jobs: { lint: {}, test: {}, deploy: {} },
@@ -39,7 +39,7 @@ suite('getJobs', () => {
     );
   });
 
-  test('Multiple jobs from fixture', () => {
+  test('multiple jobs from fixture', () => {
     assert.strictEqual(
       getJobs(
         getConfig(

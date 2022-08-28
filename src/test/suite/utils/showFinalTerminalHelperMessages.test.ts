@@ -10,7 +10,7 @@ mocha.afterEach(() => {
 });
 
 suite('showFinalTerminalHelperMessages', () => {
-  test('No helper message', async () => {
+  test('no helper message', async () => {
     const showInformationMessageSpy = sinon.spy();
     sinon.stub(vscode, 'window').value({
       showInformationMessage: showInformationMessageSpy,
@@ -31,7 +31,7 @@ suite('showFinalTerminalHelperMessages', () => {
     assert.strictEqual(showInformationMessageSpy.called, false);
   });
 
-  test('With helper message', async () => {
+  test('with helper message', async () => {
     const showInformationMessageSpy = sinon.spy();
     sinon.stub(vscode, 'window').value({
       showInformationMessage: showInformationMessageSpy,

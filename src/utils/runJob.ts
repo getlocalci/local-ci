@@ -17,6 +17,7 @@ import getLocalVolumePath from './getLocalVolumePath';
 import getProcessFilePath from './getProcessFilePath';
 import getTerminalName from './getTerminalName';
 import listenToJob from './listenToJob';
+import setBuildAgentSettings from './setBuildAgentSettings';
 import showFinalTerminalHelperMessages from './showFinalTerminalHelperMessages';
 import JobClass from '../classes/Job';
 import {
@@ -88,6 +89,7 @@ export default async function runJob(
   }
 
   uncommittedWarning(context, repoPath, jobName, checkoutJobs);
+  setBuildAgentSettings();
 
   // If this is the only checkout job, it's probably at the beginning of the workflow.
   // So delete the local volume directory to give a clean start to the workflow,

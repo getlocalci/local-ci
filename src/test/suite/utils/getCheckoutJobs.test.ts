@@ -9,11 +9,11 @@ mocha.afterEach(() => {
 });
 
 suite('getCheckoutJobs', () => {
-  test('No config file', () => {
+  test('no config file', () => {
     assert.deepStrictEqual(getCheckoutJobs(undefined), []);
   });
 
-  test('No checkout job', () => {
+  test('no checkout job', () => {
     sinon.mock(fs).expects('existsSync').once().returns(true);
     sinon.mock(fs).expects('readFileSync').once().returns('');
 
