@@ -9,5 +9,5 @@ get_picard_container() {
       echo "$container"
       break
     fi
-    done
+  done
 }

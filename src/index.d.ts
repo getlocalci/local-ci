@@ -47,6 +47,6 @@ interface RunningTerminals {
 }
 
 declare module '*.sh' {
-  const content: any;
+  const content: string;
   export default content;
 }
