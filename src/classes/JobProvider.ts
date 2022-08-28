@@ -41,7 +41,6 @@ export default class JobProvider
   readonly onDidChangeTreeData: vscode.Event<Job | undefined> =
     this._onDidChangeTreeData.event;
   private jobs: string[] = [];
-  private jobDependencies?: Map<string, string[] | null>;
   private jobErrorMessage?: string;
   private jobErrorType?: JobError;
   private logs: Record<string, string[]> = {};
@@ -49,7 +48,8 @@ export default class JobProvider
 
   constructor(
     private readonly context: vscode.ExtensionContext,
-    private readonly reporter: TelemetryReporter
+    private readonly reporter: TelemetryReporter,
+    private jobDependencies?: Map<string, string[] | null>
   ) {}
 
   async init() {
