@@ -9,12 +9,12 @@ mocha.afterEach(() => {
 });
 
 suite('getFirstWorkspaceRootPath', () => {
-  test('With no workspaceFolders', () => {
+  test('with no workspaceFolders', () => {
     sinon.stub(vscode, 'workspace').value({});
     assert.strictEqual(getFirstWorkspaceRootPath(), '');
   });
 
-  test('With workspaceFolders', () => {
+  test('Wwith workspaceFolders', () => {
     const path = 'example';
     sinon.stub(vscode, 'workspace').value({
       workspaceFolders: [

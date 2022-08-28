@@ -10,7 +10,7 @@ mocha.afterEach(() => {
 });
 
 suite('getSpawnOptions', () => {
-  test('Has working directory', () => {
+  test('has working directory', () => {
     sinon.mock(os).expects('platform').once().returns('darwin');
     const path = 'example';
     sinon.stub(vscode, 'workspace').value({
@@ -23,12 +23,12 @@ suite('getSpawnOptions', () => {
     assert.strictEqual(getSpawnOptions().cwd, path);
   });
 
-  test('Has bin directory', () => {
+  test('has bin directory', () => {
     sinon.mock(os).expects('platform').once().returns('darwin');
     assert.ok(getSpawnOptions().env.PATH.includes('/usr/local/bin'));
   });
 
-  test('With cwd argument', () => {
+  test('with cwd argument', () => {
     assert.strictEqual(getSpawnOptions('/foo/baz').cwd, '/foo/baz');
   });
 });

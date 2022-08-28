@@ -5,7 +5,7 @@ import getAllJobs from '../../../utils/getJobs';
 import { getTestFilePath } from '../../helpers';
 
 suite('getAllJobs', () => {
-  test('Jobs from fixture', () => {
+  test('jobs from fixture', () => {
     assert.strictEqual(
       getAllJobs(
         getConfig(

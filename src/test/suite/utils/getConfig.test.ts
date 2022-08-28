@@ -10,13 +10,13 @@ mocha.afterEach(() => {
 });
 
 suite('getConfig', () => {
-  test('No config', () => {
+  test('no config', () => {
     sinon.mock(fs).expects('existsSync').once().returns(false);
     sinon.mock(fs).expects('readFileSync').never();
     assert.strictEqual(getConfig(''), undefined);
   });
 
-  test('With config', () => {
+  test('with config', () => {
     const configFile = {
       jobs: { test: { docker: [{ image: 'cimg/node:16.8.0-browsers' }] } },
     };

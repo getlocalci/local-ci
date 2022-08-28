@@ -24,7 +24,7 @@ function getMockContext(isSuppressed: boolean) {
 }
 
 suite('uncommittedWarning', () => {
-  test('Warning is suppressed', async () => {
+  test('warning is suppressed', async () => {
     const showWarningMessageSpy = Promise.resolve(sinon.spy());
     sinon.stub(vscode, 'window').value({
       showWarningMessage: showWarningMessageSpy,
@@ -34,7 +34,7 @@ suite('uncommittedWarning', () => {
     assert.strictEqual((await showWarningMessageSpy).called, false);
   });
 
-  test('No uncommitted file', async () => {
+  test('no uncommitted file', async () => {
     const showWarningMessageSpy = sinon.spy();
     sinon.stub(vscode, 'window').value({
       showWarningMessage: async (message: string) =>
@@ -56,7 +56,7 @@ suite('uncommittedWarning', () => {
     assert.strictEqual(showWarningMessageSpy.called, false);
   });
 
-  test('Only an uncommitted config file should not show a warning', async () => {
+  test('only an uncommitted config file should not show a warning', async () => {
     const showWarningMessageSpy = sinon.spy();
     sinon.stub(vscode, 'window').value({
       showWarningMessage: async (message: string) =>
@@ -78,7 +78,7 @@ suite('uncommittedWarning', () => {
     assert.strictEqual(showWarningMessageSpy.called, false);
   });
 
-  test('With uncommitted files', async () => {
+  test('with uncommitted files', async () => {
     const showWarningMessageSpy = sinon.spy();
     sinon.stub(vscode, 'window').value({
       showWarningMessage: async (message: string) =>
@@ -100,7 +100,7 @@ suite('uncommittedWarning', () => {
     assert.ok(showWarningMessageSpy.called);
   });
 
-  test('Not a checkout job', async () => {
+  test('not a checkout job', async () => {
     const showWarningMessageSpy = sinon.spy();
     sinon.stub(vscode, 'window').value({
       showWarningMessage: async (message: string) =>

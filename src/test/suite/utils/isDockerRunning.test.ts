@@ -9,7 +9,7 @@ mocha.afterEach(() => {
 });
 
 suite('isDockerRunning', () => {
-  test('Is not running', () => {
+  test('is not running', () => {
     sinon
       .mock(cp)
       .expects('execSync')
@@ -18,7 +18,7 @@ suite('isDockerRunning', () => {
     assert.strictEqual(isDockerRunning(), false);
   });
 
-  test('Is running', () => {
+  test('is running', () => {
     sinon.mock(cp).expects('execSync').once();
     assert.strictEqual(isDockerRunning(), true);
   });

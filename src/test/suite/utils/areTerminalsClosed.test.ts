@@ -20,7 +20,7 @@ const baseTerminal = {
 };
 
 suite('areTerminalsClosed', () => {
-  test('Only one is closed', () => {
+  test('only one is closed', () => {
     assert.strictEqual(
       false,
       areTerminalsClosed(
@@ -30,7 +30,7 @@ suite('areTerminalsClosed', () => {
     );
   });
 
-  test('All are closed', () => {
+  test('all are closed', () => {
     assert.strictEqual(
       true,
       areTerminalsClosed(
@@ -40,7 +40,7 @@ suite('areTerminalsClosed', () => {
     );
   });
 
-  test('One undefined, one closed', () => {
+  test('one undefined, one closed', () => {
     assert.strictEqual(
       true,
       areTerminalsClosed(

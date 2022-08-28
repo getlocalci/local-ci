@@ -2,18 +2,18 @@ import * as assert from 'assert';
 import getImageFromJob from '../../../utils/getImageFromJob';
 
 suite('getImageFromJob', () => {
-  test('No docker value', () => {
+  test('no docker value', () => {
     assert.deepStrictEqual(
       getImageFromJob({ working_directory: 'foo/baz' }),
       ''
     );
   });
 
-  test('Empty docker array', () => {
+  test('empty docker array', () => {
     assert.deepStrictEqual(getImageFromJob({ docker: [] }), '');
   });
 
-  test('With docker image', () => {
+  test('with docker image', () => {
     assert.deepStrictEqual(
       getImageFromJob({ docker: [{ image: 'foo-image' }] }),
       'foo-image'
