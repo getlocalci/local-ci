@@ -3,10 +3,8 @@ import * as fs from 'fs';
 import * as vscode from 'vscode';
 import Job from '../classes/Job';
 import JobProvider from '../classes/JobProvider';
-import {
-  GET_PICARD_CONTAINER_FUNCTION,
-  SUPPRESS_JOB_COMPLETE_MESSAGE,
-} from '../constants';
+import { SUPPRESS_JOB_COMPLETE_MESSAGE } from '../constants';
+import getPicardContainerFunction from '../scripts/getPicardContainerFunction.sh';
 import getConfigFilePath from './getConfigFilePath';
 import getConfigFromPath from './getConfigFromPath';
 import getDynamicConfigPath from './getDynamicConfigPath';
@@ -66,7 +64,7 @@ export default function listenToJob(
     [
       '-c',
       `cat ${jobConfigPath} >> ${logFilePath}
-      ${GET_PICARD_CONTAINER_FUNCTION}
+      ${getPicardContainerFunction}
       until [[ -n $(get_picard_container ${jobName}) ]]
       do
         sleep 2

@@ -45,3 +45,8 @@ type RunningTerminal = number | undefined;
 interface RunningTerminals {
   [key: string]: RunningTerminal[]
 }
+
+declare module '*.sh' {
+  const content: any;
+  export default content;
+}

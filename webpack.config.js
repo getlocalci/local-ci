@@ -32,11 +32,12 @@ const config = {
       {
         test: /\.ts$/,
         exclude: /node_modules/,
-        use: [
-          {
-            loader: 'ts-loader'
-          }
-        ]
+        loader: 'ts-loader',
+      },
+      {
+        test: /\.sh$/,
+        exclude: /node_modules/,
+        loader: 'raw-loader',
       }
     ]
   }

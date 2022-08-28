@@ -21,7 +21,6 @@ import setBuildAgentSettings from './setBuildAgentSettings';
 import showFinalTerminalHelperMessages from './showFinalTerminalHelperMessages';
 import JobClass from '../classes/Job';
 import {
-  GET_RUNNING_CONTAINER_FUNCTION,
   COMMITTED_IMAGE_NAMESPACE,
   CONTAINER_STORAGE_DIRECTORY,
   CONTINUE_PIPELINE_STEP_NAME,
@@ -29,6 +28,7 @@ import {
 import uncommittedWarning from './uncommittedWarning';
 import getDynamicConfigPath from './getDynamicConfigPath';
 import JobProvider from '../classes/JobProvider';
+import getRunningContainerFunction from '../scripts/getRunningContainerFunction.sh';
 
 /** Whether this job creates a dynamic config: https://circleci.com/docs/2.0/dynamic-config/ */
 function doesJobCreateDynamicConfig(job: Job | undefined): boolean {
@@ -146,7 +146,7 @@ export default async function runJob(
 
   // Once the container is available, run an interactive bash shell within the container.
   debuggingTerminal.sendText(`
-    ${GET_RUNNING_CONTAINER_FUNCTION}
+    ${getRunningContainerFunction}
     printf "You'll get bash access to the job once this conditional is true:\n"
     until [ -n "$(get_running_container ${jobImage})" ]
       do

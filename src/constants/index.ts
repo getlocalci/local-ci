@@ -10,29 +10,6 @@ export const SURVEY_URL = 'https://www.surveymonkey.com/r/localci';
 export const TAKE_SURVEY_COMMAND = 'local-ci.survey.take';
 export const EXIT_JOB_COMMAND = 'local-ci.job.exit';
 export const PROCESS_TRY_AGAIN_COMMAND = 'local-ci.process-error.try-again';
-
-export const GET_RUNNING_CONTAINER_FUNCTION = `get_running_container() {
-  IMAGE=$1
-  for container in $(docker ps -q --filter status=running)
-    do
-    if [ "$IMAGE" = "$(docker inspect --format '{{.Config.Image}}' "$container")" ]
-      then
-      echo "$container"
-      break
-    fi
-  done
-}`;
-export const GET_PICARD_CONTAINER_FUNCTION = `get_picard_container() {
-  JOB_NAME=$1
-  for container in $(docker ps -q);
-    do
-    if [[ $(docker inspect $(docker inspect $container --format {{.Image}}) --format {{.RepoDigests}}) == *"circleci/picard"* ]] && [[ $(docker inspect $container --format {{.Args}} | grep $JOB_NAME) ]]
-      then
-      echo $container
-      break
-    fi
-    done
-}`;
 export const GET_LICENSE_KEY_URL =
   'https://getlocalci.com/pricing/?utm_medium=extension&utm_source=ui';
 export const EMAIL_ENDPOINT =
