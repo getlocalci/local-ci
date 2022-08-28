@@ -270,7 +270,7 @@
     "test-compile": "tsc -p ./",
     "test-watch": "tsc -watch -p ./",
     "pretest": "npm run test-compile && npm run lint",
-    "lint": "npm-run-all --parallel lint:*",
+    "lint": "npm-run-all --parallel lint:js lint:sh",
     "lint:js": "eslint src --ext ts",
     "lint:sh": "shellcheck src/scripts/*.sh",
     "lint:fix": "eslint src --ext ts --fix",
