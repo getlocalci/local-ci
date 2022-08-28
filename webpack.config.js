@@ -36,8 +36,7 @@ const config = {
       },
       {
         test: /\.sh$/,
-        exclude: /node_modules/,
-        loader: 'raw-loader',
+        type: 'asset/source',
       }
     ]
   }

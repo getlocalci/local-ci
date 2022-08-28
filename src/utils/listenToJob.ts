@@ -65,7 +65,7 @@ export default function listenToJob(
       '-c',
       `cat ${jobConfigPath} >> ${logFilePath}
       ${getPicardContainerFunction}
-      until [[ -n $(get_picard_container ${jobName}) ]]
+      until [ -n $(get_picard_container ${jobName}) ]
       do
         sleep 2
       done

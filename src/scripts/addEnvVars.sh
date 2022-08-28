@@ -1,6 +1,6 @@
 #!/bin/sh
-# shellcheck disable=SC2016
 
+# shellcheck disable=SC2016
 {
 echo 'export CIRCLE_SHA1=$(git rev-parse HEAD)'
 echo 'export CIRCLE_BRANCH=$(git rev-parse --abbrev-ref HEAD)'

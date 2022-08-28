@@ -11,6 +11,7 @@ jobs:
       - checkout
       - node/install-packages
       - run: npm test
+      - run: npm run lint
     resource_class: large
   package:
     docker:
