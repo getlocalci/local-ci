@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as vscode from 'vscode';
-import getProcessFilePath from '../../../utils/getProcessFilePath';
+import getProcessFilePath from 'utils/process/getProcessFilePath';
 
 mocha.afterEach(() => {
   sinon.restore();

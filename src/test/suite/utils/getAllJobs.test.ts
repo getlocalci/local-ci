@@ -1,8 +1,8 @@
 import * as assert from 'assert';
 import * as fs from 'fs';
-import getConfig from '../../../utils/config/getConfig';
-import getAllJobs from '../../../utils/getJobs';
-import { getTestFilePath } from '../../helpers';
+import getConfig from 'utils/config/getConfig';
+import getAllJobs from 'utils/job/getJobs';
+import { getTestFilePath } from 'test/helpers/';
 
 suite('getAllJobs', () => {
   test('jobs from fixture', () => {

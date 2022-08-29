@@ -1,7 +1,7 @@
 import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as vscode from 'vscode';
-import disposeTerminalsForJob from '../../../utils/terminal/disposeTerminalsForJob';
+import disposeTerminalsForJob from 'utils/terminal/disposeTerminalsForJob';
 
 mocha.afterEach(() => {
   sinon.restore();

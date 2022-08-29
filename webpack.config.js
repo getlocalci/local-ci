@@ -25,7 +25,11 @@ const config = {
     '@opentelemetry/tracing': "commonjs @opentelemetry/tracing"
   },
   resolve: {
-    extensions: ['.ts', '.js']
+    extensions: ['.ts', '.js'],
+    modules: [
+      path.resolve(__dirname, 'node_modules'),
+      path.resolve(__dirname, './src'),
+    ]
   },
   module: {
     rules: [

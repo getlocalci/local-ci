@@ -5,9 +5,9 @@ import * as vscode from 'vscode';
 import {
   LICENSE_VALIDITY,
   LICENSE_VALIDITY_CACHE_EXPIRATION,
-} from '../../../constants';
+} from 'constants/';
 import { Substitute } from '@fluffy-spoon/substitute';
-import isLicenseValid from '../../../utils/isLicenseValid';
+import isLicenseValid from 'utils/license/isLicenseValid';
 
 mocha.afterEach(() => {
   sinon.restore();
@@ -36,12 +36,12 @@ suite('isLicenseValid', () => {
             }
           },
           keys: () => ['foo'],
-          update: async () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+          update: async () => { }, // eslint-disable-line @typescript-eslint/no-empty-function
           setKeysForSync: sinon.mock(),
         },
         secrets: {
           ...mockContext.secrets,
-          delete: async () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+          delete: async () => { }, // eslint-disable-line @typescript-eslint/no-empty-function
           get: async () => '',
           store: sinon.mock(),
         },

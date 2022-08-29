@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import getDynamicConfigPath from '../../../utils/getDynamicConfigPath';
+import getDynamicConfigPath from 'utils/config/getDynamicConfigPath';
 
 suite('getDynamicConfigFilePath', () => {
   test('with empty string argument', () => {

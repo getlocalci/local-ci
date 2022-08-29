@@ -6,16 +6,16 @@ import Command from './Command';
 import Job from './Job';
 import Log from './Log';
 import Warning from './Warning';
-import getAllConfigFilePaths from '../utils/getAllConfigFilePaths';
-import getAllJobs from '../utils/job/getAllJobs';
-import getConfigFilePath from '../utils/getConfigFilePath';
-import getLogFilesDirectory from '../utils/log/getLogFilesDirectory';
-import getTrialLength from '../utils/license/getTrialLength';
-import isDockerRunning from '../utils/isDockerRunning';
-import isLicenseValid from '../utils/isLicenseValid';
-import isTrialExpired from '../utils/isTrialExpired';
-import getDockerError from '../utils/getDockerError';
-import prepareConfig from '../utils/config/prepareConfig';
+import getAllConfigFilePaths from 'utils/config/getAllConfigFilePaths';
+import getAllJobs from 'utils/job/getAllJobs';
+import getConfigFilePath from 'utils/config/getConfigFilePath';
+import getLogFilesDirectory from 'utils/log/getLogFilesDirectory';
+import getTrialLength from 'utils/license/getTrialLength';
+import isDockerRunning from 'utils/containerization/isDockerRunning';
+import isLicenseValid from 'utils/license/isLicenseValid';
+import isTrialExpired from 'utils/license/isTrialExpired';
+import getDockerError from 'utils/containerization/getDockerError';
+import prepareConfig from 'utils/config/prepareConfig';
 import {
   CREATE_CONFIG_FILE_COMMAND,
   DAY_IN_MILLISECONDS,

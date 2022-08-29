@@ -5,8 +5,8 @@ import {
   DAY_IN_MILLISECONDS,
   EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS,
   TRIAL_LENGTH_IN_MILLISECONDS,
-} from '../../../constants';
-import isTrialExpired from '../../../utils/isTrialExpired';
+} from 'constants/';
+import isTrialExpired from 'utils/license/isTrialExpired';
 
 mocha.afterEach(() => {
   sinon.restore();

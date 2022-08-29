@@ -3,7 +3,7 @@ import * as cp from 'child_process';
 import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as vscode from 'vscode';
-import showFinalTerminalHelperMessages from '../../../utils/showFinalTerminalHelperMessages';
+import showFinalTerminalHelperMessages from 'utils/terminal/showFinalTerminalHelperMessages';
 
 mocha.afterEach(() => {
   sinon.restore();

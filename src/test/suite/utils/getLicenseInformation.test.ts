@@ -6,9 +6,9 @@ import * as vscode from 'vscode';
 import {
   LICENSE_VALIDITY,
   LICENSE_VALIDITY_CACHE_EXPIRATION,
-} from '../../../constants';
+} from 'constants/';
 import { Substitute } from '@fluffy-spoon/substitute';
-import getLicenseInformation from '../../../utils/getLicenseInformation';
+import getLicenseInformation from 'utils/license/getLicenseInformation';
 
 mocha.afterEach(() => {
   sinon.restore();
@@ -30,12 +30,12 @@ function getMockContext(licenseKey: string, cachedValidity: boolean) {
         }
       },
       keys: () => ['foo'],
-      update: async () => {},
+      update: async () => { },
       setKeysForSync: sinon.mock(),
     },
     secrets: {
       ...initialContext.secrets,
-      delete: async () => {},
+      delete: async () => { },
       get: async () => licenseKey,
       store: sinon.mock(),
     },

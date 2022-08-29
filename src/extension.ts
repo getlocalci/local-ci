@@ -30,19 +30,19 @@ import {
 } from './constants';
 import cleanUpCommittedImages from './utils/containerization/cleanUpCommittedImages';
 import disposeTerminalsForJob from './utils/terminal/disposeTerminalsForJob';
-import getAllConfigFilePaths from './utils/getAllConfigFilePaths';
+import getAllConfigFilePaths from './utils/config/getAllConfigFilePaths';
 import getCheckoutJobs from './utils/job/getCheckoutJobs';
 import getConfig from './utils/config/getConfig';
-import getConfigFilePath from './utils/getConfigFilePath';
+import getConfigFilePath from './utils/config/getConfigFilePath';
 import getDebuggingTerminalName from './utils/terminal/getDebuggingTerminalName';
-import getDynamicConfigPath from './utils/getDynamicConfigPath';
+import getDynamicConfigPath from './utils/config/getDynamicConfigPath';
 import getFinalTerminalName from './utils/terminal/getFinalTerminalName';
 import getRepoBasename from './utils/common/getRepoBasename';
 import getStarterConfig from './utils/config/getStarterConfig';
 import onClickTakeSurvey from './utils/license/onClickTakeSurvey';
 import prepareConfig from './utils/config/prepareConfig';
-import runJob from './utils/runJob';
-import showLicenseInput from './utils/showLicenseInput';
+import runJob from './utils/job/runJob';
+import showLicenseInput from './utils/license/showLicenseInput';
 import showLogFile from './utils/log/showLogFile';
 import askForEmail from './utils/license/askForEmail';
 

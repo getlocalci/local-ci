@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import getRepoBasename from '../../../utils/common/getRepoBasename';
+import getRepoBasename from 'utils/common/getRepoBasename';
 
 suite('getRepoBasename', () => {
   test('Simple basename', () => {

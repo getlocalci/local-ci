@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import sanitizeLicenseKey from '../../../utils/license/sanitizeLicenseKey';
+import sanitizeLicenseKey from 'utils/license/sanitizeLicenseKey';
 
 suite('sanitizeLicenseKey', () => {
   test('empty', async () => {

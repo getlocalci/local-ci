@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import getImageFromJob from '../../../utils/getImageFromJob';
+import getImageFromJob from 'utils/containerization/getImageFromJob';
 
 suite('getImageFromJob', () => {
   test('no docker value', () => {

@@ -2,8 +2,8 @@ import * as assert from 'assert';
 import * as fs from 'fs';
 import * as mocha from 'mocha';
 import * as sinon from 'sinon';
-import { getTestFilePath, normalize } from '../../helpers';
-import writeProcessFile from '../../../utils/process/writeProcessFile';
+import { getTestFilePath, normalize } from 'test/helpers/';
+import writeProcessFile from 'utils/process/writeProcessFile';
 
 mocha.afterEach(() => {
   sinon.restore();

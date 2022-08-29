@@ -4,7 +4,7 @@ import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as vscode from 'vscode';
 import { Substitute } from '@fluffy-spoon/substitute';
-import getConfigFilePath from '../../../utils/getConfigFilePath';
+import getConfigFilePath from 'utils/config/getConfigFilePath';
 
 mocha.afterEach(() => {
   sinon.restore();
@@ -20,7 +20,7 @@ function getMockContext(filePath: string) {
       get: () => {
         return filePath;
       },
-      update: async () => {},
+      update: async () => { },
     },
   };
 }

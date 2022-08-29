@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import * as fs from 'fs';
 import * as mocha from 'mocha';
 import * as sinon from 'sinon';
-import getCheckoutJobs from '../../../utils/job/getCheckoutJobs';
+import getCheckoutJobs from 'utils/job/getCheckoutJobs';
 
 mocha.afterEach(() => {
   sinon.restore();

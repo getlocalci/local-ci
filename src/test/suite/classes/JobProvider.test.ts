@@ -2,8 +2,8 @@ import * as assert from 'assert';
 import * as vscode from 'vscode';
 import { Substitute } from '@fluffy-spoon/substitute';
 import TelemetryReporter from '@vscode/extension-telemetry';
-import JobProvider from '../../../classes/JobProvider';
-import Job from '../../../classes/Job';
+import JobProvider from 'classes/JobProvider';
+import Job from 'classes/Job';
 
 function getStubs(): [vscode.ExtensionContext, TelemetryReporter] {
   return [

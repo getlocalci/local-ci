@@ -4,7 +4,7 @@ import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as vscode from 'vscode';
 import { Substitute } from '@fluffy-spoon/substitute';
-import uncommittedWarning from '../../../utils/uncommittedWarning';
+import uncommittedWarning from 'utils/containerization/uncommittedWarning';
 
 mocha.afterEach(() => {
   sinon.restore();
