@@ -1,16 +1,9 @@
-import * as assert from 'assert';
-import * as mocha from 'mocha';
-import * as sinon from 'sinon';
-import { normalize } from 'test/helpers/';
 import getRestoreCacheCommand from 'cache/getRestoreCacheCommand';
+import { normalize } from 'test/helpers/';
 
-mocha.afterEach(() => {
-  sinon.restore();
-});
-
-suite('getRestoreCacheCommand', () => {
+describe('getRestoreCacheCommand', () => {
   test('simple key property', () => {
-    assert.strictEqual(
+    expect(
       normalize(
         getRestoreCacheCommand(
           {
@@ -29,7 +22,8 @@ suite('getRestoreCacheCommand', () => {
             },
           ]
         )
-      ),
+      )
+    ).toEqual(
       normalize(
         `restore_from_directories=("/tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then (shasum "package-lock.json" 2>/dev/null || sha256sum "package-lock.json" 2>/dev/null) | awk '{print $1}'; fi )*/.npm")
         for directory_candidate in $restore_from_directories
@@ -57,7 +51,7 @@ suite('getRestoreCacheCommand', () => {
   });
 
   test('keys property with multiple keys', () => {
-    assert.strictEqual(
+    expect(
       normalize(
         getRestoreCacheCommand(
           {
@@ -76,7 +70,8 @@ suite('getRestoreCacheCommand', () => {
             },
           ]
         )
-      ),
+      )
+    ).toEqual(
       normalize(
         `restore_from_directories=("/tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then (shasum "package-lock.json" 2>/dev/null || sha256sum "package-lock.json" 2>/dev/null) | awk '{print $1}'; fi )*/.npm" "/tmp/local-ci/v2-deps*/.npm")
         for directory_candidate in $restore_from_directories
