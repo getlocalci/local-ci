@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import { getTestFilePath } from 'test/helpers/';
+import { getTestFilePath } from 'test/helpers';
 import getConfigFromPath from 'config/getConfigFromPath';
 import getSaveCacheSteps from 'cache/getSaveCacheSteps';
 

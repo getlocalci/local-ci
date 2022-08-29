@@ -98,3 +98,8 @@ declare module '*.sh' {
   const content: any;
   export = content;
 }
+
+declare module '*.yml' {
+  const content: any;
+  export = content;
+}

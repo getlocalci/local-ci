@@ -52,7 +52,7 @@
     "onView:localCiLicense",
     "workspaceContains:**/.circleci/config.yml"
   ],
-  "main": "./dist/extension.js",
+  "main": "./src/index.ts",
   "contributes": {
     "commands": [
       {
@@ -269,7 +269,7 @@
     "preuninstall": "node ./node/binaryUninstall.js",
     "lint": "eslint src --ext ts",
     "lint:fix": "eslint src --ext ts --fix",
-    "test": "jest src/cache"
+    "test": "jest src/index.ts src/process"
   },
   "devDependencies": {
     "@cloudflare/binary-install": "^0.2.0",
@@ -288,12 +288,15 @@
     "eslint-plugin-prettier": "^4.0.0",
     "glob": "^7.1.7",
     "husky": "^8.0.1",
+    "inversify": "^6.0.1",
     "jest": "^28.1.3",
+    "jest-raw-loader": "^1.0.1",
     "js-yaml": "^4.1.0",
     "mocha": "^10.0.0",
     "node-run-cmd": "^1.0.1",
     "prettier": "^2.6.1",
     "raw-loader": "^4.0.2",
+    "reflect-metadata": "^0.1.13",
     "sinon": "^13.0.1",
     "ts-jest": "^28.0.8",
     "ts-loader": "^9.2.8",
