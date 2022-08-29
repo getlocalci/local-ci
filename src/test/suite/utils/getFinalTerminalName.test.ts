@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import getFinalTerminalName from 'utils/terminal/getFinalTerminalName';
+import getFinalTerminalName from 'terminal/getFinalTerminalName';
 
 suite('getFinalTerminalName', () => {
   test('errors', () => {

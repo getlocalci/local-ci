@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import * as cp from 'child_process';
 import * as mocha from 'mocha';
 import * as sinon from 'sinon';
-import isDockerRunning from 'utils/containerization/isDockerRunning';
+import isDockerRunning from 'containerization/isDockerRunning';
 
 mocha.afterEach(() => {
   sinon.restore();

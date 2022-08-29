@@ -1,6 +1,6 @@
 import * as assert from 'assert';
 import { DAY_IN_MILLISECONDS, TRIAL_LENGTH_IN_MILLISECONDS } from 'constants/';
-import getMillisecondsRemainingInTrial from 'utils/license/getMillisecondsRemainingInTrial';
+import getMillisecondsRemainingInTrial from 'license/getMillisecondsRemainingInTrial';
 
 const hourInMilliseconds = 3600000;
 

@@ -3,11 +3,11 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 import TelemetryReporter from '@vscode/extension-telemetry';
 import { getBinaryPath } from '../node/binary';
-import Delayer from './classes/Delayer';
-import Job from './classes/Job';
-import JobProvider from './classes/JobProvider';
-import LicenseProvider from './classes/LicenseProvider';
-import LogProvider from './classes/LogProvider';
+import Delayer from './job/Delayer';
+import Job from './job/Job';
+import JobProvider from './job/JobProvider';
+import LicenseProvider from './license/LicenseProvider';
+import LogProvider from './log/LogProvider';
 import {
   COMMITTED_IMAGE_NAMESPACE,
   CREATE_CONFIG_FILE_COMMAND,
@@ -28,23 +28,23 @@ import {
   TELEMETRY_KEY,
   TRIAL_STARTED_TIMESTAMP,
 } from './constants';
-import cleanUpCommittedImages from './utils/containerization/cleanUpCommittedImages';
-import disposeTerminalsForJob from './utils/terminal/disposeTerminalsForJob';
-import getAllConfigFilePaths from './utils/config/getAllConfigFilePaths';
-import getCheckoutJobs from './utils/job/getCheckoutJobs';
-import getConfig from './utils/config/getConfig';
-import getConfigFilePath from './utils/config/getConfigFilePath';
-import getDebuggingTerminalName from './utils/terminal/getDebuggingTerminalName';
-import getDynamicConfigPath from './utils/config/getDynamicConfigPath';
-import getFinalTerminalName from './utils/terminal/getFinalTerminalName';
-import getRepoBasename from './utils/common/getRepoBasename';
-import getStarterConfig from './utils/config/getStarterConfig';
-import onClickTakeSurvey from './utils/license/onClickTakeSurvey';
-import prepareConfig from './utils/config/prepareConfig';
-import runJob from './utils/job/runJob';
-import showLicenseInput from './utils/license/showLicenseInput';
-import showLogFile from './utils/log/showLogFile';
-import askForEmail from './utils/license/askForEmail';
+import cleanUpCommittedImages from './containerization/cleanUpCommittedImages';
+import disposeTerminalsForJob from './terminal/disposeTerminalsForJob';
+import getAllConfigFilePaths from './config/getAllConfigFilePaths';
+import getCheckoutJobs from './job/getCheckoutJobs';
+import getConfig from './config/getConfig';
+import getConfigFilePath from './config/getConfigFilePath';
+import getDebuggingTerminalName from './terminal/getDebuggingTerminalName';
+import getDynamicConfigPath from './config/getDynamicConfigPath';
+import getFinalTerminalName from './terminal/getFinalTerminalName';
+import getRepoBasename from './common/getRepoBasename';
+import getStarterConfig from './config/getStarterConfig';
+import onClickTakeSurvey from './license/onClickTakeSurvey';
+import prepareConfig from './config/prepareConfig';
+import runJob from './job/runJob';
+import showLicenseInput from './license/showLicenseInput';
+import showLogFile from './log/showLogFile';
+import askForEmail from './license/askForEmail';
 
 const reporter = new TelemetryReporter(
   EXTENSION_ID,

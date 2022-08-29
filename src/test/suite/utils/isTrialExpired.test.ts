@@ -6,7 +6,7 @@ import {
   EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS,
   TRIAL_LENGTH_IN_MILLISECONDS,
 } from 'constants/';
-import isTrialExpired from 'utils/license/isTrialExpired';
+import isTrialExpired from 'license/isTrialExpired';
 
 mocha.afterEach(() => {
   sinon.restore();

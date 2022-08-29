@@ -3,7 +3,7 @@ import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as vscode from 'vscode';
 import { Substitute } from '@fluffy-spoon/substitute';
-import showLicenseInput from 'utils/license/showLicenseInput';
+import showLicenseInput from 'license/showLicenseInput';
 
 mocha.afterEach(() => {
   sinon.restore();

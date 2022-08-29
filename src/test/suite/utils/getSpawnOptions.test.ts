@@ -3,7 +3,7 @@ import * as mocha from 'mocha';
 import * as os from 'os';
 import * as sinon from 'sinon';
 import * as vscode from 'vscode';
-import getSpawnOptions from 'utils/common/getSpawnOptions';
+import getSpawnOptions from 'common/getSpawnOptions';
 
 mocha.afterEach(() => {
   sinon.restore();

@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import getRepoPath from 'utils/common/getRepoPath';
+import getRepoPath from 'common/getRepoPath';
 
 suite('getRepoPath', () => {
   test('Simple path', () => {

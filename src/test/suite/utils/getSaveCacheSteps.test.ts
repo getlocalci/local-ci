@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 import { getTestFilePath } from 'test/helpers/';
-import getConfigFromPath from 'utils/config/getConfigFromPath';
-import getSaveCacheSteps from 'utils/cache/getSaveCacheSteps';
+import getConfigFromPath from 'config/getConfigFromPath';
+import getSaveCacheSteps from 'cache/getSaveCacheSteps';
 
 suite('getSaveCacheSteps', () => {
   test('with 2 save_cache values', () => {

@@ -40,7 +40,7 @@ const config = {
       },
       {
         test: /\.sh$/,
-        type: 'asset/source',
+        loader: 'raw-loader',
       }
     ]
   }

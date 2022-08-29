@@ -1,7 +1,7 @@
 import * as cp from 'child_process';
 import * as mocha from 'mocha';
 import * as sinon from 'sinon';
-import cleanUpCommittedImages from 'utils/containerization/cleanUpCommittedImages';
+import cleanUpCommittedImages from 'containerization/cleanUpCommittedImages';
 
 mocha.afterEach(() => {
   sinon.restore();

@@ -8,7 +8,7 @@ import {
   LICENSE_VALIDITY_CACHE_EXPIRATION,
 } from 'constants/';
 import { Substitute } from '@fluffy-spoon/substitute';
-import getLicenseInformation from 'utils/license/getLicenseInformation';
+import getLicenseInformation from 'license/getLicenseInformation';
 
 mocha.afterEach(() => {
   sinon.restore();

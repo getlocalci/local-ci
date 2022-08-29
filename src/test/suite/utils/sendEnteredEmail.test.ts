@@ -1,9 +1,9 @@
-import * as assert from 'assert';
+import assert from 'assert';
 import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import axios from 'axios';
 
-import sendEnteredEmail from 'utils/license/sendEnteredEmail';
+import sendEnteredEmail from 'license/sendEnteredEmail';
 import { EMAIL_ENDPOINT } from 'constants/';
 
 mocha.afterEach(() => {

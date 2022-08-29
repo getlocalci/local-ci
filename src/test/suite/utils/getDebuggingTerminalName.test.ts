@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import getDebuggingTerminalName from 'utils/terminal/getDebuggingTerminalName';
+import getDebuggingTerminalName from 'terminal/getDebuggingTerminalName';
 
 suite('getDebuggingTerminalName', () => {
   test('errors', () => {

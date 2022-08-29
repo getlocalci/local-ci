@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import getHash from 'utils/license/getHash';
+import getHash from 'license/getHash';
 
 suite('getHash', () => {
   test('empty string', () => {

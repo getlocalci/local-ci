@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import * as mocha from 'mocha';
 import * as os from 'os';
 import * as sinon from 'sinon';
-import isMac from 'utils/common/isMac';
+import isMac from 'common/isMac';
 
 mocha.afterEach(() => {
   sinon.restore();
