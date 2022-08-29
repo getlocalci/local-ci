@@ -33,7 +33,7 @@ function getMockContext(hasExtendedTrial: boolean) {
           return hasExtendedTrial;
         }
       },
-      update: async () => { },
+      update: async () => {},
     },
   };
 }

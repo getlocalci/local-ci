@@ -30,12 +30,12 @@ function getMockContext(licenseKey: string, cachedValidity: boolean) {
         }
       },
       keys: () => ['foo'],
-      update: async () => { },
+      update: async () => {},
       setKeysForSync: sinon.mock(),
     },
     secrets: {
       ...initialContext.secrets,
-      delete: async () => { },
+      delete: async () => {},
       get: async () => licenseKey,
       store: sinon.mock(),
     },

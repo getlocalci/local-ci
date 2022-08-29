@@ -20,7 +20,7 @@ function getMockContext(filePath: string) {
       get: () => {
         return filePath;
       },
-      update: async () => { },
+      update: async () => {},
     },
   };
 }

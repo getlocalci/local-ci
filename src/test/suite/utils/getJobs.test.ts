@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import * as fs from 'fs';
 import getConfig from 'utils/config/getConfig';
 import getJobs from 'utils/job/getJobs';
-import { getTestFilePath } from 'test/helpers'
+import { getTestFilePath } from 'test/helpers';
 
 suite('getJobs', () => {
   test('single job', () => {
