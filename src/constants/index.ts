@@ -44,6 +44,8 @@ export const LICENSE_VALIDITY_CACHE_EXPIRATION =
   'local-ci.license.cache.expiration';
 export const DAY_IN_MILLISECONDS = 86400000;
 export const TRIAL_LENGTH_IN_MILLISECONDS = 15 * DAY_IN_MILLISECONDS;
+export const EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS = 15 * DAY_IN_MILLISECONDS;
+export const HAS_EXTENDED_TRIAL = 'local-ci.license.trial-extended.survey';
 export const TRIAL_STARTED_TIMESTAMP =
   'local-ci.license.trial-started.timestamp';
 export const CONTAINER_STORAGE_DIRECTORY = '/tmp/local-ci';

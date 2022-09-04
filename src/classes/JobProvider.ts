@@ -114,7 +114,7 @@ export default class JobProvider
       (await isLicenseValid(this.context)) ||
       !isTrialExpired(
         this.context.globalState.get(TRIAL_STARTED_TIMESTAMP),
-        getTrialLength()
+        getTrialLength(this.context)
       );
 
     if (!shouldEnableExtension) {
