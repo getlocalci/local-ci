@@ -1,5 +1,5 @@
 [![Buy license key](https://img.shields.io/badge/%24-paid-orange)](https://getlocalci.com/pricing/?utm_medium=extension&utm_source=readme)
-[![15 day free preview](https://img.shields.io/badge/trial-15%20day-orange)](https://getlocalci.com/pricing/?utm_medium=extension&utm_source=readme)
+[![30 day free preview](https://img.shields.io/badge/trial-30%20day-orange)](https://getlocalci.com/pricing/?utm_medium=extension&utm_source=readme)
 [![Platform: macOS](https://img.shields.io/badge/platform-macOS-yellow)](https://en.wikipedia.org/wiki/MacOS)
 [![Requires CircleCI®](https://img.shields.io/badge/requires-CirlcleCI%C2%AE-yellow)](https://circleci.com/docs/2.0/first-steps/)
 
@@ -53,7 +53,7 @@ Find out in seconds whether the setup is right, all in your local.
 
 Local CI requires a [license key](https://getlocalci.com/pricing/?utm_medium=extension&utm_source=readme) for $15 per month.
 
-But first you'll get a free 15-day preview, no credit card needed.
+But first you'll get a free 30-day preview, no credit card needed.
 
 ## Requirements
 
