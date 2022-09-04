@@ -3,6 +3,7 @@ import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import {
   DAY_IN_MILLISECONDS,
+  EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS,
   TRIAL_LENGTH_IN_MILLISECONDS,
 } from '../../../constants';
 import isTrialExpired from '../../../utils/isTrialExpired';
@@ -10,6 +11,9 @@ import isTrialExpired from '../../../utils/isTrialExpired';
 mocha.afterEach(() => {
   sinon.restore();
 });
+
+const extendedTrial =
+  TRIAL_LENGTH_IN_MILLISECONDS + EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS;
 
 suite('isTrialExpired', () => {
   test('preview just began', () => {
@@ -34,6 +38,43 @@ suite('isTrialExpired', () => {
       isTrialExpired(
         new Date().getTime() - 32 * DAY_IN_MILLISECONDS,
         TRIAL_LENGTH_IN_MILLISECONDS
+      ),
+      true
+    );
+  });
+
+  test('preview just began and was extended', () => {
+    assert.strictEqual(
+      isTrialExpired(new Date().getTime(), TRIAL_LENGTH_IN_MILLISECONDS),
+      false
+    );
+  });
+
+  test('preview began 30 days and 10 milliseconds ago and was extended', () => {
+    assert.strictEqual(
+      isTrialExpired(
+        new Date().getTime() - (30 * DAY_IN_MILLISECONDS + 10),
+        extendedTrial
+      ),
+      false
+    );
+  });
+
+  test('preview began 32 days ago and was extended', () => {
+    assert.strictEqual(
+      isTrialExpired(
+        new Date().getTime() - 32 * DAY_IN_MILLISECONDS,
+        extendedTrial
+      ),
+      false
+    );
+  });
+
+  test('preview began 45 days and 1 millisecond ago and was extended', () => {
+    assert.strictEqual(
+      isTrialExpired(
+        new Date().getTime() - 45 * DAY_IN_MILLISECONDS,
+        extendedTrial
       ),
       true
     );
