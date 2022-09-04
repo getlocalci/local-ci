@@ -28,10 +28,7 @@ import {
 import uncommittedWarning from '../containerization/uncommittedWarning';
 import getDynamicConfigPath from 'config/getDynamicConfigPath';
 import JobProvider from 'job/JobProvider';
-import {
-  dockerExecRunningContainer,
-  getRunningContainerFunction,
-} from 'scripts/';
+import { GET_RUNNING_CONTAINER_FUNCTION } from 'constants/';
 
 /** Whether this job creates a dynamic config: https://circleci.com/docs/2.0/dynamic-config/ */
 function doesJobCreateDynamicConfig(job: Job | undefined): boolean {
@@ -149,9 +146,15 @@ export default async function runJob(
 
   // Once the container is available, run an interactive bash shell within the container.
   debuggingTerminal.sendText(`
-    ${getRunningContainerFunction}
-    LCI_JOB_IMAGE=${jobImage}
-    ${dockerExecRunningContainer}`);
+    ${GET_RUNNING_CONTAINER_FUNCTION}
+    printf "You'll get bash access to the job once this conditional is true:\n"
+    until [ -n "$(get_running_container "${jobImage}")" ]
+      do
+      sleep 1
+    done
+    echo "Inside the job's container:"
+    docker exec -it "$(get_running_container "${jobImage}")" /bin/sh || exit 1
+    `);
   debuggingTerminal.sendText('cd ~/');
 
   let finalTerminal: vscode.Terminal;

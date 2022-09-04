@@ -1,314 +1,320 @@
 {
-  "name": "local-ci",
-  "displayName": "Local CI",
-  "description": "Debug CircleCI® workflows locally, with Bash access during and after. Free preview, then paid.",
-  "version": "1.7.10",
-  "publisher": "LocalCI",
-  "contributors": [
-    "Ryan Kienstra"
-  ],
-  "preview": true,
-  "license": "GPL-2.0-or-later",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/getlocalci/local-ci"
-  },
-  "bugs": "https://github.com/getlocalci/local-ci/issues",
-  "icon": "resources/logo.png",
-  "extensionKind": [
-    "workspace"
-  ],
-  "qna": "https://github.com/getlocalci/local-ci/discussions",
-  "engines": {
-    "vscode": "^1.60.0",
-    "node": "16"
-  },
-  "os": [
-    "!win32"
-  ],
-  "categories": [
-    "Debuggers",
-    "Programming Languages",
-    "Testing"
-  ],
-  "keywords": [
-    "debug",
-    "debuggers",
-    "devops",
-    "ci",
-    "cicd",
-    "CI/CD",
-    "CircleCI",
-    "continuous integration",
-    "YAML"
-  ],
-  "activationEvents": [
-    "localCiJobs.selectRepo",
-    "onCommand:local-ci.runWalkthroughJob",
-    "onCommand:local-ci.debugWalkthroughJob",
-    "onCommand:local-ci.job.run",
-    "onUri",
-    "onView:localCiJobs",
-    "onView:localCiLicense",
-    "workspaceContains:**/.circleci/config.yml"
-  ],
-  "main": "./src/index.ts",
-  "contributes": {
-    "commands": [
-      {
-        "command": "local-ci.job.run",
-        "title": "Local CI: Run Job",
-        "icon": "$(refresh)"
-      },
-      {
-        "command": "local-ci.job.exit",
-        "title": "Local CI: Exit Job",
-        "icon": "$(notebook-delete-cell)"
-      },
-      {
-        "command": "local-ci.job.rerun",
-        "title": "Local CI: Rerun Job",
-        "icon": "$(extensions-refresh)"
-      },
-      {
-        "command": "local-ci.debug.repo",
-        "title": "Local CI: Run Jobs Locally"
-      },
-      {
-        "command": "local-ci.create.config",
-        "title": "Local CI: Create A Config File"
-      },
-      {
-        "command": "localCiJobs.exitAllJobs",
-        "title": "Local CI: Exit All Jobs",
-        "icon": "$(notebook-delete-cell)"
-      },
-      {
-        "command": "localCiJobs.help",
-        "title": "Local CI: Help",
-        "icon": "$(question)"
-      },
-      {
-        "command": "localCiJobs.refresh",
-        "title": "Local CI: Refresh Job List",
-        "icon": "$(refresh)"
-      },
-      {
-        "command": "localCiJobs.selectRepo",
-        "title": "Local CI: Select Repo ",
-        "icon": "$(debug-configure)"
-      },
-      {
-        "command": "localCiJobs.enterToken",
-        "title": "Local CI: Token Entry",
-        "icon": "$(record-keys)"
-      },
-      {
-        "command": "localCiLicense.refresh",
-        "title": "Local CI: Refresh License Information",
-        "icon": "$(refresh)"
-      }
-    ],
-    "keybindings": [
-      {
-        "command": "workbench.view.extension.localCiDebugger",
-        "key": "shift+cmd+l",
-        "mac": "shift+cmd+l"
-      }
-    ],
-    "menus": {
-      "view/title": [
-        {
-          "command": "localCiJobs.exitAllJobs",
-          "when": "view == localCiJobs",
-          "group": "navigation"
-        },
-        {
-          "command": "localCiJobs.help",
-          "when": "view == localCiJobs",
-          "group": "navigation"
-        },
-        {
-          "command": "localCiJobs.refresh",
-          "when": "view == localCiJobs",
-          "group": "navigation"
-        },
-        {
-          "command": "localCiJobs.selectRepo",
-          "when": "view == localCiJobs",
-          "group": "navigation"
-        },
-        {
-          "command": "localCiJobs.enterToken",
-          "when": "view == localCiJobs",
-          "group": "navigation"
-        },
-        {
-          "command": "localCiLicense.refresh",
-          "when": "view == localCiLicense",
-          "group": "navigation"
-        }
-      ],
-      "explorer/context": [
-        {
-          "when": "resourcePath =~ /.circleci/config.yml/",
-          "command": "local-ci.debug.repo"
-        }
-      ],
-      "view/item/context": [
-        {
-          "command": "local-ci.job.rerun",
-          "when": "view == localCiJobs && viewItem == isRunning",
-          "group": "inline"
-        }
-      ]
-    },
-    "views": {
-      "localCiDebugger": [
-        {
-          "id": "localCiJobs",
-          "name": "CircleCI® Jobs"
-        },
-        {
-          "id": "localCiLicense",
-          "name": "Local CI License Key",
-          "type": "webview"
-        }
-      ]
-    },
-    "viewsContainers": {
-      "activitybar": [
-        {
-          "id": "localCiDebugger",
-          "title": "Local CI",
-          "icon": "resources/logo.svg"
-        }
-      ]
-    },
-    "walkthroughs": [
-      {
-        "id": "welcomeLocalCi",
-        "title": "Local CI",
-        "description": "Debug CircleCI® jobs locally with Bash access and workspace persistence. All in your local, no pushing and waiting. Not affiliated with CircleCI®.",
-        "steps": [
-          {
-            "id": "operatingSystemNotice",
-            "title": "Sorry, Local CI Doesn't Work On Windows",
-            "when": "isWindows",
-            "description": "It only works on macOS, unfortunately.",
-            "media": {
-              "image": "https://user-images.githubusercontent.com/4063887/141724496-69651ea3-2cb9-4e43-9aa7-3e9b88566865.gif",
-              "altText": "Windows not supported"
-            }
-          },
-          {
-            "id": "selectRepo",
-            "title": "Select The Repo To Run CI On",
-            "when": "!isWindows",
-            "description": "You'll be able to run jobs locally in it. \n[Select Repo](command:localCiJobs.selectRepo)",
-            "media": {
-              "image": "https://user-images.githubusercontent.com/4063887/141724496-69651ea3-2cb9-4e43-9aa7-3e9b88566865.gif",
-              "altText": "Selecting the repo to run CI on"
-            }
-          },
-          {
-            "id": "runFirstWalkthroughJob",
-            "title": "Run A CircleCI® Job On Your Local Machine",
-            "when": "!isWindows",
-            "description": "No need to guess why it failed, push a commit, wait for CI to fail, push a commit, etc… \n You'll see the job running and have Bash access to debug it. \n Even after the job exits. \n[Run A Job](command:local-ci.runWalkthroughJob)",
-            "media": {
-              "image": "https://user-images.githubusercontent.com/4063887/141727455-37279ab7-a67f-4a49-8f6d-9850c5c1d805.gif",
-              "altText": "Running the first job on your local machine"
-            }
-          },
-          {
-            "id": "runSecondWalkthroughJob",
-            "title": "Run Another Job",
-            "when": "!isWindows",
-            "description": "Click one of the green triangle icons on the left, like the second or third one. \n Local CI applies a job's [persist_to_workspace](https://circleci.com/blog/deep-diving-into-circleci-workspaces/) and attach_workspace values. \n So you can run the entire workflow with these persisted files. \n Your debugging can be much faster.",
-            "media": {
-              "image": "https://user-images.githubusercontent.com/4063887/141726659-fdb0fcd2-015a-4c11-9f45-bdcbddff461c.gif",
-              "altText": "Running the second job by clicking the icon"
-            }
-          }
-        ]
-      }
-    ]
-  },
-  "badges": [
-    {
-      "url": "https://img.shields.io/badge/%24-paid-orange",
-      "href": "https://getlocalci.com/pricing/?utm_medium=extension&utm_source=badge",
-      "description": "Buy license key"
-    },
-    {
-      "url": "https://img.shields.io/badge/trial-15%20day-orange",
-      "href": "https://getlocalci.com/pricing/?utm_medium=extension&utm_source=badge",
-      "description": "15 day free preview"
-    },
-    {
-      "url": "https://img.shields.io/badge/platform-macOS-yellow",
-      "href": "https://en.wikipedia.org/wiki/MacOS",
-      "description": "Platform: macOS"
-    },
-    {
-      "url": "https://img.shields.io/badge/requires-CirlcleCI%C2%AE-yellow",
-      "href": "https://circleci.com",
-      "description": "Requires CircleCI®"
-    }
-  ],
-  "scripts": {
-    "vscode:prepublish": "npm run package",
-    "vsix": "vsce package",
-    "deploy": "vsce publish",
-    "compile": "webpack",
-    "watch": "webpack --watch",
-    "package": "webpack --mode production --devtool hidden-source-map",
-    "perepare": "husky install",
-    "preinstall": "node ./node/binaryInstall.js",
-    "preuninstall": "node ./node/binaryUninstall.js",
-    "lint": "eslint src --ext ts",
-    "lint:fix": "eslint src --ext ts --fix",
-    "test": "jest src/index.ts src/process"
-  },
-  "devDependencies": {
-    "@cloudflare/binary-install": "^0.2.0",
-    "@fluffy-spoon/substitute": "^1.208.0",
-    "@types/glob": "^7.1.3",
-    "@types/jest": "^28.1.8",
-    "@types/js-yaml": "^4.0.1",
-    "@types/mocha": "^9.1.0",
-    "@types/node": "^17.0.23",
-    "@types/sinon": "^10.0.11",
-    "@types/vscode": "^1.60.0",
-    "@typescript-eslint/eslint-plugin": "^5.17.0",
-    "@typescript-eslint/parser": "^5.17.0",
-    "eslint": "^8.16.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-prettier": "^4.0.0",
-    "glob": "^7.1.7",
-    "husky": "^8.0.1",
-    "inversify": "^6.0.1",
-    "jest": "^28.1.3",
-    "jest-raw-loader": "^1.0.1",
-    "js-yaml": "^4.1.0",
-    "mocha": "^10.0.0",
-    "node-run-cmd": "^1.0.1",
-    "prettier": "^2.6.1",
-    "raw-loader": "^4.0.2",
-    "reflect-metadata": "^0.1.13",
-    "sinon": "^13.0.1",
-    "ts-jest": "^28.0.8",
-    "ts-loader": "^9.2.8",
-    "typescript": "^4.6.3",
-    "util": "^0.12.4",
-    "vsce": "^2.10.2",
-    "webpack": "^5.70.0",
-    "webpack-cli": "^4.9.2"
-  },
-  "dependencies": {
-    "@vscode/extension-telemetry": "^0.6.2",
-    "axios": "^0.26.1",
-    "cross-sha256": "^1.2.0"
-  }
+	"name": "local-ci",
+	"displayName": "Local CI",
+	"description": "Debug CircleCI® workflows locally, with Bash access during and after. Free preview, then paid.",
+	"version": "1.7.10",
+	"publisher": "LocalCI",
+	"contributors": [
+		"Ryan Kienstra"
+	],
+	"preview": true,
+	"license": "GPL-2.0-or-later",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/getlocalci/local-ci"
+	},
+	"bugs": "https://github.com/getlocalci/local-ci/issues",
+	"icon": "resources/logo.png",
+	"extensionKind": [
+		"workspace"
+	],
+	"qna": "https://github.com/getlocalci/local-ci/discussions",
+	"engines": {
+		"vscode": "^1.60.0",
+		"node": "16"
+	},
+	"os": [
+		"!win32"
+	],
+	"categories": [
+		"Debuggers",
+		"Programming Languages",
+		"Testing"
+	],
+	"keywords": [
+		"debug",
+		"debuggers",
+		"devops",
+		"ci",
+		"cicd",
+		"CI/CD",
+		"CircleCI",
+		"continuous integration",
+		"YAML"
+	],
+	"activationEvents": [
+		"localCiJobs.selectRepo",
+		"onCommand:local-ci.runWalkthroughJob",
+		"onCommand:local-ci.debugWalkthroughJob",
+		"onCommand:local-ci.job.run",
+		"onUri",
+		"onView:localCiJobs",
+		"onView:localCiLicense",
+		"workspaceContains:**/.circleci/config.yml"
+	],
+	"main": "./src/index.ts",
+	"contributes": {
+		"commands": [
+			{
+				"command": "local-ci.job.run",
+				"title": "Local CI: Run Job",
+				"icon": "$(refresh)"
+			},
+			{
+				"command": "local-ci.job.exit",
+				"title": "Local CI: Exit Job",
+				"icon": "$(notebook-delete-cell)"
+			},
+			{
+				"command": "local-ci.job.rerun",
+				"title": "Local CI: Rerun Job",
+				"icon": "$(extensions-refresh)"
+			},
+			{
+				"command": "local-ci.debug.repo",
+				"title": "Local CI: Run Jobs Locally"
+			},
+			{
+				"command": "local-ci.create.config",
+				"title": "Local CI: Create A Config File"
+			},
+			{
+				"command": "localCiJobs.exitAllJobs",
+				"title": "Local CI: Exit All Jobs",
+				"icon": "$(notebook-delete-cell)"
+			},
+			{
+				"command": "localCiJobs.help",
+				"title": "Local CI: Help",
+				"icon": "$(question)"
+			},
+			{
+				"command": "localCiJobs.refresh",
+				"title": "Local CI: Refresh Job List",
+				"icon": "$(refresh)"
+			},
+			{
+				"command": "localCiJobs.selectRepo",
+				"title": "Local CI: Select Repo ",
+				"icon": "$(debug-configure)"
+			},
+			{
+				"command": "localCiJobs.enterToken",
+				"title": "Local CI: Token Entry",
+				"icon": "$(record-keys)"
+			},
+			{
+				"command": "localCiLicense.refresh",
+				"title": "Local CI: Refresh License Information",
+				"icon": "$(refresh)"
+			}
+		],
+		"keybindings": [
+			{
+				"command": "workbench.view.extension.localCiDebugger",
+				"key": "shift+cmd+l",
+				"mac": "shift+cmd+l"
+			}
+		],
+		"menus": {
+			"view/title": [
+				{
+					"command": "localCiJobs.exitAllJobs",
+					"when": "view == localCiJobs",
+					"group": "navigation"
+				},
+				{
+					"command": "localCiJobs.help",
+					"when": "view == localCiJobs",
+					"group": "navigation"
+				},
+				{
+					"command": "localCiJobs.refresh",
+					"when": "view == localCiJobs",
+					"group": "navigation"
+				},
+				{
+					"command": "localCiJobs.selectRepo",
+					"when": "view == localCiJobs",
+					"group": "navigation"
+				},
+				{
+					"command": "localCiJobs.enterToken",
+					"when": "view == localCiJobs",
+					"group": "navigation"
+				},
+				{
+					"command": "localCiLicense.refresh",
+					"when": "view == localCiLicense",
+					"group": "navigation"
+				}
+			],
+			"explorer/context": [
+				{
+					"when": "resourcePath =~ /.circleci/config.yml/",
+					"command": "local-ci.debug.repo"
+				}
+			],
+			"view/item/context": [
+				{
+					"command": "local-ci.job.rerun",
+					"when": "view == localCiJobs && viewItem == isRunning",
+					"group": "inline"
+				}
+			]
+		},
+		"views": {
+			"localCiDebugger": [
+				{
+					"id": "localCiJobs",
+					"name": "CircleCI® Jobs"
+				},
+				{
+					"id": "localCiLicense",
+					"name": "Local CI License Key",
+					"type": "webview"
+				}
+			]
+		},
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "localCiDebugger",
+					"title": "Local CI",
+					"icon": "resources/logo.svg"
+				}
+			]
+		},
+		"walkthroughs": [
+			{
+				"id": "welcomeLocalCi",
+				"title": "Local CI",
+				"description": "Debug CircleCI® jobs locally with Bash access and workspace persistence. All in your local, no pushing and waiting. Not affiliated with CircleCI®.",
+				"steps": [
+					{
+						"id": "operatingSystemNotice",
+						"title": "Sorry, Local CI Doesn't Work On Windows",
+						"when": "isWindows",
+						"description": "It only works on macOS, unfortunately.",
+						"media": {
+							"image": "https://user-images.githubusercontent.com/4063887/141724496-69651ea3-2cb9-4e43-9aa7-3e9b88566865.gif",
+							"altText": "Windows not supported"
+						}
+					},
+					{
+						"id": "selectRepo",
+						"title": "Select The Repo To Run CI On",
+						"when": "!isWindows",
+						"description": "You'll be able to run jobs locally in it. \n[Select Repo](command:localCiJobs.selectRepo)",
+						"media": {
+							"image": "https://user-images.githubusercontent.com/4063887/141724496-69651ea3-2cb9-4e43-9aa7-3e9b88566865.gif",
+							"altText": "Selecting the repo to run CI on"
+						}
+					},
+					{
+						"id": "runFirstWalkthroughJob",
+						"title": "Run A CircleCI® Job On Your Local Machine",
+						"when": "!isWindows",
+						"description": "No need to guess why it failed, push a commit, wait for CI to fail, push a commit, etc… \n You'll see the job running and have Bash access to debug it. \n Even after the job exits. \n[Run A Job](command:local-ci.runWalkthroughJob)",
+						"media": {
+							"image": "https://user-images.githubusercontent.com/4063887/141727455-37279ab7-a67f-4a49-8f6d-9850c5c1d805.gif",
+							"altText": "Running the first job on your local machine"
+						}
+					},
+					{
+						"id": "runSecondWalkthroughJob",
+						"title": "Run Another Job",
+						"when": "!isWindows",
+						"description": "Click one of the green triangle icons on the left, like the second or third one. \n Local CI applies a job's [persist_to_workspace](https://circleci.com/blog/deep-diving-into-circleci-workspaces/) and attach_workspace values. \n So you can run the entire workflow with these persisted files. \n Your debugging can be much faster.",
+						"media": {
+							"image": "https://user-images.githubusercontent.com/4063887/141726659-fdb0fcd2-015a-4c11-9f45-bdcbddff461c.gif",
+							"altText": "Running the second job by clicking the icon"
+						}
+					}
+				]
+			}
+		]
+	},
+	"badges": [
+		{
+			"url": "https://img.shields.io/badge/%24-paid-orange",
+			"href": "https://getlocalci.com/pricing/?utm_medium=extension&utm_source=badge",
+			"description": "Buy license key"
+		},
+		{
+			"url": "https://img.shields.io/badge/trial-15%20day-orange",
+			"href": "https://getlocalci.com/pricing/?utm_medium=extension&utm_source=badge",
+			"description": "15 day free preview"
+		},
+		{
+			"url": "https://img.shields.io/badge/platform-macOS-yellow",
+			"href": "https://en.wikipedia.org/wiki/MacOS",
+			"description": "Platform: macOS"
+		},
+		{
+			"url": "https://img.shields.io/badge/requires-CirlcleCI%C2%AE-yellow",
+			"href": "https://circleci.com",
+			"description": "Requires CircleCI®"
+		}
+	],
+	"scripts": {
+		"vscode:prepublish": "npm run package",
+		"vsix": "vsce package",
+		"deploy": "vsce publish",
+		"compile": "webpack",
+		"watch": "webpack --watch",
+		"package": "webpack --mode production --devtool hidden-source-map",
+		"perepare": "husky install",
+		"preinstall": "node ./node/binaryInstall.js",
+		"preuninstall": "node ./node/binaryUninstall.js",
+		"lint": "eslint src --ext ts",
+		"lint:fix": "eslint src --ext ts --fix",
+		"test": "ts-node -O '{\"types\": [\"module\"]}' -r tsconfig-paths/register src/test/runTest.ts"
+	},
+	"devDependencies": {
+		"@cloudflare/binary-install": "^0.2.0",
+		"@fluffy-spoon/substitute": "^1.208.0",
+		"@types/glob": "^7.1.3",
+		"@types/js-yaml": "^4.0.1",
+		"@types/mocha": "^9.1.0",
+		"@types/node": "^17.0.23",
+		"@types/sinon": "^10.0.11",
+		"@types/vscode": "^1.60.0",
+		"@typescript-eslint/eslint-plugin": "^5.17.0",
+		"@typescript-eslint/parser": "^5.17.0",
+		"eslint": "^8.16.0",
+		"eslint-config-prettier": "^8.5.0",
+		"eslint-plugin-prettier": "^4.0.0",
+		"glob": "^7.1.7",
+		"husky": "^8.0.1",
+		"js-yaml": "^4.1.0",
+		"mocha": "^10.0.0",
+		"node-run-cmd": "^1.0.1",
+		"nodemon": "^2.0.19",
+		"prettier": "^2.6.1",
+		"raw-loader": "^4.0.2",
+		"reflect-metadata": "^0.1.13",
+		"sinon": "^13.0.1",
+		"ts-jest": "^28.0.8",
+		"ts-loader": "^9.2.8",
+		"ts-node": "^10.9.1",
+		"tsconfig-paths": "^4.1.0",
+		"typescript": "^4.6.3",
+		"util": "^0.12.4",
+		"vsce": "^2.10.2",
+		"webpack": "^5.70.0",
+		"webpack-cli": "^4.9.2"
+	},
+	"dependencies": {
+		"@vscode/extension-telemetry": "^0.6.2",
+		"@vscode/test-electron": "^2.1.5",
+		"axios": "^0.26.1",
+		"cross-sha256": "^1.2.0"
+	},
+	"__metadata": {
+		"id": "57696b9d-cad3-426a-bef7-5c42849f2a32",
+		"publisherDisplayName": "Local CI",
+		"publisherId": "552350bd-429a-4285-9dd3-4713dfd65a04",
+		"isPreReleaseVersion": false
+	}
 }

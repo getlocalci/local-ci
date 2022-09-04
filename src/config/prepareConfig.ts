@@ -7,7 +7,7 @@ import getDynamicConfigParametersPath from './getDynamicConfigParametersPath';
 import getDynamicConfigPath from './getDynamicConfigPath';
 import getProcessedConfig from './getProcessedConfig';
 import getProcessFilePath from 'process/getProcessFilePath';
-import writeProcessFile from 'process/ProcessFile';
+import writeProcessFile from 'process/writeProcessFile';
 
 export default function prepareConfig(
   configFilePath: string,

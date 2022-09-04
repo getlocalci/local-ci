@@ -1,6 +1,6 @@
 import * as cp from 'child_process';
 import getSpawnOptions from 'common/getSpawnOptions';
-import { getRunningContainerFunction } from 'scripts/';
+import { GET_RUNNING_CONTAINER_FUNCTION } from 'constants/';
 
 /**
  * Commits the latest container so that this can open an interactive session when it finishes.
@@ -19,8 +19,7 @@ export default function commitContainer(
     '/bin/sh',
     [
       '-c',
-      `${getRunningContainerFunction}
-
+      `${GET_RUNNING_CONTAINER_FUNCTION}
       while [ true ]
         do
         running_container=$(get_running_container ${dockerImage})

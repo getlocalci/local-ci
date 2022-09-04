@@ -48,3 +48,15 @@ export const SUPPRESS_UNCOMMITTED_FILE_WARNING =
 export const SUPPRESS_JOB_COMPLETE_MESSAGE =
   'local-ci.suppress-message.job-complete';
 export const TELEMETRY_KEY = '90189d4e-b560-4a92-aa2c-5a9df190b66a'; // Microsoft.AppInsights Instrumentation Key.
+
+export const GET_RUNNING_CONTAINER_FUNCTION = `get_running_container() {
+  IMAGE=$1
+  for container in $(docker ps -q --filter status=running)
+    do
+    if [ "$IMAGE" = "$(docker inspect --format '{{.Config.Image}}' "$container")" ]
+      then
+      echo "$container"
+      break
+    fi
+  done
+}`
