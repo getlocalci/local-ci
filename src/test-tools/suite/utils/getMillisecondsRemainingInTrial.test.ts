@@ -21,7 +21,7 @@ suite('getMillisecondsRemainingInTrial', () => {
         time - 24 * hourInMilliseconds,
         TRIAL_LENGTH_IN_MILLISECONDS
       ),
-      14 * DAY_IN_MILLISECONDS
+      29 * DAY_IN_MILLISECONDS
     );
   });
 
@@ -30,7 +30,7 @@ suite('getMillisecondsRemainingInTrial', () => {
     assert.strictEqual(
       getMillisecondsRemainingInTrial(
         time,
-        time - (14 * DAY_IN_MILLISECONDS + 23 * hourInMilliseconds),
+        time - (29 * DAY_IN_MILLISECONDS + 23 * hourInMilliseconds),
         TRIAL_LENGTH_IN_MILLISECONDS
       ),
       hourInMilliseconds
@@ -42,7 +42,7 @@ suite('getMillisecondsRemainingInTrial', () => {
     assert.strictEqual(
       getMillisecondsRemainingInTrial(
         time,
-        time - 15 * DAY_IN_MILLISECONDS,
+        time - 30 * DAY_IN_MILLISECONDS,
         TRIAL_LENGTH_IN_MILLISECONDS
       ),
       0

@@ -26,7 +26,7 @@ suite('isTrialExpired', () => {
   test('preview barely expired', () => {
     assert.strictEqual(
       isTrialExpired(
-        new Date().getTime() - (15 * DAY_IN_MILLISECONDS + 1),
+        new Date().getTime() - (30 * DAY_IN_MILLISECONDS + 1),
         TRIAL_LENGTH_IN_MILLISECONDS
       ),
       true
@@ -36,7 +36,7 @@ suite('isTrialExpired', () => {
   test('trial expired by 2 days', () => {
     assert.strictEqual(
       isTrialExpired(
-        new Date().getTime() - 17 * DAY_IN_MILLISECONDS,
+        new Date().getTime() - 32 * DAY_IN_MILLISECONDS,
         TRIAL_LENGTH_IN_MILLISECONDS
       ),
       true
@@ -50,30 +50,30 @@ suite('isTrialExpired', () => {
     );
   });
 
-  test('preview began 15 days and 10 milliseconds ago and was extended', () => {
+  test('preview began 30 days and 10 milliseconds ago and was extended', () => {
     assert.strictEqual(
       isTrialExpired(
-        new Date().getTime() - (15 * DAY_IN_MILLISECONDS + 10),
+        new Date().getTime() - (30 * DAY_IN_MILLISECONDS + 10),
         extendedTrial
       ),
       false
     );
   });
 
-  test('preview began 17 days ago and was extended', () => {
+  test('preview began 32 days ago and was extended', () => {
     assert.strictEqual(
       isTrialExpired(
-        new Date().getTime() - 17 * DAY_IN_MILLISECONDS,
+        new Date().getTime() - 32 * DAY_IN_MILLISECONDS,
         extendedTrial
       ),
       false
     );
   });
 
-  test('preview began 30 days and 1 millisecond ago and was extended', () => {
+  test('preview began 45 days and 1 millisecond ago and was extended', () => {
     assert.strictEqual(
       isTrialExpired(
-        new Date().getTime() - 30 * DAY_IN_MILLISECONDS,
+        new Date().getTime() - 45 * DAY_IN_MILLISECONDS,
         extendedTrial
       ),
       true

@@ -18,17 +18,12 @@ import getDockerError from 'containerization/getDockerError';
 import prepareConfig from 'config/prepareConfig';
 import {
   CREATE_CONFIG_FILE_COMMAND,
-  DAY_IN_MILLISECONDS,
   ENTER_LICENSE_COMMAND,
-  EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS,
   GET_LICENSE_COMMAND,
   JOB_TREE_VIEW_ID,
   PROCESS_TRY_AGAIN_COMMAND,
-  TAKE_SURVEY_COMMAND,
   TRIAL_STARTED_TIMESTAMP,
-  HAS_EXTENDED_TRIAL,
-} from 'constants/';
-import IconCommand from './IconCommand';
+} from '../constants';
 
 enum JobError {
   DockerNotRunning,
@@ -46,10 +41,10 @@ export default class JobProvider
   readonly onDidChangeTreeData: vscode.Event<Job | undefined> =
     this._onDidChangeTreeData.event;
   private jobs: string[] = [];
-  private jobErrorType?: JobError;
   private jobErrorMessage?: string;
-  private runningJob?: string;
+  private jobErrorType?: JobError;
   private logs: Record<string, string[]> = {};
+  private runningJob?: string;
 
   constructor(
     private readonly context: vscode.ExtensionContext,
@@ -226,11 +221,6 @@ export default class JobProvider
 
   getErrorTreeItems(): Array<vscode.TreeItem | Command | Warning> {
     const errorMessage = this.getJobErrorMessage();
-    const licenseKeyTreeItems = [
-      new Warning('Please enter a Local CI license key.'),
-      new Command('Get License', GET_LICENSE_COMMAND),
-      new Command('Enter License', ENTER_LICENSE_COMMAND),
-    ];
 
     switch (this.jobErrorType) {
       case JobError.DockerNotRunning:
@@ -240,18 +230,11 @@ export default class JobProvider
           new Command('Try Again', `${JOB_TREE_VIEW_ID}.refresh`),
         ];
       case JobError.LicenseKey:
-        return !this.context.globalState.get(HAS_EXTENDED_TRIAL)
-          ? [
-              ...licenseKeyTreeItems,
-              new IconCommand(
-                `Get ${
-                  EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS / DAY_IN_MILLISECONDS
-                } more free days by taking a 2-minute survey`,
-                TAKE_SURVEY_COMMAND,
-                'rocket'
-              ),
-            ]
-          : licenseKeyTreeItems;
+        return [
+          new Warning('Please enter a Local CI license key.'),
+          new Command('Get License', GET_LICENSE_COMMAND),
+          new Command('Enter License', ENTER_LICENSE_COMMAND),
+        ];
       case JobError.NoConfigFilePathInWorkspace:
         return [
           new Warning('Error: No .circleci/config.yml found'),

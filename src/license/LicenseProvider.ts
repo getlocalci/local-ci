@@ -3,7 +3,6 @@ import { LICENSE_ERROR } from 'constants/';
 import getLicenseErrorMessage from 'license/getLicenseErrorMessage';
 import getLicenseInformation from 'license/getLicenseInformation';
 import isLicenseValid from 'license/isLicenseValid';
-import onClickTakeSurvey from 'license/onClickTakeSurvey';
 import showLicenseInput from 'license/showLicenseInput';
 
 function getNonce() {
@@ -66,13 +65,6 @@ export default class LicenseProvider implements vscode.WebviewViewProvider {
             detail: 'The license key is invalid',
           });
         }
-      }
-
-      if (data.type === 'takeSurvey') {
-        onClickTakeSurvey(this.context, () => {
-          this.load();
-          this.licenseSuccessCallback();
-        });
       }
     });
   }
