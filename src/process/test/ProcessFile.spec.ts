@@ -1,11 +1,14 @@
-import 'reflect-metadata';
 import { normalize } from 'test/helpers';
 import AppTestHarness from 'test/helpers/AppTestHarness';
 import ProcessFile from 'process/ProcessFile';
-import { Mock, UnknownFunction } from 'jest-mock';
+import FakeFsGateway from 'common/FakeFsGateway';
+import withCacheFixture from './fixture/with-cache.yml';
+import withCacheExpected from './expected/with-cache.yml';
+import dyanamicConfigFixture from './fixture/dynamic-config.yml';
+import dynamicConfigExpected from './expected/dynamic-config.yml';
 
-let testHarness;
-let fsGateway: { fs: { writeFileSync: Mock<UnknownFunction>; mkdirSync: Mock<UnknownFunction>; }; };
+let testHarness: AppTestHarness;
+let fsGateway: FakeFsGateway;
 
 describe('ProcessFile', () => {
   beforeEach(() => {
@@ -15,43 +18,26 @@ describe('ProcessFile', () => {
   });
 
   test('full config file with cache', () => {
-    const processFile = new ProcessFile()
-    console.log('here is processfile:', processFile.fsGateway)
-    processFile.write(
-      '',
-      '/foo/baz/'
-    );
+    const processFile = testHarness.container.get(ProcessFile);
+    const writeFileSpy = jest.fn();
+    fsGateway.fs.writeFileSync = writeFileSpy;
+    processFile.write(withCacheFixture, '/foo/baz/');
 
-    expect(fsGateway.fs.mkdirSync).toHaveBeenCalledTimes(1);
-    expect(fsGateway.fs.writeFileSync).toHaveBeenCalledWith(
-      normalize('')
+    expect(writeFileSpy).toHaveBeenCalledTimes(1);
+    expect(normalize(writeFileSpy.mock.lastCall[1])).toEqual(
+      normalize(withCacheExpected)
     );
-
-    // assert.strictEqual(
-    //   normalize(writeFileSyncSpy.firstCall.lastArg),
-    //   normalize(
-    //     fs.readFileSync(getTestFilePath('expected', fileName)).toString()
-    //   )
-    // );
   });
 
-  // test('dynamic config', () => {
-  //   const fileName = 'dynamic-config.yml';
-  //   sinon.mock(fs).expects('mkdirSync').once();
+  test('dynamic config', () => {
+    const processFile = testHarness.container.get(ProcessFile);
+    const writeFileSpy = jest.fn();
+    fsGateway.fs.writeFileSync = writeFileSpy;
+    processFile.write(dyanamicConfigFixture, '/foo/baz/');
 
-  //   const writeFileSyncSpy = sinon.spy();
-  //   sinon.stub(fs, 'writeFileSync').value(writeFileSyncSpy);
-
-  //   writeProcessFile(
-  //     fs.readFileSync(getTestFilePath('fixture', fileName), 'utf8').toString(),
-  //     '/foo/baz/'
-  //   );
-
-  //   assert.strictEqual(
-  //     normalize(writeFileSyncSpy.firstCall.lastArg),
-  //     normalize(
-  //       fs.readFileSync(getTestFilePath('expected', fileName)).toString()
-  //     )
-  //   );
-  // });
+    expect(writeFileSpy).toHaveBeenCalledTimes(1);
+    expect(normalize(writeFileSpy.mock.lastCall[1])).toEqual(
+      normalize(dynamicConfigExpected)
+    );
+  });
 });

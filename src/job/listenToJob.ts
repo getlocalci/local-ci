@@ -8,7 +8,7 @@ import { getPicardContainerFunction } from 'scripts/';
 import getConfigFilePath from 'config/getConfigFilePath';
 import getConfigFromPath from 'config/getConfigFromPath';
 import getDynamicConfigPath from 'config/getDynamicConfigPath';
-import getSpawnOptions from 'common/getSpawnOptions';
+import Spawn from 'common/Spawn';
 import showLogFile from 'log/showLogFile';
 
 function handleExit(
@@ -71,7 +71,7 @@ export default function listenToJob(
       done
       docker logs --follow $(get_picard_container ${jobName})`,
     ],
-    getSpawnOptions()
+    new Spawn().getOptions()
   );
 
   process.stdout.on('data', async (data) => {

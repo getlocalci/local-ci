@@ -3,9 +3,9 @@ import { decorate, injectable } from 'inversify';
 /** Stub class for filesystem. */
 class FakeFsGateway {
   fs = {
-    existsSync: () => {},
-    mkdirSync: () => {},
-    writeFileSync: () => {}
+    existsSync: () => null,
+    mkdirSync: () => null,
+    writeFileSync: () => null,
   };
 }
 

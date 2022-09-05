@@ -1,6 +1,6 @@
 import * as cp from 'child_process';
 import { getBinaryPath } from '../../node/binary.js';
-import getSpawnOptions from 'common/getSpawnOptions';
+import getSpawnOptions from 'common/Spawn';
 
 /**
  * Gets the contents of the processed .circleci/config.yml file.

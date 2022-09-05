@@ -1,6 +1,6 @@
 import * as cp from 'child_process';
 import { type, arch } from 'os';
-import getSpawnOptions from 'common/getSpawnOptions';
+import getSpawnOptions from 'common/Spawn';
 
 function isIntelMac() {
   return type() === 'Darwin' && arch() === 'x64';

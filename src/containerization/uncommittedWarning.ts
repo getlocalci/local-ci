@@ -1,7 +1,7 @@
 import * as cp from 'child_process';
 import * as vscode from 'vscode';
 import { SUPPRESS_UNCOMMITTED_FILE_WARNING } from 'constants/';
-import getSpawnOptions from 'common/getSpawnOptions';
+import getSpawnOptions from 'common/Spawn';
 
 /**
  * Shows a warning if there are uncommitted files in the repo.

@@ -15,76 +15,7 @@ import {
 } from 'constants/';
 import { addEnvVars } from 'scripts/';
 
-function getPersistToWorkspaceCommand(step: FullStep): string | undefined {
-  if (typeof step?.persist_to_workspace?.paths === 'string') {
-    const pathToPersist = path.join(
-      step?.persist_to_workspace?.root ?? '.',
-      step?.persist_to_workspace?.paths
-    );
-
-    // BusyBox doesn't have the -n option.
-    return `cp -rn ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY} || cp -ru ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY}`;
-  }
-
-  return step?.persist_to_workspace?.paths.reduce(
-    (accumulator, workspacePath) => {
-      const pathToPersist = path.join(
-        step?.persist_to_workspace?.root ?? '.',
-        workspacePath
-      );
-
-      // BusyBox doesn't have the -n option.
-      return `${accumulator} cp -rn ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY} || cp -ru ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY} \n`;
-    },
-    ''
-  );
-}
-
-function getEnsureVolumeIsWritableStep() {
-  return {
-    run: {
-      name: 'Ensure volume is writable',
-      command: `if [ "$(ls -ld ${CONTAINER_STORAGE_DIRECTORY} | awk '{print $3}')" != "$(whoami)" ] && [ "$(sudo -V 2>/dev/null)" ]
-        then
-        sudo chown $(whoami) ${CONTAINER_STORAGE_DIRECTORY}
-      fi`,
-    },
-  };
-}
-
-function getEnvVarStep() {
-  return {
-    run: {
-      name: 'Set more environment variables',
-      command: addEnvVars,
-    },
-  };
-}
-
-/**
- * Gets the output-path environment variable from the path-filtering orb.
- *
- * https://circleci.com/developer/orbs/orb/circleci/path-filtering#commands
- */
-function getOutputPath(steps: Job['steps']): string | undefined {
-  if (!steps) {
-    return;
-  }
-
-  for (const step of steps) {
-    if (
-      typeof step !== 'string' &&
-      typeof step?.run !== 'string' &&
-      step?.run?.environment &&
-      step?.run?.environment['OUTPUT_PATH']
-    ) {
-      return step?.run?.environment['OUTPUT_PATH'];
-    }
-  }
-}
-
 class ProcessFile {
-
   fsGateway: any;
 
   /**
@@ -96,10 +27,7 @@ class ProcessFile {
    * Likewise, on attach_workspace, it copies from the volume.
    * The processedConfig was already compiled by the CircleCI® CLI binary.
    */
-  write (
-    processedConfig: string,
-    processFilePath: string
-  ) {
+  write(processedConfig: string, processFilePath: string) {
     const config = getConfig(processedConfig);
 
     if (!config) {
@@ -137,7 +65,7 @@ class ProcessFile {
               return {
                 run: {
                   name: 'Persist to workspace',
-                  command: getPersistToWorkspaceCommand(step),
+                  command: this.getPersistToWorkspaceCommand(step),
                 },
               };
             }
@@ -173,7 +101,7 @@ class ProcessFile {
               step?.run?.environment &&
               step?.run?.environment['CONFIG_PATH']
             ) {
-              const outputPath = getOutputPath(configJobs[jobName].steps);
+              const outputPath = this.getOutputPath(configJobs[jobName].steps);
 
               return {
                 run: {
@@ -208,7 +136,7 @@ class ProcessFile {
             newSteps?.splice(
               newSteps?.indexOf('checkout') + 1,
               0,
-              getEnvVarStep()
+              this.getEnvVarStep()
             );
           }
 
@@ -216,7 +144,10 @@ class ProcessFile {
             ...accumulator,
             [jobName]: {
               ...configJobs[jobName],
-              steps: [getEnsureVolumeIsWritableStep(), ...(newSteps ?? [])],
+              steps: [
+                this.getEnsureVolumeIsWritableStep(),
+                ...(newSteps ?? []),
+              ],
             },
           };
         },
@@ -225,13 +156,83 @@ class ProcessFile {
     };
 
     if (!this.fsGateway.fs.existsSync(path.dirname(processFilePath))) {
-      this.fsGateway.fs.mkdirSync(path.dirname(processFilePath), { recursive: true });
+      this.fsGateway.fs.mkdirSync(path.dirname(processFilePath), {
+        recursive: true,
+      });
     }
     this.fsGateway.fs.writeFileSync(processFilePath, yaml.dump(newConfig));
+  }
+
+  /**
+   * Gets the output-path environment variable from the path-filtering orb.
+   *
+   * https://circleci.com/developer/orbs/orb/circleci/path-filtering#commands
+   */
+  private getOutputPath(steps: Job['steps']): string | undefined {
+    if (!steps) {
+      return;
+    }
+
+    for (const step of steps) {
+      if (
+        typeof step !== 'string' &&
+        typeof step?.run !== 'string' &&
+        step?.run?.environment &&
+        step?.run?.environment['OUTPUT_PATH']
+      ) {
+        return step?.run?.environment['OUTPUT_PATH'];
+      }
+    }
+  }
+
+  private getPersistToWorkspaceCommand(step: FullStep): string | undefined {
+    if (typeof step?.persist_to_workspace?.paths === 'string') {
+      const pathToPersist = path.join(
+        step?.persist_to_workspace?.root ?? '.',
+        step?.persist_to_workspace?.paths
+      );
+
+      // BusyBox doesn't have the -n option.
+      return `cp -rn ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY} || cp -ru ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY}`;
+    }
+
+    return step?.persist_to_workspace?.paths.reduce(
+      (accumulator, workspacePath) => {
+        const pathToPersist = path.join(
+          step?.persist_to_workspace?.root ?? '.',
+          workspacePath
+        );
+
+        // BusyBox doesn't have the -n option.
+        return `${accumulator} cp -rn ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY} || cp -ru ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY} \n`;
+      },
+      ''
+    );
+  }
+
+  private getEnsureVolumeIsWritableStep() {
+    return {
+      run: {
+        name: 'Ensure volume is writable',
+        command: `if [ "$(ls -ld ${CONTAINER_STORAGE_DIRECTORY} | awk '{print $3}')" != "$(whoami)" ] && [ "$(sudo -V 2>/dev/null)" ]
+          then
+          sudo chown $(whoami) ${CONTAINER_STORAGE_DIRECTORY}
+        fi`,
+      },
+    };
+  }
+
+  private getEnvVarStep() {
+    return {
+      run: {
+        name: 'Set more environment variables',
+        command: addEnvVars,
+      },
+    };
   }
 }
 
 decorate(injectable(), ProcessFile);
-decorate(inject(Types.IFsGateway), ProcessFile.prototype, 'fsGateway')
+decorate(inject(Types.IFsGateway), ProcessFile.prototype, 'fsGateway');
 
-export default ProcessFile
+export default ProcessFile;

@@ -1,3 +1,5 @@
 export default {
-  IFsGateway: Symbol.for('IFsGateway')
-}
+  IChildProcessGateway: Symbol.for('IChildProcessGateway'),
+  IEditorGateway: Symbol.for('IEditorGateway'),
+  IFsGateway: Symbol.for('IFsGateway'),
+};

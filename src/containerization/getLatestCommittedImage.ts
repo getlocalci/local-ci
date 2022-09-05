@@ -1,5 +1,5 @@
 import * as cp from 'child_process';
-import getSpawnOptions from 'common/getSpawnOptions';
+import getSpawnOptions from 'common/Spawn';
 
 export default function getLatestCommittedImage(
   committedImageName: string

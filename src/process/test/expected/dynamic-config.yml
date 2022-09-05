@@ -14,11 +14,13 @@ jobs:
       - checkout
       - run:
           name: Set more environment variables
-          command: |-
-            echo 'export CIRCLE_SHA1=$(git rev-parse HEAD)' >> $BASH_ENV
-            echo 'export CIRCLE_BRANCH=$(git rev-parse --abbrev-ref HEAD)' >> $BASH_ENV
-            echo 'export CIRCLE_PROJECT_REPONAME=$(basename $(git remote get-url origin))' >> $BASH_ENV
-
+          command: >
+            # shellcheck disable=SC2016
+            {
+            echo 'export CIRCLE_SHA1=$(git rev-parse HEAD)'
+            echo 'export CIRCLE_BRANCH=$(git rev-parse --abbrev-ref HEAD)'
+            echo 'export CIRCLE_PROJECT_REPONAME=$(basename $(git remote get-url origin))'
+            } >> "$BASH_ENV"
       - run:
           name: Create config
           command: echo "Creating the dynamic config here"

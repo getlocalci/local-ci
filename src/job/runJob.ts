@@ -18,7 +18,7 @@ import getProcessFilePath from 'process/getProcessFilePath';
 import getTerminalName from 'terminal/getTerminalName';
 import listenToJob from './listenToJob';
 import setBuildAgentSettings from 'config/setBuildAgentSettings';
-import showFinalTerminalHelperMessages from 'terminal/showFinalTerminalHelperMessages';
+import showFinalTerminalHelperMessages from 'terminal/FinalTerminal';
 import JobClass from 'job/Job';
 import {
   COMMITTED_IMAGE_NAMESPACE,

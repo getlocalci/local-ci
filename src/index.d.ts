@@ -103,3 +103,5 @@ declare module '*.yml' {
   const content: any;
   export = content;
 }
+
+declare module 'inversify';
