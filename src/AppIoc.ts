@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import ChildProcessGateway from 'common/ChildProcessGateway';
 import EditorGateway from './common/EditorGateway';
 import FsGateway from './common/FsGateway';

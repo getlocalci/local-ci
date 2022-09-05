@@ -1,6 +1,6 @@
 import ChildProcessGateway from 'common/ChildProcessGateway';
 import EditorGateway from 'common/EditorGateway';
-import AppTestHarness from 'test/helpers/AppTestHarness';
+import AppTestHarness from 'test-tools/helpers/AppTestHarness';
 import FinalTerminal from '../FinalTerminal';
 
 let testHarness: AppTestHarness;

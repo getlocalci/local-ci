@@ -4,6 +4,9 @@ import { decorate, injectable } from 'inversify';
 class FakeEditorGateway {
   editor = {
     window: {},
+    workspace: {
+      workspaceFolders: [{}],
+    },
   };
 }
 

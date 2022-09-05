@@ -3,12 +3,15 @@ import BaseIOC from 'BaseIoc';
 import FakeEditorGateway from 'common/FakeEditorGateway';
 import FakeFsGateway from 'common/FakeFsGateway';
 import FakeChildProcessGateway from 'common/FakeChildProcessGateway';
+import FakeOsGateway from 'common/FakeOsGateway';
 
 export default class AppTestHarness {
   container: any;
   childProcessGateway: any;
   editorGateway: any;
   fsGateway: any;
+  osGateway: any;
+  spawn: any;
 
   init() {
     this.container = new BaseIOC().buildBaseTemplate();
@@ -21,9 +24,11 @@ export default class AppTestHarness {
       .to(FakeEditorGateway)
       .inSingletonScope();
     this.container.bind(Types.IFsGateway).to(FakeFsGateway).inSingletonScope();
+    this.container.bind(Types.IOsGateway).to(FakeOsGateway).inSingletonScope();
 
     this.childProcessGateway = this.container.get(Types.IChildProcessGateway);
     this.editorGateway = this.container.get(Types.IEditorGateway);
     this.fsGateway = this.container.get(Types.IFsGateway);
+    this.osGateway = this.container.get(Types.IOsGateway);
   }
 }

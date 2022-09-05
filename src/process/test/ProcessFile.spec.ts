@@ -1,5 +1,5 @@
-import { normalize } from 'test/helpers';
-import AppTestHarness from 'test/helpers/AppTestHarness';
+import { normalize } from 'test-tools/helpers';
+import AppTestHarness from 'test-tools/helpers/AppTestHarness';
 import ProcessFile from 'process/ProcessFile';
 import FakeFsGateway from 'common/FakeFsGateway';
 import withCacheFixture from './fixture/with-cache.yml';

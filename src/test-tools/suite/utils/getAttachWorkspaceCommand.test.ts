@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import { normalize } from 'test/helpers';
+import { normalize } from 'test-tools/helpers';
 import getAttachWorkspaceCommand from 'config/getAttachWorkspaceCommand';
 
 suite('getAttachWorkspaceCommand', () => {
