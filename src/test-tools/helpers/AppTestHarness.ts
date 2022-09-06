@@ -4,14 +4,14 @@ import FakeEditorGateway from 'common/FakeEditorGateway';
 import FakeFsGateway from 'common/FakeFsGateway';
 import FakeChildProcessGateway from 'common/FakeChildProcessGateway';
 import FakeOsGateway from 'common/FakeOsGateway';
+import BaseIoc from 'BaseIoc';
 
 export default class AppTestHarness {
-  container: any;
-  childProcessGateway: any;
-  editorGateway: any;
-  fsGateway: any;
-  osGateway: any;
-  spawn: any;
+  container: BaseIoc['container'];
+  childProcessGateway!: FakeChildProcessGateway;
+  editorGateway!: FakeEditorGateway;
+  fsGateway!: FakeFsGateway;
+  osGateway!: FakeOsGateway;
 
   init() {
     this.container = new BaseIOC().buildBaseTemplate();

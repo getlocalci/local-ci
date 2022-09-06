@@ -52,7 +52,7 @@
     "onView:localCiLicense",
     "workspaceContains:**/.circleci/config.yml"
   ],
-  "main": "./src/index.ts",
+  "main": "./src/extension.ts",
   "contributes": {
     "commands": [
       {

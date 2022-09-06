@@ -14,9 +14,10 @@ import {
   DYNAMIC_CONFIG_PATH_IN_CONTAINER,
 } from 'constants/';
 import { addEnvVars } from 'scripts/';
+import FsGateway from 'common/FsGateway';
 
 class ProcessFile {
-  fsGateway: any;
+  fsGateway!: FsGateway;
 
   /**
    * Overwrites parts of the process.yml file.

@@ -1,8 +1,9 @@
 import { decorate, inject, injectable } from 'inversify';
 import Types from 'common/types';
+import EditorGateway from './EditorGateway';
 
 class Workspace {
-  editorGateway: any;
+  editorGateway!: EditorGateway;
 
   /**
    * Gets the absolute path to the 1st VS Code workspace folder.
