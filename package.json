@@ -52,7 +52,7 @@
     "onView:localCiLicense",
     "workspaceContains:**/.circleci/config.yml"
   ],
-  "main": "./src/extension.ts",
+  "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
@@ -271,7 +271,7 @@
     "lint:js": "eslint src --ext ts",
     "lint:js:fix": "npm run lint:js -- --fix",
     "lint:sh": "shellcheck src/scripts/*.sh",
-    "test": "jest src/common src/process src/terminal"
+    "test": "jest src/common src/log src/process src/terminal"
   },
   "devDependencies": {
     "@cloudflare/binary-install": "^0.2.0",

@@ -1,9 +1,8 @@
-import * as assert from 'assert';
 import getLogFilePath from 'log/getLogFilePath';
 
-suite('getLogFilePath', () => {
+describe('getLogFilePath', () => {
   test('empty path to config file', () => {
-    assert.ok(
+    expect(
       getLogFilePath('', 'test-lint').startsWith(
         '/tmp/local-ci/logs/test-lint/'
       )
@@ -11,7 +10,7 @@ suite('getLogFilePath', () => {
   });
 
   test('with path to config file', () => {
-    assert.ok(
+    expect(
       getLogFilePath('your-repo/.circleci/config.yml', 'test-lint').startsWith(
         '/tmp/local-ci/your-repo/logs/test-lint/'
       )
