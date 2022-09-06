@@ -2,8 +2,8 @@ import 'reflect-metadata';
 import ChildProcessGateway from 'common/ChildProcessGateway';
 import EditorGateway from './common/EditorGateway';
 import FsGateway from './common/FsGateway';
-import Types from './common/types';
 import BaseIoc from './BaseIoc';
+import Types from 'common/Types';
 
 export const container = new BaseIoc().buildBaseTemplate();
 

@@ -1,4 +1,4 @@
-import Types from 'common/types';
+import Types from 'common/Types';
 import BaseIOC from 'BaseIoc';
 import FakeEditorGateway from 'common/FakeEditorGateway';
 import FakeFsGateway from 'common/FakeFsGateway';

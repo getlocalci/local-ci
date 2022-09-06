@@ -1,5 +1,5 @@
 import { decorate, inject, injectable } from 'inversify';
-import Types from 'common/types';
+import Types from 'common/Types';
 import EditorGateway from './EditorGateway';
 
 class Workspace {

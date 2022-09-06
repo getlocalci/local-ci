@@ -1,5 +1,5 @@
 import { decorate, inject, injectable } from 'inversify';
-import Types from 'common/types';
+import Types from 'common/Types';
 import Spawn from 'common/Spawn';
 import ChildProcessGateway from 'common/ChildProcessGateway';
 import EditorGateway from 'common/EditorGateway';

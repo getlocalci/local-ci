@@ -6,7 +6,7 @@ import getConfig from 'config/getConfig';
 import getRestoreCacheCommand from 'cache/getRestoreCacheCommand';
 import getSaveCacheCommand from 'cache/getSaveCacheCommand';
 import getSaveCacheSteps from 'cache/getSaveCacheSteps';
-import Types from 'common/types';
+import Types from 'common/Types';
 import {
   CONTAINER_STORAGE_DIRECTORY,
   CONTINUE_PIPELINE_STEP_NAME,

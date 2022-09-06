@@ -8,7 +8,7 @@ let childProcessGateway: FakeChildProcessGateway;
 let editorGateway: FakeEditorGateway;
 let finalTerminal: FinalTerminal;
 
-describe('showFinalTerminalHelperMessages', () => {
+describe('FinalTerminal', () => {
   beforeEach(() => {
     testHarness = new AppTestHarness();
     testHarness.init();

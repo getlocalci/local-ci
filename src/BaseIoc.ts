@@ -1,10 +1,15 @@
 import { Container } from 'inversify';
 import ProcessFile from 'process/ProcessFile';
+import EnvPath from 'common/EnvPath';
 import FinalTerminal from 'terminal/FinalTerminal';
 import Spawn from 'common/Spawn';
 import Workspace from 'common/Workspace';
 
-/** Main dependency injection class, for classes that are the same in production and unit tests. */
+/**
+ * Main dependency injection class.
+ *
+ * For classes that are the same in production and unit tests.
+ */
 export default class BaseIoc {
   container;
 
@@ -16,10 +21,11 @@ export default class BaseIoc {
   }
 
   buildBaseTemplate() {
-    this.container.bind(FinalTerminal).to(FinalTerminal).inSingletonScope();
-    this.container.bind(ProcessFile).to(ProcessFile).inSingletonScope();
-    this.container.bind(Spawn).to(Spawn).inSingletonScope();
-    this.container.bind(Workspace).to(Workspace).inSingletonScope();
+    this.container.bind(FinalTerminal).toSelf().inSingletonScope();
+    this.container.bind(EnvPath).toSelf().inSingletonScope();
+    this.container.bind(ProcessFile).toSelf().inSingletonScope();
+    this.container.bind(Spawn).toSelf().inSingletonScope();
+    this.container.bind(Workspace).toSelf().inSingletonScope();
 
     return this.container;
   }
