@@ -3,7 +3,9 @@ import { decorate, injectable } from 'inversify';
 /** Stub class for the editor. */
 class FakeEditorGateway {
   editor = {
-    window: {},
+    window: {
+      showInformationMessage: () => null,
+    },
     workspace: {
       workspaceFolders: [{}],
     },

@@ -1,9 +1,10 @@
 import { decorate, injectable } from 'inversify';
 
-/** Stub class for filesystem. */
+/** Stub class for operating system. */
 class FakeOsGateway {
   os = {
-    type: () => null,
+    platform: () => '',
+    type: () => '',
   };
 }
 

@@ -1,11 +1,11 @@
-import ChildProcessGateway from 'common/ChildProcessGateway';
-import EditorGateway from 'common/EditorGateway';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
+import FakeChildProcessGateway from 'common/FakeChildProcessGateway';
+import FakeEditorGateway from 'common/FakeEditorGateway';
 import FinalTerminal from '../FinalTerminal';
 
 let testHarness: AppTestHarness;
-let childProcessGateway: ChildProcessGateway;
-let editorGateway: EditorGateway;
+let childProcessGateway: FakeChildProcessGateway;
+let editorGateway: FakeEditorGateway;
 let finalTerminal: FinalTerminal;
 
 describe('showFinalTerminalHelperMessages', () => {

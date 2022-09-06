@@ -1,12 +1,12 @@
 import Spawn from 'common/Spawn';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
 import FakeEditorGateway from 'common/FakeEditorGateway';
-import OsGateway from 'common/OsGateway';
+import FakeOsGateway from 'common/FakeOsGateway';
 
 let testHarness: AppTestHarness;
 let spawn: Spawn;
 let editorGateway: FakeEditorGateway;
-let osGateway: OsGateway;
+let osGateway: FakeOsGateway;
 
 describe('Spawn', () => {
   beforeEach(() => {
