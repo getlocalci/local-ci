@@ -8,7 +8,7 @@ let spawn: Spawn;
 let editorGateway: FakeEditorGateway;
 let osGateway: FakeOsGateway;
 
-describe('Spawn', () => {
+describe('Spawn.getOptions()', () => {
   beforeEach(() => {
     testHarness = new AppTestHarness();
     testHarness.init();
