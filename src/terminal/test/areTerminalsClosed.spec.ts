@@ -1,52 +1,42 @@
-import * as assert from 'assert';
-import * as mocha from 'mocha';
-import * as sinon from 'sinon';
 import areTerminalsClosed from 'terminal/areTerminalsClosed';
-
-mocha.afterEach(() => {
-  sinon.restore();
-});
 
 const baseTerminal = {
   name: 'Example',
-  processId: { then: sinon.mock() },
+  processId: { then: jest.fn() },
   creationOptions: {},
   exitStatus: undefined,
-  sendText: sinon.mock(),
-  show: sinon.mock(),
-  hide: sinon.mock(),
-  dispose: sinon.mock(),
+  sendText: jest.fn(),
+  show: jest.fn(),
+  hide: jest.fn(),
+  dispose: jest.fn(),
   state: { isInteractedWith: false },
 };
 
-suite('areTerminalsClosed', () => {
+describe('areTerminalsClosed', () => {
   test('only one is closed', () => {
-    assert.strictEqual(
-      false,
+    expect(
       areTerminalsClosed(
         { ...baseTerminal, exitStatus: { code: 1 } },
         baseTerminal
       )
-    );
+    ).toEqual(false);
   });
 
   test('all are closed', () => {
-    assert.strictEqual(
-      true,
+    expect(
       areTerminalsClosed(
         { ...baseTerminal, exitStatus: { code: 0 } },
         { ...baseTerminal, exitStatus: { code: 1 } }
       )
-    );
+    ).toEqual(true);
   });
 
   test('one undefined, one closed', () => {
-    assert.strictEqual(
-      true,
+    expect(
       areTerminalsClosed(
         { ...baseTerminal, exitStatus: { code: 0 } },
         undefined
       )
-    );
+    ).toEqual(true);
   });
 });
