@@ -1,6 +1,6 @@
 import getFinalTerminalName from 'terminal/getFinalTerminalName';
 
-describe('getFinalTerminalName', () => {
+test('getFinalTerminalName', () => {
   expect(getFinalTerminalName('composer')).toEqual(
     'Local CI final debugging composer'
   );
