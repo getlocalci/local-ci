@@ -8,75 +8,65 @@ import {
 } from 'constants/';
 import isTrialExpired from 'license/isTrialExpired';
 
-mocha.afterEach(() => {
-  sinon.restore();
-});
-
 const extendedTrial =
   TRIAL_LENGTH_IN_MILLISECONDS + EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS;
 
-suite('isTrialExpired', () => {
+describe('isTrialExpired', () => {
   test('preview just began', () => {
-    assert.strictEqual(
+    expect(
       isTrialExpired(new Date().getTime(), TRIAL_LENGTH_IN_MILLISECONDS),
-      false
-    );
+    ).toEqual( false )
   });
 
   test('preview barely expired', () => {
-    assert.strictEqual(
+    expect(
       isTrialExpired(
         new Date().getTime() - (30 * DAY_IN_MILLISECONDS + 1),
         TRIAL_LENGTH_IN_MILLISECONDS
-      ),
-      true
-    );
+      )
+    ).toEqual(true)
   });
 
   test('trial expired by 2 days', () => {
-    assert.strictEqual(
+    expect(
       isTrialExpired(
         new Date().getTime() - 32 * DAY_IN_MILLISECONDS,
         TRIAL_LENGTH_IN_MILLISECONDS
-      ),
-      true
-    );
+      )
+    ).toEqual( true );
   });
 
   test('preview just began and was extended', () => {
-    assert.strictEqual(
+    expect(
       isTrialExpired(new Date().getTime(), TRIAL_LENGTH_IN_MILLISECONDS),
-      false
-    );
+    ).toEqual( false );
   });
 
   test('preview began 30 days and 10 milliseconds ago and was extended', () => {
-    assert.strictEqual(
+    expect(
       isTrialExpired(
         new Date().getTime() - (30 * DAY_IN_MILLISECONDS + 10),
         extendedTrial
-      ),
-      false
-    );
+      )
+    ).toEqual( false );
   });
 
   test('preview began 32 days ago and was extended', () => {
-    assert.strictEqual(
+    expect(
       isTrialExpired(
         new Date().getTime() - 32 * DAY_IN_MILLISECONDS,
         extendedTrial
-      ),
-      false
-    );
+      )
+    ).toEqual(false)
+
   });
 
   test('preview began 45 days and 1 millisecond ago and was extended', () => {
-    assert.strictEqual(
+    expect(
       isTrialExpired(
         new Date().getTime() - 45 * DAY_IN_MILLISECONDS,
         extendedTrial
-      ),
-      true
-    );
+      )
+    ).toEqual( true );
   });
 });
