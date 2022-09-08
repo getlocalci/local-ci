@@ -104,4 +104,17 @@ declare module '*.yml' {
   export = content;
 }
 
+interface IocContext {
+  container: IocContainer;
+}
+
+interface IocContainer {
+  bind<T>(toBind: { new (): T } | symbol ): IocContainer;
+  get<T>(injectable: { new (): T } | symbol): T;
+  inSingletonScope(): void;
+  to<T>(toBindTo: { new (): T } ): IocContainer;
+  toFactory<T>(factory: (context: IocContext) => T): T;
+  toSelf(): IocContainer;
+}
+
 declare module 'inversify';

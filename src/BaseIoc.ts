@@ -22,7 +22,7 @@ import Types from 'common/Types';
  * For classes that are the same in production and unit tests.
  */
 export default class BaseIoc {
-  container;
+  container: IocContainer;
 
   constructor() {
     this.container = new Container({
@@ -31,7 +31,7 @@ export default class BaseIoc {
     });
   }
 
-  buildBaseTemplate() {
+  buildBaseTemplate(): IocContainer {
     this.container
       .bind(Types.IJobProviderFactory)
       .toFactory(JobProviderFactory);

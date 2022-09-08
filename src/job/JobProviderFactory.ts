@@ -11,14 +11,6 @@ import JobFactory from './JobFactory';
 import WarningFactory from './WarningFactory';
 import TelemetryReporter from '@vscode/extension-telemetry';
 import JobProvider from './JobProvider';
-import EditorGateway from 'common/EditorGateway';
-import FsGateway from 'common/FsGateway';
-
-interface IocContext {
-  container: {
-    get<T>(injectable: { new (): T } | symbol): T;
-  };
-}
 
 export default function JobProviderFactory(iocContext: IocContext) {
   return (

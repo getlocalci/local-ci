@@ -5,7 +5,7 @@ import FsGateway from './common/FsGateway';
 import BaseIoc from './BaseIoc';
 import Types from 'common/Types';
 
-export const container = new BaseIoc().buildBaseTemplate();
+export const container: IocContainer = new BaseIoc().buildBaseTemplate();
 
 container
   .bind(Types.IChildProcessGateway)
