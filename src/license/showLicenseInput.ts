@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { LICENSE_ERROR, GET_LICENSE_KEY_URL, LICENSE_KEY } from 'constants/';
 import getLicenseErrorMessage from 'license/getLicenseErrorMessage';
-import isLicenseValid from './isLicenseValid';
+import isLicenseValid from './License';
 import sanitizeLicenseKey from './sanitizeLicenseKey';
 
 export default async function showLicenseInput(

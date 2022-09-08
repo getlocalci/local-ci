@@ -1,6 +1,6 @@
 import * as assert from 'assert';
 import * as vscode from 'vscode';
-import Job from 'job/Job';
+import Job from 'job/JobFactory';
 
 suite('Job', () => {
   test('No element passed', () => {

@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import * as cp from 'child_process';
 import * as mocha from 'mocha';
 import * as sinon from 'sinon';
-import getDockerError from 'containerization/getDockerError';
+import getDockerError from 'containerization/Docker';
 
 mocha.afterEach(() => {
   sinon.restore();

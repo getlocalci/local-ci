@@ -1,0 +1,30 @@
+import EditorGateway from 'common/EditorGateway';
+import Types from 'common/Types';
+import { decorate, inject, injectable } from 'inversify';
+
+class CommandFactory {
+  editorGateway!: EditorGateway;
+
+  create(label: string, command: string) {
+    const newCommand = new this.editorGateway.editor.TreeItem(label);
+
+    newCommand.collapsibleState =
+      this.editorGateway.editor.TreeItemCollapsibleState.None;
+    newCommand.tooltip = label;
+    newCommand.command = {
+      command,
+      title: label,
+      tooltip: label,
+    };
+
+    return newCommand;
+  }
+}
+
+decorate(injectable(), CommandFactory);
+decorate(
+  inject(Types.IEditorGateway),
+  CommandFactory.prototype,
+  'editorGateway'
+);
+export default CommandFactory;

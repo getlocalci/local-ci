@@ -6,7 +6,7 @@ import areTerminalsClosed from 'terminal/areTerminalsClosed';
 import cleanUpCommittedImages from 'containerization/cleanUpCommittedImages';
 import commitContainer from 'containerization/commitContainer';
 import getCheckoutJobs from './getCheckoutJobs';
-import getConfigFilePath from 'config/getConfigFilePath';
+import getConfigFilePath from 'config/ConfigFile';
 import getConfigFromPath from 'config/getConfigFromPath';
 import getDebuggingTerminalName from 'terminal/getDebuggingTerminalName';
 import getFinalDebuggingTerminalName from 'terminal/getFinalTerminalName';
@@ -19,7 +19,7 @@ import getTerminalName from 'terminal/getTerminalName';
 import listenToJob from './listenToJob';
 import setBuildAgentSettings from 'config/setBuildAgentSettings';
 import showFinalTerminalHelperMessages from 'terminal/FinalTerminal';
-import JobClass from 'job/Job';
+import JobClass from 'job/JobFactory';
 import {
   COMMITTED_IMAGE_NAMESPACE,
   CONTAINER_STORAGE_DIRECTORY,

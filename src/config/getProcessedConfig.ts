@@ -1,6 +1,6 @@
-import * as cp from 'child_process';
+import type { ExecFileSyncOptions } from 'child_process';
 import { getBinaryPath } from '../../node/binary.js';
-import getSpawnOptions from 'common/Spawn';
+import ChildProcessGateway from 'common/ChildProcessGateway.js';
 
 /**
  * Gets the contents of the processed .circleci/config.yml file.
@@ -8,12 +8,16 @@ import getSpawnOptions from 'common/Spawn';
  * The CircleCI CLI binary compiles that .yml file into another .yml file.
  * For example, it copies orbs into the file and evaluates the job parameters.
  */
-export default function getProcessedConfig(configFilePath: string): string {
+export default function getProcessedConfig(
+  configFilePath: string,
+  cp: ChildProcessGateway['cp'],
+  spawnOptions: ExecFileSyncOptions
+): string {
   return cp
     .execFileSync(
       getBinaryPath(),
       ['config', 'process', configFilePath],
-      getSpawnOptions()
+      spawnOptions
     )
     .toString()
     .trim();

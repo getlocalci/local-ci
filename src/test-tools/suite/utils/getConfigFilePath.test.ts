@@ -4,7 +4,7 @@ import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as vscode from 'vscode';
 import { Substitute } from '@fluffy-spoon/substitute';
-import getConfigFilePath from 'config/getConfigFilePath';
+import getConfigFilePath from 'config/ConfigFile';
 
 mocha.afterEach(() => {
   sinon.restore();

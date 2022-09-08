@@ -1,21 +1,19 @@
-import * as fs from 'fs';
+import { decorate, inject, injectable } from 'inversify';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import TelemetryReporter from '@vscode/extension-telemetry';
-import Command from './Command';
-import Job from './Job';
-import Log from '../log/Log';
-import Warning from './Warning';
-import getAllConfigFilePaths from 'config/getAllConfigFilePaths';
+import CommandFactory from './ComandFactory';
+import JobFactory from './JobFactory';
+import LogFactory from '../log/LogFactory';
+import WarningFactory from './WarningFactory';
+import AllConfigFiles from 'config/AllConfigFiles';
 import getAllJobs from 'job/getAllJobs';
-import getConfigFilePath from 'config/getConfigFilePath';
+import ConfigFile from 'config/ConfigFile';
 import getLogFilesDirectory from 'log/getLogFilesDirectory';
 import getTrialLength from 'license/getTrialLength';
-import isDockerRunning from 'containerization/isDockerRunning';
-import isLicenseValid from 'license/isLicenseValid';
 import isTrialExpired from 'license/isTrialExpired';
-import getDockerError from 'containerization/getDockerError';
-import prepareConfig from 'config/prepareConfig';
+import Docker from 'containerization/Docker';
+import Config from 'config/Config';
 import {
   CREATE_CONFIG_FILE_COMMAND,
   ENTER_LICENSE_COMMAND,
@@ -24,6 +22,10 @@ import {
   PROCESS_TRY_AGAIN_COMMAND,
   TRIAL_STARTED_TIMESTAMP,
 } from '../constants';
+import License from 'license/License';
+import FsGateway from 'common/FsGateway';
+import Types from 'common/Types';
+import EditorGateway from 'common/EditorGateway';
 
 enum JobError {
   DockerNotRunning,
@@ -33,13 +35,12 @@ enum JobError {
   ProcessFile,
 }
 
-export default class JobProvider
-  implements vscode.TreeDataProvider<vscode.TreeItem>
-{
-  private _onDidChangeTreeData: vscode.EventEmitter<Job | undefined> =
-    new vscode.EventEmitter<Job | undefined>();
-  readonly onDidChangeTreeData: vscode.Event<Job | undefined> =
-    this._onDidChangeTreeData.event;
+class JobProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
+  onDidChangeTreeData?: vscode.Event<vscode.TreeItem | undefined>;
+
+  private _onDidChangeTreeData?: vscode.EventEmitter<
+    vscode.TreeItem | undefined
+  >;
   private jobs: string[] = [];
   private jobErrorMessage?: string;
   private jobErrorType?: JobError;
@@ -49,8 +50,24 @@ export default class JobProvider
   constructor(
     private readonly context: vscode.ExtensionContext,
     private readonly reporter: TelemetryReporter,
+    private allConfigFiles: AllConfigFiles,
+    private configFile: ConfigFile,
+    private command: CommandFactory,
+    private docker: Docker,
+    private editorGateway: EditorGateway,
+    private fsGateway: FsGateway,
+    private license: License,
+    private processedConfig: Config,
+    private jobFactory: JobFactory,
+    private logFactory: LogFactory,
+    private warningFactory: WarningFactory,
     private jobDependencies?: Map<string, string[] | null>
-  ) {}
+  ) {
+    this._onDidChangeTreeData = new this.editorGateway.editor.EventEmitter<
+      vscode.TreeItem | undefined
+    >();
+    this.onDidChangeTreeData = this._onDidChangeTreeData.event;
+  }
 
   async init() {
     await this.loadJobs();
@@ -58,17 +75,24 @@ export default class JobProvider
   }
 
   /** Refreshes the TreeView, without processing the config file. */
-  async refresh(job?: Job, skipMessage?: boolean): Promise<void> {
+  async refresh(job?: vscode.TreeItem, skipMessage?: boolean): Promise<void> {
     await this.loadJobs(true, skipMessage);
     await this.loadLogs();
-    this._onDidChangeTreeData.fire(job);
+    if (this._onDidChangeTreeData) {
+      this._onDidChangeTreeData.fire(job);
+    }
   }
 
   /** Processes the config file(s) in addition to refreshing. */
-  async hardRefresh(job?: Job, suppressMessage?: boolean): Promise<void> {
+  async hardRefresh(
+    job?: vscode.TreeItem,
+    suppressMessage?: boolean
+  ): Promise<void> {
     await this.loadJobs(false, suppressMessage);
     await this.loadLogs();
-    this._onDidChangeTreeData.fire(job);
+    if (this._onDidChangeTreeData) {
+      this._onDidChangeTreeData.fire(job);
+    }
   }
 
   async loadJobs(
@@ -80,12 +104,13 @@ export default class JobProvider
     this.jobErrorMessage = undefined;
     this.runningJob = undefined;
 
-    const configFilePath = await getConfigFilePath(this.context);
-    if (!configFilePath || !fs.existsSync(configFilePath)) {
+    const configFilePath = await this.configFile.getPath(this.context);
+    if (!configFilePath || !this.fsGateway.fs.existsSync(configFilePath)) {
       this.reporter.sendTelemetryEvent('configFilePath');
 
-      const doExistConfigPaths = !!(await getAllConfigFilePaths(this.context))
-        .length;
+      const doExistConfigPaths = !!(
+        await this.allConfigFiles.getPaths(this.context)
+      ).length;
       if (doExistConfigPaths) {
         this.jobErrorType = JobError.NoConfigFilePathSelected;
       } else {
@@ -100,7 +125,7 @@ export default class JobProvider
     let processError;
 
     if (!skipConfigProcessing) {
-      const configResult = prepareConfig(
+      const configResult = this.processedConfig.process(
         configFilePath,
         this.reporter,
         skipMessage
@@ -111,7 +136,7 @@ export default class JobProvider
     }
 
     const shouldEnableExtension =
-      (await isLicenseValid(this.context)) ||
+      (await this.license.isValid(this.context)) ||
       !isTrialExpired(
         this.context.globalState.get(TRIAL_STARTED_TIMESTAMP),
         getTrialLength(this.context)
@@ -122,10 +147,10 @@ export default class JobProvider
       return;
     }
 
-    if (!isDockerRunning()) {
+    if (!this.docker.isRunning()) {
       this.reporter.sendTelemetryErrorEvent('dockerNotRunning');
       this.jobErrorType = JobError.DockerNotRunning;
-      this.jobErrorMessage = getDockerError();
+      this.jobErrorMessage = this.docker.getError();
       return;
     }
 
@@ -146,14 +171,16 @@ export default class JobProvider
   }
 
   async loadLogs() {
-    const configFilePath = await getConfigFilePath(this.context);
+    const configFilePath = await this.configFile.getPath(this.context);
 
     for (const jobName of this.jobDependencies?.keys() ?? []) {
       const logDirectory = getLogFilesDirectory(configFilePath, jobName);
-      if (fs.existsSync(logDirectory)) {
-        this.logs[jobName] = fs.readdirSync(logDirectory).map((logFile) => {
-          return path.join(logDirectory, logFile);
-        });
+      if (this.fsGateway.fs.existsSync(logDirectory)) {
+        this.logs[jobName] = this.fsGateway.fs
+          .readdirSync(logDirectory)
+          .map((logFile) => {
+            return path.join(logDirectory, logFile);
+          });
       }
     }
   }
@@ -162,9 +189,7 @@ export default class JobProvider
     return treeItem;
   }
 
-  getChildren(
-    parentElement?: Job | Log
-  ): Array<Job | Log | Command | Warning | vscode.TreeItem> {
+  getChildren(parentElement?: vscode.TreeItem): Array<vscode.TreeItem> {
     if (!parentElement) {
       return this.jobs.length
         ? this.getJobTreeItems(
@@ -178,7 +203,8 @@ export default class JobProvider
     const jobNames = this.jobDependencies?.keys();
     if (
       !jobNames ||
-      ('getJobName' in parentElement && !parentElement.getJobName())
+      ('getJobName' in parentElement &&
+        !this.jobFactory.getJobName(parentElement))
     ) {
       return [];
     }
@@ -198,57 +224,65 @@ export default class JobProvider
 
     return [
       ...this.getLogTreeItems(
-        'getJobName' in parentElement ? parentElement.getJobName() : ''
+        'getJobName' in parentElement
+          ? this.jobFactory.getJobName(parentElement)
+          : ''
       ),
       ...this.getJobTreeItems(children),
     ];
   }
 
-  getLogTreeItems(jobName: string): Log[] {
+  getLogTreeItems(jobName: string): vscode.TreeItem[] {
     return (
-      this.logs[jobName]?.map(
-        (logFile) => new Log(path.basename(logFile), logFile)
+      this.logs[jobName]?.map((logFile) =>
+        this.logFactory.create(path.basename(logFile), logFile)
       ) ?? []
     );
   }
 
-  getJobTreeItems(jobs: string[]): Job[] {
-    return jobs.map(
-      (jobName) =>
-        new Job(jobName, jobName === this.runningJob, this.hasChild(jobName))
+  getJobTreeItems(jobs: string[]): vscode.TreeItem[] {
+    return jobs.map((jobName) =>
+      this.jobFactory.create(
+        jobName,
+        jobName === this.runningJob,
+        this.hasChild(jobName)
+      )
     );
   }
 
-  getErrorTreeItems(): Array<vscode.TreeItem | Command | Warning> {
+  getErrorTreeItems(): Array<vscode.TreeItem> {
     const errorMessage = this.getJobErrorMessage();
 
     switch (this.jobErrorType) {
       case JobError.DockerNotRunning:
         return [
-          new Warning('Error: is Docker running?'),
-          new vscode.TreeItem(errorMessage),
-          new Command('Try Again', `${JOB_TREE_VIEW_ID}.refresh`),
+          this.warningFactory.create('Error: is Docker running?'),
+          new this.editorGateway.editor.TreeItem(errorMessage),
+          this.command.create('Try Again', `${JOB_TREE_VIEW_ID}.refresh`),
         ];
       case JobError.LicenseKey:
         return [
-          new Warning('Please enter a Local CI license key.'),
-          new Command('Get License', GET_LICENSE_COMMAND),
-          new Command('Enter License', ENTER_LICENSE_COMMAND),
+          this.warningFactory.create('Please enter a Local CI license key.'),
+          this.command.create('Get License', GET_LICENSE_COMMAND),
+          this.command.create('Enter License', ENTER_LICENSE_COMMAND),
         ];
       case JobError.NoConfigFilePathInWorkspace:
         return [
-          new Warning('Error: No .circleci/config.yml found'),
-          new Command('Create a config for me', CREATE_CONFIG_FILE_COMMAND),
+          this.warningFactory.create('Error: No .circleci/config.yml found'),
+          this.command.create(
+            'Create a config for me',
+            CREATE_CONFIG_FILE_COMMAND
+          ),
         ];
       case JobError.NoConfigFilePathSelected:
         return [
-          new Warning('Error: No jobs found'),
-          new Command('Select repo', 'localCiJobs.selectRepo'),
+          this.warningFactory.create('Error: No jobs found'),
+          this.command.create('Select repo', 'localCiJobs.selectRepo'),
         ];
       case JobError.ProcessFile:
         return [
-          new Warning('Error processing the CircleCI config:'),
-          new vscode.TreeItem(
+          this.warningFactory.create('Error processing the CircleCI config:'),
+          new this.editorGateway.editor.TreeItem(
             [
               errorMessage?.includes('connection refused') ||
               errorMessage?.includes('timeout')
@@ -259,7 +293,7 @@ export default class JobProvider
               .filter((message) => !!message)
               .join(' ')
           ),
-          new Command('Try Again', PROCESS_TRY_AGAIN_COMMAND),
+          this.command.create('Try Again', PROCESS_TRY_AGAIN_COMMAND),
         ];
       default:
         return [];
@@ -297,3 +331,18 @@ export default class JobProvider
     this.runningJob = jobName;
   }
 }
+
+decorate(injectable(), JobProvider);
+decorate(inject(AllConfigFiles), JobProvider.prototype, 'allConfigFiles');
+decorate(inject(ConfigFile), JobProvider.prototype, 'configFile');
+decorate(inject(CommandFactory), JobProvider.prototype, 'command');
+decorate(inject(Docker), JobProvider.prototype, 'docker');
+decorate(inject(Types.IEditorGateway), JobProvider.prototype, 'editorGateway');
+decorate(inject(JobFactory), JobProvider.prototype, 'jobFactory');
+decorate(inject(LogFactory), JobProvider.prototype, 'logFactory');
+decorate(inject(Config), JobProvider.prototype, 'processedConfig');
+decorate(inject(WarningFactory), JobProvider.prototype, 'warningFactory');
+decorate(inject(Types.IFsGateway), JobProvider.prototype, 'fsGateway');
+decorate(inject(License), JobProvider.prototype, 'license');
+
+export default JobProvider;

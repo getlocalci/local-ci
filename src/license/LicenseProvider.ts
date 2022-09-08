@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { LICENSE_ERROR } from 'constants/';
 import getLicenseErrorMessage from 'license/getLicenseErrorMessage';
 import getLicenseInformation from 'license/getLicenseInformation';
-import isLicenseValid from 'license/isLicenseValid';
+import isLicenseValid from 'license/License';
 import showLicenseInput from 'license/showLicenseInput';
 
 function getNonce() {

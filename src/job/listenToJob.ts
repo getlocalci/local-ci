@@ -1,11 +1,11 @@
 import * as cp from 'child_process';
 import * as fs from 'fs';
 import * as vscode from 'vscode';
-import Job from 'job/Job';
+import Job from 'job/JobFactory';
 import JobProvider from 'job/JobProvider';
 import { SUPPRESS_JOB_COMPLETE_MESSAGE } from 'constants/';
 import { getPicardContainerFunction } from 'scripts/';
-import getConfigFilePath from 'config/getConfigFilePath';
+import getConfigFilePath from 'config/ConfigFile';
 import getConfigFromPath from 'config/getConfigFromPath';
 import getDynamicConfigPath from 'config/getDynamicConfigPath';
 import Spawn from 'common/Spawn';

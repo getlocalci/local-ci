@@ -19,5 +19,4 @@ class Workspace {
 
 decorate(injectable(), Workspace);
 decorate(inject(Types.IEditorGateway), Workspace.prototype, 'editorGateway');
-
 export default Workspace;

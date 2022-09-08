@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import getLicenseErrorMessage from './getLicenseErrorMessage';
 import getTimeRemainingInTrial from './getTimeRemainingInTrial';
 import getTrialLength from './getTrialLength';
-import isLicenseValid from './isLicenseValid';
+import isLicenseValid from './License';
 import isTrialExpired from './isTrialExpired';
 import {
   DAY_IN_MILLISECONDS,

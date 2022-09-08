@@ -235,5 +235,4 @@ class ProcessFile {
 
 decorate(injectable(), ProcessFile);
 decorate(inject(Types.IFsGateway), ProcessFile.prototype, 'fsGateway');
-
 export default ProcessFile;
