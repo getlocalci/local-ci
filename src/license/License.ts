@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { decorate, inject, injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import Types from 'common/Types';
 import EditorGateway from 'common/EditorGateway';
 import * as vscode from 'vscode';
@@ -16,7 +16,9 @@ import getHash from './getHash';
 const licenseValidationEndpoint = 'https://getlocalci.com';
 const fiveMinutesInMilliseconds = 300000;
 
-class License {
+@injectable()
+export default class License {
+  @inject(Types.IEditorGateway)
   editorGateway!: EditorGateway;
 
   async isValid(
@@ -80,7 +82,3 @@ class License {
     return typeof expiration === 'number' && new Date().getTime() > expiration;
   }
 }
-
-decorate(injectable(), License);
-decorate(inject(Types.IEditorGateway), License.prototype, 'editorGateway');
-export default License;

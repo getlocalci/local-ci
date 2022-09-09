@@ -1,4 +1,4 @@
-import { decorate, inject, injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import * as path from 'path';
 import TelemetryReporter from '@vscode/extension-telemetry';
 import applyPipelineParameters from './applyPipelineParameters';
@@ -13,11 +13,21 @@ import EditorGateway from 'common/EditorGateway';
 import Spawn from 'common/Spawn';
 import ChildProcessGateway from 'common/ChildProcessGateway';
 
-class Config {
+@injectable()
+export default class Config {
+  @inject(Types.IChildProcessGateway)
   childProcessGateway!: ChildProcessGateway;
+
+  @inject(Types.IEditorGateway)
   editorGateway!: EditorGateway;
+
+  @inject(Types.IFsGateway)
   fsGateway!: FsGateway;
+
+  @inject(ProcessFile)
   processFile!: ProcessFile;
+
+  @inject(Spawn)
   spawn!: Spawn;
 
   process(
@@ -82,16 +92,3 @@ class Config {
     return { processedConfig, processError };
   }
 }
-
-decorate(injectable(), Config);
-decorate(
-  inject(Types.IChildProcessGateway),
-  Config.prototype,
-  'childProcessGateway'
-);
-decorate(inject(Types.IEditorGateway), Config.prototype, 'editorGateway');
-decorate(inject(Types.IFsGateway), Config.prototype, 'fsGateway');
-decorate(inject(ProcessFile), Config.prototype, 'processFile');
-decorate(inject(Spawn), Config.prototype, 'spawn');
-
-export default Config;

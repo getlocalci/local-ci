@@ -1,8 +1,10 @@
-import { decorate, inject, injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import OsGateway from './OsGateway';
-import types from './Types';
+import Types from './Types';
 
-class EnvPath {
+@injectable()
+export default class EnvPath {
+  @inject(Types.IOsGateway)
   osGateway!: OsGateway;
 
   /**
@@ -25,7 +27,3 @@ class EnvPath {
     return this.osGateway.os.type() === 'Darwin';
   }
 }
-
-decorate(injectable(), EnvPath);
-decorate(inject(types.IOsGateway), EnvPath.prototype, 'osGateway');
-export default EnvPath;

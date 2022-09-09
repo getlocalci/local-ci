@@ -1,10 +1,12 @@
-import { decorate, inject, injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import * as vscode from 'vscode';
 import { EXIT_JOB_COMMAND, RUN_JOB_COMMAND } from 'constants/';
 import Types from 'common/Types';
 import EditorGateway from 'common/EditorGateway';
 
-class JobFactory {
+@injectable()
+export default class JobFactory {
+  @inject(Types.IEditorGateway)
   editorGateway!: EditorGateway;
 
   create(label: string, isRunning: boolean, hasChildJob: boolean) {
@@ -83,7 +85,3 @@ class JobFactory {
     return job;
   }
 }
-
-decorate(injectable(), JobFactory);
-decorate(inject(Types.IEditorGateway), JobFactory.prototype, 'editorGateway');
-export default JobFactory;

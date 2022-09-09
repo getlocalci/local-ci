@@ -1,12 +1,18 @@
-import { decorate, inject, injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import Types from 'common/Types';
 import Spawn from 'common/Spawn';
 import ChildProcessGateway from 'common/ChildProcessGateway';
 import EditorGateway from 'common/EditorGateway';
 
-class FinalTerminal {
+@injectable()
+export default class FinalTerminal {
+  @inject(Types.IChildProcessGateway)
   childProcessGateway!: ChildProcessGateway;
+
+  @inject(Types.IEditorGateway)
   editorGateway!: EditorGateway;
+
+  @inject(Spawn)
   spawn!: Spawn;
 
   // @todo: this isn't working.
@@ -40,18 +46,3 @@ class FinalTerminal {
     });
   }
 }
-
-decorate(injectable(), FinalTerminal);
-decorate(
-  inject(Types.IChildProcessGateway),
-  FinalTerminal.prototype,
-  'childProcessGateway'
-);
-decorate(
-  inject(Types.IEditorGateway),
-  FinalTerminal.prototype,
-  'editorGateway'
-);
-decorate(inject(Spawn), FinalTerminal.prototype, 'spawn');
-
-export default FinalTerminal;

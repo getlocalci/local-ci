@@ -1,8 +1,10 @@
 import EditorGateway from 'common/EditorGateway';
 import Types from 'common/Types';
-import { decorate, inject, injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 
-class CommandFactory {
+@injectable()
+export default class CommandFactory {
+  @inject(Types.IEditorGateway)
   editorGateway!: EditorGateway;
 
   create(label: string, command: string) {
@@ -20,11 +22,3 @@ class CommandFactory {
     return newCommand;
   }
 }
-
-decorate(injectable(), CommandFactory);
-decorate(
-  inject(Types.IEditorGateway),
-  CommandFactory.prototype,
-  'editorGateway'
-);
-export default CommandFactory;

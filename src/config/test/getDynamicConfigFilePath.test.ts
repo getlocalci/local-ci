@@ -1,17 +1,14 @@
-import * as assert from 'assert';
 import getDynamicConfigPath from 'config/getDynamicConfigPath';
 
-suite('getDynamicConfigFilePath', () => {
+describe('getDynamicConfigFilePath', () => {
   test('with empty string argument', () => {
-    assert.strictEqual(
-      getDynamicConfigPath(''),
+    expect(getDynamicConfigPath('')).toEqual(
       '/tmp/local-ci/unknown/volume/dynamic-config.yml'
     );
   });
 
   test('with path as argument', () => {
-    assert.strictEqual(
-      getDynamicConfigPath('/home/foo/baz/.circleci/config.yml'),
+    expect(getDynamicConfigPath('/home/foo/baz/.circleci/config.yml')).toEqual(
       '/tmp/local-ci/baz/volume/dynamic-config.yml'
     );
   });

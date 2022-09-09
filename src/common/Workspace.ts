@@ -1,8 +1,10 @@
-import { decorate, inject, injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import Types from 'common/Types';
 import EditorGateway from './EditorGateway';
 
-class Workspace {
+@injectable()
+export default class Workspace {
+  @inject(Types.IEditorGateway)
   editorGateway!: EditorGateway;
 
   /**
@@ -16,7 +18,3 @@ class Workspace {
       : '';
   }
 }
-
-decorate(injectable(), Workspace);
-decorate(inject(Types.IEditorGateway), Workspace.prototype, 'editorGateway');
-export default Workspace;

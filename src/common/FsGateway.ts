@@ -1,9 +1,7 @@
 import * as fs from 'fs';
-import { decorate, injectable } from 'inversify';
+import { injectable } from 'inversify';
 
-class FsGateway {
+@injectable()
+export default class FsGateway {
   fs = fs;
 }
-
-decorate(injectable(), FsGateway);
-export default FsGateway;

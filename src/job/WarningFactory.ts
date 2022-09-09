@@ -1,9 +1,11 @@
-import { decorate, inject, injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import EditorGateway from 'common/EditorGateway';
 import * as vscode from 'vscode';
 import Types from 'common/Types';
 
-class WarningFactory {
+@injectable()
+export default class WarningFactory {
+  @inject(Types.IEditorGateway)
   editorGateway!: EditorGateway;
 
   create(label: string): vscode.TreeItem {
@@ -17,12 +19,3 @@ class WarningFactory {
     return warning;
   }
 }
-
-decorate(injectable(), WarningFactory);
-decorate(
-  inject(Types.IEditorGateway),
-  WarningFactory.prototype,
-  'editorGateway'
-);
-
-export default WarningFactory;

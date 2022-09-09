@@ -1,13 +1,11 @@
-import { decorate, injectable } from 'inversify';
+import { injectable } from 'inversify';
 
 /** Stub class for filesystem. */
-class FakeFsGateway {
+@injectable()
+export default class FakeFsGateway {
   fs = {
     existsSync: () => null,
     mkdirSync: () => null,
     writeFileSync: () => null,
   };
 }
-
-decorate(injectable(), FakeFsGateway);
-export default FakeFsGateway;

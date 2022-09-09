@@ -1,9 +1,7 @@
 import * as cp from 'child_process';
-import { decorate, injectable } from 'inversify';
+import { injectable } from 'inversify';
 
-class ChildProcessGateway {
+@injectable()
+export default class ChildProcessGateway {
   cp = cp;
 }
-
-decorate(injectable(), ChildProcessGateway);
-export default ChildProcessGateway;

@@ -1,17 +1,17 @@
-import * as assert from 'assert';
 import { normalize } from 'test-tools/helpers';
 import getAttachWorkspaceCommand from 'config/getAttachWorkspaceCommand';
 
-suite('getAttachWorkspaceCommand', () => {
+describe('getAttachWorkspaceCommand', () => {
   test('no attach_workspace', () => {
-    assert.strictEqual(getAttachWorkspaceCommand({}), '');
+    expect(getAttachWorkspaceCommand({})).toEqual('');
   });
 
   test('with attach_workspace', () => {
-    assert.strictEqual(
+    expect(
       normalize(
         getAttachWorkspaceCommand({ attach_workspace: { at: '/foo/baz' } })
-      ),
+      )
+    ).toEqual(
       normalize(
         `if [ ! -d /tmp/local-ci ]
           then

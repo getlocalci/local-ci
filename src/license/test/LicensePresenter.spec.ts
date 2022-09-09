@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import * as assert from 'assert';
-import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as vscode from 'vscode';
 import {
@@ -8,11 +6,8 @@ import {
   LICENSE_VALIDITY_CACHE_EXPIRATION,
 } from 'constants/';
 import { Substitute } from '@fluffy-spoon/substitute';
-import getLicenseInformation from 'license/getLicenseInformation';
-
-mocha.afterEach(() => {
-  sinon.restore();
-});
+import LicensePresenter from 'license/LicensePresenter';
+import AppTestHarness from 'test-tools/helpers/AppTestHarness';
 
 function getMockContext(licenseKey: string, cachedValidity: boolean) {
   const initialContext = Substitute.for<vscode.ExtensionContext>();
@@ -42,19 +37,29 @@ function getMockContext(licenseKey: string, cachedValidity: boolean) {
   };
 }
 
-suite('getLicenseInformation', () => {
+let testHarness: AppTestHarness;
+let licensePresenter: LicensePresenter;
+
+describe('LicensePresenter', () => {
+  beforeEach(() => {
+    testHarness = new AppTestHarness();
+    testHarness.init();
+    licensePresenter = testHarness.container.get(LicensePresenter);
+  });
+
   test('no license', async () => {
-    assert.ok(
-      (await getLicenseInformation(getMockContext('', false))).includes(
+    expect(
+      (await licensePresenter.getView(getMockContext('', false))).includes(
         'Enter license key'
       )
     );
   });
+
   test('cached valid license', async () => {
-    const actual = await getLicenseInformation(
+    const actual = await licensePresenter.getView(
       getMockContext('123456789', true)
     );
-    assert.strictEqual(actual.includes('Enter license key'), false);
-    assert.ok(actual.includes('Your Local CI license key is valid'));
+    expect(actual.includes('Enter license key')).toEqual(false);
+    expect(actual.includes('Your Local CI license key is valid'));
   });
 });

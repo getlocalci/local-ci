@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { LICENSE_ERROR } from 'constants/';
 import getLicenseErrorMessage from 'license/getLicenseErrorMessage';
-import getLicenseInformation from 'license/getLicenseInformation';
+import LicensePresenter from 'license/LicensePresenter';
 import isLicenseValid from 'license/License';
 import showLicenseInput from 'license/showLicenseInput';
 
@@ -22,6 +22,7 @@ export default class LicenseProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = 'localCiLicense';
   private extensionUri: vscode.Uri;
   private webviewView?: vscode.WebviewView;
+  private licensePresenter!: LicensePresenter; // @todo: use a factory for this, and injecct the LicensePresenter
 
   constructor(
     private readonly context: vscode.ExtensionContext,
@@ -109,7 +110,7 @@ export default class LicenseProvider implements vscode.WebviewViewProvider {
       <title>Local CI License Key</title>
     </head>
     <body>
-      ${await getLicenseInformation(this.context)}
+      ${await LicensePresenter(this.context)}
       <script nonce="${nonce}" src="${scriptUri}"></script>
     </body>
     </html>`;

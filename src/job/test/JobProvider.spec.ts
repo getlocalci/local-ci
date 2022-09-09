@@ -25,18 +25,18 @@ describe('JobProvider', () => {
     jobProviderFactory = testHarness.container.get(Types.IJobProviderFactory);
   });
 
-  test('No element passed', () => {
+  test('no element passed', () => {
     expect(jobProviderFactory(...getStubs()).getChildren()).toEqual([]);
   });
 
-  test('No child', async () => {
+  test('no child', () => {
     const provider = jobProviderFactory(...getStubs());
     expect(
       provider.getChildren(jobFactory.create('foo', false, false))
     ).toEqual([]);
   });
 
-  test('Two children', () => {
+  test('two children', () => {
     const allJobs = new Map();
     allJobs.set('foo', []);
     allJobs.set('baz', ['foo']);
@@ -47,11 +47,7 @@ describe('JobProvider', () => {
     );
     expect(children.length).toEqual(2);
 
-    expect(jobFactory.getJobName(children[0] as vscode.TreeItem)).toEqual(
-      'baz'
-    );
-    expect(jobFactory.getJobName(children[1] as vscode.TreeItem)).toEqual(
-      'example'
-    );
+    expect(jobFactory.getJobName(children[0])).toEqual('baz');
+    expect(jobFactory.getJobName(children[1])).toEqual('example');
   });
 });

@@ -1,4 +1,4 @@
-import { decorate, injectable, inject } from 'inversify';
+import { injectable, inject } from 'inversify';
 import * as path from 'path';
 import * as yaml from 'js-yaml';
 import getAttachWorkspaceCommand from 'config/getAttachWorkspaceCommand';
@@ -16,7 +16,9 @@ import {
 import { addEnvVars } from 'scripts/';
 import FsGateway from 'common/FsGateway';
 
-class ProcessFile {
+@injectable()
+export default class ProcessFile {
+  @inject(Types.IFsGateway)
   fsGateway!: FsGateway;
 
   /**
@@ -232,7 +234,3 @@ class ProcessFile {
     };
   }
 }
-
-decorate(injectable(), ProcessFile);
-decorate(inject(Types.IFsGateway), ProcessFile.prototype, 'fsGateway');
-export default ProcessFile;

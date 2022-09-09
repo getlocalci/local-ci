@@ -1,51 +1,46 @@
-import * as assert from 'assert';
 import { DAY_IN_MILLISECONDS, TRIAL_LENGTH_IN_MILLISECONDS } from 'constants/';
 import getMillisecondsRemainingInTrial from 'license/getMillisecondsRemainingInTrial';
 
 const hourInMilliseconds = 3600000;
 
-suite('getMillisecondsRemainingInTrial', () => {
+describe('getMillisecondsRemainingInTrial', () => {
   test('entire trial remaining', () => {
     const time = new Date().getTime();
-    assert.strictEqual(
-      getMillisecondsRemainingInTrial(time, time, TRIAL_LENGTH_IN_MILLISECONDS),
-      TRIAL_LENGTH_IN_MILLISECONDS
-    );
+    expect(
+      getMillisecondsRemainingInTrial(time, time, TRIAL_LENGTH_IN_MILLISECONDS)
+    ).toEqual(TRIAL_LENGTH_IN_MILLISECONDS);
   });
 
   test('1 day remaining', () => {
     const time = new Date().getTime();
-    assert.strictEqual(
+    expect(
       getMillisecondsRemainingInTrial(
         time,
         time - 24 * hourInMilliseconds,
         TRIAL_LENGTH_IN_MILLISECONDS
-      ),
-      29 * DAY_IN_MILLISECONDS
-    );
+      )
+    ).toEqual(29 * DAY_IN_MILLISECONDS);
   });
 
   test('1 hour remaining', () => {
     const time = new Date().getTime();
-    assert.strictEqual(
+    expect(
       getMillisecondsRemainingInTrial(
         time,
         time - (29 * DAY_IN_MILLISECONDS + 23 * hourInMilliseconds),
         TRIAL_LENGTH_IN_MILLISECONDS
-      ),
-      hourInMilliseconds
-    );
+      )
+    ).toEqual(hourInMilliseconds);
   });
 
   test('no time remaining', () => {
     const time = new Date().getTime();
-    assert.strictEqual(
+    expect(
       getMillisecondsRemainingInTrial(
         time,
         time - 30 * DAY_IN_MILLISECONDS,
         TRIAL_LENGTH_IN_MILLISECONDS
-      ),
-      0
-    );
+      )
+    ).toEqual(0);
   });
 });

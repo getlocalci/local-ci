@@ -1,4 +1,4 @@
-import { decorate, inject, injectable } from 'inversify';
+import { injectable } from 'inversify';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import TelemetryReporter from '@vscode/extension-telemetry';
@@ -24,7 +24,6 @@ import {
 } from '../constants';
 import License from 'license/License';
 import FsGateway from 'common/FsGateway';
-import Types from 'common/Types';
 import EditorGateway from 'common/EditorGateway';
 
 enum JobError {
@@ -35,7 +34,10 @@ enum JobError {
   ProcessFile,
 }
 
-class JobProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
+@injectable()
+export default class JobProvider
+  implements vscode.TreeDataProvider<vscode.TreeItem>
+{
   onDidChangeTreeData?: vscode.Event<vscode.TreeItem | undefined>;
 
   private _onDidChangeTreeData?: vscode.EventEmitter<
@@ -83,7 +85,7 @@ class JobProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
     }
   }
 
-  /** Processes the config file(s) in addition to refreshing. */
+  /** Processes the config file(s) and refreshes. */
   async hardRefresh(
     job?: vscode.TreeItem,
     suppressMessage?: boolean
@@ -331,18 +333,3 @@ class JobProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
     this.runningJob = jobName;
   }
 }
-
-decorate(injectable(), JobProvider);
-decorate(inject(AllConfigFiles), JobProvider.prototype, 'allConfigFiles');
-decorate(inject(ConfigFile), JobProvider.prototype, 'configFile');
-decorate(inject(CommandFactory), JobProvider.prototype, 'command');
-decorate(inject(Docker), JobProvider.prototype, 'docker');
-decorate(inject(Types.IEditorGateway), JobProvider.prototype, 'editorGateway');
-decorate(inject(JobFactory), JobProvider.prototype, 'jobFactory');
-decorate(inject(LogFactory), JobProvider.prototype, 'logFactory');
-decorate(inject(Config), JobProvider.prototype, 'processedConfig');
-decorate(inject(WarningFactory), JobProvider.prototype, 'warningFactory');
-decorate(inject(Types.IFsGateway), JobProvider.prototype, 'fsGateway');
-decorate(inject(License), JobProvider.prototype, 'license');
-
-export default JobProvider;

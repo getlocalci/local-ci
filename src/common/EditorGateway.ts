@@ -1,9 +1,7 @@
 import * as vscode from 'vscode';
-import { decorate, injectable } from 'inversify';
+import { injectable } from 'inversify';
 
-class EditorGateway {
+@injectable()
+export default class EditorGateway {
   editor = vscode;
 }
-
-decorate(injectable(), EditorGateway);
-export default EditorGateway;

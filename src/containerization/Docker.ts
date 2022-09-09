@@ -1,11 +1,15 @@
-import { decorate, inject, injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 
 import Spawn from 'common/Spawn';
 import Types from 'common/Types';
 import ChildProcessGateway from 'common/ChildProcessGateway';
 
+@injectable()
 class Docker {
+  @inject(Types.IChildProcessGateway)
   childProcessGateway!: ChildProcessGateway;
+
+  @inject(Spawn)
   spawn!: Spawn;
 
   getError(): string {
@@ -25,13 +29,5 @@ class Docker {
     return !this.getError()?.length;
   }
 }
-
-decorate(injectable(), Docker);
-decorate(
-  inject(Types.IChildProcessGateway),
-  Docker.prototype,
-  'childProcessGateway'
-);
-decorate(inject(Spawn), Docker.prototype, 'spawn');
 
 export default Docker;

@@ -1,9 +1,13 @@
-import { decorate, inject, injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import EnvPath from './EnvPath';
 import Workspace from './Workspace';
 
-class Spawn {
+@injectable()
+export default class Spawn {
+  @inject(EnvPath)
   envPath!: EnvPath;
+
+  @inject(Workspace)
   workspace!: Workspace;
 
   getOptions(cwd?: string): SpawnOptions {
@@ -16,9 +20,3 @@ class Spawn {
     };
   }
 }
-
-decorate(injectable(), Spawn);
-decorate(inject(EnvPath), Spawn.prototype, 'envPath');
-decorate(inject(Workspace), Spawn.prototype, 'workspace');
-
-export default Spawn;

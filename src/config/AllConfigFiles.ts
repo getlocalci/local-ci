@@ -1,11 +1,13 @@
-import { decorate, inject, injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import * as vscode from 'vscode';
 import { SELECTED_CONFIG_PATH } from 'constants/';
 import getRepoBasename from 'common/getRepoBasename';
 import EditorGateway from 'common/EditorGateway';
 import Types from 'common/Types';
 
-class AllConfigFiles {
+@injectable()
+export default class AllConfigFiles {
+  @inject(Types.IEditorGateway)
   editorGateway!: EditorGateway;
 
   /**
@@ -47,11 +49,3 @@ class AllConfigFiles {
       }));
   }
 }
-
-decorate(injectable(), AllConfigFiles);
-decorate(
-  inject(Types.IEditorGateway),
-  AllConfigFiles.prototype,
-  'editorGateway'
-);
-export default AllConfigFiles;

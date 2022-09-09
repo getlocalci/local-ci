@@ -1,12 +1,10 @@
-import * as assert from 'assert';
-import * as fs from 'fs';
 import getConfig from 'config/getConfig';
 import getJobs from 'job/getJobs';
-import { getTestFilePath } from 'test-tools/helpers';
+import configWithCache from 'test-tools/fixture/with-cache.yml';
 
-suite('getJobs', () => {
+describe('getJobs', () => {
   test('single job', () => {
-    assert.strictEqual(
+    expect(
       getJobs({
         jobs: {},
         workflows: {
@@ -14,13 +12,12 @@ suite('getJobs', () => {
             jobs: [{ test: {} }],
           },
         },
-      }).size,
-      1
-    );
+      }).size
+    ).toEqual(1);
   });
 
   test('multiple jobs', () => {
-    assert.strictEqual(
+    expect(
       getJobs({
         jobs: { lint: {}, test: {}, deploy: {} },
         workflows: {
@@ -34,19 +31,11 @@ suite('getJobs', () => {
             ],
           },
         },
-      }).size,
-      3
-    );
+      }).size
+    ).toEqual(3);
   });
 
   test('multiple jobs from fixture', () => {
-    assert.strictEqual(
-      getJobs(
-        getConfig(
-          fs.readFileSync(getTestFilePath('fixture', 'with-cache.yml'), 'utf8')
-        )
-      ).size,
-      8
-    );
+    expect(getJobs(getConfig(configWithCache)).size).toEqual(8);
   });
 });

@@ -1,7 +1,8 @@
-import { decorate, injectable } from 'inversify';
+import { injectable } from 'inversify';
 
 /** Stub class for the editor. */
-class FakeEditorGateway {
+@injectable()
+export default class FakeEditorGateway {
   editor = {
     EventEmitter: class {},
     ThemeIcon: class {},
@@ -9,6 +10,7 @@ class FakeEditorGateway {
       constructor(public label: string) {}
     },
     TreeItemCollapsibleState: {
+      Expanded: 'expanded',
       None: 'none',
     },
     window: {
@@ -24,6 +26,3 @@ class FakeEditorGateway {
     },
   };
 }
-
-decorate(injectable(), FakeEditorGateway);
-export default FakeEditorGateway;

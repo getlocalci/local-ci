@@ -1,12 +1,10 @@
-import { decorate, injectable } from 'inversify';
+import { injectable } from 'inversify';
 
 /** Stub class for cp. */
-class FakeChildProcessGateway {
+@injectable()
+export default class FakeChildProcessGateway {
   cp = {
     spawn: () => null,
     spawnSync: () => null,
   };
 }
-
-decorate(injectable(), FakeChildProcessGateway);
-export default FakeChildProcessGateway;
