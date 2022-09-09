@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.8.0 - 9 September 2022
+- Extend preview to 30 days. [#180](https://github.com/getlocalci/local-ci/pull/180)
+- Fix an issue on Intel Mac, where it fails from the wrong build agent. [#179](https://github.com/getlocalci/local-ci/pull/179)
+
 ## 1.7.10 - 27 August 2022
 - Add a notice for the --storage-opt error. [#174](https://github.com/getlocalci/local-ci/pull/174)
 - Bump the binary version to v0.1.20788. [#178](https://github.com/getlocalci/local-ci/pull/178)
