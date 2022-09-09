@@ -3,9 +3,11 @@ import ProcessFile from 'process/ProcessFile';
 import Config from 'config/Config';
 import EnvPath from 'common/EnvPath';
 import FinalTerminal from 'terminal/FinalTerminal';
+import JobTerminals from 'terminal/JobTerminals';
 import License from 'license/License';
 import Spawn from 'common/Spawn';
 import Workspace from 'common/Workspace';
+import CommittedImages from 'containerization/CommittedImages';
 import CommandFactory from 'job/ComandFactory';
 import JobFactory from 'job/JobFactory';
 import LogFactory from 'log/LogFactory';
@@ -40,6 +42,7 @@ export default class BaseIoc {
     this.container.bind(CommandFactory).toSelf().inSingletonScope();
     this.container.bind(Docker).toSelf().inSingletonScope();
     this.container.bind(FinalTerminal).toSelf().inSingletonScope();
+    this.container.bind(JobTerminals).toSelf().inSingletonScope();
     this.container.bind(EnvPath).toSelf().inSingletonScope();
     this.container.bind(JobFactory).toSelf().inSingletonScope();
     this.container.bind(LogFactory).toSelf().inSingletonScope();
@@ -49,7 +52,7 @@ export default class BaseIoc {
     this.container.bind(Config).toSelf().inSingletonScope();
     this.container.bind(Spawn).toSelf().inSingletonScope();
     this.container.bind(Workspace).toSelf().inSingletonScope();
-
+    this.container.bind(CommittedImages).toSelf().inSingletonScope();
     return this.container;
   }
 }

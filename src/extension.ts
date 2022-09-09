@@ -28,8 +28,8 @@ import {
   TELEMETRY_KEY,
   TRIAL_STARTED_TIMESTAMP,
 } from 'constants/';
-import cleanUpCommittedImages from 'containerization/cleanUpCommittedImages';
-import disposeTerminalsForJob from 'terminal/disposeTerminalsForJob';
+import cleanUpCommittedImages from 'containerization/CommittedImages';
+import disposeTerminalsForJob from 'terminal/JobTerminals';
 import AllConfigFiles from 'config/AllConfigFiles';
 import getCheckoutJobs from 'job/getCheckoutJobs';
 import getConfig from 'config/getConfig';

@@ -1,33 +1,21 @@
-import * as assert from 'assert';
-import * as fs from 'fs';
-import * as mocha from 'mocha';
-import * as sinon from 'sinon';
 import getCheckoutJobs from 'job/getCheckoutJobs';
 
-mocha.afterEach(() => {
-  sinon.restore();
-});
-
-suite('getCheckoutJobs', () => {
+describe('getCheckoutJobs', () => {
   test('no config file', () => {
-    assert.deepStrictEqual(getCheckoutJobs(undefined), []);
+    expect(getCheckoutJobs(undefined)).toEqual([]);
   });
 
   test('no checkout job', () => {
-    sinon.mock(fs).expects('existsSync').once().returns(true);
-    sinon.mock(fs).expects('readFileSync').once().returns('');
-
-    assert.deepStrictEqual(
+    expect(
       getCheckoutJobs({
         jobs: { test: { docker: [{ image: 'cimg/node:16.8.0-browsers' }] } },
         workflows: {},
-      }),
-      []
-    );
+      })
+    ).toEqual([]);
   });
 
   test('With string checkout job', () => {
-    assert.deepStrictEqual(
+    expect(
       getCheckoutJobs({
         jobs: {
           test: {
@@ -36,8 +24,7 @@ suite('getCheckoutJobs', () => {
           },
         },
         workflows: {},
-      }),
-      ['test']
-    );
+      })
+    ).toEqual(['test']);
   });
 });

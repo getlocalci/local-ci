@@ -15,10 +15,11 @@ export default class FakeEditorGateway {
     },
     window: {
       showInformationMessage: () => null,
+      terminals: [{}],
     },
     workspace: {
-      asRelativePath: () => null,
-      findFiles: () => null,
+      asRelativePath: (path: string) => path,
+      findFiles: () => Promise.resolve([{ fsPath: 'one/two/' }]),
       workspaceFolders: [{}],
     },
     Uri: {

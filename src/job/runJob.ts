@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as vscode from 'vscode';
 import { getBinaryPath } from '../../node/binary';
 import areTerminalsClosed from 'terminal/areTerminalsClosed';
-import cleanUpCommittedImages from 'containerization/cleanUpCommittedImages';
+import cleanUpCommittedImages from 'containerization/CommittedImages';
 import commitContainer from 'containerization/commitContainer';
 import getCheckoutJobs from './getCheckoutJobs';
 import getConfigFilePath from 'config/ConfigFile';
