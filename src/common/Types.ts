@@ -3,5 +3,6 @@ export default {
   IEditorGateway: Symbol.for('IEditorGateway'),
   IFsGateway: Symbol.for('IFsGateway'),
   IOsGateway: Symbol.for('IOsGateway'),
+  IProcessGateway: Symbol.for('IProcessGateway'),
   IJobProviderFactory: Symbol.for('IJobProviderFactory'),
 };

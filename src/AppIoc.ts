@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import ChildProcessGateway from 'common/ChildProcessGateway';
 import EditorGateway from './common/EditorGateway';
 import FsGateway from './common/FsGateway';
+import ProcessGateway from 'common/ProcessGateway';
 import BaseIoc from './BaseIoc';
 import Types from 'common/Types';
 
@@ -13,3 +14,4 @@ container
   .inSingletonScope();
 container.bind(Types.IEditorGateway).to(EditorGateway).inSingletonScope();
 container.bind(Types.IFsGateway).to(FsGateway).inSingletonScope();
+container.bind(Types.IProcessGateway).to(ProcessGateway).inSingletonScope();
