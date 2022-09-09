@@ -6,7 +6,7 @@ import JobProvider from 'job/JobProvider';
 import { SUPPRESS_JOB_COMPLETE_MESSAGE } from 'constants/';
 import { getPicardContainerFunction } from 'scripts/';
 import getConfigFilePath from 'config/ConfigFile';
-import getConfigFromPath from 'config/getConfigFromPath';
+import getConfigFromPath from 'config/ParsedConfig';
 import getDynamicConfigPath from 'config/getDynamicConfigPath';
 import Spawn from 'common/Spawn';
 import showLogFile from 'log/showLogFile';

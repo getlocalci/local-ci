@@ -7,7 +7,7 @@ import cleanUpCommittedImages from 'containerization/CommittedImages';
 import commitContainer from 'containerization/commitContainer';
 import getCheckoutJobs from './getCheckoutJobs';
 import getConfigFilePath from 'config/ConfigFile';
-import getConfigFromPath from 'config/getConfigFromPath';
+import getConfigFromPath from 'config/ParsedConfig';
 import getDebuggingTerminalName from 'terminal/getDebuggingTerminalName';
 import getFinalDebuggingTerminalName from 'terminal/getFinalTerminalName';
 import getLogFilePath from 'log/getLogFilePath';

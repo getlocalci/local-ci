@@ -16,6 +16,8 @@ import WarningFactory from 'job/WarningFactory';
 import AllConfigFiles from 'config/AllConfigFiles';
 import ConfigFile from 'config/ConfigFile';
 import Docker from 'containerization/Docker';
+import ParsedConfig from 'config/ParsedConfig';
+import AllJobs from 'job/AllJobs';
 import Types from 'common/Types';
 
 /**
@@ -53,6 +55,8 @@ export default class BaseIoc {
     this.container.bind(Spawn).toSelf().inSingletonScope();
     this.container.bind(Workspace).toSelf().inSingletonScope();
     this.container.bind(CommittedImages).toSelf().inSingletonScope();
+    this.container.bind(ParsedConfig).toSelf().inSingletonScope();
+    this.container.bind(AllJobs).toSelf().inSingletonScope();
     return this.container;
   }
 }

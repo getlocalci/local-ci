@@ -11,6 +11,7 @@ import JobFactory from './JobFactory';
 import WarningFactory from './WarningFactory';
 import TelemetryReporter from '@vscode/extension-telemetry';
 import JobProvider from './JobProvider';
+import AllJobs from './AllJobs';
 
 export default function JobProviderFactory(iocContext: IocContext) {
   return (
@@ -32,6 +33,7 @@ export default function JobProviderFactory(iocContext: IocContext) {
       iocContext.container.get(JobFactory),
       iocContext.container.get(LogFactory),
       iocContext.container.get(WarningFactory),
+      iocContext.container.get(AllJobs),
       jobDependencies
     );
   };

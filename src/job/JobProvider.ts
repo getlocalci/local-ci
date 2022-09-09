@@ -7,7 +7,7 @@ import JobFactory from './JobFactory';
 import LogFactory from '../log/LogFactory';
 import WarningFactory from './WarningFactory';
 import AllConfigFiles from 'config/AllConfigFiles';
-import getAllJobs from 'job/getAllJobs';
+import AllJobs from 'job/AllJobs';
 import ConfigFile from 'config/ConfigFile';
 import getLogFilesDirectory from 'log/getLogFilesDirectory';
 import getTrialLength from 'license/getTrialLength';
@@ -63,6 +63,7 @@ export default class JobProvider
     private jobFactory: JobFactory,
     private logFactory: LogFactory,
     private warningFactory: WarningFactory,
+    private allJobs: AllJobs,
     private jobDependencies?: Map<string, string[] | null>
   ) {
     this._onDidChangeTreeData = new this.editorGateway.editor.EventEmitter<
@@ -166,7 +167,7 @@ export default class JobProvider
       return;
     }
 
-    this.jobDependencies = getAllJobs(processedConfig, configFilePath);
+    this.jobDependencies = this.allJobs.get(processedConfig, configFilePath);
     for (const jobName of this.jobDependencies.keys()) {
       this.jobs.push(jobName);
     }
