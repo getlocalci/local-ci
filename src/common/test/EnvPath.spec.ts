@@ -17,24 +17,7 @@ describe('EnvPath', () => {
     processGateway = testHarness.processGateway;
   });
 
-  describe('isMac', () => {
-    test('mac', async () => {
-      osGateway.os.type = () => 'Darwin';
-      expect(envPath.isMac());
-    });
-
-    test('linux', async () => {
-      osGateway.os.type = () => 'Linux';
-      expect(envPath.isMac()).toEqual(false);
-    });
-
-    test('windows', async () => {
-      osGateway.os.type = () => 'Windows_NT';
-      expect(envPath.isMac()).toEqual(false);
-    });
-  });
-
-  describe('EnvPath', () => {
+  describe('get', () => {
     test('on Linux', () => {
       osGateway.os.type = jest.fn().mockImplementationOnce(() => 'Linux');
       processGateway.process.env = { PATH: '' };
@@ -54,6 +37,23 @@ describe('EnvPath', () => {
       processGateway.process.env = { PATH: 'Users/Foo/:/usr/local/bin' };
 
       expect(envPath.get()).toEqual('Users/Foo/:/usr/local/bin');
+    });
+  });
+
+  describe('isMac', () => {
+    test('mac', async () => {
+      osGateway.os.type = () => 'Darwin';
+      expect(envPath.isMac());
+    });
+
+    test('linux', async () => {
+      osGateway.os.type = () => 'Linux';
+      expect(envPath.isMac()).toEqual(false);
+    });
+
+    test('windows', async () => {
+      osGateway.os.type = () => 'Windows_NT';
+      expect(envPath.isMac()).toEqual(false);
     });
   });
 });
