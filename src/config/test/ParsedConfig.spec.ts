@@ -1,4 +1,3 @@
-import getConfig from 'config/getConfig';
 import onlyJobsYml from 'test-tools/fixture/only-jobs.yml';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
 import ParsedConfig from 'config/ParsedConfig';
