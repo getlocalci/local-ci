@@ -43,7 +43,7 @@ import prepareConfig from 'config/Config';
 import runJob from 'job/runJob';
 import showLicenseInput from 'license/showLicenseInput';
 import showLogFile from 'log/showLogFile';
-import askForEmail from 'license/askForEmail';
+import askForEmail from 'license/Email';
 import { container } from 'AppIoc';
 
 const reporter = new TelemetryReporter(

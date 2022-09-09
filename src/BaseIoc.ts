@@ -19,6 +19,7 @@ import Docker from 'containerization/Docker';
 import ParsedConfig from 'config/ParsedConfig';
 import AllJobs from 'job/AllJobs';
 import Types from 'common/Types';
+import Email from 'license/Email';
 
 /**
  * Main dependency injection class.
@@ -57,6 +58,7 @@ export default class BaseIoc {
     this.container.bind(CommittedImages).toSelf().inSingletonScope();
     this.container.bind(ParsedConfig).toSelf().inSingletonScope();
     this.container.bind(AllJobs).toSelf().inSingletonScope();
+    this.container.bind(Email).toSelf().inSingletonScope();
     return this.container;
   }
 }

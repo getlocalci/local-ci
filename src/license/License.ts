@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { inject, injectable } from 'inversify';
 import Types from 'common/Types';
 import EditorGateway from 'common/EditorGateway';
@@ -12,6 +11,7 @@ import {
   LICENSE_VALIDITY_CACHE_EXPIRATION,
 } from 'constants/';
 import getHash from './getHash';
+import HttpGateway from 'common/HttpGateway';
 
 const licenseValidationEndpoint = 'https://getlocalci.com';
 const fiveMinutesInMilliseconds = 300000;
@@ -20,6 +20,9 @@ const fiveMinutesInMilliseconds = 300000;
 export default class License {
   @inject(Types.IEditorGateway)
   editorGateway!: EditorGateway;
+
+  @inject(Types.IHttpGateway)
+  httpGateway!: HttpGateway;
 
   async isValid(
     context: vscode.ExtensionContext,
@@ -41,7 +44,7 @@ export default class License {
 
     let response;
     try {
-      response = await axios.get(licenseValidationEndpoint, {
+      response = await this.httpGateway.get(licenseValidationEndpoint, {
         params: {
           headers: {
             'Cache-Control': 'no-cache',
