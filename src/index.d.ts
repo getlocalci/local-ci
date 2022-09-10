@@ -1,3 +1,6 @@
+import * as vscode from 'vscode';
+import JobProvider from 'job/JobProvider';
+
 interface SaveCache {
   key: string;
   paths: Array<string>;
@@ -82,6 +85,11 @@ interface DynamicCache {
   epoch: string;
 }
 
+interface Command {
+  commandName: string;
+  getCallback: (context: vscode.ExtensionContext, jobProvider: JobProvider) => () => void | Promise<void>;
+}
+
 interface SpawnOptions {
   cwd: string;
   env: {
@@ -102,19 +110,6 @@ declare module '*.sh' {
 declare module '*.yml' {
   const content: any;
   export = content;
-}
-
-interface IocContext {
-  container: IocContainer;
-}
-
-interface IocContainer {
-  bind<T>(toBind: { new (): T } | symbol ): IocContainer;
-  get<T>(injectable: { new (): T } | symbol): T;
-  inSingletonScope(): void;
-  to<T>(toBindTo: { new (): T } ): IocContainer;
-  toFactory<T>(factory: (context: IocContext) => T): T;
-  toSelf(): IocContainer;
 }
 
 declare module 'inversify';

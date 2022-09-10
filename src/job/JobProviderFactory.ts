@@ -12,8 +12,9 @@ import WarningFactory from './WarningFactory';
 import TelemetryReporter from '@vscode/extension-telemetry';
 import JobProvider from './JobProvider';
 import AllJobs from './AllJobs';
+import { interfaces } from 'inversify';
 
-export default function JobProviderFactory(iocContext: IocContext) {
+export default function JobProviderFactory(iocContext: interfaces.Context) {
   return (
     context: vscode.ExtensionContext,
     reporter: TelemetryReporter,

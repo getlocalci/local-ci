@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import type { Container } from 'inversify';
 import ChildProcessGateway from 'common/ChildProcessGateway';
 import EditorGateway from 'common/EditorGateway';
 import FsGateway from 'common/FsGateway';
@@ -7,7 +8,7 @@ import ProcessGateway from 'common/ProcessGateway';
 import BaseIoc from 'BaseIoc';
 import Types from 'common/Types';
 
-export const container: IocContainer = new BaseIoc().buildBaseTemplate();
+export const container: Container = new BaseIoc().buildBaseTemplate();
 
 container
   .bind(Types.IChildProcessGateway)

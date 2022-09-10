@@ -18,7 +18,10 @@ import LicenseInput from 'license/LicenseInput';
 import LogFactory from 'log/LogFactory';
 import ParsedConfig from 'config/ParsedConfig';
 import ProcessFile from 'process/ProcessFile';
+import Refresh from 'command/Refresh';
+import Registrar from 'common/Registrar';
 import Spawn from 'common/Spawn';
+import TryProcessAgain from 'command/TryProcessAgain';
 import Types from 'common/Types';
 import UncommittedFile from 'containerization/UncommittedFile';
 import WarningFactory from 'job/WarningFactory';
@@ -30,7 +33,7 @@ import Workspace from 'common/Workspace';
  * For classes that are the same in production and unit tests.
  */
 export default class BaseIoc {
-  container: IocContainer;
+  container: Container;
 
   constructor() {
     this.container = new Container({
@@ -39,7 +42,7 @@ export default class BaseIoc {
     });
   }
 
-  buildBaseTemplate(): IocContainer {
+  buildBaseTemplate(): Container {
     this.container
       .bind(Types.IJobProviderFactory)
       .toFactory(JobProviderFactory);
@@ -58,6 +61,9 @@ export default class BaseIoc {
     this.container.bind(LicenseInput).toSelf();
     this.container.bind(ProcessFile).toSelf();
     this.container.bind(Config).toSelf();
+    this.container.bind(Refresh).toSelf();
+    this.container.bind(Registrar).toSelf();
+    this.container.bind(TryProcessAgain).toSelf();
     this.container.bind(Spawn).toSelf();
     this.container.bind(Workspace).toSelf();
     this.container.bind(CommittedImages).toSelf();

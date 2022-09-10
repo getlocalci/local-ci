@@ -1,4 +1,4 @@
-import 'AppIoc';
+import { container as iocContainer } from 'AppIoc';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
@@ -45,6 +45,7 @@ import showLicenseInput from 'license/LicenseInput';
 import showLogFile from 'log/showLogFile';
 import askForEmail from 'license/Email';
 import { container } from 'AppIoc';
+import Registrar from 'common/Registrar';
 
 const reporter = new TelemetryReporter(
   EXTENSION_ID,
@@ -87,26 +88,14 @@ export function activate(context: vscode.ExtensionContext): void {
       vscode.window.registerTreeDataProvider(JOB_TREE_VIEW_ID, jobProvider)
     );
 
+  const registrar = iocContainer.get(Registrar);
   context.subscriptions.push(
     reporter,
-    vscode.commands.registerCommand(`${JOB_TREE_VIEW_ID}.refresh`, () =>
-      jobProvider.hardRefresh()
-    ),
+    ...registrar.getRegisteredCommands(),
     vscode.workspace.registerTextDocumentContentProvider(
       LOG_FILE_SCHEME,
       new LogProvider()
     ),
-    vscode.commands.registerCommand(PROCESS_TRY_AGAIN_COMMAND, async () => {
-      // There might have been a problem with the dynamic config file, so remove it.
-      const dynamicConfig = getDynamicConfigPath(
-        await getConfigFilePath(context)
-      );
-      if (fs.existsSync(dynamicConfig)) {
-        fs.rmSync(dynamicConfig);
-      }
-
-      jobProvider.hardRefresh();
-    }),
     vscode.commands.registerCommand(`${JOB_TREE_VIEW_ID}.enterToken`, () => {
       const terminal = vscode.window.createTerminal({
         name: 'Enter CircleCI® API Token',

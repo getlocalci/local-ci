@@ -8,9 +8,10 @@ import ProcessGateway from 'common/ProcessGateway';
 import FakeProcessGateway from 'common/FakeProcessGateway';
 import HttpGateway from 'common/HttpGateway';
 import FakeHttpGateway from 'common/FakeHttpGateway';
+import { Container } from 'inversify';
 
 export default class AppTestHarness {
-  container!: IocContainer;
+  container!: Container;
   childProcessGateway!: FakeChildProcessGateway;
   editorGateway!: FakeEditorGateway;
   fsGateway!: FakeFsGateway;
