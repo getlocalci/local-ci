@@ -14,11 +14,13 @@ import JobFactory from 'job/JobFactory';
 import JobProviderFactory from 'job/JobProviderFactory';
 import JobTerminals from 'terminal/JobTerminals';
 import License from 'license/License';
+import LicenseInput from 'license/LicenseInput';
 import LogFactory from 'log/LogFactory';
 import ParsedConfig from 'config/ParsedConfig';
 import ProcessFile from 'process/ProcessFile';
 import Spawn from 'common/Spawn';
 import Types from 'common/Types';
+import UncommittedFile from 'containerization/UncommittedFile';
 import WarningFactory from 'job/WarningFactory';
 import Workspace from 'common/Workspace';
 
@@ -53,6 +55,7 @@ export default class BaseIoc {
     this.container.bind(LogFactory).toSelf();
     this.container.bind(WarningFactory).toSelf();
     this.container.bind(License).toSelf();
+    this.container.bind(LicenseInput).toSelf();
     this.container.bind(ProcessFile).toSelf();
     this.container.bind(Config).toSelf();
     this.container.bind(Spawn).toSelf();
@@ -60,7 +63,9 @@ export default class BaseIoc {
     this.container.bind(CommittedImages).toSelf();
     this.container.bind(ParsedConfig).toSelf();
     this.container.bind(AllJobs).toSelf();
+    this.container.bind(UncommittedFile).toSelf();
     this.container.bind(Email).toSelf();
+
     return this.container;
   }
 }

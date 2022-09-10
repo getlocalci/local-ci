@@ -3,7 +3,7 @@ import { LICENSE_ERROR } from 'constants/';
 import getLicenseErrorMessage from 'license/getLicenseErrorMessage';
 import LicensePresenter from 'license/LicensePresenter';
 import isLicenseValid from 'license/License';
-import showLicenseInput from 'license/showLicenseInput';
+import showLicenseInput from 'license/LicenseInput';
 
 function getNonce() {
   const possible =

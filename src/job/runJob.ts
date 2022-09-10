@@ -25,7 +25,7 @@ import {
   CONTAINER_STORAGE_DIRECTORY,
   CONTINUE_PIPELINE_STEP_NAME,
 } from 'constants/';
-import uncommittedWarning from '../containerization/uncommittedWarning';
+import uncommittedWarning from '../containerization/UncommittedFile';
 import getDynamicConfigPath from 'config/getDynamicConfigPath';
 import JobProvider from 'job/JobProvider';
 import {

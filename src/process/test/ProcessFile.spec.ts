@@ -1,4 +1,4 @@
-import { normalize } from 'test-tools/helpers';
+import normalize from 'test-tools/helpers/normalize';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
 import ProcessFile from 'process/ProcessFile';
 import FakeFsGateway from 'common/FakeFsGateway';

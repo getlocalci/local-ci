@@ -1,5 +1,5 @@
 import getRestoreCacheCommand from 'cache/getRestoreCacheCommand';
-import { normalize } from 'test-tools/helpers';
+import normalize from 'test-tools/helpers/normalize';
 
 describe('getRestoreCacheCommand', () => {
   test('simple key property', () => {

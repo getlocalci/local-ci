@@ -1,4 +1,4 @@
-import { normalize } from 'test-tools/helpers';
+import normalize from 'test-tools/helpers/normalize';
 import getAttachWorkspaceCommand from 'config/getAttachWorkspaceCommand';
 
 describe('getAttachWorkspaceCommand', () => {

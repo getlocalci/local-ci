@@ -41,7 +41,7 @@ import getRepoBasename from 'common/getRepoBasename';
 import getStarterConfig from 'config/getStarterConfig';
 import prepareConfig from 'config/Config';
 import runJob from 'job/runJob';
-import showLicenseInput from 'license/showLicenseInput';
+import showLicenseInput from 'license/LicenseInput';
 import showLogFile from 'log/showLogFile';
 import askForEmail from 'license/Email';
 import { container } from 'AppIoc';

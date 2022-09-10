@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { injectable } from 'inversify';
 
 /** Stub class for the editor. */
@@ -14,7 +15,9 @@ export default class FakeEditorGateway {
       None: 'none',
     },
     window: {
-      showInformationMessage: () => null,
+      showInformationMessage: async (message: string) => message,
+      showWarningMessage: async (message: string) => message,
+      showInputBox: async () => '',
       terminals: [{}],
     },
     workspace: {

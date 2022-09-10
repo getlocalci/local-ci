@@ -1,7 +1,6 @@
 import CommittedImages from 'containerization/CommittedImages';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
 import ChildProcessGateway from 'common/ChildProcessGateway';
-import Types from 'common/Types';
 
 let testHarness: AppTestHarness;
 let committedImages: CommittedImages;
@@ -12,7 +11,7 @@ describe('CommittedImages', () => {
     testHarness = new AppTestHarness();
     testHarness.init();
     committedImages = testHarness.container.get(CommittedImages);
-    childProcessGateway = testHarness.container.get(Types.IChildProcessGateway);
+    childProcessGateway = testHarness.childProcessGateway;
   });
 
   test('no error', () => {
