@@ -40,25 +40,25 @@ export default class BaseIoc {
     this.container
       .bind(Types.IJobProviderFactory)
       .toFactory(JobProviderFactory);
-    this.container.bind(AllConfigFiles).toSelf().inSingletonScope();
-    this.container.bind(ConfigFile).toSelf().inSingletonScope();
-    this.container.bind(CommandFactory).toSelf().inSingletonScope();
-    this.container.bind(Docker).toSelf().inSingletonScope();
-    this.container.bind(FinalTerminal).toSelf().inSingletonScope();
-    this.container.bind(JobTerminals).toSelf().inSingletonScope();
-    this.container.bind(EnvPath).toSelf().inSingletonScope();
-    this.container.bind(JobFactory).toSelf().inSingletonScope();
-    this.container.bind(LogFactory).toSelf().inSingletonScope();
-    this.container.bind(WarningFactory).toSelf().inSingletonScope();
-    this.container.bind(License).toSelf().inSingletonScope();
-    this.container.bind(ProcessFile).toSelf().inSingletonScope();
-    this.container.bind(Config).toSelf().inSingletonScope();
-    this.container.bind(Spawn).toSelf().inSingletonScope();
-    this.container.bind(Workspace).toSelf().inSingletonScope();
-    this.container.bind(CommittedImages).toSelf().inSingletonScope();
-    this.container.bind(ParsedConfig).toSelf().inSingletonScope();
-    this.container.bind(AllJobs).toSelf().inSingletonScope();
-    this.container.bind(Email).toSelf().inSingletonScope();
+    this.container.bind(AllConfigFiles).toSelf();
+    this.container.bind(ConfigFile).toSelf();
+    this.container.bind(CommandFactory).toSelf();
+    this.container.bind(Docker).toSelf();
+    this.container.bind(FinalTerminal).toSelf();
+    this.container.bind(JobTerminals).toSelf();
+    this.container.bind(EnvPath).toSelf();
+    this.container.bind(JobFactory).toSelf();
+    this.container.bind(LogFactory).toSelf();
+    this.container.bind(WarningFactory).toSelf();
+    this.container.bind(License).toSelf();
+    this.container.bind(ProcessFile).toSelf();
+    this.container.bind(Config).toSelf();
+    this.container.bind(Spawn).toSelf();
+    this.container.bind(Workspace).toSelf();
+    this.container.bind(CommittedImages).toSelf();
+    this.container.bind(ParsedConfig).toSelf();
+    this.container.bind(AllJobs).toSelf();
+    this.container.bind(Email).toSelf();
     return this.container;
   }
 }
