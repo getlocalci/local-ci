@@ -4,6 +4,7 @@ import { injectable } from 'inversify';
 @injectable()
 export default class FakeOsGateway {
   os = {
+    arch: () => '',
     platform: () => '',
     type: () => '',
   };

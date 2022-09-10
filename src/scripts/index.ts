@@ -2,6 +2,7 @@ import scriptAddEnvVars from './addEnvVars.sh';
 import scriptDockerExecRunningContainer from './dockerExecRunningContainer.sh';
 import scriptGetPicardContainerFunction from './getPicardContainerFunction.sh';
 import scriptGetRunningContainerFunction from './getRunningContainerFunction.sh';
+import scriptWriteBuildAgentSettings from './writeBuildAgentSettings.sh';
 
 function stripBinSh(file: string) {
   return file.replace('^#!/bin/sh', '').replace(`^\n\n`, '');
@@ -16,4 +17,8 @@ export const getPicardContainerFunction = stripBinSh(
 );
 export const getRunningContainerFunction = stripBinSh(
   scriptGetRunningContainerFunction
+);
+
+export const writeBuildAgentSettings = stripBinSh(
+  scriptWriteBuildAgentSettings
 );

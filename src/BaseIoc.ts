@@ -1,25 +1,26 @@
 import { Container } from 'inversify';
-import ProcessFile from 'process/ProcessFile';
-import Config from 'config/Config';
-import EnvPath from 'common/EnvPath';
-import FinalTerminal from 'terminal/FinalTerminal';
-import JobTerminals from 'terminal/JobTerminals';
-import License from 'license/License';
-import Spawn from 'common/Spawn';
-import Workspace from 'common/Workspace';
+import AllConfigFiles from 'config/AllConfigFiles';
+import AllJobs from 'job/AllJobs';
+import BuildAgentSettings from 'config/BuildAgentSettings';
 import CommittedImages from 'containerization/CommittedImages';
 import CommandFactory from 'job/ComandFactory';
-import JobFactory from 'job/JobFactory';
-import LogFactory from 'log/LogFactory';
-import JobProviderFactory from 'job/JobProviderFactory';
-import WarningFactory from 'job/WarningFactory';
-import AllConfigFiles from 'config/AllConfigFiles';
+import Config from 'config/Config';
 import ConfigFile from 'config/ConfigFile';
 import Docker from 'containerization/Docker';
-import ParsedConfig from 'config/ParsedConfig';
-import AllJobs from 'job/AllJobs';
-import Types from 'common/Types';
 import Email from 'license/Email';
+import EnvPath from 'common/EnvPath';
+import FinalTerminal from 'terminal/FinalTerminal';
+import JobFactory from 'job/JobFactory';
+import JobProviderFactory from 'job/JobProviderFactory';
+import JobTerminals from 'terminal/JobTerminals';
+import License from 'license/License';
+import LogFactory from 'log/LogFactory';
+import ParsedConfig from 'config/ParsedConfig';
+import ProcessFile from 'process/ProcessFile';
+import Spawn from 'common/Spawn';
+import Types from 'common/Types';
+import WarningFactory from 'job/WarningFactory';
+import Workspace from 'common/Workspace';
 
 /**
  * Main dependency injection class.
@@ -41,6 +42,7 @@ export default class BaseIoc {
       .bind(Types.IJobProviderFactory)
       .toFactory(JobProviderFactory);
     this.container.bind(AllConfigFiles).toSelf();
+    this.container.bind(BuildAgentSettings).toSelf();
     this.container.bind(ConfigFile).toSelf();
     this.container.bind(CommandFactory).toSelf();
     this.container.bind(Docker).toSelf();

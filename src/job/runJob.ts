@@ -17,7 +17,7 @@ import getLocalVolumePath from 'containerization/getLocalVolumePath';
 import getProcessFilePath from 'process/getProcessFilePath';
 import getTerminalName from 'terminal/getTerminalName';
 import listenToJob from './listenToJob';
-import setBuildAgentSettings from 'config/setBuildAgentSettings';
+import setBuildAgentSettings from 'config/BuildAgentSettings';
 import showFinalTerminalHelperMessages from 'terminal/FinalTerminal';
 import JobClass from 'job/JobFactory';
 import {

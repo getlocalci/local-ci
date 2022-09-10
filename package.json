@@ -269,7 +269,7 @@
     "preuninstall": "node ./node/binaryUninstall.js",
     "lint": "npm-run-all --parallel lint:js lint:sh",
     "lint:js": "eslint src --ext ts",
-    "lint:js:fix": "npm run lint:js -- --fix",
+    "lint:fix": "npm run lint:js -- --fix",
     "lint:sh": "shellcheck src/scripts/*.sh",
     "test": "jest"
   },
