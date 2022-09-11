@@ -7,7 +7,7 @@ import { getBinaryPath } from '../node/binary';
 import Delayer from 'job/Delayer';
 import JobFactory from 'job/JobFactory';
 import JobProvider from 'job/JobProvider';
-import LicenseProvider from 'license/LicenseProvider';
+import LicenseProviderFactory from 'license/LicenseProviderFactory';
 import LogProvider from 'log/LogProvider';
 import {
   COMMITTED_IMAGE_NAMESPACE,
@@ -91,10 +91,10 @@ export function activate(context: vscode.ExtensionContext): void {
   const registrar = iocContainer.get(Registrar);
   context.subscriptions.push(
     reporter,
-    ...registrar.getRegisteredCommands(),
+    ...registrar.registerCommands(),
     vscode.workspace.registerTextDocumentContentProvider(
       LOG_FILE_SCHEME,
-      new LogProvider()
+      iocContainer.get(LogProvider)
     ),
     vscode.commands.registerCommand(`${JOB_TREE_VIEW_ID}.enterToken`, () => {
       const terminal = vscode.window.createTerminal({
@@ -356,7 +356,9 @@ export function activate(context: vscode.ExtensionContext): void {
   const licenseCompletedCallback = () => licenseProvider.load();
   const licenseSuccessCallback = () => jobProvider.hardRefresh();
   const licenseTreeViewId = 'localCiLicense';
-  const licenseProvider = new LicenseProvider(context, licenseSuccessCallback);
+  const licenseProvider = iocContainer
+    .get(LicenseProviderFactory)
+    .create(context, licenseSuccessCallback);
   vscode.window.registerWebviewViewProvider(licenseTreeViewId, licenseProvider);
 
   context.subscriptions.push(

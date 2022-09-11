@@ -16,7 +16,7 @@ export default class Registrar {
     @inject(TryProcessAgain) private tryProcessAgain: TryProcessAgain
   ) {}
 
-  getRegisteredCommands(): vscode.Disposable[] {
+  registerCommands(): vscode.Disposable[] {
     return [this.refresh, this.tryProcessAgain].map((command) => {
       return this.editorGateway.editor.commands.registerCommand(
         command.commandName,

@@ -15,6 +15,7 @@ import JobProviderFactory from 'job/JobProviderFactory';
 import JobTerminals from 'terminal/JobTerminals';
 import License from 'license/License';
 import LicenseInput from 'license/LicenseInput';
+import LicenseProviderFactory from 'license/LicenseProviderFactory';
 import LogFactory from 'log/LogFactory';
 import ParsedConfig from 'config/ParsedConfig';
 import ProcessFile from 'process/ProcessFile';
@@ -62,6 +63,7 @@ export default class BaseIoc {
     this.container.bind(LogFactory).toSelf();
     this.container.bind(License).toSelf();
     this.container.bind(LicenseInput).toSelf();
+    this.container.bind(LicenseProviderFactory).toSelf();
     this.container.bind(ParsedConfig).toSelf();
     this.container.bind(ProcessFile).toSelf();
     this.container.bind(Refresh).toSelf();

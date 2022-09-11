@@ -1,9 +1,10 @@
-import * as vscode from 'vscode';
+import type vscode from 'vscode';
 import { LICENSE_ERROR } from 'constants/';
 import getLicenseErrorMessage from 'license/getLicenseErrorMessage';
+import License from 'license/License';
+import LicenseInput from 'license/LicenseInput';
 import LicensePresenter from 'license/LicensePresenter';
-import isLicenseValid from 'license/License';
-import showLicenseInput from 'license/LicenseInput';
+import EditorGateway from 'common/EditorGateway';
 
 function getNonce() {
   const possible =
@@ -22,11 +23,14 @@ export default class LicenseProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = 'localCiLicense';
   private extensionUri: vscode.Uri;
   private webviewView?: vscode.WebviewView;
-  private licensePresenter!: LicensePresenter; // @todo: use a factory for this, and injecct the LicensePresenter
 
   constructor(
     private readonly context: vscode.ExtensionContext,
-    private licenseSuccessCallback: () => void
+    private licenseSuccessCallback: () => void,
+    private license: License,
+    private licenseInput: LicenseInput,
+    private licensePresenter: LicensePresenter,
+    private editorGateway: EditorGateway
   ) {
     this.extensionUri = context.extensionUri;
   }
@@ -42,7 +46,7 @@ export default class LicenseProvider implements vscode.WebviewViewProvider {
 
     webviewView.webview.onDidReceiveMessage(async (data) => {
       if (data.type === 'enterLicense') {
-        showLicenseInput(
+        this.licenseInput.show(
           this.context,
           () => this.load(),
           () => this.licenseSuccessCallback()
@@ -50,10 +54,10 @@ export default class LicenseProvider implements vscode.WebviewViewProvider {
       }
 
       if (data.type === 'retryLicenseValidation') {
-        const isValid = await isLicenseValid(this.context, true);
+        const isValid = await this.license.isValid(this.context, true);
 
         if (isValid) {
-          vscode.window.showInformationMessage(
+          this.editorGateway.editor.window.showInformationMessage(
             'Validation worked, your Local CI license key is valid and activated!'
           );
           this.load();
@@ -62,7 +66,7 @@ export default class LicenseProvider implements vscode.WebviewViewProvider {
           const warningMessage = `Sorry, validation didn't work. ${getLicenseErrorMessage(
             await this.context.secrets.get(LICENSE_ERROR)
           )}`;
-          vscode.window.showWarningMessage(warningMessage, {
+          this.editorGateway.editor.window.showWarningMessage(warningMessage, {
             detail: 'The license key is invalid',
           });
         }
@@ -85,10 +89,18 @@ export default class LicenseProvider implements vscode.WebviewViewProvider {
   private async _getHtmlForWebview(): Promise<string> {
     const webviewDirname = 'webview';
     const scriptUri = this.webviewView?.webview.asWebviewUri(
-      vscode.Uri.joinPath(this.extensionUri, webviewDirname, 'index.js')
+      this.editorGateway.editor.Uri.joinPath(
+        this.extensionUri,
+        webviewDirname,
+        'index.js'
+      )
     );
     const styleVSCodeUri = this.webviewView?.webview.asWebviewUri(
-      vscode.Uri.joinPath(this.extensionUri, webviewDirname, 'vscode.css')
+      this.editorGateway.editor.Uri.joinPath(
+        this.extensionUri,
+        webviewDirname,
+        'vscode.css'
+      )
     );
 
     // Use a nonce to only allow a specific script to be run.
@@ -110,7 +122,7 @@ export default class LicenseProvider implements vscode.WebviewViewProvider {
       <title>Local CI License Key</title>
     </head>
     <body>
-      ${await LicensePresenter(this.context)}
+      ${await this.licensePresenter.getView(this.context)}
       <script nonce="${nonce}" src="${scriptUri}"></script>
     </body>
     </html>`;
