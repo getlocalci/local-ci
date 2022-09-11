@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import type { Container } from 'inversify';
+import { Container } from 'inversify';
 import ChildProcessGateway from 'common/ChildProcessGateway';
 import EditorGateway from 'common/EditorGateway';
 import FsGateway from 'common/FsGateway';

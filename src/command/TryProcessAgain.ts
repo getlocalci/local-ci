@@ -1,5 +1,5 @@
-import type { Command } from 'index';
-import * as vscode from 'vscode';
+import type { Command } from './index';
+import type vscode from 'vscode';
 import { PROCESS_TRY_AGAIN_COMMAND } from 'constants/';
 import JobProvider from 'job/JobProvider';
 import { inject, injectable } from 'inversify';

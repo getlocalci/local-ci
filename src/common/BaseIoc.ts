@@ -47,30 +47,30 @@ export default class BaseIoc {
       .bind(Types.IJobProviderFactory)
       .toFactory(JobProviderFactory);
     this.container.bind(AllConfigFiles).toSelf();
+    this.container.bind(AllJobs).toSelf();
     this.container.bind(BuildAgentSettings).toSelf();
-    this.container.bind(ConfigFile).toSelf();
     this.container.bind(CommandFactory).toSelf();
+    this.container.bind(CommittedImages).toSelf();
+    this.container.bind(Config).toSelf();
+    this.container.bind(ConfigFile).toSelf();
     this.container.bind(Docker).toSelf();
-    this.container.bind(FinalTerminal).toSelf();
-    this.container.bind(JobTerminals).toSelf();
+    this.container.bind(Email).toSelf();
     this.container.bind(EnvPath).toSelf();
+    this.container.bind(FinalTerminal).toSelf();
     this.container.bind(JobFactory).toSelf();
+    this.container.bind(JobTerminals).toSelf();
     this.container.bind(LogFactory).toSelf();
-    this.container.bind(WarningFactory).toSelf();
     this.container.bind(License).toSelf();
     this.container.bind(LicenseInput).toSelf();
+    this.container.bind(ParsedConfig).toSelf();
     this.container.bind(ProcessFile).toSelf();
-    this.container.bind(Config).toSelf();
     this.container.bind(Refresh).toSelf();
     this.container.bind(Registrar).toSelf();
-    this.container.bind(TryProcessAgain).toSelf();
     this.container.bind(Spawn).toSelf();
-    this.container.bind(Workspace).toSelf();
-    this.container.bind(CommittedImages).toSelf();
-    this.container.bind(ParsedConfig).toSelf();
-    this.container.bind(AllJobs).toSelf();
+    this.container.bind(TryProcessAgain).toSelf();
     this.container.bind(UncommittedFile).toSelf();
-    this.container.bind(Email).toSelf();
+    this.container.bind(WarningFactory).toSelf();
+    this.container.bind(Workspace).toSelf();
 
     return this.container;
   }

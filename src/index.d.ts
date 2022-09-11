@@ -1,6 +1,3 @@
-import * as vscode from 'vscode';
-import JobProvider from 'job/JobProvider';
-
 interface SaveCache {
   key: string;
   paths: Array<string>;
@@ -85,11 +82,6 @@ interface DynamicCache {
   epoch: string;
 }
 
-interface Command {
-  commandName: string;
-  getCallback: (context: vscode.ExtensionContext, jobProvider: JobProvider) => () => void | Promise<void>;
-}
-
 interface SpawnOptions {
   cwd: string;
   env: {
@@ -111,5 +103,3 @@ declare module '*.yml' {
   const content: any;
   export = content;
 }
-
-declare module 'inversify';
