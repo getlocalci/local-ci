@@ -1,35 +1,48 @@
 import EnterToken from 'command/EnterToken';
 import ExitAllJobs from 'command/ExitAllJobs';
+import SelectRepo from 'command/SelectRepo';
 import EditorGateway from 'common/EditorGateway';
-import Types from 'common/Types';
-import { inject, injectable } from 'inversify';
 import JobProvider from 'job/JobProvider';
 import type vscode from 'vscode';
+import type { Command } from 'command/index';
 import Refresh from '../command/Refresh';
 import TryProcessAgain from '../command/TryProcessAgain';
+import LicenseProvider from 'license/LicenseProvider';
+import RunJob from 'command/RunJob';
+import ExitJob from 'command/ExitJob';
 
-@injectable()
 export default class Registrar {
   constructor(
     private context: vscode.ExtensionContext,
     private jobProvider: JobProvider,
-    @inject(Types.IEditorGateway) private editorGateway: EditorGateway,
-    @inject(EnterToken) private enterToken: EnterToken,
-    @inject(ExitAllJobs) private exitAllJobs: ExitAllJobs,
-    @inject(Refresh) private refresh: Refresh,
-    @inject(TryProcessAgain) private tryProcessAgain: TryProcessAgain
+    private licenseProvider: LicenseProvider,
+    private editorGateway: EditorGateway,
+    private enterToken: EnterToken,
+    private exitAllJobs: ExitAllJobs,
+    private exitJob: ExitJob,
+    private refresh: Refresh,
+    private runJob: RunJob,
+    private selectRepo: SelectRepo,
+    private tryProcessAgain: TryProcessAgain
   ) {}
 
   registerCommands(): vscode.Disposable[] {
     return [
-      this.refresh,
-      this.tryProcessAgain,
       this.enterToken,
       this.exitAllJobs,
-    ].map((command) => {
+      this.exitJob,
+      this.refresh,
+      this.runJob,
+      this.selectRepo,
+      this.tryProcessAgain,
+    ].map((command: Command) => {
       return this.editorGateway.editor.commands.registerCommand(
         command.commandName,
-        command.getCallback(this.context, this.jobProvider)
+        command.getCallback(
+          this.context,
+          this.jobProvider,
+          this.licenseProvider
+        )
       );
     });
   }

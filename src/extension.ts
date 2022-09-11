@@ -9,8 +9,8 @@ import JobProviderFactory from 'job/JobProviderFactory';
 import LicenseProviderFactory from 'license/LicenseProviderFactory';
 import LogProvider from 'log/LogProvider';
 import {
-  COMMITTED_IMAGE_NAMESPACE,
   CREATE_CONFIG_FILE_COMMAND,
+  DO_NOT_CONFIRM_RUN_JOB,
   ENTER_LICENSE_COMMAND,
   EXIT_JOB_COMMAND,
   EXTENSION_ID,
@@ -38,19 +38,17 @@ import getFinalTerminalName from 'terminal/getFinalTerminalName';
 import getRepoBasename from 'common/getRepoBasename';
 import getStarterConfig from 'config/getStarterConfig';
 import prepareConfig from 'config/Config';
-import runJob from 'job/runJob';
+import runJob from 'job/JobRunner';
 import showLicenseInput from 'license/LicenseInput';
 import showLogFile from 'log/showLogFile';
 import askForEmail from 'license/Email';
-import Registrar from 'common/Registrar';
+import RegistrarFactory from 'common/RegistrarFactory';
 
 const reporter = new TelemetryReporter(
   EXTENSION_ID,
   vscode.extensions.getExtension(EXTENSION_ID)?.packageJSON.version,
   TELEMETRY_KEY
 );
-
-const doNotConfirmRunJob = 'local-ci.job.do-not-confirm';
 
 export function activate(context: vscode.ExtensionContext): void {
   if (!context.globalState.get(TRIAL_STARTED_TIMESTAMP)) {
@@ -87,64 +85,11 @@ export function activate(context: vscode.ExtensionContext): void {
       vscode.window.registerTreeDataProvider(JOB_TREE_VIEW_ID, jobProvider)
     );
 
-  const registrar = iocContainer.get(Registrar);
   context.subscriptions.push(
     reporter,
-    ...registrar.registerCommands(),
     vscode.workspace.registerTextDocumentContentProvider(
       LOG_FILE_SCHEME,
       iocContainer.get(LogProvider)
-    ),
-    vscode.commands.registerCommand(
-      `${JOB_TREE_VIEW_ID}.selectRepo`,
-      async () => {
-        reporter.sendTelemetryEvent('selectRepo');
-
-        const createConfigText = 'Create a config for me';
-        const quickPick = vscode.window.createQuickPick();
-        const configFilePaths = await getAllConfigFilePaths(context);
-        quickPick.title = 'Repo to run CI on';
-        quickPick.items = configFilePaths.length
-          ? configFilePaths
-          : [
-              {
-                label: 'No config file found',
-                description:
-                  'A .circleci/config.yml file is needed to run Local CI',
-              },
-              {
-                label: createConfigText,
-              },
-            ];
-        quickPick.onDidChangeSelection((selection) => {
-          if (selection.length && selection[0].label === createConfigText) {
-            vscode.commands.executeCommand(CREATE_CONFIG_FILE_COMMAND);
-          }
-          if (
-            selection?.length &&
-            (selection[0] as ConfigFileQuickPick)?.fsPath
-          ) {
-            const selectedFsPath = (selection[0] as ConfigFileQuickPick)
-              ?.fsPath;
-            context.globalState
-              .update(SELECTED_CONFIG_PATH, selectedFsPath)
-              .then(() => {
-                jobProvider.hardRefresh();
-                vscode.window.showInformationMessage(
-                  `The repo ${getRepoBasename(selectedFsPath)} is now selected`
-                );
-
-                vscode.commands.executeCommand(
-                  'workbench.view.extension.localCiDebugger'
-                );
-              });
-          }
-
-          quickPick.dispose();
-        });
-        quickPick.onDidHide(() => quickPick.dispose());
-        quickPick.show();
-      }
     )
   );
 
@@ -152,59 +97,6 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.window.createTreeView(JOB_TREE_VIEW_ID, {
       treeDataProvider: jobProvider,
     }),
-    vscode.commands.registerCommand(
-      RUN_JOB_COMMAND,
-      async (jobName: string, job?: vscode.TreeItem) => {
-        if (!jobName) {
-          vscode.window.showWarningMessage(
-            'Please click a specific job to run it'
-          );
-          vscode.commands.executeCommand(
-            'workbench.view.extension.localCiDebugger'
-          );
-
-          return;
-        }
-
-        reporter.sendTelemetryEvent('runJob');
-
-        if (context.globalState.get(doNotConfirmRunJob)) {
-          runJob(context, jobName, jobProvider, job);
-          return;
-        }
-
-        const confirmText = 'Yes';
-        const dontAskAgainText = `Yes, don't ask again`;
-        vscode.window
-          .showInformationMessage(
-            `Do you want to run the job ${jobName}?`,
-            { modal: true },
-            { title: confirmText },
-            { title: dontAskAgainText }
-          )
-          .then((selection) => {
-            if (
-              selection?.title === confirmText ||
-              selection?.title === dontAskAgainText
-            ) {
-              runJob(context, jobName, jobProvider, job);
-            }
-
-            if (selection?.title === dontAskAgainText) {
-              context.globalState.update(doNotConfirmRunJob, true);
-            }
-          });
-      }
-    ),
-    vscode.commands.registerCommand(
-      EXIT_JOB_COMMAND,
-      (job: vscode.TreeItem) => {
-        const newJob = jobFactory.setIsNotRunning(job);
-        const jobName = jobFactory.getJobName(job);
-        jobProvider.refresh(job);
-        disposeTerminalsForJob(jobName);
-      }
-    ),
     vscode.commands.registerCommand(
       'local-ci.job.rerun',
       async (job: JobFactory) => {
@@ -218,7 +110,7 @@ export function activate(context: vscode.ExtensionContext): void {
           runJob(context, jobName, jobProvider, job);
         }
 
-        if (context.globalState.get(doNotConfirmRunJob)) {
+        if (context.globalState.get(DO_NOT_CONFIRM_RUN_JOB)) {
           rerunJob();
           return;
         }
@@ -239,7 +131,7 @@ export function activate(context: vscode.ExtensionContext): void {
             }
 
             if (selection?.title === dontAskAgainText) {
-              context.globalState.update(doNotConfirmRunJob, true);
+              context.globalState.update(DO_NOT_CONFIRM_RUN_JOB, true);
             }
           });
       }
@@ -316,9 +208,13 @@ export function activate(context: vscode.ExtensionContext): void {
   const licenseProvider = iocContainer
     .get(LicenseProviderFactory)
     .create(context, licenseSuccessCallback);
+  const registrar = iocContainer
+    .get(RegistrarFactory)
+    .create(context, jobProvider, licenseProvider);
   vscode.window.registerWebviewViewProvider(licenseTreeViewId, licenseProvider);
 
   context.subscriptions.push(
+    ...registrar.registerCommands(),
     vscode.commands.registerCommand(`${licenseTreeViewId}.refresh`, () => {
       licenseProvider.load();
     }),

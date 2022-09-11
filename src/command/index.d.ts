@@ -8,5 +8,5 @@ export interface Command {
     context: vscode.ExtensionContext,
     jobProvider: JobProvider,
     licenseProvider: LicenseProvider,
-  ) => () => void | Promise<void>;
+  ) => (arg0: any) => void | Promise<void>;
 }

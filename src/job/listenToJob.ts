@@ -47,7 +47,7 @@ function handleExit(
 export default function listenToJob(
   context: vscode.ExtensionContext,
   jobProvider: JobProvider,
-  job: Job | undefined,
+  job: vscode.TreeItem | undefined,
   commitProcess: cp.ChildProcess,
   doesJobCreateDynamicConfig: boolean,
   jobConfigPath: string,

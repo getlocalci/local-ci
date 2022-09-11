@@ -14,6 +14,7 @@ export const EMAIL_ENDPOINT =
   'https://getlocalci.com/wp-json/gf-integration/v1/email';
 export const HELP_URL = 'https://github.com/getlocalci/local-ci/discussions';
 export const JOB_TREE_VIEW_ID = 'localCiJobs';
+export const DO_NOT_CONFIRM_RUN_JOB = 'local-ci.job.do-not-confirm';
 export const LICENSE_ITEM_ID = 43;
 export const LICENSE_KEY = 'local-ci.license.key';
 export const LICENSE_VALIDITY = 'local-ci.license.validity';

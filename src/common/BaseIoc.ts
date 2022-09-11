@@ -9,9 +9,11 @@ import ConfigFile from 'config/ConfigFile';
 import Docker from 'containerization/Docker';
 import Email from 'license/Email';
 import EnvPath from 'common/EnvPath';
+import ExitJob from 'command/ExitJob';
 import FinalTerminal from 'terminal/FinalTerminal';
 import JobFactory from 'job/JobFactory';
 import JobProviderFactory from 'job/JobProviderFactory';
+import JobRunner from 'job/JobRunner';
 import JobTerminals from 'terminal/JobTerminals';
 import License from 'license/License';
 import LicenseInput from 'license/LicenseInput';
@@ -20,7 +22,8 @@ import LogFactory from 'log/LogFactory';
 import ParsedConfig from 'config/ParsedConfig';
 import ProcessFile from 'process/ProcessFile';
 import Refresh from 'command/Refresh';
-import Registrar from 'common/Registrar';
+import RegistrarFactory from 'common/RegistrarFactory';
+import RunJob from 'command/RunJob';
 import Spawn from 'common/Spawn';
 import TryProcessAgain from 'command/TryProcessAgain';
 import UncommittedFile from 'containerization/UncommittedFile';
@@ -28,6 +31,7 @@ import WarningFactory from 'job/WarningFactory';
 import Workspace from 'common/Workspace';
 import EnterToken from 'command/EnterToken';
 import ExitAllJobs from 'command/ExitAllJobs';
+import SelectRepo from 'command/SelectRepo';
 
 /**
  * Main dependency injection class.
@@ -57,9 +61,11 @@ export default class BaseIoc {
     this.container.bind(EnterToken).toSelf();
     this.container.bind(EnvPath).toSelf();
     this.container.bind(ExitAllJobs).toSelf();
+    this.container.bind(ExitJob).toSelf();
     this.container.bind(FinalTerminal).toSelf();
     this.container.bind(JobFactory).toSelf();
     this.container.bind(JobProviderFactory).toSelf();
+    this.container.bind(JobRunner).toSelf();
     this.container.bind(JobTerminals).toSelf();
     this.container.bind(LogFactory).toSelf();
     this.container.bind(License).toSelf();
@@ -68,7 +74,9 @@ export default class BaseIoc {
     this.container.bind(ParsedConfig).toSelf();
     this.container.bind(ProcessFile).toSelf();
     this.container.bind(Refresh).toSelf();
-    this.container.bind(Registrar).toSelf();
+    this.container.bind(RegistrarFactory).toSelf();
+    this.container.bind(RunJob).toSelf();
+    this.container.bind(SelectRepo).toSelf();
     this.container.bind(Spawn).toSelf();
     this.container.bind(TryProcessAgain).toSelf();
     this.container.bind(UncommittedFile).toSelf();
