@@ -5,5 +5,4 @@ export default {
   IHttpGateway: Symbol.for('IHttpGateway'),
   IOsGateway: Symbol.for('IOsGateway'),
   IProcessGateway: Symbol.for('IProcessGateway'),
-  IJobProviderFactory: Symbol.for('IJobProviderFactory'),
 };

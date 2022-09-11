@@ -4,7 +4,6 @@ import TelemetryReporter from '@vscode/extension-telemetry';
 import JobFactory from 'job/JobFactory';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
 import JobProviderFactory from 'job/JobProviderFactory';
-import Types from 'common/Types';
 
 function getStubs(): [vscode.ExtensionContext, TelemetryReporter] {
   return [
@@ -14,7 +13,7 @@ function getStubs(): [vscode.ExtensionContext, TelemetryReporter] {
 }
 
 let testHarness: AppTestHarness;
-let jobProviderFactory: ReturnType<typeof JobProviderFactory>;
+let jobProviderFactory: JobProviderFactory;
 let jobFactory: JobFactory;
 
 describe('JobProvider', () => {
@@ -22,15 +21,15 @@ describe('JobProvider', () => {
     testHarness = new AppTestHarness();
     testHarness.init();
     jobFactory = testHarness.container.get(JobFactory);
-    jobProviderFactory = testHarness.container.get(Types.IJobProviderFactory);
+    jobProviderFactory = testHarness.container.get(JobProviderFactory);
   });
 
   test('no element passed', () => {
-    expect(jobProviderFactory(...getStubs()).getChildren()).toEqual([]);
+    expect(jobProviderFactory.create(...getStubs()).getChildren()).toEqual([]);
   });
 
   test('no child', () => {
-    const provider = jobProviderFactory(...getStubs());
+    const provider = jobProviderFactory.create(...getStubs());
     expect(
       provider.getChildren(jobFactory.create('foo', false, false))
     ).toEqual([]);
@@ -42,9 +41,9 @@ describe('JobProvider', () => {
     allJobs.set('baz', ['foo']);
     allJobs.set('example', ['foo']);
 
-    const children = jobProviderFactory(...getStubs(), allJobs).getChildren(
-      jobFactory.create('foo', false, false)
-    );
+    const children = jobProviderFactory
+      .create(...getStubs(), allJobs)
+      .getChildren(jobFactory.create('foo', false, false));
     expect(children.length).toEqual(2);
 
     expect(jobFactory.getJobName(children[0])).toEqual('baz');

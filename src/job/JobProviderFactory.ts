@@ -10,32 +10,71 @@ import CommandFactory from './ComandFactory';
 import JobFactory from './JobFactory';
 import WarningFactory from './WarningFactory';
 import TelemetryReporter from '@vscode/extension-telemetry';
-import JobProvider from './JobProvider';
 import AllJobs from './AllJobs';
-import { interfaces } from 'inversify';
+import { inject, injectable } from 'inversify';
+import FsGateway from 'common/FsGateway';
+import EditorGateway from 'common/EditorGateway';
+import JobProvider from './JobProvider';
 
-export default function JobProviderFactory(iocContext: interfaces.Context) {
-  return (
+@injectable()
+export default class JobProviderFactory {
+  @inject(AllConfigFiles)
+  allConfigFiles!: AllConfigFiles;
+
+  @inject(ConfigFile)
+  configFile!: ConfigFile;
+
+  @inject(CommandFactory)
+  commandFactory!: CommandFactory;
+
+  @inject(Docker)
+  docker!: Docker;
+
+  @inject(Types.IEditorGateway)
+  editorGateway!: EditorGateway;
+
+  @inject(Types.IFsGateway)
+  fsGateway!: FsGateway;
+
+  @inject(License)
+  license!: License;
+
+  @inject(Config)
+  config!: Config;
+
+  @inject(JobFactory)
+  jobFactory!: JobFactory;
+
+  @inject(LogFactory)
+  logFactory!: LogFactory;
+
+  @inject(WarningFactory)
+  warningFactory!: WarningFactory;
+
+  @inject(AllJobs)
+  allJobs!: AllJobs;
+
+  create(
     context: vscode.ExtensionContext,
     reporter: TelemetryReporter,
     jobDependencies?: Map<string, string[] | null>
-  ) => {
+  ) {
     return new JobProvider(
       context,
       reporter,
-      iocContext.container.get(AllConfigFiles),
-      iocContext.container.get(ConfigFile),
-      iocContext.container.get(CommandFactory),
-      iocContext.container.get(Docker),
-      iocContext.container.get(Types.IEditorGateway),
-      iocContext.container.get(Types.IFsGateway),
-      iocContext.container.get(License),
-      iocContext.container.get(Config),
-      iocContext.container.get(JobFactory),
-      iocContext.container.get(LogFactory),
-      iocContext.container.get(WarningFactory),
-      iocContext.container.get(AllJobs),
+      this.allConfigFiles,
+      this.configFile,
+      this.commandFactory,
+      this.docker,
+      this.editorGateway,
+      this.fsGateway,
+      this.license,
+      this.config,
+      this.jobFactory,
+      this.logFactory,
+      this.warningFactory,
+      this.allJobs,
       jobDependencies
     );
-  };
+  }
 }
