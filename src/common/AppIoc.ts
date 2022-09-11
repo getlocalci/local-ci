@@ -5,7 +5,7 @@ import EditorGateway from 'common/EditorGateway';
 import FsGateway from 'common/FsGateway';
 import HttpGateway from 'common/HttpGateway';
 import ProcessGateway from 'common/ProcessGateway';
-import BaseIoc from 'BaseIoc';
+import BaseIoc from 'common/BaseIoc';
 import Types from 'common/Types';
 
 export const container: Container = new BaseIoc().buildBaseTemplate();

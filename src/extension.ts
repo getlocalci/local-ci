@@ -1,4 +1,4 @@
-import { container as iocContainer } from 'AppIoc';
+import { container as iocContainer } from 'common/AppIoc';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
@@ -44,7 +44,7 @@ import runJob from 'job/runJob';
 import showLicenseInput from 'license/LicenseInput';
 import showLogFile from 'log/showLogFile';
 import askForEmail from 'license/Email';
-import { container } from 'AppIoc';
+import { container } from 'common/AppIoc';
 import Registrar from 'common/Registrar';
 
 const reporter = new TelemetryReporter(

@@ -1,5 +1,5 @@
 import Types from 'common/Types';
-import BaseIOC from 'BaseIoc';
+import BaseIOC from 'common/BaseIoc';
 import FakeEditorGateway from 'common/FakeEditorGateway';
 import FakeFsGateway from 'common/FakeFsGateway';
 import FakeChildProcessGateway from 'common/FakeChildProcessGateway';
