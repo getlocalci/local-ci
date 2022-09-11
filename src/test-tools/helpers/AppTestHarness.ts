@@ -4,20 +4,20 @@ import FakeEditorGateway from 'common/FakeEditorGateway';
 import FakeFsGateway from 'common/FakeFsGateway';
 import FakeChildProcessGateway from 'common/FakeChildProcessGateway';
 import FakeOsGateway from 'common/FakeOsGateway';
-import ProcessGateway from 'common/ProcessGateway';
 import FakeProcessGateway from 'common/FakeProcessGateway';
-import HttpGateway from 'common/HttpGateway';
 import FakeHttpGateway from 'common/FakeHttpGateway';
 import { Container } from 'inversify';
+import FakeReporterGateway from 'common/FakeReporterGateway';
 
 export default class AppTestHarness {
   container!: Container;
   childProcessGateway!: FakeChildProcessGateway;
   editorGateway!: FakeEditorGateway;
   fsGateway!: FakeFsGateway;
-  httpGateway!: HttpGateway;
+  httpGateway!: FakeHttpGateway;
   osGateway!: FakeOsGateway;
-  processGateway!: ProcessGateway;
+  processGateway!: FakeProcessGateway;
+  reporterGateway!: FakeReporterGateway;
 
   init() {
     this.container = new BaseIOC().buildBaseTemplate();
@@ -39,6 +39,10 @@ export default class AppTestHarness {
       .bind(Types.IProcessGateway)
       .to(FakeProcessGateway)
       .inSingletonScope();
+    this.container
+      .bind(Types.IReporterGateway)
+      .to(FakeReporterGateway)
+      .inSingletonScope();
 
     this.childProcessGateway = this.container.get(Types.IChildProcessGateway);
     this.editorGateway = this.container.get(Types.IEditorGateway);
@@ -46,5 +50,6 @@ export default class AppTestHarness {
     this.httpGateway = this.container.get(Types.IHttpGateway);
     this.osGateway = this.container.get(Types.IOsGateway);
     this.processGateway = this.container.get(Types.IProcessGateway);
+    this.reporterGateway = this.container.get(Types.IReporterGateway);
   }
 }

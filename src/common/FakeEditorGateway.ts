@@ -5,6 +5,9 @@ import { injectable } from 'inversify';
 @injectable()
 export default class FakeEditorGateway {
   editor = {
+    env: {
+      openExternal: () => null,
+    },
     EventEmitter: class {},
     ThemeIcon: class {},
     TreeItem: class {
@@ -27,6 +30,7 @@ export default class FakeEditorGateway {
     },
     Uri: {
       file: (path: string) => path,
+      parse: (path: string) => path,
     },
   };
 }

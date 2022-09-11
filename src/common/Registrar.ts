@@ -1,3 +1,4 @@
+import EnterToken from 'command/EnterToken';
 import EditorGateway from 'common/EditorGateway';
 import Types from 'common/Types';
 import { inject, injectable } from 'inversify';
@@ -12,16 +13,19 @@ export default class Registrar {
     private context: vscode.ExtensionContext,
     private jobProvider: JobProvider,
     @inject(Types.IEditorGateway) private editorGateway: EditorGateway,
+    @inject(EnterToken) private enterToken: EnterToken,
     @inject(Refresh) private refresh: Refresh,
     @inject(TryProcessAgain) private tryProcessAgain: TryProcessAgain
   ) {}
 
   registerCommands(): vscode.Disposable[] {
-    return [this.refresh, this.tryProcessAgain].map((command) => {
-      return this.editorGateway.editor.commands.registerCommand(
-        command.commandName,
-        command.getCallback(this.context, this.jobProvider)
-      );
-    });
+    return [this.refresh, this.tryProcessAgain, this.enterToken].map(
+      (command) => {
+        return this.editorGateway.editor.commands.registerCommand(
+          command.commandName,
+          command.getCallback(this.context, this.jobProvider)
+        );
+      }
+    );
   }
 }

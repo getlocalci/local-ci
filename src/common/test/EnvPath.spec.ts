@@ -1,12 +1,12 @@
 import EnvPath from 'common/EnvPath';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
 import FakeOsGateway from 'common/FakeOsGateway';
-import ProcessGateway from 'common/ProcessGateway';
+import FakeProcessGateway from 'common/FakeProcessGateway';
 
 let testHarness: AppTestHarness;
 let envPath: EnvPath;
 let osGateway: FakeOsGateway;
-let processGateway: ProcessGateway;
+let processGateway: FakeProcessGateway;
 
 describe('EnvPath', () => {
   beforeEach(() => {

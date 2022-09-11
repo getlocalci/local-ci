@@ -1,7 +1,12 @@
 import JobProvider from 'job/JobProvider';
-import * as vscode from 'vscode';
+import LicenseProvider from 'license/LicenseProvider';
+import type vscode from 'vscode';
 
 export interface Command {
   commandName: string;
-  getCallback: (context: vscode.ExtensionContext, jobProvider: JobProvider) => () => void | Promise<void>;
+  getCallback: (
+    context: vscode.ExtensionContext,
+    jobProvider: JobProvider,
+    licenseProvider: LicenseProvider,
+  ) => () => void | Promise<void>;
 }
