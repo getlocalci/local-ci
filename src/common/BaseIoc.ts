@@ -26,6 +26,8 @@ import TryProcessAgain from 'command/TryProcessAgain';
 import UncommittedFile from 'containerization/UncommittedFile';
 import WarningFactory from 'job/WarningFactory';
 import Workspace from 'common/Workspace';
+import EnterToken from 'command/EnterToken';
+import ExitAllJobs from 'command/ExitAllJobs';
 
 /**
  * Main dependency injection class.
@@ -52,7 +54,9 @@ export default class BaseIoc {
     this.container.bind(ConfigFile).toSelf();
     this.container.bind(Docker).toSelf();
     this.container.bind(Email).toSelf();
+    this.container.bind(EnterToken).toSelf();
     this.container.bind(EnvPath).toSelf();
+    this.container.bind(ExitAllJobs).toSelf();
     this.container.bind(FinalTerminal).toSelf();
     this.container.bind(JobFactory).toSelf();
     this.container.bind(JobProviderFactory).toSelf();

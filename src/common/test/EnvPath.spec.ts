@@ -41,17 +41,17 @@ describe('EnvPath', () => {
   });
 
   describe('isMac', () => {
-    test('mac', async () => {
+    test('mac', () => {
       osGateway.os.type = () => 'Darwin';
       expect(envPath.isMac());
     });
 
-    test('linux', async () => {
+    test('linux', () => {
       osGateway.os.type = () => 'Linux';
       expect(envPath.isMac()).toEqual(false);
     });
 
-    test('windows', async () => {
+    test('windows', () => {
       osGateway.os.type = () => 'Windows_NT';
       expect(envPath.isMac()).toEqual(false);
     });

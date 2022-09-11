@@ -3,7 +3,6 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import TelemetryReporter from '@vscode/extension-telemetry';
-import { getBinaryPath } from '../node/binary';
 import Delayer from 'job/Delayer';
 import JobFactory from 'job/JobFactory';
 import JobProviderFactory from 'job/JobProviderFactory';
@@ -44,8 +43,6 @@ import showLicenseInput from 'license/LicenseInput';
 import showLogFile from 'log/showLogFile';
 import askForEmail from 'license/Email';
 import Registrar from 'common/Registrar';
-import Types from 'common/Types';
-import JobProvider from 'job/JobProvider';
 
 const reporter = new TelemetryReporter(
   EXTENSION_ID,
@@ -98,35 +95,6 @@ export function activate(context: vscode.ExtensionContext): void {
       LOG_FILE_SCHEME,
       iocContainer.get(LogProvider)
     ),
-    vscode.commands.registerCommand(`${JOB_TREE_VIEW_ID}.help`, () => {
-      reporter.sendTelemetryEvent('help');
-      vscode.env.openExternal(vscode.Uri.parse(HELP_URL));
-    }),
-    vscode.commands.registerCommand(`${JOB_TREE_VIEW_ID}.exitAllJobs`, () => {
-      reporter.sendTelemetryEvent('exitAllJobs');
-      jobProvider.hardRefresh();
-
-      const confirmText = 'Yes';
-      vscode.window
-        .showWarningMessage(
-          'Are you sure you want to exit all jobs?',
-          { modal: true },
-          { title: confirmText }
-        )
-        .then((selection) => {
-          if (selection?.title === confirmText) {
-            vscode.window.terminals.forEach((terminal) => {
-              if (
-                terminal.name.startsWith('Local CI') &&
-                !terminal.exitStatus
-              ) {
-                terminal.dispose();
-              }
-            });
-            cleanUpCommittedImages(`${COMMITTED_IMAGE_NAMESPACE}/*`);
-          }
-        });
-    }),
     vscode.commands.registerCommand(
       `${JOB_TREE_VIEW_ID}.selectRepo`,
       async () => {
