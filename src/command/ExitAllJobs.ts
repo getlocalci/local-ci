@@ -11,18 +11,18 @@ import CommittedImages from 'containerization/CommittedImages';
 @injectable()
 export default class ExitAllJobs implements Command {
   @inject(Types.IEditorGateway)
-  editorGateway!: EditorGateway
+  editorGateway!: EditorGateway;
 
   @inject(Types.IReporterGateway)
-  reporterGateway!: ReporterGateway
+  reporterGateway!: ReporterGateway;
 
   @inject(CommittedImages)
-  committedImages!: CommittedImages
+  committedImages!: CommittedImages;
 
   commandName: string;
 
   constructor() {
-    this.commandName = `${JOB_TREE_VIEW_ID}.exitAllJobs`
+    this.commandName = `${JOB_TREE_VIEW_ID}.exitAllJobs`;
   }
 
   getCallback(context: vscode.ExtensionContext, jobProvider: JobProvider) {
@@ -31,8 +31,8 @@ export default class ExitAllJobs implements Command {
       jobProvider.hardRefresh();
 
       const confirmText = 'Yes';
-      const selection = await this.editorGateway.editor.window
-        .showWarningMessage(
+      const selection =
+        await this.editorGateway.editor.window.showWarningMessage(
           'Are you sure you want to exit all jobs?',
           { modal: true },
           { title: confirmText }
@@ -41,9 +41,9 @@ export default class ExitAllJobs implements Command {
       if (selection?.title === confirmText) {
         this.editorGateway.editor.window.terminals
           .filter((terminal) => {
-            return terminal.name.startsWith('Local CI') &&
-              !terminal.exitStatus;
-          }).forEach((terminal) => {
+            return terminal.name.startsWith('Local CI') && !terminal.exitStatus;
+          })
+          .forEach((terminal) => {
             terminal.dispose();
           });
 

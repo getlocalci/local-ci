@@ -26,13 +26,11 @@ export default class Registrar {
       this.tryProcessAgain,
       this.enterToken,
       this.exitAllJobs,
-    ].map(
-      (command) => {
-        return this.editorGateway.editor.commands.registerCommand(
-          command.commandName,
-          command.getCallback(this.context, this.jobProvider)
-        );
-      }
-    );
+    ].map((command) => {
+      return this.editorGateway.editor.commands.registerCommand(
+        command.commandName,
+        command.getCallback(this.context, this.jobProvider)
+      );
+    });
   }
 }
