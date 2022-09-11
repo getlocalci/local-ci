@@ -6,7 +6,7 @@ import TelemetryReporter from '@vscode/extension-telemetry';
 import { getBinaryPath } from '../node/binary';
 import Delayer from 'job/Delayer';
 import JobFactory from 'job/JobFactory';
-import JobProvider from 'job/JobProvider';
+import JobProviderFactory from 'job/JobProviderFactory';
 import LicenseProviderFactory from 'license/LicenseProviderFactory';
 import LogProvider from 'log/LogProvider';
 import {
@@ -46,6 +46,9 @@ import showLogFile from 'log/showLogFile';
 import askForEmail from 'license/Email';
 import { container } from 'common/AppIoc';
 import Registrar from 'common/Registrar';
+import JobProviderFactory from 'job/JobProviderFactory';
+import Types from 'common/Types';
+import JobProvider from 'job/JobProvider';
 
 const reporter = new TelemetryReporter(
   EXTENSION_ID,
@@ -81,9 +84,9 @@ export function activate(context: vscode.ExtensionContext): void {
 
   const jobFactory: JobFactory = container.get(JobFactory);
   reporter.sendTelemetryEvent('activate');
-  const jobProvider = new JobProvider();
+  const jobProvider = container.get(JobProviderFactory).create(context, reporter);
   jobProvider
-    .init(context, reporter)
+    .init()
     .then(() =>
       vscode.window.registerTreeDataProvider(JOB_TREE_VIEW_ID, jobProvider)
     );

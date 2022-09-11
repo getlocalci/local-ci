@@ -44,9 +44,6 @@ export default class BaseIoc {
   }
 
   buildBaseTemplate(): Container {
-    this.container
-      .bind(Types.IJobProviderFactory)
-      .toFactory(JobProviderFactory);
     this.container.bind(AllConfigFiles).toSelf();
     this.container.bind(AllJobs).toSelf();
     this.container.bind(BuildAgentSettings).toSelf();
@@ -59,6 +56,7 @@ export default class BaseIoc {
     this.container.bind(EnvPath).toSelf();
     this.container.bind(FinalTerminal).toSelf();
     this.container.bind(JobFactory).toSelf();
+    this.container.bind(JobProviderFactory).toSelf();
     this.container.bind(JobTerminals).toSelf();
     this.container.bind(LogFactory).toSelf();
     this.container.bind(License).toSelf();
