@@ -23,7 +23,6 @@ import Refresh from 'command/Refresh';
 import Registrar from 'common/Registrar';
 import Spawn from 'common/Spawn';
 import TryProcessAgain from 'command/TryProcessAgain';
-import Types from 'common/Types';
 import UncommittedFile from 'containerization/UncommittedFile';
 import WarningFactory from 'job/WarningFactory';
 import Workspace from 'common/Workspace';

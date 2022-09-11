@@ -44,9 +44,7 @@ import runJob from 'job/runJob';
 import showLicenseInput from 'license/LicenseInput';
 import showLogFile from 'log/showLogFile';
 import askForEmail from 'license/Email';
-import { container } from 'common/AppIoc';
 import Registrar from 'common/Registrar';
-import JobProviderFactory from 'job/JobProviderFactory';
 import Types from 'common/Types';
 import JobProvider from 'job/JobProvider';
 
@@ -82,9 +80,11 @@ export function activate(context: vscode.ExtensionContext): void {
       });
   }
 
-  const jobFactory: JobFactory = container.get(JobFactory);
+  const jobFactory: JobFactory = iocContainer.get(JobFactory);
   reporter.sendTelemetryEvent('activate');
-  const jobProvider = container.get(JobProviderFactory).create(context, reporter);
+  const jobProvider = iocContainer
+    .get(JobProviderFactory)
+    .create(context, reporter);
   jobProvider
     .init()
     .then(() =>

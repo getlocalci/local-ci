@@ -41,9 +41,9 @@ describe('JobProvider', () => {
     allJobs.set('baz', ['foo']);
     allJobs.set('example', ['foo']);
 
-    const children = jobProviderFactory.create(...getStubs(), allJobs).getChildren(
-      jobFactory.create('foo', false, false)
-    );
+    const children = jobProviderFactory
+      .create(...getStubs(), allJobs)
+      .getChildren(jobFactory.create('foo', false, false));
     expect(children.length).toEqual(2);
 
     expect(jobFactory.getJobName(children[0])).toEqual('baz');

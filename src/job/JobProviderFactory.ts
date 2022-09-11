@@ -40,10 +40,10 @@ export default class JobProviderFactory {
   license!: License;
 
   @inject(Config)
-  config!: Config
+  config!: Config;
 
   @inject(JobFactory)
-  jobFactory!: JobFactory
+  jobFactory!: JobFactory;
 
   @inject(LogFactory)
   logFactory!: LogFactory;
@@ -76,5 +76,5 @@ export default class JobProviderFactory {
       this.allJobs,
       jobDependencies
     );
-  };
+  }
 }
