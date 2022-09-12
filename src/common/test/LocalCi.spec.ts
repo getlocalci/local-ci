@@ -18,7 +18,7 @@ describe('LocalCi', () => {
   });
 
   describe('activate', () => {
-    test('registersCommands', () => {
+    test('registers commands', () => {
       const expectedCommands = [
         'local-ci.create.config',
         'local-ci.debug.repo',
@@ -42,13 +42,13 @@ describe('LocalCi', () => {
       editorGateway.editor.commands.registerCommand = spy;
       localCi.activate(getContext());
 
-      const registeredCommands = spy.mock.calls.map((call) => {
+      const actualRegisteredCommands = spy.mock.calls.map((call) => {
         return call[0];
       });
 
       expect(
         expectedCommands.every((command) => {
-          if (registeredCommands.includes(command)) {
+          if (actualRegisteredCommands.includes(command)) {
             return true;
           }
 

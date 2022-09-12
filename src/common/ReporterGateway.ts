@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
 import { injectable } from 'inversify';
-
 import TelemetryReporter from '@vscode/extension-telemetry';
 import { EXTENSION_ID, TELEMETRY_KEY } from 'constants/';
 
