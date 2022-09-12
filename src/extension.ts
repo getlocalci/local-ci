@@ -19,6 +19,7 @@ import {
   HELP_URL,
   HOST_TMP_DIRECTORY,
   JOB_TREE_VIEW_ID,
+  LICENSE_TREE_VIEW_ID,
   LOG_FILE_SCHEME,
   RUN_JOB_COMMAND,
   SELECTED_CONFIG_PATH,
@@ -44,12 +45,6 @@ import showLogFile from 'log/LogFile';
 import askForEmail from 'license/Email';
 import RegistrarFactory from 'common/RegistrarFactory';
 
-const reporter = new TelemetryReporter(
-  EXTENSION_ID,
-  vscode.extensions.getExtension(EXTENSION_ID)?.packageJSON.version,
-  TELEMETRY_KEY
-);
-
 export function activate(context: vscode.ExtensionContext): void {
   if (!context.globalState.get(TRIAL_STARTED_TIMESTAMP)) {
     context.globalState.update(TRIAL_STARTED_TIMESTAMP, new Date().getTime());
@@ -74,148 +69,28 @@ export function activate(context: vscode.ExtensionContext): void {
       });
   }
 
-  const jobFactory: JobFactory = iocContainer.get(JobFactory);
   reporter.sendTelemetryEvent('activate');
   const jobProvider = iocContainer
     .get(JobProviderFactory)
     .create(context, reporter);
-  jobProvider
-    .init()
-    .then(() =>
-      vscode.window.registerTreeDataProvider(JOB_TREE_VIEW_ID, jobProvider)
-    );
+  jobProvider.init();
 
-  context.subscriptions.push(
-    reporter,
-    vscode.workspace.registerTextDocumentContentProvider(
-      LOG_FILE_SCHEME,
-      iocContainer.get(LogProvider)
-    )
-  );
-
-  context.subscriptions.push(
-    vscode.window.createTreeView(JOB_TREE_VIEW_ID, {
-      treeDataProvider: jobProvider,
-    }),
-    vscode.commands.registerCommand(
-      'local-ci.job.rerun',
-      async (job: JobFactory) => {
-        const jobName = job.getJobName();
-        const confirmText = 'Yes';
-        const dontAskAgainText = `Yes, don't ask again`;
-
-        async function rerunJob() {
-          reporter.sendTelemetryEvent('rerunJob');
-          disposeTerminalsForJob(jobName);
-          runJob(context, jobName, jobProvider, job);
-        }
-
-        if (context.globalState.get(DO_NOT_CONFIRM_RUN_JOB)) {
-          rerunJob();
-          return;
-        }
-
-        vscode.window
-          .showInformationMessage(
-            `Do you want to rerun the job ${jobName}?`,
-            { modal: true },
-            { title: confirmText },
-            { title: dontAskAgainText }
-          )
-          .then(async (selection) => {
-            if (
-              selection?.title === confirmText ||
-              selection?.title === dontAskAgainText
-            ) {
-              rerunJob();
-            }
-
-            if (selection?.title === dontAskAgainText) {
-              context.globalState.update(DO_NOT_CONFIRM_RUN_JOB, true);
-            }
-          });
-      }
-    ),
-    vscode.commands.registerCommand(
-      'local-ci.debug.repo',
-      (clickedFile: vscode.Uri) => {
-        reporter.sendTelemetryEvent('click.debugRepo');
-        if (clickedFile.fsPath) {
-          context.globalState
-            .update(SELECTED_CONFIG_PATH, clickedFile.fsPath)
-            .then(() => {
-              jobProvider.hardRefresh();
-              vscode.commands.executeCommand(
-                'workbench.view.extension.localCiDebugger'
-              );
-            });
-        }
-      }
-    ),
-    vscode.commands.registerCommand('local-ci.runWalkthroughJob', async () => {
-      reporter.sendTelemetryEvent('runWalkthroughJob');
-      const configFilePath = await getConfigFilePath(context);
-      const { processedConfig } = prepareConfig(configFilePath, reporter);
-
-      const checkoutJobs = getCheckoutJobs(getConfig(processedConfig));
-      if (!checkoutJobs.length) {
-        return;
-      }
-
-      const jobName = checkoutJobs[0];
-      jobProvider.setRunningJob(jobName);
-
-      vscode.commands.executeCommand(
-        'workbench.view.extension.localCiDebugger'
-      );
-      vscode.commands.executeCommand(RUN_JOB_COMMAND, jobName);
-      vscode.window.showInformationMessage(
-        `👈 The job ${jobName} is now running in your local`
-      );
-
-      vscode.window.onDidOpenTerminal(async (terminal) => {
-        if (terminal.name === getDebuggingTerminalName(jobName)) {
-          terminal.show();
-          vscode.window.showInformationMessage(
-            `👈 Here's an interactive bash shell of the job. Enter something, like whoami`
-          );
-        } else if (terminal.name === getFinalTerminalName(jobName)) {
-          terminal.show();
-          vscode.window.showInformationMessage(
-            `👈 Here's another bash shell now that the job exited`
-          );
-        }
-      });
-    })
-  );
+  context.subscriptions.push(reporter);
 
   // When saving .circlci/config.yml, this refreshes the jobs tree.
-  const delayer = new Delayer(2000);
-  vscode.workspace.onDidSaveTextDocument(
-    async (textDocument: vscode.TextDocument): Promise<void> => {
-      if (
-        textDocument.uri.fsPath.endsWith('.circleci/config.yml') &&
-        textDocument.uri.fsPath === (await getConfigFilePath(context))
-      ) {
-        delayer.trigger(() => jobProvider.hardRefresh(undefined, true));
-      }
-    }
-  );
-
   const licenseCompletedCallback = () => licenseProvider.load();
   const licenseSuccessCallback = () => jobProvider.hardRefresh();
-  const licenseTreeViewId = 'localCiLicense';
   const licenseProvider = iocContainer
     .get(LicenseProviderFactory)
     .create(context, licenseSuccessCallback);
   const registrar = iocContainer
     .get(RegistrarFactory)
     .create(context, jobProvider, licenseProvider);
-  vscode.window.registerWebviewViewProvider(licenseTreeViewId, licenseProvider);
 
   context.subscriptions.push(
     ...registrar.registerCommands(),
-    vscode.commands.registerCommand(`${licenseTreeViewId}.refresh`, () => {
+    ...registrar.registerProviders(),
+    vscode.commands.registerCommand(`${LICENSE_TREE_VIEW_ID}.refresh`, () => {
       licenseProvider.load();
     }),
     vscode.commands.registerCommand(GET_LICENSE_COMMAND, () => {
@@ -258,19 +133,7 @@ export function activate(context: vscode.ExtensionContext): void {
     })
   );
 
-  // Entering this URI in the browser will show the license key input:
-  // vscode://LocalCI.local-ci/enterLicense
-  vscode.window.registerUriHandler({
-    handleUri: (uri: vscode.Uri) => {
-      if (uri.path === '/enterLicense') {
-        showLicenseInput(
-          context,
-          licenseCompletedCallback,
-          licenseSuccessCallback
-        );
-      }
-    },
-  });
+  registrar.registerHandlers();
 }
 
 export function deactivate(): void {

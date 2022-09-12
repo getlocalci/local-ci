@@ -76,6 +76,10 @@ export default class JobProvider
   async init() {
     await this.loadJobs();
     await this.loadLogs();
+    this.editorGateway.editor.window.registerTreeDataProvider(
+      JOB_TREE_VIEW_ID,
+      this
+    );
   }
 
   /** Refreshes the TreeView, without processing the config file. */

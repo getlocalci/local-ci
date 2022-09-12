@@ -1,8 +1,10 @@
-import * as fs from 'fs';
-import * as vscode from 'vscode';
+import FsGateway from 'common/FsGateway';
+import type vscode from 'vscode';
 
 export default class LogProvider implements vscode.TextDocumentContentProvider {
+  constructor(private fsGateway: FsGateway) {}
+
   provideTextDocumentContent(uri: vscode.Uri): string {
-    return fs.readFileSync(uri.fsPath, 'utf8');
+    return this.fsGateway.fs.readFileSync(uri.fsPath, 'utf8');
   }
 }

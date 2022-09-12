@@ -7,7 +7,7 @@ export default class JobTreeItem implements vscode.TreeItem {
   collapsibleState: vscode.TreeItemCollapsibleState;
   iconPath: vscode.ThemeIcon;
   tooltip: string;
-  command: any;
+  command: vscode.TreeItem['command'];
   contextValue?: string;
   description?: string;
 

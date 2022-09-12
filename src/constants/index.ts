@@ -17,6 +17,7 @@ export const JOB_TREE_VIEW_ID = 'localCiJobs';
 export const DO_NOT_CONFIRM_RUN_JOB = 'local-ci.job.do-not-confirm';
 export const LICENSE_ITEM_ID = 43;
 export const LICENSE_KEY = 'local-ci.license.key';
+export const LICENSE_TREE_VIEW_ID = 'localCiLicense';
 export const LICENSE_VALIDITY = 'local-ci.license.validity';
 export const LICENSE_VALIDITY_CACHE_EXPIRATION =
   'local-ci.license.cache.expiration';

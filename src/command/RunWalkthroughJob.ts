@@ -1,0 +1,78 @@
+import { inject, injectable } from 'inversify';
+import type vscode from 'vscode';
+import Types from 'common/Types';
+import JobProvider from 'job/JobProvider';
+import ReporterGateway from 'common/ReporterGateway';
+import EditorGateway from 'common/EditorGateway';
+import { RUN_JOB_COMMAND } from 'constants/';
+import getDebuggingTerminalName from 'terminal/getDebuggingTerminalName';
+import getFinalTerminalName from 'terminal/getFinalTerminalName';
+import getCheckoutJobs from 'job/getCheckoutJobs';
+import getConfig from 'config/getConfig';
+import Config from 'config/Config';
+import ConfigFile from 'config/ConfigFile';
+
+@injectable()
+export default class RunWalkthroughJob {
+  @inject(Config)
+  config!: Config;
+
+  @inject(ConfigFile)
+  configFile!: ConfigFile;
+
+  @inject(Types.IEditorGateway)
+  editorGateway!: EditorGateway;
+
+  @inject(Types.IReporterGateway)
+  reporterGateway!: ReporterGateway;
+
+  commandName: string;
+
+  constructor() {
+    this.commandName = 'local-ci.runWalkthroughJob';
+  }
+
+  getCallback(context: vscode.ExtensionContext, jobProvider: JobProvider) {
+    return async () => {
+      this.reporterGateway.reporter.sendTelemetryEvent('runWalkthroughJob');
+      const configFilePath = await this.configFile.getPath(context);
+      const { processedConfig } = this.config.process(
+        configFilePath,
+        this.reporterGateway.reporter
+      );
+
+      const checkoutJobs = getCheckoutJobs(getConfig(processedConfig));
+      if (!checkoutJobs.length) {
+        return;
+      }
+
+      const jobName = checkoutJobs[0];
+      jobProvider.setRunningJob(jobName);
+
+      this.editorGateway.editor.commands.executeCommand(
+        'workbench.view.extension.localCiDebugger'
+      );
+      this.editorGateway.editor.commands.executeCommand(
+        RUN_JOB_COMMAND,
+        jobName
+      );
+      this.editorGateway.editor.window.showInformationMessage(
+        `👈 The job ${jobName} is now running in your local`
+      );
+
+      this.editorGateway.editor.window.onDidOpenTerminal(async (terminal) => {
+        if (terminal.name === getDebuggingTerminalName(jobName)) {
+          terminal.show();
+          this.editorGateway.editor.window.showInformationMessage(
+            `👈 Here's an interactive bash shell of the job. Enter something, like whoami`
+          );
+        } else if (terminal.name === getFinalTerminalName(jobName)) {
+          terminal.show();
+          this.editorGateway.editor.window.showInformationMessage(
+            `👈 Here's another bash shell now that the job exited`
+          );
+        }
+      });
+    };
+  }
+}
