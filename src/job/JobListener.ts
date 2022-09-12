@@ -51,11 +51,11 @@ export default class JobListener {
 
     const command = `cat ${jobConfigPath} >> ${logFilePath}
     ${getPicardContainerFunction}
-    until [ -n $(get_picard_container ${jobName}) ]
+    until [ -n "$(get_picard_container ${jobName})" ]
     do
       sleep 2
     done
-    docker logs --follow $(get_picard_container ${jobName})`;
+    docker logs --follow "$(get_picard_container ${jobName})"`;
 
     const process = this.childProcessGateway.cp.spawn(
       '/bin/sh',

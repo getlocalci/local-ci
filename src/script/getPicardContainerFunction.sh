@@ -6,7 +6,7 @@ get_picard_container() {
     do
     if docker inspect "$container" --format '{{.Args}}' | grep -q "$JOB_NAME" && docker inspect "$(docker inspect "$container" --format '{{.Image}}')" --format '{{.RepoDigests}}' | grep -q "circleci/picard"
       then
-      echo "$container"
+      echo "$container" | awk '{print $1}'
       break
     fi
   done
