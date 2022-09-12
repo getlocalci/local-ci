@@ -7,7 +7,7 @@ let help: Help;
 let editorGateway: FakeEditorGateway;
 let reporterGateway: FakeReporterGateway;
 
-describe('Help', () => {
+describe('Help command', () => {
   beforeEach(() => {
     const testHarness = new AppTestHarness();
     testHarness.init();
@@ -22,7 +22,7 @@ describe('Help', () => {
 
     help.getCallback()();
 
-    expect(reporterSpy.mock.lastCall[0]).toEqual('help');
+    expect(reporterSpy).toHaveBeenCalledWith('help');
   });
 
   test('opens an external link', () => {
@@ -33,6 +33,6 @@ describe('Help', () => {
 
     help.getCallback()();
 
-    expect(editorSpy.mock.lastCall[0]).toEqual(stubUri);
+    expect(editorSpy).toHaveBeenCalledWith(stubUri);
   });
 });

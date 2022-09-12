@@ -3,8 +3,8 @@ import * as fs from 'fs';
 import type vscode from 'vscode';
 import JobProvider from 'job/JobProvider';
 import JobTreeItem from 'job/JobTreeItem';
-import { SUPPRESS_JOB_COMPLETE_MESSAGE } from 'constants/';
-import { getPicardContainerFunction } from 'scripts/';
+import { SUPPRESS_JOB_COMPLETE_MESSAGE } from 'constant';
+import { getPicardContainerFunction } from 'scripts';
 import ParsedConfig from 'config/ParsedConfig';
 import getDynamicConfigPath from 'config/getDynamicConfigPath';
 import Spawn from 'common/Spawn';
@@ -49,18 +49,17 @@ export default class JobListener {
       `Log for CircleCI® job ${jobName} \n${new Date()} \n\n`
     );
 
+    const command = `cat ${jobConfigPath} >> ${logFilePath}
+    ${getPicardContainerFunction}
+    until [ -n $(get_picard_container ${jobName}) ]
+    do
+      sleep 2
+    done
+    docker logs --follow $(get_picard_container ${jobName})`;
+
     const process = this.childProcessGateway.cp.spawn(
       '/bin/sh',
-      [
-        '-c',
-        `cat ${jobConfigPath} >> ${logFilePath}
-        ${getPicardContainerFunction}
-        until [ -n $(get_picard_container ${jobName}) ]
-        do
-          sleep 2
-        done
-        docker logs --follow $(get_picard_container ${jobName})`,
-      ],
+      ['-c', command],
       this.spawn.getOptions()
     );
 

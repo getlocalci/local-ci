@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
 import type { Command } from './index';
-import { DO_NOT_CONFIRM_RUN_JOB, RUN_JOB_COMMAND } from 'constants/';
+import { DO_NOT_CONFIRM_RUN_JOB, RUN_JOB_COMMAND } from 'constant';
 import Types from 'common/Types';
 import JobProvider from 'job/JobProvider';
 import ReporterGateway from 'gateway/ReporterGateway';

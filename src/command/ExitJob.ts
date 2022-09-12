@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
 import type { Command } from './index';
-import { EXIT_JOB_COMMAND } from 'constants/';
+import { EXIT_JOB_COMMAND } from 'constant';
 import JobProvider from 'job/JobProvider';
 import JobRunner from 'job/JobRunner';
 import JobFactory from 'job/JobFactory';

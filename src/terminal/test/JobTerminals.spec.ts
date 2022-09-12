@@ -25,7 +25,7 @@ describe('JobTerminals', () => {
     ];
 
     jobTerminals.dispose(jobName);
-    expect(disposeSpy.mock.calls.length).toEqual(0);
+    expect(disposeSpy).not.toHaveBeenCalled();
   });
 
   test('terminal is disposed', async () => {
@@ -39,6 +39,6 @@ describe('JobTerminals', () => {
     ];
 
     jobTerminals.dispose(jobName);
-    expect(disposeSpy.mock.calls.length).toEqual(1);
+    expect(disposeSpy).toHaveBeenCalledTimes(1);
   });
 });

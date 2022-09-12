@@ -3,7 +3,7 @@ import {
   EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS,
   HAS_EXTENDED_TRIAL,
   TRIAL_LENGTH_IN_MILLISECONDS,
-} from 'constants/';
+} from 'constant';
 
 export default function getTrialLength(
   context: vscode.ExtensionContext

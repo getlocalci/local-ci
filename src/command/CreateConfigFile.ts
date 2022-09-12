@@ -2,7 +2,7 @@ import { inject, injectable } from 'inversify';
 import * as path from 'path';
 import type vscode from 'vscode';
 import type { Command } from './index';
-import { CREATE_CONFIG_FILE_COMMAND } from 'constants/';
+import { CREATE_CONFIG_FILE_COMMAND } from 'constant';
 import Types from 'common/Types';
 import JobProvider from 'job/JobProvider';
 import ReporterGateway from 'gateway/ReporterGateway';

@@ -4,7 +4,7 @@ import Types from 'common/Types';
 import JobProvider from 'job/JobProvider';
 import ReporterGateway from 'gateway/ReporterGateway';
 import EditorGateway from 'gateway/EditorGateway';
-import { RUN_JOB_COMMAND } from 'constants/';
+import { RUN_JOB_COMMAND } from 'constant';
 import getDebuggingTerminalName from 'terminal/getDebuggingTerminalName';
 import getFinalTerminalName from 'terminal/getFinalTerminalName';
 import getCheckoutJobs from 'job/getCheckoutJobs';

@@ -1,5 +1,5 @@
 import { inject, injectable } from 'inversify';
-import { EMAIL_ENDPOINT, EXTENSION_ID } from 'constants/';
+import { EMAIL_ENDPOINT, EXTENSION_ID } from 'constant';
 import Types from 'common/Types';
 import HttpGateway from 'gateway/HttpGateway';
 import EditorGateway from 'gateway/EditorGateway';

@@ -1,4 +1,4 @@
-import { DAY_IN_MILLISECONDS, TRIAL_LENGTH_IN_MILLISECONDS } from 'constants/';
+import { DAY_IN_MILLISECONDS, TRIAL_LENGTH_IN_MILLISECONDS } from 'constant';
 import getTimeRemainingInTrial from 'license/getTimeRemainingInTrial';
 
 const minuteInMilliseconds = 60000;

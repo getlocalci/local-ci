@@ -1,47 +1,44 @@
+import { inject, injectable } from 'inversify';
 import * as path from 'path';
 import type vscode from 'vscode';
 import { getBinaryPath } from '../../node/binary';
 import areTerminalsClosed from 'terminal/areTerminalsClosed';
+import BuildAgentSettings from 'config/BuildAgentSettings';
+import CommittedImages from 'containerization/CommittedImages';
+import ConfigFile from 'config/ConfigFile';
+import EditorGateway from 'gateway/EditorGateway';
+import FinalTerminal from 'terminal/FinalTerminal';
+import FsGateway from 'gateway/FsGateway';
 import getCheckoutJobs from './getCheckoutJobs';
 import getDebuggingTerminalName from 'terminal/getDebuggingTerminalName';
+import getDynamicConfigPath from 'config/getDynamicConfigPath';
 import getFinalDebuggingTerminalName from 'terminal/getFinalTerminalName';
 import getLogFilePath from 'log/getLogFilePath';
 import getImageFromJob from 'containerization/getImageFromJob';
-import LatestCommittedImage from 'containerization/LatestCommittedImage';
 import getLocalVolumePath from 'containerization/getLocalVolumePath';
 import getProcessFilePath from 'process/getProcessFilePath';
 import getTerminalName from 'terminal/getTerminalName';
+import JobFactory from 'job/JobFactory';
 import JobListener from './JobListener';
+import JobProvider from 'job/JobProvider';
+import JobTreeItem from './JobTreeItem';
+import LatestCommittedImage from 'containerization/LatestCommittedImage';
+import ParsedConfig from 'config/ParsedConfig';
+import RunningContainer from 'containerization/RunningContainer';
+import Types from 'common/Types';
+import UncommittedFile from '../containerization/UncommittedFile';
 import {
   COMMITTED_IMAGE_NAMESPACE,
   CONTAINER_STORAGE_DIRECTORY,
   CONTINUE_PIPELINE_STEP_NAME,
-} from 'constants/';
-import getDynamicConfigPath from 'config/getDynamicConfigPath';
-import JobProvider from 'job/JobProvider';
+} from 'constant';
 import {
   dockerExecRunningContainer,
   getRunningContainerFunction,
 } from 'scripts/';
-import ConfigFile from 'config/ConfigFile';
-import { inject, injectable } from 'inversify';
-import JobFactory from 'job/JobFactory';
-import ParsedConfig from 'config/ParsedConfig';
-import FinalTerminal from 'terminal/FinalTerminal';
-import CommittedImages from 'containerization/CommittedImages';
-import UncommittedFile from '../containerization/UncommittedFile';
-import BuildAgentSettings from 'config/BuildAgentSettings';
-import Types from 'common/Types';
-import EditorGateway from 'gateway/EditorGateway';
-import RunningContainer from 'containerization/RunningContainer';
-import JobTreeItem from './JobTreeItem';
-import FsGateway from 'gateway/FsGateway';
 
 @injectable()
 export default class JobRunner {
-  @inject(Types.IFsGateway)
-  fsGateway!: FsGateway;
-
   @inject(BuildAgentSettings)
   buildAgentSettings!: BuildAgentSettings;
 
@@ -51,14 +48,14 @@ export default class JobRunner {
   @inject(ConfigFile)
   configFile!: ConfigFile;
 
-  @inject(RunningContainer)
-  runningContainer!: RunningContainer;
-
   @inject(Types.IEditorGateway)
   editorGateway!: EditorGateway;
 
   @inject(FinalTerminal)
   finalTerminal!: FinalTerminal;
+
+  @inject(Types.IFsGateway)
+  fsGateway!: FsGateway;
 
   @inject(JobFactory)
   jobFactory!: JobFactory;
@@ -71,6 +68,9 @@ export default class JobRunner {
 
   @inject(ParsedConfig)
   parsedConfig!: ParsedConfig;
+
+  @inject(RunningContainer)
+  runningContainer!: RunningContainer;
 
   @inject(UncommittedFile)
   uncommittedFile!: UncommittedFile;

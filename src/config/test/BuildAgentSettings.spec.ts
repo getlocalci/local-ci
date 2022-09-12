@@ -24,7 +24,7 @@ describe('BuildAgentSettings', () => {
     childProcessGateway.cp.spawn = spawnSpy;
 
     buildAgentSettings.set();
-    expect(spawnSpy.mock.calls.length).toEqual(0);
+    expect(spawnSpy).not.toHaveBeenCalled();
   });
 
   test('should not set the settings on an M1 Mac machine', () => {
@@ -34,7 +34,7 @@ describe('BuildAgentSettings', () => {
     childProcessGateway.cp.spawn = spawnSpy;
 
     buildAgentSettings.set();
-    expect(spawnSpy.mock.calls.length).toEqual(0);
+    expect(spawnSpy).not.toHaveBeenCalled();
   });
 
   test('should set the settings on an Intel Mac machine', () => {
@@ -44,6 +44,6 @@ describe('BuildAgentSettings', () => {
     childProcessGateway.cp.spawn = spawnSpy;
 
     buildAgentSettings.set();
-    expect(spawnSpy.mock.calls.length).toEqual(1);
+    expect(spawnSpy).toHaveBeenCalledTimes(1);
   });
 });

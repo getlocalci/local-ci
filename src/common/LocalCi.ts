@@ -1,12 +1,12 @@
 import { inject, injectable } from 'inversify';
-import { HOST_TMP_DIRECTORY } from 'constants/';
-import JobProviderFactory from 'job/JobProviderFactory';
-import LicenseProviderFactory from 'license/LicenseProviderFactory';
 import type vscode from 'vscode';
 import FsGateway from 'gateway/FsGateway';
+import JobProviderFactory from 'job/JobProviderFactory';
+import LicenseProviderFactory from 'license/LicenseProviderFactory';
 import RegistrarFactory from './RegistrarFactory';
 import ReporterGateway from 'gateway/ReporterGateway';
 import Types from './Types';
+import { HOST_TMP_DIRECTORY } from 'constant';
 
 @injectable()
 export default class LocalCi {

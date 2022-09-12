@@ -9,7 +9,7 @@ import {
   LICENSE_KEY,
   LICENSE_VALIDITY,
   LICENSE_VALIDITY_CACHE_EXPIRATION,
-} from 'constants/';
+} from 'constant';
 import getHash from './getHash';
 import HttpGateway from 'gateway/HttpGateway';
 

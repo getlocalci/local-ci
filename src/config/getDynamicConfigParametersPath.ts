@@ -1,6 +1,6 @@
 import * as path from 'path';
 import getLocalVolumePath from 'containerization/getLocalVolumePath';
-import { DYNAMIC_CONFIG_PARAMETERS_FILE_NAME } from 'constants/';
+import { DYNAMIC_CONFIG_PARAMETERS_FILE_NAME } from 'constant';
 
 /**
  * Gets the absolute path to the dynamic config file, though the file may not exist.

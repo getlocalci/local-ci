@@ -1,6 +1,6 @@
 import * as path from 'path';
 import convertToBash from './convertToBash';
-import { CONTAINER_STORAGE_DIRECTORY } from 'constants/';
+import { CONTAINER_STORAGE_DIRECTORY } from 'constant';
 
 export default function getRestoreCacheCommand(
   restoreCacheStep: FullStep,

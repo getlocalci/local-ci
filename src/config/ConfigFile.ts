@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import * as vscode from 'vscode';
-import { CREATE_CONFIG_FILE_COMMAND, SELECTED_CONFIG_PATH } from 'constants/';
+import { CREATE_CONFIG_FILE_COMMAND, SELECTED_CONFIG_PATH } from 'constant';
 import AllConfigFiles from './AllConfigFiles';
 import EditorGateway from 'gateway/EditorGateway';
 import Types from 'common/Types';

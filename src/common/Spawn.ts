@@ -8,11 +8,11 @@ export default class Spawn {
   @inject(EnvPath)
   envPath!: EnvPath;
 
-  @inject(Workspace)
-  workspace!: Workspace;
-
   @inject(ProcessGateway)
   processGateway!: ProcessGateway;
+
+  @inject(Workspace)
+  workspace!: Workspace;
 
   getOptions(cwd?: string): SpawnOptions {
     return {

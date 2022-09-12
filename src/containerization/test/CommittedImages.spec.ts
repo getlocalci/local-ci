@@ -19,6 +19,6 @@ describe('CommittedImages', () => {
     childProcessGateway.cp.spawn = spawnSpy;
 
     committedImages.cleanUp('local-ci-lint');
-    expect(spawnSpy.mock.calls.length).toEqual(1);
+    expect(spawnSpy).toHaveBeenCalledTimes(1);
   });
 });

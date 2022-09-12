@@ -22,7 +22,7 @@ describe('LicenseInput', () => {
       completedCallbackSpy,
       successCallbackSpy
     );
-    expect(completedCallbackSpy.mock.calls.length).toEqual(1);
-    expect(successCallbackSpy.mock.calls.length).toEqual(0);
+    expect(completedCallbackSpy).toHaveBeenCalledTimes(1);
+    expect(successCallbackSpy).not.toHaveBeenCalled();
   });
 });

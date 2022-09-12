@@ -8,10 +8,11 @@ import Config from 'config/Config';
 import ConfigFile from 'config/ConfigFile';
 import CreateConfigFile from 'command/CreateConfigFile';
 import DebugRepo from 'command/DebugRepo';
-import RunningContainer from 'containerization/RunningContainer';
 import Docker from 'containerization/Docker';
 import Email from 'license/Email';
+import EnterToken from 'command/EnterToken';
 import EnvPath from 'common/EnvPath';
+import ExitAllJobs from 'command/ExitAllJobs';
 import ExitJob from 'command/ExitJob';
 import FinalTerminal from 'terminal/FinalTerminal';
 import GetLicense from 'command/GetLicense';
@@ -33,15 +34,14 @@ import Refresh from 'command/Refresh';
 import RegistrarFactory from 'common/RegistrarFactory';
 import ReRunJob from 'command/ReRunJob';
 import RunJob from 'command/RunJob';
+import RunningContainer from 'containerization/RunningContainer';
 import RunWalkthroughJob from 'command/RunWalkthroughJob';
+import SelectRepo from 'command/SelectRepo';
 import Spawn from 'common/Spawn';
 import TryProcessAgain from 'command/TryProcessAgain';
 import UncommittedFile from 'containerization/UncommittedFile';
 import WarningFactory from 'job/WarningFactory';
 import Workspace from 'common/Workspace';
-import EnterToken from 'command/EnterToken';
-import ExitAllJobs from 'command/ExitAllJobs';
-import SelectRepo from 'command/SelectRepo';
 
 /**
  * Main dependency injection class.

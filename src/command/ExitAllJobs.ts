@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
 import type { Command } from './index';
-import { COMMITTED_IMAGE_NAMESPACE, JOB_TREE_VIEW_ID } from 'constants/';
+import { COMMITTED_IMAGE_NAMESPACE, JOB_TREE_VIEW_ID } from 'constant';
 import Types from 'common/Types';
 import JobProvider from 'job/JobProvider';
 import ReporterGateway from 'gateway/ReporterGateway';

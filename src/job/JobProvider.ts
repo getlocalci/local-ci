@@ -20,7 +20,7 @@ import {
   JOB_TREE_VIEW_ID,
   PROCESS_TRY_AGAIN_COMMAND,
   TRIAL_STARTED_TIMESTAMP,
-} from '../constants';
+} from '../constant';
 import License from 'license/License';
 import FsGateway from 'gateway/FsGateway';
 import EditorGateway from 'gateway/EditorGateway';

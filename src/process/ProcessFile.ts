@@ -12,7 +12,7 @@ import {
   CONTINUE_PIPELINE_STEP_NAME,
   DYNAMIC_CONFIG_PARAMETERS_FILE_NAME,
   DYNAMIC_CONFIG_PATH_IN_CONTAINER,
-} from 'constants/';
+} from 'constant';
 import { addEnvVars } from 'scripts/';
 import FsGateway from 'gateway/FsGateway';
 

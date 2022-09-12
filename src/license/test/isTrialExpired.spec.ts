@@ -2,7 +2,7 @@ import {
   DAY_IN_MILLISECONDS,
   EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS,
   TRIAL_LENGTH_IN_MILLISECONDS,
-} from 'constants/';
+} from 'constant';
 import isTrialExpired from 'license/isTrialExpired';
 
 const extendedTrial =

@@ -1,5 +1,5 @@
 import Email from 'license/Email';
-import { EMAIL_ENDPOINT } from 'constants/';
+import { EMAIL_ENDPOINT } from 'constant';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
 import FakeHttpGateway from 'gateway/FakeHttpGateway';
 
@@ -22,14 +22,11 @@ describe('Email', () => {
     httpGateway.post = postSpy;
 
     await email.sendEnteredEmail(emailAddress);
-    expect(postSpy.mock.lastCall).toEqual([
-      EMAIL_ENDPOINT,
-      {
-        name: undefined,
-        email: emailAddress,
-        optedIn: undefined,
-      },
-    ]);
+    expect(postSpy).toHaveBeenCalledWith(EMAIL_ENDPOINT, {
+      name: undefined,
+      email: emailAddress,
+      optedIn: undefined,
+    });
   });
 
   test('all fields', async () => {
@@ -41,13 +38,10 @@ describe('Email', () => {
     httpGateway.post = postSpy;
 
     await email.sendEnteredEmail(emailAddress, name, optedIn);
-    expect(postSpy.mock.lastCall).toEqual([
-      EMAIL_ENDPOINT,
-      {
-        name,
-        email: emailAddress,
-        optedIn,
-      },
-    ]);
+    expect(postSpy).toHaveBeenCalledWith(EMAIL_ENDPOINT, {
+      name,
+      email: emailAddress,
+      optedIn,
+    });
   });
 });

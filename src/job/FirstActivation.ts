@@ -2,7 +2,7 @@ import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
 import Types from 'common/Types';
 import EditorGateway from 'gateway/EditorGateway';
-import { EXTENSION_ID, TRIAL_STARTED_TIMESTAMP } from 'constants/';
+import { EXTENSION_ID, TRIAL_STARTED_TIMESTAMP } from 'constant';
 import ReporterGateway from 'gateway/ReporterGateway';
 import Email from 'license/Email';
 

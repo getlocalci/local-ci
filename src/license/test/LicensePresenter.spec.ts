@@ -1,10 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import * as sinon from 'sinon';
 import * as vscode from 'vscode';
-import {
-  LICENSE_VALIDITY,
-  LICENSE_VALIDITY_CACHE_EXPIRATION,
-} from 'constants/';
+import { LICENSE_VALIDITY, LICENSE_VALIDITY_CACHE_EXPIRATION } from 'constant';
 import { Substitute } from '@fluffy-spoon/substitute';
 import LicensePresenter from 'license/LicensePresenter';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';

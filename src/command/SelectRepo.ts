@@ -5,7 +5,7 @@ import {
   CREATE_CONFIG_FILE_COMMAND,
   JOB_TREE_VIEW_ID,
   SELECTED_CONFIG_PATH,
-} from 'constants/';
+} from 'constant';
 import Types from 'common/Types';
 import JobProvider from 'job/JobProvider';
 import ReporterGateway from 'gateway/ReporterGateway';

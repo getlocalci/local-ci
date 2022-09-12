@@ -5,7 +5,7 @@ import scriptGetRunningContainerFunction from './getRunningContainerFunction.sh'
 import scriptWriteBuildAgentSettings from './writeBuildAgentSettings.sh';
 
 function stripBinSh(file: string) {
-  return file.replace('^#!/bin/sh', '').replace(`^\n\n`, '');
+  return file.replace(/^#!\/bin\/sh/, '').replace(`^\n\n`, '');
 }
 
 export const addEnvVars = stripBinSh(scriptAddEnvVars);

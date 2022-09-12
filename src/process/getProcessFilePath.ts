@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { HOST_TMP_DIRECTORY } from 'constants/';
+import { HOST_TMP_DIRECTORY } from 'constant';
 import getRepoPath from 'common/getRepoBasename';
 
 /** Gets the absolute path to the process .yml file for this workspace. */

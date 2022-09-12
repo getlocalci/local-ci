@@ -7,6 +7,7 @@ export default class FakeFsGateway {
     existsSync: () => null,
     mkdirSync: () => null,
     readFileSync: () => null,
+    rmSync: () => null,
     writeFileSync: () => null,
   };
 }

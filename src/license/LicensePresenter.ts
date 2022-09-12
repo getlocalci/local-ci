@@ -12,7 +12,7 @@ import {
   LICENSE_VALIDITY,
   SCHEDULE_INTERVIEW_URL,
   TRIAL_STARTED_TIMESTAMP,
-} from 'constants/';
+} from 'constant';
 import License from './License';
 
 @injectable()

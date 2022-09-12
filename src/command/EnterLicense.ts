@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
 import type { Command } from './index';
-import { ENTER_LICENSE_COMMAND } from 'constants/';
+import { ENTER_LICENSE_COMMAND } from 'constant';
 import JobProvider from 'job/JobProvider';
 import LicenseInput from 'license/LicenseInput';
 import LicenseProvider from 'license/LicenseProvider';

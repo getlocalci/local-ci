@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import type { Command } from './index';
-import { GET_LICENSE_COMMAND, GET_LICENSE_KEY_URL } from 'constants/';
+import { GET_LICENSE_COMMAND, GET_LICENSE_KEY_URL } from 'constant';
 import Types from 'common/Types';
 import EditorGateway from 'gateway/EditorGateway';
 

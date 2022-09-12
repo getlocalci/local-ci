@@ -1,12 +1,7 @@
-import * as vscode from 'vscode';
-import {
-  LICENSE_VALIDITY,
-  LICENSE_VALIDITY_CACHE_EXPIRATION,
-} from 'constants/';
-import { Substitute } from '@fluffy-spoon/substitute';
+import { LICENSE_VALIDITY, LICENSE_VALIDITY_CACHE_EXPIRATION } from 'constant';
 import License from 'license/License';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
-const getMockContext = () => Substitute.for<vscode.ExtensionContext>();
+import getContextStub from 'test-tools/helpers/getContextStub';
 
 let testHarness: AppTestHarness;
 let license: License;
@@ -19,11 +14,11 @@ describe('License', () => {
   });
 
   test('no license key', async () => {
-    expect(await license.isValid(getMockContext(), true, '')).toBe(false);
+    expect(await license.isValid(getContextStub(), true, '')).toBe(false);
   });
 
   test('cached license validation', async () => {
-    const mockContext = getMockContext();
+    const mockContext = getContextStub();
 
     expect(
       await license.isValid({

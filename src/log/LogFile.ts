@@ -1,4 +1,4 @@
-import { LOG_FILE_SCHEME } from 'constants/';
+import { LOG_FILE_SCHEME } from 'constant';
 import { inject, injectable } from 'inversify';
 import Types from 'common/Types';
 import EditorGateway from 'gateway/EditorGateway';

@@ -1,5 +1,5 @@
 import type vscode from 'vscode';
-import { LICENSE_ERROR } from 'constants/';
+import { LICENSE_ERROR } from 'constant';
 import getLicenseErrorMessage from 'license/getLicenseErrorMessage';
 import License from 'license/License';
 import LicenseInput from 'license/LicenseInput';

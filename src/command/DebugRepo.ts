@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
-import { SELECTED_CONFIG_PATH } from 'constants/';
+import { SELECTED_CONFIG_PATH } from 'constant';
 import Types from 'common/Types';
 import JobProvider from 'job/JobProvider';
 import ReporterGateway from 'gateway/ReporterGateway';

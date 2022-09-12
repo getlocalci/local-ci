@@ -1,4 +1,4 @@
-import { DAY_IN_MILLISECONDS } from 'constants/';
+import { DAY_IN_MILLISECONDS } from 'constant';
 
 const minuteInMilliseconds = 60000;
 const hourInMilliseconds = 3600000;

@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import type { Command } from './index';
-import { SHOW_LOG_FILE_COMMAND } from 'constants/';
+import { SHOW_LOG_FILE_COMMAND } from 'constant';
 import LogFile from 'log/LogFile';
 
 @injectable()

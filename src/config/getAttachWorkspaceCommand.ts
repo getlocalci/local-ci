@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { CONTAINER_STORAGE_DIRECTORY } from 'constants/';
+import { CONTAINER_STORAGE_DIRECTORY } from 'constant';
 
 export default function getAttachWorkspaceCommand(step: Step): string {
   if (typeof step === 'string' || !step?.attach_workspace?.at) {

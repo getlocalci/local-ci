@@ -7,11 +7,15 @@ export default class FakeEditorGateway {
   editor = {
     commands: {
       registerCommand: () => null,
+      executeCommand: () => null,
     },
     env: {
       openExternal: () => null,
     },
-    EventEmitter: class {},
+    EventEmitter: class {
+      event!: string;
+      fire() {}
+    },
     ThemeIcon: class {},
     TreeItem: class {
       constructor(public label: string) {}
@@ -26,6 +30,7 @@ export default class FakeEditorGateway {
       registerTreeDataProvider: () => null,
       registerWebviewViewProvider: () => null,
       showInformationMessage: async (message: string) => message,
+      showTextDocument: async (message: string) => message,
       showWarningMessage: async (message: string) => message,
       showInputBox: async () => '',
       terminals: [{}],
@@ -37,6 +42,7 @@ export default class FakeEditorGateway {
       onDidSaveTextDocument: () => null,
       registerTextDocumentContentProvider: () => null,
       workspaceFolders: [{}],
+      fs: { writeFile: async () => null },
     },
     Uri: {
       file: (path: string) => path,

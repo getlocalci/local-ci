@@ -36,7 +36,7 @@ describe('uncommittedWarning', () => {
     const showWarningMessageSpy = jest.fn();
     (editorGateway.editor.window.showWarningMessage = showWarningMessageSpy),
       uncommittedFile.warn(getMockContext(true), '/foo/baz', 'build', []);
-    expect(showWarningMessageSpy.mock.calls.length).toEqual(0);
+    expect(showWarningMessageSpy).not.toHaveBeenCalled();
   });
 
   test('no uncommitted file', async () => {
@@ -57,7 +57,7 @@ describe('uncommittedWarning', () => {
     });
 
     uncommittedFile.warn(getMockContext(false), '/foo/baz', 'test-lint', []);
-    expect(showWarningMessageSpy.mock.calls.length).toEqual(0);
+    expect(showWarningMessageSpy).not.toHaveBeenCalled();
   });
 
   test('only an uncommitted config file should not show a warning', async () => {
@@ -78,7 +78,7 @@ describe('uncommittedWarning', () => {
     });
 
     uncommittedFile.warn(getMockContext(false), '/foo/baz', 'test-lint', []);
-    expect(showWarningMessageSpy.mock.calls.length).toEqual(0);
+    expect(showWarningMessageSpy).not.toHaveBeenCalled();
   });
 
   test('with uncommitted files', async () => {
@@ -99,7 +99,7 @@ describe('uncommittedWarning', () => {
     });
 
     uncommittedFile.warn(getMockContext(false), '/foo/baz', 'build', []);
-    expect(showWarningMessageSpy.mock.calls.length).toEqual(1);
+    expect(showWarningMessageSpy).toHaveBeenCalledTimes(1);
   });
 
   test('not a checkout job', async () => {

@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import * as vscode from 'vscode';
-import { SHOW_LOG_FILE_COMMAND } from 'constants/';
+import { SHOW_LOG_FILE_COMMAND } from 'constant';
 import EditorGateway from 'gateway/EditorGateway';
 import Types from 'common/Types';
 

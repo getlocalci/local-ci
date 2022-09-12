@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
 import type { Command } from './index';
-import { LICENSE_TREE_VIEW_ID } from 'constants/';
+import { LICENSE_TREE_VIEW_ID } from 'constant';
 import JobProvider from 'job/JobProvider';
 import LicenseProvider from 'license/LicenseProvider';
 import EditorGateway from 'gateway/EditorGateway';
