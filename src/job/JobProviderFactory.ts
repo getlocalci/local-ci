@@ -9,12 +9,12 @@ import LogFactory from 'log/LogFactory';
 import CommandFactory from './ComandFactory';
 import JobFactory from './JobFactory';
 import WarningFactory from './WarningFactory';
-import TelemetryReporter from '@vscode/extension-telemetry';
 import AllJobs from './AllJobs';
 import { inject, injectable } from 'inversify';
 import FsGateway from 'common/FsGateway';
 import EditorGateway from 'common/EditorGateway';
 import JobProvider from './JobProvider';
+import ReporterGateway from 'common/ReporterGateway';
 
 @injectable()
 export default class JobProviderFactory {
@@ -48,6 +48,9 @@ export default class JobProviderFactory {
   @inject(LogFactory)
   logFactory!: LogFactory;
 
+  @inject(Types.IReporterGateway)
+  reporterGateway!: ReporterGateway;
+
   @inject(WarningFactory)
   warningFactory!: WarningFactory;
 
@@ -56,12 +59,11 @@ export default class JobProviderFactory {
 
   create(
     context: vscode.ExtensionContext,
-    reporter: TelemetryReporter,
     jobDependencies?: Map<string, string[] | null>
   ) {
     return new JobProvider(
       context,
-      reporter,
+      this.reporterGateway,
       this.allConfigFiles,
       this.configFile,
       this.commandFactory,

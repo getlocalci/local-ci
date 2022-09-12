@@ -1,16 +1,12 @@
 import * as vscode from 'vscode';
 import { Substitute } from '@fluffy-spoon/substitute';
-import TelemetryReporter from '@vscode/extension-telemetry';
 import JobFactory from 'job/JobFactory';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
 import JobProviderFactory from 'job/JobProviderFactory';
 import JobTreeItem from 'job/JobTreeItem';
 
-function getStubs(): [vscode.ExtensionContext, TelemetryReporter] {
-  return [
-    Substitute.for<vscode.ExtensionContext>(),
-    Substitute.for<TelemetryReporter>(),
-  ];
+function getStub() {
+  return Substitute.for<vscode.ExtensionContext>();
 }
 
 let testHarness: AppTestHarness;
@@ -26,11 +22,11 @@ describe('JobProvider', () => {
   });
 
   test('no element passed', () => {
-    expect(jobProviderFactory.create(...getStubs()).getChildren()).toEqual([]);
+    expect(jobProviderFactory.create(getStub()).getChildren()).toEqual([]);
   });
 
   test('no child', () => {
-    const provider = jobProviderFactory.create(...getStubs());
+    const provider = jobProviderFactory.create(getStub());
     expect(
       provider.getChildren(jobFactory.create('foo', false, false))
     ).toEqual([]);
@@ -43,7 +39,7 @@ describe('JobProvider', () => {
     allJobs.set('example', ['foo']);
 
     const children = jobProviderFactory
-      .create(...getStubs(), allJobs)
+      .create(getStub(), allJobs)
       .getChildren(jobFactory.create('foo', false, false));
 
     expect(children.length).toEqual(2);

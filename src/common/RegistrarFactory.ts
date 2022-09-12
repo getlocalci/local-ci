@@ -17,13 +17,21 @@ import LicenseInput from 'license/LicenseInput';
 import RunWalkthroughJob from 'command/RunWalkthroughJob';
 import LogProviderFactory from 'log/LogProviderFactory';
 import ConfigFile from 'config/ConfigFile';
+import CreateConfigFile from 'command/CreateConfigFile';
+import EnterLicense from 'command/EnterLicense';
+import GetLicense from 'command/GetLicense';
+import FirstActivation from 'job/FirstActivation';
 
 @injectable()
 export default class RegistrarFactory {
   constructor(
     @inject(Types.IEditorGateway) private editorGateway: EditorGateway,
     @inject(ConfigFile) private configFile: ConfigFile,
+    @inject(CreateConfigFile) private createConfigFile: CreateConfigFile,
+    @inject(FirstActivation) private firstActivation: FirstActivation,
+    @inject(GetLicense) private getLicense: GetLicense,
     @inject(LogProviderFactory) private logProviderFactory: LogProviderFactory,
+    @inject(EnterLicense) private enterLicense: EnterLicense,
     @inject(EnterToken) private enterToken: EnterToken,
     @inject(ExitAllJobs) private exitAllJobs: ExitAllJobs,
     @inject(ExitJob) private exitJob: ExitJob,
@@ -45,9 +53,13 @@ export default class RegistrarFactory {
       context,
       jobProvider,
       licenseProvider,
+      this.firstActivation,
       this.configFile,
+      this.createConfigFile,
+      this.getLicense,
       this.licenseInput,
       this.editorGateway,
+      this.enterLicense,
       this.logProviderFactory,
       this.enterToken,
       this.exitAllJobs,

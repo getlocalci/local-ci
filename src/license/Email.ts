@@ -1,9 +1,9 @@
 import { inject, injectable } from 'inversify';
-import TelemetryReporter from '@vscode/extension-telemetry';
 import { EMAIL_ENDPOINT, EXTENSION_ID } from 'constants/';
 import Types from 'common/Types';
 import HttpGateway from 'common/HttpGateway';
 import EditorGateway from 'common/EditorGateway';
+import ReporterGateway from 'common/ReporterGateway';
 
 @injectable()
 export default class Email {
@@ -13,7 +13,10 @@ export default class Email {
   @inject(Types.IHttpGateway)
   httpGateway!: HttpGateway;
 
-  async askForEmail(reporter: TelemetryReporter): Promise<void> {
+  @inject(Types.IReporterGateway)
+  repoterGateway!: ReporterGateway;
+
+  async askForEmail(): Promise<void> {
     const enteredEmail = await this.editorGateway.editor.window.showInputBox({
       title: 'Email',
       prompt:
@@ -57,7 +60,7 @@ export default class Email {
         'workbench.action.openWalkthrough',
         `${EXTENSION_ID}#welcomeLocalCi`
       );
-      reporter.sendTelemetryEvent('click.getStarted');
+      this.repoterGateway.reporter.sendTelemetryEvent('click.getStarted');
     }
   }
 

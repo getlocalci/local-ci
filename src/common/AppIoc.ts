@@ -8,15 +8,20 @@ import ProcessGateway from 'common/ProcessGateway';
 import BaseIoc from 'common/BaseIoc';
 import Types from 'common/Types';
 import ReporterGateway from './ReporterGateway';
+import OsGateway from './OsGateway';
 
-export const container: Container = new BaseIoc().buildBaseTemplate();
+export const iocContainer: Container = new BaseIoc().buildBaseTemplate();
 
-container
+iocContainer
   .bind(Types.IChildProcessGateway)
   .to(ChildProcessGateway)
   .inSingletonScope();
-container.bind(Types.IEditorGateway).to(EditorGateway).inSingletonScope();
-container.bind(Types.IFsGateway).to(FsGateway).inSingletonScope();
-container.bind(Types.IHttpGateway).to(HttpGateway).inSingletonScope();
-container.bind(Types.IProcessGateway).to(ProcessGateway).inSingletonScope();
-container.bind(Types.IReporterGateway).to(ReporterGateway).inSingletonScope();
+iocContainer.bind(Types.IEditorGateway).to(EditorGateway).inSingletonScope();
+iocContainer.bind(Types.IFsGateway).to(FsGateway).inSingletonScope();
+iocContainer.bind(Types.IHttpGateway).to(HttpGateway).inSingletonScope();
+iocContainer.bind(Types.IOsGateway).to(OsGateway).inSingletonScope();
+iocContainer.bind(Types.IProcessGateway).to(ProcessGateway).inSingletonScope();
+iocContainer
+  .bind(Types.IReporterGateway)
+  .to(ReporterGateway)
+  .inSingletonScope();

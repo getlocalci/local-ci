@@ -31,6 +31,9 @@ export default class JobListener {
   @inject(ParsedConfig)
   parsedConfig!: ParsedConfig;
 
+  @inject(Spawn)
+  spawn!: Spawn;
+
   listen(
     context: vscode.ExtensionContext,
     jobProvider: JobProvider,
@@ -58,7 +61,7 @@ export default class JobListener {
         done
         docker logs --follow $(get_picard_container ${jobName})`,
       ],
-      new Spawn().getOptions()
+      this.spawn.getOptions()
     );
 
     process.stdout.on('data', async (data) => {

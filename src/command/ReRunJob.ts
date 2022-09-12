@@ -36,7 +36,7 @@ export default class ReRunJob implements Command {
       const dontAskAgainText = `Yes, don't ask again`;
 
       if (context.globalState.get(DO_NOT_CONFIRM_RUN_JOB)) {
-        this.rerunJob(context, jobProvider, job);
+        this.reRun(context, jobProvider, job);
         return;
       }
 
@@ -52,7 +52,7 @@ export default class ReRunJob implements Command {
             selection?.title === confirmText ||
             selection?.title === dontAskAgainText
           ) {
-            this.rerunJob(context, jobProvider, job);
+            this.reRun(context, jobProvider, job);
           }
 
           if (selection?.title === dontAskAgainText) {
@@ -62,7 +62,7 @@ export default class ReRunJob implements Command {
     };
   }
 
-  async rerunJob(
+  async reRun(
     context: vscode.ExtensionContext,
     jobProvider: JobProvider,
     job: JobTreeItem

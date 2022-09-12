@@ -1,5 +1,4 @@
 import * as path from 'path';
-import * as fs from 'fs';
 import type vscode from 'vscode';
 import { getBinaryPath } from '../../node/binary';
 import areTerminalsClosed from 'terminal/areTerminalsClosed';
@@ -25,7 +24,7 @@ import {
   getRunningContainerFunction,
 } from 'scripts/';
 import ConfigFile from 'config/ConfigFile';
-import { inject } from 'inversify';
+import { inject, injectable } from 'inversify';
 import JobFactory from 'job/JobFactory';
 import ParsedConfig from 'config/ParsedConfig';
 import FinalTerminal from 'terminal/FinalTerminal';
@@ -36,8 +35,13 @@ import Types from 'common/Types';
 import EditorGateway from 'common/EditorGateway';
 import RunningContainer from 'containerization/RunningContainer';
 import JobTreeItem from './JobTreeItem';
+import FsGateway from 'common/FsGateway';
 
+@injectable()
 export default class JobRunner {
+  @inject(Types.IFsGateway)
+  fsGateway!: FsGateway;
+
   @inject(BuildAgentSettings)
   buildAgentSettings!: BuildAgentSettings;
 
@@ -126,11 +130,11 @@ export default class JobRunner {
     // So delete the local volume directory to give a clean start to the workflow,
     // without files saved from any previous run.
     if (checkoutJobs.includes(jobName) && 1 === checkoutJobs.length) {
-      fs.rmSync(localVolume, { recursive: true, force: true });
+      this.fsGateway.fs.rmSync(localVolume, { recursive: true, force: true });
     }
 
-    if (!fs.existsSync(localVolume)) {
-      fs.mkdirSync(localVolume, { recursive: true });
+    if (!this.fsGateway.fs.existsSync(localVolume)) {
+      this.fsGateway.fs.mkdirSync(localVolume, { recursive: true });
     }
 
     // This allows persisting files between jobs with persist_to_workspace and attach_workspace.
@@ -153,8 +157,10 @@ export default class JobRunner {
     );
 
     const logFilePath = getLogFilePath(configFilePath, jobName);
-    if (!fs.existsSync(path.dirname(logFilePath))) {
-      fs.mkdirSync(path.dirname(logFilePath), { recursive: true });
+    if (!this.fsGateway.fs.existsSync(path.dirname(logFilePath))) {
+      this.fsGateway.fs.mkdirSync(path.dirname(logFilePath), {
+        recursive: true,
+      });
     }
 
     const listeningProcess = this.jobListener.listen(

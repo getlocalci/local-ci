@@ -21,15 +21,23 @@ import RunWalkthroughJob from 'command/RunWalkthroughJob';
 import LogProviderFactory from 'log/LogProviderFactory';
 import Delayer from 'job/Delayer';
 import ConfigFile from 'config/ConfigFile';
+import CreateConfigFile from 'command/CreateConfigFile';
+import EnterLicense from 'command/EnterLicense';
+import GetLicense from 'command/GetLicense';
+import FirstActivation from 'job/FirstActivation';
 
 export default class Registrar {
   constructor(
     private context: vscode.ExtensionContext,
     private jobProvider: JobProvider,
     private licenseProvider: LicenseProvider,
+    private firstActivation: FirstActivation,
     private configFile: ConfigFile,
+    private createConfigFile: CreateConfigFile,
+    private getLicense: GetLicense,
     private licenseInput: LicenseInput,
     private editorGateway: EditorGateway,
+    private enterLicense: EnterLicense,
     private logProviderFactory: LogProviderFactory,
     private enterToken: EnterToken,
     private exitAllJobs: ExitAllJobs,
@@ -44,9 +52,12 @@ export default class Registrar {
 
   registerCommands(): vscode.Disposable[] {
     return [
+      this.createConfigFile,
+      this.enterLicense,
       this.enterToken,
       this.exitAllJobs,
       this.exitJob,
+      this.getLicense,
       this.refresh,
       this.reRunJob,
       this.runJob,
@@ -67,6 +78,10 @@ export default class Registrar {
 
   registerProviders() {
     return [
+      this.editorGateway.editor.window.registerTreeDataProvider(
+        JOB_TREE_VIEW_ID,
+        this.jobProvider
+      ),
       this.editorGateway.editor.window.registerWebviewViewProvider(
         LICENSE_TREE_VIEW_ID,
         this.licenseProvider
@@ -87,6 +102,8 @@ export default class Registrar {
    * vscode://LocalCI.local-ci/enterLicense
    */
   registerHandlers() {
+    this.firstActivation.handle(this.context);
+
     this.editorGateway.editor.window.registerUriHandler({
       handleUri: (uri: vscode.Uri) => {
         if (uri.path === '/enterLicense') {
@@ -99,7 +116,6 @@ export default class Registrar {
       },
     });
 
-    const delayer = new Delayer(2000);
     this.editorGateway.editor.workspace.onDidSaveTextDocument(
       async (textDocument: vscode.TextDocument): Promise<void> => {
         if (
@@ -107,7 +123,9 @@ export default class Registrar {
           textDocument.uri.fsPath ===
             (await this.configFile.getPath(this.context))
         ) {
-          delayer.trigger(() => this.jobProvider.hardRefresh(undefined, true));
+          new Delayer(2000).trigger(() =>
+            this.jobProvider.hardRefresh(undefined, true)
+          );
         }
       }
     );

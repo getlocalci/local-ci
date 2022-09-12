@@ -1,7 +1,6 @@
 import { injectable } from 'inversify';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import TelemetryReporter from '@vscode/extension-telemetry';
 import CommandFactory from './ComandFactory';
 import JobFactory from './JobFactory';
 import LogFactory from '../log/LogFactory';
@@ -26,6 +25,7 @@ import License from 'license/License';
 import FsGateway from 'common/FsGateway';
 import EditorGateway from 'common/EditorGateway';
 import JobTreeItem from './JobTreeItem';
+import ReporterGateway from 'common/ReporterGateway';
 
 enum JobError {
   DockerNotRunning,
@@ -52,7 +52,7 @@ export default class JobProvider
 
   constructor(
     private readonly context: vscode.ExtensionContext,
-    private readonly reporter: TelemetryReporter,
+    private readonly reporterGateway: ReporterGateway,
     private allConfigFiles: AllConfigFiles,
     private configFile: ConfigFile,
     private command: CommandFactory,
@@ -76,10 +76,6 @@ export default class JobProvider
   async init() {
     await this.loadJobs();
     await this.loadLogs();
-    this.editorGateway.editor.window.registerTreeDataProvider(
-      JOB_TREE_VIEW_ID,
-      this
-    );
   }
 
   /** Refreshes the TreeView, without processing the config file. */
@@ -114,7 +110,7 @@ export default class JobProvider
 
     const configFilePath = await this.configFile.getPath(this.context);
     if (!configFilePath || !this.fsGateway.fs.existsSync(configFilePath)) {
-      this.reporter.sendTelemetryEvent('configFilePath');
+      this.reporterGateway.reporter.sendTelemetryEvent('configFilePath');
 
       const doExistConfigPaths = !!(
         await this.allConfigFiles.getPaths(this.context)
@@ -122,7 +118,7 @@ export default class JobProvider
       if (doExistConfigPaths) {
         this.jobErrorType = JobError.NoConfigFilePathSelected;
       } else {
-        this.reporter.sendTelemetryErrorEvent('noConfigFile');
+        this.reporterGateway.reporter.sendTelemetryErrorEvent('noConfigFile');
         this.jobErrorType = JobError.NoConfigFilePathInWorkspace;
       }
 
@@ -135,7 +131,7 @@ export default class JobProvider
     if (!skipConfigProcessing) {
       const configResult = this.processedConfig.process(
         configFilePath,
-        this.reporter,
+        this.reporterGateway.reporter,
         skipMessage
       );
 
@@ -156,7 +152,7 @@ export default class JobProvider
     }
 
     if (!this.docker.isRunning()) {
-      this.reporter.sendTelemetryErrorEvent('dockerNotRunning');
+      this.reporterGateway.reporter.sendTelemetryErrorEvent('dockerNotRunning');
       this.jobErrorType = JobError.DockerNotRunning;
       this.jobErrorMessage = this.docker.getError();
       return;
