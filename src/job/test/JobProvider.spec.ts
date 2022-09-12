@@ -1,4 +1,4 @@
-import * as vscode from 'vscode';
+import type vscode from 'vscode';
 import { Substitute } from '@fluffy-spoon/substitute';
 import JobFactory from 'job/JobFactory';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';

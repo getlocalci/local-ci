@@ -1,4 +1,4 @@
-import * as vscode from 'vscode';
+import type vscode from 'vscode';
 import Types from 'common/Types';
 import AllConfigFiles from 'config/AllConfigFiles';
 import Config from 'config/Config';

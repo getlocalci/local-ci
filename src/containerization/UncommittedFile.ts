@@ -1,5 +1,5 @@
 import { inject, injectable } from 'inversify';
-import * as vscode from 'vscode';
+import type vscode from 'vscode';
 import { SUPPRESS_UNCOMMITTED_FILE_WARNING } from 'constant';
 import ChildProcessGateway from 'gateway/ChildProcessGateway';
 import Types from 'common/Types';

@@ -1,4 +1,4 @@
-import * as vscode from 'vscode';
+import type vscode from 'vscode';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
 import LocalCi from 'common/LocalCi';
 import { Substitute } from '@fluffy-spoon/substitute';

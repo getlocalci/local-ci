@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import * as vscode from 'vscode';
+import type vscode from 'vscode';
 import { Substitute } from '@fluffy-spoon/substitute';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
 import Types from 'common/Types';

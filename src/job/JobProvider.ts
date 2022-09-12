@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
 import * as path from 'path';
-import * as vscode from 'vscode';
+import type vscode from 'vscode';
 import CommandFactory from './ComandFactory';
 import JobFactory from './JobFactory';
 import LogFactory from '../log/LogFactory';

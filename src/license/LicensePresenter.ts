@@ -1,5 +1,5 @@
 import { inject, injectable } from 'inversify';
-import * as vscode from 'vscode';
+import type vscode from 'vscode';
 import getLicenseErrorMessage from './getLicenseErrorMessage';
 import getTimeRemainingInTrial from './getTimeRemainingInTrial';
 import getTrialLength from './getTrialLength';

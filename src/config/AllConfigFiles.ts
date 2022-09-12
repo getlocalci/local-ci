@@ -1,5 +1,5 @@
 import { inject, injectable } from 'inversify';
-import * as vscode from 'vscode';
+import type vscode from 'vscode';
 import { SELECTED_CONFIG_PATH } from 'constant';
 import getRepoBasename from 'common/getRepoBasename';
 import EditorGateway from 'gateway/EditorGateway';

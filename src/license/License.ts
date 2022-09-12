@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import Types from 'common/Types';
 import EditorGateway from 'gateway/EditorGateway';
-import * as vscode from 'vscode';
+import type vscode from 'vscode';
 import {
   DAY_IN_MILLISECONDS,
   LICENSE_ERROR,

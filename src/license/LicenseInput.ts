@@ -1,5 +1,5 @@
 import { inject, injectable } from 'inversify';
-import * as vscode from 'vscode';
+import type vscode from 'vscode';
 import { LICENSE_ERROR, GET_LICENSE_KEY_URL, LICENSE_KEY } from 'constant';
 import getLicenseErrorMessage from 'license/getLicenseErrorMessage';
 import License from './License';

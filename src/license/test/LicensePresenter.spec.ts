@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import * as sinon from 'sinon';
-import * as vscode from 'vscode';
+import type vscode from 'vscode';
 import { LICENSE_VALIDITY, LICENSE_VALIDITY_CACHE_EXPIRATION } from 'constant';
 import { Substitute } from '@fluffy-spoon/substitute';
 import LicensePresenter from 'license/LicensePresenter';

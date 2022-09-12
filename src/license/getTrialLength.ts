@@ -1,4 +1,4 @@
-import * as vscode from 'vscode';
+import type vscode from 'vscode';
 import {
   EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS,
   HAS_EXTENDED_TRIAL,
