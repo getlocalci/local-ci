@@ -4,21 +4,24 @@ import scriptGetPicardContainerFunction from './getPicardContainerFunction.sh';
 import scriptGetRunningContainerFunction from './getRunningContainerFunction.sh';
 import scriptWriteBuildAgentSettings from './writeBuildAgentSettings.sh';
 
-function stripBinSh(file: string) {
-  return file.replace(/^#!\/bin\/sh/, '').replace(`^\n\n`, '');
+function stripDevNotation(file: string) {
+  return file
+    .replace(/^#!\/bin\/sh/, '')
+    .replace(/^\n\n/, '')
+    .replace(/^# shellcheck .*\n/, '');
 }
 
-export const addEnvVars = stripBinSh(scriptAddEnvVars);
-export const dockerExecRunningContainer = stripBinSh(
+export const addEnvVars = stripDevNotation(scriptAddEnvVars);
+export const dockerExecRunningContainer = stripDevNotation(
   scriptDockerExecRunningContainer
 );
-export const getPicardContainerFunction = stripBinSh(
+export const getPicardContainerFunction = stripDevNotation(
   scriptGetPicardContainerFunction
 );
-export const getRunningContainerFunction = stripBinSh(
+export const getRunningContainerFunction = stripDevNotation(
   scriptGetRunningContainerFunction
 );
 
-export const writeBuildAgentSettings = stripBinSh(
+export const writeBuildAgentSettings = stripDevNotation(
   scriptWriteBuildAgentSettings
 );
