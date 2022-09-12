@@ -4,7 +4,7 @@ import type { Command } from './index';
 import { JOB_TREE_VIEW_ID } from 'constants/';
 import { getBinaryPath } from '../../node/binary';
 import Types from 'common/Types';
-import EditorGateway from 'common/EditorGateway';
+import EditorGateway from 'gateway/EditorGateway';
 
 @injectable()
 export default class EnterToken implements Command {

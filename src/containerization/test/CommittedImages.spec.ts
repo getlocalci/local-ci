@@ -1,6 +1,6 @@
 import CommittedImages from 'containerization/CommittedImages';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
-import FakeChildProcessGateway from 'common/FakeChildProcessGateway';
+import FakeChildProcessGateway from 'gateway/FakeChildProcessGateway';
 
 let testHarness: AppTestHarness;
 let committedImages: CommittedImages;

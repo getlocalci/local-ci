@@ -14,7 +14,7 @@ import {
   DYNAMIC_CONFIG_PATH_IN_CONTAINER,
 } from 'constants/';
 import { addEnvVars } from 'scripts/';
-import FsGateway from 'common/FsGateway';
+import FsGateway from 'gateway/FsGateway';
 
 @injectable()
 export default class ProcessFile {

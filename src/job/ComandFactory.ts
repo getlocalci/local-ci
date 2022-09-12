@@ -1,4 +1,4 @@
-import EditorGateway from 'common/EditorGateway';
+import EditorGateway from 'gateway/EditorGateway';
 import Types from 'common/Types';
 import { inject, injectable } from 'inversify';
 

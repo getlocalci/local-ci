@@ -32,10 +32,10 @@ import CommittedImages from 'containerization/CommittedImages';
 import UncommittedFile from '../containerization/UncommittedFile';
 import BuildAgentSettings from 'config/BuildAgentSettings';
 import Types from 'common/Types';
-import EditorGateway from 'common/EditorGateway';
+import EditorGateway from 'gateway/EditorGateway';
 import RunningContainer from 'containerization/RunningContainer';
 import JobTreeItem from './JobTreeItem';
-import FsGateway from 'common/FsGateway';
+import FsGateway from 'gateway/FsGateway';
 
 @injectable()
 export default class JobRunner {

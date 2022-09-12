@@ -2,7 +2,7 @@ import { inject, injectable } from 'inversify';
 import EnterToken from 'command/EnterToken';
 import ExitAllJobs from 'command/ExitAllJobs';
 import SelectRepo from 'command/SelectRepo';
-import EditorGateway from 'common/EditorGateway';
+import EditorGateway from 'gateway/EditorGateway';
 import Types from 'common/Types';
 import JobProvider from 'job/JobProvider';
 import type vscode from 'vscode';

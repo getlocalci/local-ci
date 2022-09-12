@@ -1,7 +1,7 @@
 import Spawn from 'common/Spawn';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
-import FakeEditorGateway from 'common/FakeEditorGateway';
-import FakeOsGateway from 'common/FakeOsGateway';
+import FakeEditorGateway from 'gateway/FakeEditorGateway';
+import FakeOsGateway from 'gateway/FakeOsGateway';
 
 let testHarness: AppTestHarness;
 let spawn: Spawn;

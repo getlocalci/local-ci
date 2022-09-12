@@ -1,7 +1,7 @@
 import Email from 'license/Email';
 import { EMAIL_ENDPOINT } from 'constants/';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
-import FakeHttpGateway from 'common/FakeHttpGateway';
+import FakeHttpGateway from 'gateway/FakeHttpGateway';
 
 let testHarness: AppTestHarness;
 let email: Email;

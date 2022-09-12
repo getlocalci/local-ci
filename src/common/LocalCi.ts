@@ -3,9 +3,9 @@ import { HOST_TMP_DIRECTORY } from 'constants/';
 import JobProviderFactory from 'job/JobProviderFactory';
 import LicenseProviderFactory from 'license/LicenseProviderFactory';
 import type vscode from 'vscode';
-import FsGateway from './FsGateway';
+import FsGateway from 'gateway/FsGateway';
 import RegistrarFactory from './RegistrarFactory';
-import ReporterGateway from './ReporterGateway';
+import ReporterGateway from 'gateway/ReporterGateway';
 import Types from './Types';
 
 @injectable()

@@ -1,7 +1,7 @@
 import EnterToken from 'command/EnterToken';
 import ExitAllJobs from 'command/ExitAllJobs';
 import SelectRepo from 'command/SelectRepo';
-import EditorGateway from 'common/EditorGateway';
+import EditorGateway from 'gateway/EditorGateway';
 import JobProvider from 'job/JobProvider';
 import type vscode from 'vscode';
 import type { Command } from 'command/index';

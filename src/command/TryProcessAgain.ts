@@ -3,7 +3,7 @@ import type vscode from 'vscode';
 import { PROCESS_TRY_AGAIN_COMMAND } from 'constants/';
 import JobProvider from 'job/JobProvider';
 import { inject, injectable } from 'inversify';
-import FsGateway from 'common/FsGateway';
+import FsGateway from 'gateway/FsGateway';
 import Types from 'common/Types';
 import ConfigFile from 'config/ConfigFile';
 import getDynamicConfigPath from 'config/getDynamicConfigPath';

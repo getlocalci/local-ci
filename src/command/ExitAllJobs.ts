@@ -4,8 +4,8 @@ import type { Command } from './index';
 import { COMMITTED_IMAGE_NAMESPACE, JOB_TREE_VIEW_ID } from 'constants/';
 import Types from 'common/Types';
 import JobProvider from 'job/JobProvider';
-import ReporterGateway from 'common/ReporterGateway';
-import EditorGateway from 'common/EditorGateway';
+import ReporterGateway from 'gateway/ReporterGateway';
+import EditorGateway from 'gateway/EditorGateway';
 import CommittedImages from 'containerization/CommittedImages';
 
 @injectable()

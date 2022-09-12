@@ -5,8 +5,8 @@ import type { Command } from './index';
 import { CREATE_CONFIG_FILE_COMMAND } from 'constants/';
 import Types from 'common/Types';
 import JobProvider from 'job/JobProvider';
-import ReporterGateway from 'common/ReporterGateway';
-import EditorGateway from 'common/EditorGateway';
+import ReporterGateway from 'gateway/ReporterGateway';
+import EditorGateway from 'gateway/EditorGateway';
 import getStarterConfig from 'config/getStarterConfig';
 
 @injectable()

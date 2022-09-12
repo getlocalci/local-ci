@@ -2,7 +2,7 @@ import { inject, injectable } from 'inversify';
 import * as vscode from 'vscode';
 import { SELECTED_CONFIG_PATH } from 'constants/';
 import getRepoBasename from 'common/getRepoBasename';
-import EditorGateway from 'common/EditorGateway';
+import EditorGateway from 'gateway/EditorGateway';
 import Types from 'common/Types';
 
 @injectable()

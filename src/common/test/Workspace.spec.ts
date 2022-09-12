@@ -1,6 +1,6 @@
 import Workspace from 'common/Workspace';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
-import FakeEditorGateway from 'common/FakeEditorGateway';
+import FakeEditorGateway from 'gateway/FakeEditorGateway';
 
 let testHarness: AppTestHarness;
 let workspace: Workspace;

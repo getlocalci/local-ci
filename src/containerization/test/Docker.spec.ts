@@ -1,6 +1,6 @@
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
 import Docker from 'containerization/Docker';
-import ChildProcessGateway from 'common/ChildProcessGateway';
+import ChildProcessGateway from 'gateway/ChildProcessGateway';
 import Types from 'common/Types';
 
 let testHarness: AppTestHarness;

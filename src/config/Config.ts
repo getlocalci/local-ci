@@ -8,10 +8,10 @@ import getProcessedConfig from './getProcessedConfig';
 import getProcessFilePath from 'process/getProcessFilePath';
 import ProcessFile from 'process/ProcessFile';
 import Types from 'common/Types';
-import FsGateway from 'common/FsGateway';
-import EditorGateway from 'common/EditorGateway';
+import FsGateway from 'gateway/FsGateway';
+import EditorGateway from 'gateway/EditorGateway';
 import Spawn from 'common/Spawn';
-import ChildProcessGateway from 'common/ChildProcessGateway';
+import ChildProcessGateway from 'gateway/ChildProcessGateway';
 
 @injectable()
 export default class Config {

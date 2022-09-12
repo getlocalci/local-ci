@@ -1,9 +1,9 @@
 import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
 import Types from 'common/Types';
-import EditorGateway from 'common/EditorGateway';
+import EditorGateway from 'gateway/EditorGateway';
 import { EXTENSION_ID, TRIAL_STARTED_TIMESTAMP } from 'constants/';
-import ReporterGateway from 'common/ReporterGateway';
+import ReporterGateway from 'gateway/ReporterGateway';
 import Email from 'license/Email';
 
 @injectable()

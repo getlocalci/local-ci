@@ -22,10 +22,10 @@ import {
   TRIAL_STARTED_TIMESTAMP,
 } from '../constants';
 import License from 'license/License';
-import FsGateway from 'common/FsGateway';
-import EditorGateway from 'common/EditorGateway';
+import FsGateway from 'gateway/FsGateway';
+import EditorGateway from 'gateway/EditorGateway';
 import JobTreeItem from './JobTreeItem';
-import ReporterGateway from 'common/ReporterGateway';
+import ReporterGateway from 'gateway/ReporterGateway';
 
 enum JobError {
   DockerNotRunning,

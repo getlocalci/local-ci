@@ -10,9 +10,9 @@ import getDynamicConfigPath from 'config/getDynamicConfigPath';
 import Spawn from 'common/Spawn';
 import LogFile from 'log/LogFile';
 import Types from 'common/Types';
-import ChildProcessGateway from 'common/ChildProcessGateway';
+import ChildProcessGateway from 'gateway/ChildProcessGateway';
 import ConfigFile from 'config/ConfigFile';
-import EditorGateway from 'common/EditorGateway';
+import EditorGateway from 'gateway/EditorGateway';
 
 @injectable()
 export default class JobListener {

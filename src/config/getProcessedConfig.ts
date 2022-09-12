@@ -1,6 +1,6 @@
 import type { ExecFileSyncOptions } from 'child_process';
 import { getBinaryPath } from '../../node/binary.js';
-import ChildProcessGateway from 'common/ChildProcessGateway.js';
+import ChildProcessGateway from 'gateway/ChildProcessGateway.js';
 
 /**
  * Gets the contents of the processed .circleci/config.yml file.

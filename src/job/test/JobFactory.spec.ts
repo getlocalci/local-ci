@@ -1,6 +1,6 @@
 import JobFactory from 'job/JobFactory';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
-import FakeEditorGateway from 'common/FakeEditorGateway';
+import FakeEditorGateway from 'gateway/FakeEditorGateway';
 
 let testHarness: AppTestHarness;
 let jobFactory: JobFactory;

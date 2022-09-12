@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
-import OsGateway from './OsGateway';
-import ProcessGateway from './ProcessGateway';
+import OsGateway from 'gateway/OsGateway';
+import ProcessGateway from 'gateway/ProcessGateway';
 import Types from './Types';
 
 @injectable()

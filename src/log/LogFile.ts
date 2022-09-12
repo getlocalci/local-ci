@@ -1,7 +1,7 @@
 import { LOG_FILE_SCHEME } from 'constants/';
 import { inject, injectable } from 'inversify';
 import Types from 'common/Types';
-import EditorGateway from 'common/EditorGateway';
+import EditorGateway from 'gateway/EditorGateway';
 
 @injectable()
 export default class LogFile {

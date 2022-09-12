@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import EnvPath from './EnvPath';
-import ProcessGateway from './ProcessGateway';
+import ProcessGateway from 'gateway/ProcessGateway';
 import Workspace from './Workspace';
 
 @injectable()

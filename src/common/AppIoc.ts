@@ -1,14 +1,14 @@
 import 'reflect-metadata';
 import { Container } from 'inversify';
-import ChildProcessGateway from 'common/ChildProcessGateway';
-import EditorGateway from 'common/EditorGateway';
-import FsGateway from 'common/FsGateway';
-import HttpGateway from 'common/HttpGateway';
-import ProcessGateway from 'common/ProcessGateway';
+import ChildProcessGateway from 'gateway/ChildProcessGateway';
+import EditorGateway from 'gateway/EditorGateway';
+import FsGateway from 'gateway/FsGateway';
+import HttpGateway from 'gateway/HttpGateway';
+import ProcessGateway from 'gateway/ProcessGateway';
 import BaseIoc from 'common/BaseIoc';
 import Types from 'common/Types';
-import ReporterGateway from './ReporterGateway';
-import OsGateway from './OsGateway';
+import ReporterGateway from 'gateway/ReporterGateway';
+import OsGateway from 'gateway/OsGateway';
 
 export const iocContainer: Container = new BaseIoc().buildBaseTemplate();
 

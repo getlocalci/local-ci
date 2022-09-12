@@ -2,7 +2,7 @@ import { inject, injectable } from 'inversify';
 
 import Spawn from 'common/Spawn';
 import Types from 'common/Types';
-import ChildProcessGateway from 'common/ChildProcessGateway';
+import ChildProcessGateway from 'gateway/ChildProcessGateway';
 
 @injectable()
 class Docker {

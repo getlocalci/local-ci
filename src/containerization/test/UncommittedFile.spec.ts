@@ -2,8 +2,8 @@ import * as vscode from 'vscode';
 import { Substitute } from '@fluffy-spoon/substitute';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
 import UncommittedFile from 'containerization/UncommittedFile';
-import FakeEditorGateway from 'common/FakeEditorGateway';
-import FakeChildProcessGateway from 'common/FakeChildProcessGateway';
+import FakeEditorGateway from 'gateway/FakeEditorGateway';
+import FakeChildProcessGateway from 'gateway/FakeChildProcessGateway';
 
 function getMockContext(isSuppressed: boolean) {
   const initialContext = Substitute.for<vscode.ExtensionContext>();

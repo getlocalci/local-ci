@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
 import LocalCi from 'common/LocalCi';
 import { Substitute } from '@fluffy-spoon/substitute';
-import FakeEditorGateway from 'common/FakeEditorGateway';
+import FakeEditorGateway from 'gateway/FakeEditorGateway';
 const getContext = () => Substitute.for<vscode.ExtensionContext>();
 
 let testHarness: AppTestHarness;

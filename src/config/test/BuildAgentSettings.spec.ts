@@ -1,6 +1,6 @@
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
-import FakeChildProcessGateway from 'common/FakeChildProcessGateway';
-import FakeOsGateway from 'common/FakeOsGateway';
+import FakeChildProcessGateway from 'gateway/FakeChildProcessGateway';
+import FakeOsGateway from 'gateway/FakeOsGateway';
 import BuildAgentSettings from 'config/BuildAgentSettings';
 
 let testHarness: AppTestHarness;

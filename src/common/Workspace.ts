@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import Types from 'common/Types';
-import EditorGateway from './EditorGateway';
+import EditorGateway from 'gateway/EditorGateway';
 
 @injectable()
 export default class Workspace {

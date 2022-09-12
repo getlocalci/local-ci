@@ -11,10 +11,10 @@ import JobFactory from './JobFactory';
 import WarningFactory from './WarningFactory';
 import AllJobs from './AllJobs';
 import { inject, injectable } from 'inversify';
-import FsGateway from 'common/FsGateway';
-import EditorGateway from 'common/EditorGateway';
+import FsGateway from 'gateway/FsGateway';
+import EditorGateway from 'gateway/EditorGateway';
 import JobProvider from './JobProvider';
-import ReporterGateway from 'common/ReporterGateway';
+import ReporterGateway from 'gateway/ReporterGateway';
 
 @injectable()
 export default class JobProviderFactory {

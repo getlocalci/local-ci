@@ -2,7 +2,7 @@ import { inject, injectable } from 'inversify';
 import getTerminalName from './getTerminalName';
 import getDebuggingTerminalName from './getDebuggingTerminalName';
 import getFinalTerminalName from './getFinalTerminalName';
-import EditorGateway from 'common/EditorGateway';
+import EditorGateway from 'gateway/EditorGateway';
 import Types from 'common/Types';
 
 @injectable()

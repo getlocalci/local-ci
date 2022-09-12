@@ -1,4 +1,4 @@
-import FakeEditorGateway from 'common/FakeEditorGateway';
+import FakeEditorGateway from 'gateway/FakeEditorGateway';
 import JobTerminals from 'terminal/JobTerminals';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
 

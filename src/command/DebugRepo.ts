@@ -3,8 +3,8 @@ import type vscode from 'vscode';
 import { SELECTED_CONFIG_PATH } from 'constants/';
 import Types from 'common/Types';
 import JobProvider from 'job/JobProvider';
-import ReporterGateway from 'common/ReporterGateway';
-import EditorGateway from 'common/EditorGateway';
+import ReporterGateway from 'gateway/ReporterGateway';
+import EditorGateway from 'gateway/EditorGateway';
 
 @injectable()
 export default class DebugRepo {

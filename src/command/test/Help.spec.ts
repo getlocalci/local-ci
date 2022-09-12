@@ -1,7 +1,7 @@
 import Help from 'command/Help';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
-import FakeEditorGateway from 'common/FakeEditorGateway';
-import FakeReporterGateway from 'common/FakeReporterGateway';
+import FakeEditorGateway from 'gateway/FakeEditorGateway';
+import FakeReporterGateway from 'gateway/FakeReporterGateway';
 
 let help: Help;
 let editorGateway: FakeEditorGateway;

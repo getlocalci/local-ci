@@ -4,7 +4,7 @@ import type { Command } from './index';
 import { LICENSE_TREE_VIEW_ID } from 'constants/';
 import JobProvider from 'job/JobProvider';
 import LicenseProvider from 'license/LicenseProvider';
-import EditorGateway from 'common/EditorGateway';
+import EditorGateway from 'gateway/EditorGateway';
 import Types from 'common/Types';
 
 @injectable()

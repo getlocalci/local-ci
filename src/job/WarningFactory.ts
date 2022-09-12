@@ -1,5 +1,5 @@
 import { inject, injectable } from 'inversify';
-import EditorGateway from 'common/EditorGateway';
+import EditorGateway from 'gateway/EditorGateway';
 import * as vscode from 'vscode';
 import Types from 'common/Types';
 

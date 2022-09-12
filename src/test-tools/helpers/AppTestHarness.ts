@@ -1,13 +1,13 @@
+import { Container } from 'inversify';
 import Types from 'common/Types';
 import BaseIOC from 'common/BaseIoc';
-import FakeEditorGateway from 'common/FakeEditorGateway';
-import FakeFsGateway from 'common/FakeFsGateway';
-import FakeChildProcessGateway from 'common/FakeChildProcessGateway';
-import FakeOsGateway from 'common/FakeOsGateway';
-import FakeProcessGateway from 'common/FakeProcessGateway';
-import FakeHttpGateway from 'common/FakeHttpGateway';
-import { Container } from 'inversify';
-import FakeReporterGateway from 'common/FakeReporterGateway';
+import FakeEditorGateway from 'gateway/FakeEditorGateway';
+import FakeFsGateway from 'gateway/FakeFsGateway';
+import FakeChildProcessGateway from 'gateway/FakeChildProcessGateway';
+import FakeOsGateway from 'gateway/FakeOsGateway';
+import FakeProcessGateway from 'gateway/FakeProcessGateway';
+import FakeHttpGateway from 'gateway/FakeHttpGateway';
+import FakeReporterGateway from 'gateway/FakeReporterGateway';
 
 export default class AppTestHarness {
   container!: Container;

@@ -1,7 +1,7 @@
 import EnvPath from 'common/EnvPath';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
-import FakeOsGateway from 'common/FakeOsGateway';
-import FakeProcessGateway from 'common/FakeProcessGateway';
+import FakeOsGateway from 'gateway/FakeOsGateway';
+import FakeProcessGateway from 'gateway/FakeProcessGateway';
 
 let testHarness: AppTestHarness;
 let envPath: EnvPath;

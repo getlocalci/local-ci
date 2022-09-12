@@ -4,7 +4,7 @@ import getLicenseErrorMessage from 'license/getLicenseErrorMessage';
 import License from 'license/License';
 import LicenseInput from 'license/LicenseInput';
 import LicensePresenter from 'license/LicensePresenter';
-import EditorGateway from 'common/EditorGateway';
+import EditorGateway from 'gateway/EditorGateway';
 
 function getNonce() {
   const possible =

@@ -1,9 +1,9 @@
 import { inject, injectable } from 'inversify';
 import { EMAIL_ENDPOINT, EXTENSION_ID } from 'constants/';
 import Types from 'common/Types';
-import HttpGateway from 'common/HttpGateway';
-import EditorGateway from 'common/EditorGateway';
-import ReporterGateway from 'common/ReporterGateway';
+import HttpGateway from 'gateway/HttpGateway';
+import EditorGateway from 'gateway/EditorGateway';
+import ReporterGateway from 'gateway/ReporterGateway';
 
 @injectable()
 export default class Email {

@@ -1,6 +1,6 @@
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
-import FakeChildProcessGateway from 'common/FakeChildProcessGateway';
-import FakeEditorGateway from 'common/FakeEditorGateway';
+import FakeChildProcessGateway from 'gateway/FakeChildProcessGateway';
+import FakeEditorGateway from 'gateway/FakeEditorGateway';
 import FinalTerminal from '../FinalTerminal';
 
 let testHarness: AppTestHarness;

@@ -4,8 +4,8 @@ import type { Command } from './index';
 import { DO_NOT_CONFIRM_RUN_JOB, RUN_JOB_COMMAND } from 'constants/';
 import Types from 'common/Types';
 import JobProvider from 'job/JobProvider';
-import ReporterGateway from 'common/ReporterGateway';
-import EditorGateway from 'common/EditorGateway';
+import ReporterGateway from 'gateway/ReporterGateway';
+import EditorGateway from 'gateway/EditorGateway';
 import JobRunner from 'job/JobRunner';
 import JobTreeItem from 'job/JobTreeItem';
 

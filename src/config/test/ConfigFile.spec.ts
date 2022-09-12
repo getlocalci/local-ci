@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { Substitute } from '@fluffy-spoon/substitute';
 import ConfigFile from 'config/ConfigFile';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
-import EditorGateway from 'common/EditorGateway';
+import EditorGateway from 'gateway/EditorGateway';
 import Types from 'common/Types';
 
 function getMockContext(filePath: string) {

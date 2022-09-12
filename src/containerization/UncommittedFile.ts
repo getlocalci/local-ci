@@ -1,10 +1,10 @@
 import { inject, injectable } from 'inversify';
 import * as vscode from 'vscode';
 import { SUPPRESS_UNCOMMITTED_FILE_WARNING } from 'constants/';
-import ChildProcessGateway from 'common/ChildProcessGateway';
+import ChildProcessGateway from 'gateway/ChildProcessGateway';
 import Types from 'common/Types';
 import Spawn from 'common/Spawn';
-import EditorGateway from 'common/EditorGateway';
+import EditorGateway from 'gateway/EditorGateway';
 
 @injectable()
 export default class UncommittedFile {

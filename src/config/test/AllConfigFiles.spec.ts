@@ -4,7 +4,7 @@ import { Substitute } from '@fluffy-spoon/substitute';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
 import Types from 'common/Types';
 import AllConfigFiles from 'config/AllConfigFiles';
-import FakeEditorGateway from 'common/FakeEditorGateway';
+import FakeEditorGateway from 'gateway/FakeEditorGateway';
 
 function getMockContext(filePath: string) {
   const initialContext = Substitute.for<vscode.ExtensionContext>();

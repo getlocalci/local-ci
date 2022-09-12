@@ -1,4 +1,4 @@
-import FsGateway from 'common/FsGateway';
+import FsGateway from 'gateway/FsGateway';
 import type vscode from 'vscode';
 
 export default class LogProvider implements vscode.TextDocumentContentProvider {

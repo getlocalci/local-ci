@@ -4,7 +4,7 @@ import { LICENSE_ERROR, GET_LICENSE_KEY_URL, LICENSE_KEY } from 'constants/';
 import getLicenseErrorMessage from 'license/getLicenseErrorMessage';
 import License from './License';
 import sanitizeLicenseKey from './sanitizeLicenseKey';
-import EditorGateway from 'common/EditorGateway';
+import EditorGateway from 'gateway/EditorGateway';
 import Types from 'common/Types';
 
 @injectable()
