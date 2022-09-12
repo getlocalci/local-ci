@@ -25,6 +25,7 @@ import {
 import License from 'license/License';
 import FsGateway from 'common/FsGateway';
 import EditorGateway from 'common/EditorGateway';
+import JobTreeItem from './JobTreeItem';
 
 enum JobError {
   DockerNotRunning,
@@ -88,7 +89,7 @@ export default class JobProvider
 
   /** Processes the config file(s) and refreshes. */
   async hardRefresh(
-    job?: vscode.TreeItem,
+    job?: JobTreeItem,
     suppressMessage?: boolean
   ): Promise<void> {
     await this.loadJobs(false, suppressMessage);
@@ -192,7 +193,7 @@ export default class JobProvider
     return treeItem;
   }
 
-  getChildren(parentElement?: vscode.TreeItem): Array<vscode.TreeItem> {
+  getChildren(parentElement?: JobTreeItem): Array<vscode.TreeItem> {
     if (!parentElement) {
       return this.jobs.length
         ? this.getJobTreeItems(
@@ -206,8 +207,7 @@ export default class JobProvider
     const jobNames = this.jobDependencies?.keys();
     if (
       !jobNames ||
-      ('getJobName' in parentElement &&
-        !this.jobFactory.getJobName(parentElement))
+      ('getJobName' in parentElement && !parentElement?.getJobName())
     ) {
       return [];
     }
@@ -227,9 +227,7 @@ export default class JobProvider
 
     return [
       ...this.getLogTreeItems(
-        'getJobName' in parentElement
-          ? this.jobFactory.getJobName(parentElement)
-          : ''
+        'getJobName' in parentElement ? parentElement.getJobName() : ''
       ),
       ...this.getJobTreeItems(children),
     ];

@@ -7,6 +7,7 @@ import JobProvider from 'job/JobProvider';
 import ReporterGateway from 'common/ReporterGateway';
 import EditorGateway from 'common/EditorGateway';
 import JobRunner from 'job/JobRunner';
+import JobTreeItem from 'job/JobTreeItem';
 
 @injectable()
 export default class RunJob implements Command {
@@ -26,7 +27,7 @@ export default class RunJob implements Command {
   }
 
   getCallback(context: vscode.ExtensionContext, jobProvider: JobProvider) {
-    return async (jobName: string, job?: vscode.TreeItem) => {
+    return async (jobName: string, job?: JobTreeItem) => {
       if (!jobName) {
         this.editorGateway.editor.window.showWarningMessage(
           'Please click a specific job to run it'

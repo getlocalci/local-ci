@@ -1,4 +1,4 @@
-import { Container } from 'inversify';
+import { Container as IocContainer } from 'inversify';
 import AllConfigFiles from 'config/AllConfigFiles';
 import AllJobs from 'job/AllJobs';
 import BuildAgentSettings from 'config/BuildAgentSettings';
@@ -6,6 +6,7 @@ import CommittedImages from 'containerization/CommittedImages';
 import CommandFactory from 'job/ComandFactory';
 import Config from 'config/Config';
 import ConfigFile from 'config/ConfigFile';
+import RunningContainer from 'containerization/RunningContainer';
 import Docker from 'containerization/Docker';
 import Email from 'license/Email';
 import EnvPath from 'common/EnvPath';
@@ -14,11 +15,14 @@ import FinalTerminal from 'terminal/FinalTerminal';
 import JobFactory from 'job/JobFactory';
 import JobProviderFactory from 'job/JobProviderFactory';
 import JobRunner from 'job/JobRunner';
+import JobListener from 'job/JobListener';
 import JobTerminals from 'terminal/JobTerminals';
+import LatestCommittedImage from 'containerization/LatestCommittedImage';
 import License from 'license/License';
 import LicenseInput from 'license/LicenseInput';
 import LicenseProviderFactory from 'license/LicenseProviderFactory';
 import LogFactory from 'log/LogFactory';
+import LogFile from 'log/LogFile';
 import ParsedConfig from 'config/ParsedConfig';
 import ProcessFile from 'process/ProcessFile';
 import Refresh from 'command/Refresh';
@@ -39,16 +43,16 @@ import SelectRepo from 'command/SelectRepo';
  * For classes that are the same in production and unit tests.
  */
 export default class BaseIoc {
-  container: Container;
+  container: IocContainer;
 
   constructor() {
-    this.container = new Container({
+    this.container = new IocContainer({
       autoBindInjectable: true,
       defaultScope: 'Transient',
     });
   }
 
-  buildBaseTemplate(): Container {
+  buildBaseTemplate(): IocContainer {
     this.container.bind(AllConfigFiles).toSelf();
     this.container.bind(AllJobs).toSelf();
     this.container.bind(BuildAgentSettings).toSelf();
@@ -56,6 +60,7 @@ export default class BaseIoc {
     this.container.bind(CommittedImages).toSelf();
     this.container.bind(Config).toSelf();
     this.container.bind(ConfigFile).toSelf();
+    this.container.bind(RunningContainer).toSelf();
     this.container.bind(Docker).toSelf();
     this.container.bind(Email).toSelf();
     this.container.bind(EnterToken).toSelf();
@@ -64,10 +69,13 @@ export default class BaseIoc {
     this.container.bind(ExitJob).toSelf();
     this.container.bind(FinalTerminal).toSelf();
     this.container.bind(JobFactory).toSelf();
+    this.container.bind(JobListener).toSelf();
     this.container.bind(JobProviderFactory).toSelf();
     this.container.bind(JobRunner).toSelf();
     this.container.bind(JobTerminals).toSelf();
     this.container.bind(LogFactory).toSelf();
+    this.container.bind(LogFile).toSelf();
+    this.container.bind(LatestCommittedImage).toSelf();
     this.container.bind(License).toSelf();
     this.container.bind(LicenseInput).toSelf();
     this.container.bind(LicenseProviderFactory).toSelf();

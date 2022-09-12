@@ -16,9 +16,9 @@ describe('Job', () => {
 
   test('no element passed', () => {
     const jobName = 'this-is-your-job';
-    expect(
-      jobFactory.getJobName(jobFactory.create(jobName, false, false))
-    ).toEqual(jobName);
+    expect(jobFactory.create(jobName, false, false).getJobName()).toEqual(
+      jobName
+    );
   });
 
   test('is running', () => {
@@ -33,15 +33,18 @@ describe('Job', () => {
 
   test('is success', () => {
     const job = jobFactory.create('example', false, false);
-    expect(jobFactory.setIsSuccess(job).description).toEqual('✅');
+    job.setIsSuccess();
+    expect(job.description).toEqual('✅');
 
-    expect(jobFactory.setIsFailure(job).description).toEqual('❌');
+    job.setIsFailure();
+    expect(job.description).toEqual('❌');
   });
 
   test('is expanded', () => {
     const job = jobFactory.create('example', false, false);
 
-    expect(jobFactory.setExpanded(job).collapsibleState).toEqual(
+    job.setExpanded();
+    expect(job.collapsibleState).toEqual(
       editorGateway.editor.TreeItemCollapsibleState.Expanded
     );
   });

@@ -6,6 +6,7 @@ import JobProvider from 'job/JobProvider';
 import JobRunner from 'job/JobRunner';
 import JobFactory from 'job/JobFactory';
 import JobTerminals from 'terminal/JobTerminals';
+import JobTreeItem from 'job/JobTreeItem';
 
 @injectable()
 export default class ExitJob implements Command {
@@ -25,11 +26,11 @@ export default class ExitJob implements Command {
   }
 
   getCallback(context: vscode.ExtensionContext, jobProvider: JobProvider) {
-    return (job: vscode.TreeItem) => {
-      const newJob = this.jobFactory.setIsNotRunning(job);
-      const jobName = this.jobFactory.getJobName(newJob);
+    return (job: JobTreeItem) => {
+      job.setIsNotRunning();
+      const jobName = job.getJobName();
 
-      jobProvider.refresh(newJob);
+      jobProvider.refresh(job);
       this.jobTerminals.dispose(jobName);
     };
   }

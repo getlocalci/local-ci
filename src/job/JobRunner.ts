@@ -3,24 +3,21 @@ import * as fs from 'fs';
 import type vscode from 'vscode';
 import { getBinaryPath } from '../../node/binary';
 import areTerminalsClosed from 'terminal/areTerminalsClosed';
-import commitContainer from 'containerization/commitContainer';
 import getCheckoutJobs from './getCheckoutJobs';
 import getDebuggingTerminalName from 'terminal/getDebuggingTerminalName';
 import getFinalDebuggingTerminalName from 'terminal/getFinalTerminalName';
 import getLogFilePath from 'log/getLogFilePath';
 import getImageFromJob from 'containerization/getImageFromJob';
-import getLatestCommittedImage from 'containerization/getLatestCommittedImage';
+import LatestCommittedImage from 'containerization/LatestCommittedImage';
 import getLocalVolumePath from 'containerization/getLocalVolumePath';
 import getProcessFilePath from 'process/getProcessFilePath';
 import getTerminalName from 'terminal/getTerminalName';
-import listenToJob from './listenToJob';
-import JobClass from 'job/JobFactory';
+import JobListener from './JobListener';
 import {
   COMMITTED_IMAGE_NAMESPACE,
   CONTAINER_STORAGE_DIRECTORY,
   CONTINUE_PIPELINE_STEP_NAME,
 } from 'constants/';
-import uncommittedWarning from '../containerization/UncommittedFile';
 import getDynamicConfigPath from 'config/getDynamicConfigPath';
 import JobProvider from 'job/JobProvider';
 import {
@@ -37,7 +34,8 @@ import UncommittedFile from '../containerization/UncommittedFile';
 import BuildAgentSettings from 'config/BuildAgentSettings';
 import Types from 'common/Types';
 import EditorGateway from 'common/EditorGateway';
-import { TreeItem } from 'vscode';
+import RunningContainer from 'containerization/RunningContainer';
+import JobTreeItem from './JobTreeItem';
 
 export default class JobRunner {
   @inject(BuildAgentSettings)
@@ -49,6 +47,9 @@ export default class JobRunner {
   @inject(ConfigFile)
   configFile!: ConfigFile;
 
+  @inject(RunningContainer)
+  runningContainer!: RunningContainer;
+
   @inject(Types.IEditorGateway)
   editorGateway!: EditorGateway;
 
@@ -57,6 +58,12 @@ export default class JobRunner {
 
   @inject(JobFactory)
   jobFactory!: JobFactory;
+
+  @inject(JobListener)
+  jobListener!: JobListener;
+
+  @inject(LatestCommittedImage)
+  latestCommittedImage!: LatestCommittedImage;
 
   @inject(ParsedConfig)
   parsedConfig!: ParsedConfig;
@@ -68,11 +75,12 @@ export default class JobRunner {
     context: vscode.ExtensionContext,
     jobName: string,
     jobProvider: JobProvider,
-    job: vscode.TreeItem | undefined
+    job: JobTreeItem | undefined
   ): Promise<void> {
-    const runningJob =
-      job instanceof TreeItem ? this.jobFactory.setIsRunning(job) : job;
-    await jobProvider.hardRefresh(runningJob);
+    if (job && job instanceof JobTreeItem) {
+      job.setIsRunning();
+      await jobProvider.hardRefresh(job);
+    }
 
     const configFilePath = await this.configFile.getPath(context);
     const repoPath = path.dirname(path.dirname(configFilePath));
@@ -139,17 +147,20 @@ export default class JobRunner {
     const committedImageRepo = `${COMMITTED_IMAGE_NAMESPACE}/${jobName}`;
 
     const jobImage = getImageFromJob(jobInConfig);
-    const commitProcess = commitContainer(jobImage, committedImageRepo);
+    const commitProcess = this.runningContainer.commit(
+      jobImage,
+      committedImageRepo
+    );
 
     const logFilePath = getLogFilePath(configFilePath, jobName);
     if (!fs.existsSync(path.dirname(logFilePath))) {
       fs.mkdirSync(path.dirname(logFilePath), { recursive: true });
     }
 
-    const listeningProcess = listenToJob(
+    const listeningProcess = this.jobListener.listen(
       context,
       jobProvider,
-      runningJob,
+      job,
       commitProcess,
       this.doesJobCreateDynamicConfig(jobInConfig),
       jobConfigPath,
@@ -200,7 +211,7 @@ export default class JobRunner {
           return;
         }
 
-        const latestCommmittedImageId = await getLatestCommittedImage(
+        const latestCommmittedImageId = await this.latestCommittedImage.get(
           committedImageRepo
         );
 

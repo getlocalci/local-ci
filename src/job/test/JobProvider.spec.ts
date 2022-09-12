@@ -4,6 +4,7 @@ import TelemetryReporter from '@vscode/extension-telemetry';
 import JobFactory from 'job/JobFactory';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
 import JobProviderFactory from 'job/JobProviderFactory';
+import JobTreeItem from 'job/JobTreeItem';
 
 function getStubs(): [vscode.ExtensionContext, TelemetryReporter] {
   return [
@@ -44,9 +45,9 @@ describe('JobProvider', () => {
     const children = jobProviderFactory
       .create(...getStubs(), allJobs)
       .getChildren(jobFactory.create('foo', false, false));
-    expect(children.length).toEqual(2);
 
-    expect(jobFactory.getJobName(children[0])).toEqual('baz');
-    expect(jobFactory.getJobName(children[1])).toEqual('example');
+    expect(children.length).toEqual(2);
+    expect((children[0] as JobTreeItem).getJobName()).toEqual('baz');
+    expect((children[1] as JobTreeItem).getJobName()).toEqual('example');
   });
 });

@@ -40,7 +40,7 @@ import getStarterConfig from 'config/getStarterConfig';
 import prepareConfig from 'config/Config';
 import runJob from 'job/JobRunner';
 import showLicenseInput from 'license/LicenseInput';
-import showLogFile from 'log/showLogFile';
+import showLogFile from 'log/LogFile';
 import askForEmail from 'license/Email';
 import RegistrarFactory from 'common/RegistrarFactory';
 
