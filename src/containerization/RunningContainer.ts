@@ -2,7 +2,7 @@ import { inject, injectable } from 'inversify';
 import ChildProcessGateway from 'gateway/ChildProcessGateway';
 import Spawn from 'common/Spawn';
 import Types from 'common/Types';
-import { getRunningContainerFunction } from 'scripts/';
+import { getRunningContainerFunction } from 'script';
 
 @injectable()
 export default class RunningContainer {

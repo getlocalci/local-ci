@@ -13,7 +13,7 @@ import {
   DYNAMIC_CONFIG_PARAMETERS_FILE_NAME,
   DYNAMIC_CONFIG_PATH_IN_CONTAINER,
 } from 'constant';
-import { addEnvVars } from 'scripts/';
+import { addEnvVars } from 'script';
 import FsGateway from 'gateway/FsGateway';
 
 @injectable()

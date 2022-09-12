@@ -4,7 +4,6 @@ import type vscode from 'vscode';
 import JobProvider from 'job/JobProvider';
 import JobTreeItem from 'job/JobTreeItem';
 import { SUPPRESS_JOB_COMPLETE_MESSAGE } from 'constant';
-import { getPicardContainerFunction } from 'scripts';
 import ParsedConfig from 'config/ParsedConfig';
 import getDynamicConfigPath from 'config/getDynamicConfigPath';
 import Spawn from 'common/Spawn';
@@ -13,6 +12,7 @@ import Types from 'common/Types';
 import ChildProcessGateway from 'gateway/ChildProcessGateway';
 import ConfigFile from 'config/ConfigFile';
 import EditorGateway from 'gateway/EditorGateway';
+import { getPicardContainerFunction } from 'script';
 
 @injectable()
 export default class JobListener {

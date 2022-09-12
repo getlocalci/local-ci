@@ -35,7 +35,7 @@ import {
 import {
   dockerExecRunningContainer,
   getRunningContainerFunction,
-} from 'scripts/';
+} from 'script';
 
 @injectable()
 export default class JobRunner {

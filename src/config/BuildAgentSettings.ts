@@ -3,7 +3,7 @@ import Spawn from 'common/Spawn';
 import OsGateway from 'gateway/OsGateway';
 import Types from 'common/Types';
 import ChildProcessGateway from 'gateway/ChildProcessGateway';
-import { writeBuildAgentSettings } from 'scripts/';
+import { writeBuildAgentSettings } from 'script';
 
 @injectable()
 export default class BuildAgentSettings {
