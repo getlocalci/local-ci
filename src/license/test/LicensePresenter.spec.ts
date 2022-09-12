@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import * as sinon from 'sinon';
 import type vscode from 'vscode';
 import { LICENSE_VALIDITY, LICENSE_VALIDITY_CACHE_EXPIRATION } from 'constant';
 import { Substitute } from '@fluffy-spoon/substitute';
@@ -23,13 +22,13 @@ function getMockContext(licenseKey: string, cachedValidity: boolean) {
       },
       keys: () => ['foo'],
       update: async () => {},
-      setKeysForSync: sinon.mock(),
+      setKeysForSync: jest.fn(),
     },
     secrets: {
       ...initialContext.secrets,
       delete: async () => {},
       get: async () => licenseKey,
-      store: sinon.mock(),
+      store: jest.fn(),
     },
   };
 }
