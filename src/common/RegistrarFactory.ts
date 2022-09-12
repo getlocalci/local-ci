@@ -21,15 +21,21 @@ import CreateConfigFile from 'command/CreateConfigFile';
 import EnterLicense from 'command/EnterLicense';
 import GetLicense from 'command/GetLicense';
 import FirstActivation from 'job/FirstActivation';
+import DebugRepo from 'command/DebugRepo';
+import Help from 'command/Help';
+import RefreshLicenseTree from 'command/RefreshLicenseTree';
+import ShowLogFile from 'command/ShowLogFile';
 
 @injectable()
 export default class RegistrarFactory {
   constructor(
     @inject(Types.IEditorGateway) private editorGateway: EditorGateway,
     @inject(ConfigFile) private configFile: ConfigFile,
+    @inject(DebugRepo) private debugRepo: DebugRepo,
     @inject(CreateConfigFile) private createConfigFile: CreateConfigFile,
     @inject(FirstActivation) private firstActivation: FirstActivation,
     @inject(GetLicense) private getLicense: GetLicense,
+    @inject(Help) private help: Help,
     @inject(LogProviderFactory) private logProviderFactory: LogProviderFactory,
     @inject(EnterLicense) private enterLicense: EnterLicense,
     @inject(EnterToken) private enterToken: EnterToken,
@@ -37,8 +43,10 @@ export default class RegistrarFactory {
     @inject(ExitJob) private exitJob: ExitJob,
     @inject(LicenseInput) private licenseInput: LicenseInput,
     @inject(Refresh) private refresh: Refresh,
+    @inject(RefreshLicenseTree) private refreshLicenseTree: RefreshLicenseTree,
     @inject(ReRunJob) private reRunJob: ReRunJob,
     @inject(RunJob) private runJob: RunJob,
+    @inject(ShowLogFile) private showLogFile: ShowLogFile,
     @inject(RunWalkthroughJob) private runWalkthroughJob: RunWalkthroughJob,
     @inject(SelectRepo) private selectRepo: SelectRepo,
     @inject(TryProcessAgain) private tryProcessAgain: TryProcessAgain
@@ -55,20 +63,24 @@ export default class RegistrarFactory {
       licenseProvider,
       this.firstActivation,
       this.configFile,
+      this.debugRepo,
       this.createConfigFile,
       this.getLicense,
       this.licenseInput,
       this.editorGateway,
       this.enterLicense,
+      this.help,
       this.logProviderFactory,
       this.enterToken,
       this.exitAllJobs,
       this.exitJob,
       this.refresh,
+      this.refreshLicenseTree,
       this.reRunJob,
       this.runJob,
       this.runWalkthroughJob,
       this.selectRepo,
+      this.showLogFile,
       this.tryProcessAgain
     );
   }

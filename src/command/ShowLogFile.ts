@@ -4,7 +4,7 @@ import { SHOW_LOG_FILE_COMMAND } from 'constants/';
 import LogFile from 'log/LogFile';
 
 @injectable()
-export default class EnterLicense implements Command {
+export default class ShowLogFile implements Command {
   @inject(LogFile)
   logFile!: LogFile;
 

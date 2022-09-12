@@ -5,6 +5,9 @@ import { injectable } from 'inversify';
 @injectable()
 export default class FakeEditorGateway {
   editor = {
+    commands: {
+      registerCommand: () => null,
+    },
     env: {
       openExternal: () => null,
     },
@@ -18,6 +21,10 @@ export default class FakeEditorGateway {
       None: 'none',
     },
     window: {
+      createTreeView: () => null,
+      registerUriHandler: () => null,
+      registerTreeDataProvider: () => null,
+      registerWebviewViewProvider: () => null,
       showInformationMessage: async (message: string) => message,
       showWarningMessage: async (message: string) => message,
       showInputBox: async () => '',
@@ -26,6 +33,9 @@ export default class FakeEditorGateway {
     workspace: {
       asRelativePath: (path: string) => path,
       findFiles: () => Promise.resolve([{ fsPath: 'one/two/' }]),
+      getWorkspaceFolder: () => '',
+      onDidSaveTextDocument: () => null,
+      registerTextDocumentContentProvider: () => null,
       workspaceFolders: [{}],
     },
     Uri: {

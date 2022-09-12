@@ -25,6 +25,10 @@ import CreateConfigFile from 'command/CreateConfigFile';
 import EnterLicense from 'command/EnterLicense';
 import GetLicense from 'command/GetLicense';
 import FirstActivation from 'job/FirstActivation';
+import DebugRepo from 'command/DebugRepo';
+import Help from 'command/Help';
+import RefreshLicenseTree from 'command/RefreshLicenseTree';
+import ShowLogFile from 'command/ShowLogFile';
 
 export default class Registrar {
   constructor(
@@ -33,36 +37,44 @@ export default class Registrar {
     private licenseProvider: LicenseProvider,
     private firstActivation: FirstActivation,
     private configFile: ConfigFile,
+    private debugRepo: DebugRepo,
     private createConfigFile: CreateConfigFile,
     private getLicense: GetLicense,
     private licenseInput: LicenseInput,
     private editorGateway: EditorGateway,
     private enterLicense: EnterLicense,
+    private help: Help,
     private logProviderFactory: LogProviderFactory,
     private enterToken: EnterToken,
     private exitAllJobs: ExitAllJobs,
     private exitJob: ExitJob,
     private refresh: Refresh,
+    private refreshLicenseTree: RefreshLicenseTree,
     private reRunJob: ReRunJob,
     private runJob: RunJob,
     private runWalkthroughJob: RunWalkthroughJob,
     private selectRepo: SelectRepo,
+    private showLogFile: ShowLogFile,
     private tryProcessAgain: TryProcessAgain
   ) {}
 
   registerCommands(): vscode.Disposable[] {
     return [
       this.createConfigFile,
+      this.debugRepo,
       this.enterLicense,
       this.enterToken,
       this.exitAllJobs,
       this.exitJob,
       this.getLicense,
+      this.help,
       this.refresh,
+      this.refreshLicenseTree,
       this.reRunJob,
       this.runJob,
       this.runWalkthroughJob,
       this.selectRepo,
+      this.showLogFile,
       this.tryProcessAgain,
     ].map((command: Command) => {
       return this.editorGateway.editor.commands.registerCommand(
