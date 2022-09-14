@@ -19,14 +19,14 @@ export default class SelectRepo implements Command {
   @inject(AllConfigFiles)
   allConfigFiles!: AllConfigFiles;
 
+  @inject(CommittedImages)
+  committedImages!: CommittedImages;
+
   @inject(Types.IEditorGateway)
   editorGateway!: EditorGateway;
 
   @inject(Types.IReporterGateway)
   reporterGateway!: ReporterGateway;
-
-  @inject(CommittedImages)
-  committedImages!: CommittedImages;
 
   commandName: string;
 

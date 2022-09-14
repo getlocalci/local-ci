@@ -10,11 +10,11 @@ import { PROCESS_TRY_AGAIN_COMMAND } from 'constant';
 
 @injectable()
 export default class TryProcessAgain implements Command {
-  @inject(Types.IFsGateway)
-  fsGateway!: FsGateway;
-
   @inject(ConfigFile)
   configFile!: ConfigFile;
+
+  @inject(Types.IFsGateway)
+  fsGateway!: FsGateway;
 
   commandName: string;
 

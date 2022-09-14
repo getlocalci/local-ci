@@ -33,9 +33,9 @@ import {
 
 export default class Registrar {
   constructor(
-    private context: vscode.ExtensionContext,
-    private jobProvider: JobProvider,
-    private licenseProvider: LicenseProvider,
+    public context: vscode.ExtensionContext,
+    public jobProvider: JobProvider,
+    public licenseProvider: LicenseProvider,
     private configFile: ConfigFile,
     private createConfigFile: CreateConfigFile,
     private debugRepo: DebugRepo,

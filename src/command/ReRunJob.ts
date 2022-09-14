@@ -12,14 +12,14 @@ import { DO_NOT_CONFIRM_RUN_JOB } from 'constant';
 
 @injectable()
 export default class ReRunJob implements Command {
-  @inject(JobTerminals)
-  jobTerminals!: JobTerminals;
+  @inject(Types.IEditorGateway)
+  editorGateway!: EditorGateway;
 
   @inject(JobRunner)
   jobRunner!: JobRunner;
 
-  @inject(Types.IEditorGateway)
-  editorGateway!: EditorGateway;
+  @inject(JobTerminals)
+  jobTerminals!: JobTerminals;
 
   @inject(Types.IReporterGateway)
   reporterGateway!: ReporterGateway;

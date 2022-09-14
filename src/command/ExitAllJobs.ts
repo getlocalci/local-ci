@@ -10,14 +10,14 @@ import { COMMITTED_IMAGE_NAMESPACE, JOB_TREE_VIEW_ID } from 'constant';
 
 @injectable()
 export default class ExitAllJobs implements Command {
+  @inject(CommittedImages)
+  committedImages!: CommittedImages;
+
   @inject(Types.IEditorGateway)
   editorGateway!: EditorGateway;
 
   @inject(Types.IReporterGateway)
   reporterGateway!: ReporterGateway;
-
-  @inject(CommittedImages)
-  committedImages!: CommittedImages;
 
   commandName: string;
 

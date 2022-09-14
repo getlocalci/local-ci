@@ -11,11 +11,11 @@ import { DO_NOT_CONFIRM_RUN_JOB, RUN_JOB_COMMAND } from 'constant';
 
 @injectable()
 export default class RunJob implements Command {
-  @inject(JobRunner)
-  jobRunner!: JobRunner;
-
   @inject(Types.IEditorGateway)
   editorGateway!: EditorGateway;
+
+  @inject(JobRunner)
+  jobRunner!: JobRunner;
 
   @inject(Types.IReporterGateway)
   reporterGateway!: ReporterGateway;
