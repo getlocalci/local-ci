@@ -1,10 +1,10 @@
-import CommittedImages from 'containerization/CommittedImages';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
+import CommittedImages from 'containerization/CommittedImages';
 import FakeChildProcessGateway from 'gateway/FakeChildProcessGateway';
 
-let testHarness: AppTestHarness;
-let committedImages: CommittedImages;
 let childProcessGateway: FakeChildProcessGateway;
+let committedImages: CommittedImages;
+let testHarness: AppTestHarness;
 
 describe('CommittedImages', () => {
   beforeEach(() => {

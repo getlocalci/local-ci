@@ -1,17 +1,17 @@
 import { inject, injectable } from 'inversify';
 import * as path from 'path';
-import TelemetryReporter from '@vscode/extension-telemetry';
 import applyPipelineParameters from './applyPipelineParameters';
+import ChildProcessGateway from 'gateway/ChildProcessGateway';
+import EditorGateway from 'gateway/EditorGateway';
+import FsGateway from 'gateway/FsGateway';
 import getDynamicConfigParametersPath from './getDynamicConfigParametersPath';
 import getDynamicConfigPath from './getDynamicConfigPath';
 import getProcessedConfig from './getProcessedConfig';
 import getProcessFilePath from 'process/getProcessFilePath';
 import ProcessFile from 'process/ProcessFile';
-import Types from 'common/Types';
-import FsGateway from 'gateway/FsGateway';
-import EditorGateway from 'gateway/EditorGateway';
+import ReporterGateway from 'gateway/ReporterGateway';
 import Spawn from 'common/Spawn';
-import ChildProcessGateway from 'gateway/ChildProcessGateway';
+import Types from 'common/Types';
 
 @injectable()
 export default class Config {
@@ -32,7 +32,7 @@ export default class Config {
 
   process(
     configFilePath: string,
-    reporter: TelemetryReporter,
+    reporter: ReporterGateway['reporter'],
     suppressMessage?: boolean
   ): { processedConfig: string; processError: string } {
     let processedConfig = '';

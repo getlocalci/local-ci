@@ -3,10 +3,10 @@ import FakeChildProcessGateway from 'gateway/FakeChildProcessGateway';
 import FakeEditorGateway from 'gateway/FakeEditorGateway';
 import FinalTerminal from '../FinalTerminal';
 
-let testHarness: AppTestHarness;
 let childProcessGateway: FakeChildProcessGateway;
 let editorGateway: FakeEditorGateway;
 let finalTerminal: FinalTerminal;
+let testHarness: AppTestHarness;
 
 describe('FinalTerminal', () => {
   beforeEach(() => {

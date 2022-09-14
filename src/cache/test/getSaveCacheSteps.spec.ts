@@ -1,6 +1,6 @@
+import configWithCache from 'test-tools/fixture/with-cache.yml';
 import getConfig from 'config/getConfig';
 import getSaveCacheSteps from 'cache/getSaveCacheSteps';
-import configWithCache from 'test-tools/fixture/with-cache.yml';
 
 describe('getSaveCacheSteps', () => {
   test('with 2 save_cache values', () => {

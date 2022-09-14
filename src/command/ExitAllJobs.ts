@@ -1,12 +1,12 @@
 import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
 import type { Command } from './index';
-import { COMMITTED_IMAGE_NAMESPACE, JOB_TREE_VIEW_ID } from 'constant';
 import Types from 'common/Types';
+import CommittedImages from 'containerization/CommittedImages';
+import EditorGateway from 'gateway/EditorGateway';
 import JobProvider from 'job/JobProvider';
 import ReporterGateway from 'gateway/ReporterGateway';
-import EditorGateway from 'gateway/EditorGateway';
-import CommittedImages from 'containerization/CommittedImages';
+import { COMMITTED_IMAGE_NAMESPACE, JOB_TREE_VIEW_ID } from 'constant';
 
 @injectable()
 export default class ExitAllJobs implements Command {

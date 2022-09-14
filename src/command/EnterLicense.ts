@@ -1,10 +1,10 @@
 import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
 import type { Command } from './index';
-import { ENTER_LICENSE_COMMAND } from 'constant';
 import JobProvider from 'job/JobProvider';
 import LicenseInput from 'license/LicenseInput';
 import LicenseProvider from 'license/LicenseProvider';
+import { ENTER_LICENSE_COMMAND } from 'constant';
 
 @injectable()
 export default class EnterLicense implements Command {

@@ -1,9 +1,9 @@
 import { inject, injectable } from 'inversify';
-import getTerminalName from './getTerminalName';
+import Types from 'common/Types';
 import getDebuggingTerminalName from './getDebuggingTerminalName';
+import getTerminalName from './getTerminalName';
 import getFinalTerminalName from './getFinalTerminalName';
 import EditorGateway from 'gateway/EditorGateway';
-import Types from 'common/Types';
 
 @injectable()
 export default class JobTerminals {

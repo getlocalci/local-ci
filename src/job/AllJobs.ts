@@ -1,8 +1,8 @@
 import { inject, injectable } from 'inversify';
 import getConfig from 'config/getConfig';
-import ParsedConfig from 'config/ParsedConfig';
 import getDynamicConfigPath from 'config/getDynamicConfigPath';
 import getJobs from './getJobs';
+import ParsedConfig from 'config/ParsedConfig';
 
 @injectable()
 export default class AllJobs {

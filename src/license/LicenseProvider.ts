@@ -1,10 +1,10 @@
 import type vscode from 'vscode';
-import { LICENSE_ERROR } from 'constant';
+import EditorGateway from 'gateway/EditorGateway';
 import getLicenseErrorMessage from 'license/getLicenseErrorMessage';
 import License from 'license/License';
 import LicenseInput from 'license/LicenseInput';
 import LicensePresenter from 'license/LicensePresenter';
-import EditorGateway from 'gateway/EditorGateway';
+import { LICENSE_ERROR } from 'constant';
 
 function getNonce() {
   const possible =

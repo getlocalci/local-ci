@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import type vscode from 'vscode';
-import { LICENSE_VALIDITY, LICENSE_VALIDITY_CACHE_EXPIRATION } from 'constant';
-import { Substitute } from '@fluffy-spoon/substitute';
-import LicensePresenter from 'license/LicensePresenter';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
+import LicensePresenter from 'license/LicensePresenter';
+import { LICENSE_VALIDITY, LICENSE_VALIDITY_CACHE_EXPIRATION } from 'constant';
+import getContextStub from 'test-tools/helpers/getContextStub';
 
 function getMockContext(licenseKey: string, cachedValidity: boolean) {
-  const initialContext = Substitute.for<vscode.ExtensionContext>();
+  const initialContext = getContextStub();
 
   return {
     ...initialContext,
@@ -33,8 +32,8 @@ function getMockContext(licenseKey: string, cachedValidity: boolean) {
   };
 }
 
-let testHarness: AppTestHarness;
 let licensePresenter: LicensePresenter;
+let testHarness: AppTestHarness;
 
 describe('LicensePresenter', () => {
   beforeEach(() => {

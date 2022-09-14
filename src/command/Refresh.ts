@@ -1,8 +1,8 @@
 import { injectable } from 'inversify';
 import type vscode from 'vscode';
 import type { Command } from './index';
-import { JOB_TREE_VIEW_ID } from 'constant';
 import JobProvider from 'job/JobProvider';
+import { JOB_TREE_VIEW_ID } from 'constant';
 
 @injectable()
 export default class Refresh implements Command {

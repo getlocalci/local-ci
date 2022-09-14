@@ -1,14 +1,14 @@
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
-import getContextStub from 'test-tools/helpers/getContextStub';
+import CreateConfigFile from 'command/CreateConfigFile';
 import FakeEditorGateway from 'gateway/FakeEditorGateway';
 import FakeReporterGateway from 'gateway/FakeReporterGateway';
-import CreateConfigFile from 'command/CreateConfigFile';
+import getContextStub from 'test-tools/helpers/getContextStub';
 import JobProviderFactory from 'job/JobProviderFactory';
 
 let createConfigFile: CreateConfigFile;
 let editorGateway: FakeEditorGateway;
-let reporterGateway: FakeReporterGateway;
 let jobProviderFactory: JobProviderFactory;
+let reporterGateway: FakeReporterGateway;
 
 describe('CreateConfigFile command', () => {
   beforeEach(() => {

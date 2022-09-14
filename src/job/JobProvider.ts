@@ -2,17 +2,22 @@ import { injectable } from 'inversify';
 import * as path from 'path';
 import type vscode from 'vscode';
 import CommandFactory from './ComandFactory';
-import JobFactory from './JobFactory';
-import LogFactory from '../log/LogFactory';
-import WarningFactory from './WarningFactory';
+import Config from 'config/Config';
+import Docker from 'containerization/Docker';
 import AllConfigFiles from 'config/AllConfigFiles';
 import AllJobs from 'job/AllJobs';
 import ConfigFile from 'config/ConfigFile';
+import EditorGateway from 'gateway/EditorGateway';
+import FsGateway from 'gateway/FsGateway';
 import getLogFilesDirectory from 'log/getLogFilesDirectory';
 import getTrialLength from 'license/getTrialLength';
 import isTrialExpired from 'license/isTrialExpired';
-import Docker from 'containerization/Docker';
-import Config from 'config/Config';
+import JobFactory from './JobFactory';
+import JobTreeItem from './JobTreeItem';
+import License from 'license/License';
+import LogFactory from '../log/LogFactory';
+import ReporterGateway from 'gateway/ReporterGateway';
+import WarningFactory from './WarningFactory';
 import {
   CREATE_CONFIG_FILE_COMMAND,
   ENTER_LICENSE_COMMAND,
@@ -21,11 +26,6 @@ import {
   PROCESS_TRY_AGAIN_COMMAND,
   TRIAL_STARTED_TIMESTAMP,
 } from '../constant';
-import License from 'license/License';
-import FsGateway from 'gateway/FsGateway';
-import EditorGateway from 'gateway/EditorGateway';
-import JobTreeItem from './JobTreeItem';
-import ReporterGateway from 'gateway/ReporterGateway';
 
 enum JobError {
   DockerNotRunning,
@@ -55,7 +55,7 @@ export default class JobProvider
     private readonly reporterGateway: ReporterGateway,
     private allConfigFiles: AllConfigFiles,
     private configFile: ConfigFile,
-    private command: CommandFactory,
+    private commandFactory: CommandFactory,
     private docker: Docker,
     private editorGateway: EditorGateway,
     private fsGateway: FsGateway,
@@ -259,18 +259,21 @@ export default class JobProvider
         return [
           this.warningFactory.create('Error: is Docker running?'),
           new this.editorGateway.editor.TreeItem(errorMessage),
-          this.command.create('Try Again', `${JOB_TREE_VIEW_ID}.refresh`),
+          this.commandFactory.create(
+            'Try Again',
+            `${JOB_TREE_VIEW_ID}.refresh`
+          ),
         ];
       case JobError.LicenseKey:
         return [
           this.warningFactory.create('Please enter a Local CI license key.'),
-          this.command.create('Get License', GET_LICENSE_COMMAND),
-          this.command.create('Enter License', ENTER_LICENSE_COMMAND),
+          this.commandFactory.create('Get License', GET_LICENSE_COMMAND),
+          this.commandFactory.create('Enter License', ENTER_LICENSE_COMMAND),
         ];
       case JobError.NoConfigFilePathInWorkspace:
         return [
           this.warningFactory.create('Error: No .circleci/config.yml found'),
-          this.command.create(
+          this.commandFactory.create(
             'Create a config for me',
             CREATE_CONFIG_FILE_COMMAND
           ),
@@ -278,7 +281,7 @@ export default class JobProvider
       case JobError.NoConfigFilePathSelected:
         return [
           this.warningFactory.create('Error: No jobs found'),
-          this.command.create('Select repo', 'localCiJobs.selectRepo'),
+          this.commandFactory.create('Select repo', 'localCiJobs.selectRepo'),
         ];
       case JobError.ProcessFile:
         return [
@@ -294,7 +297,7 @@ export default class JobProvider
               .filter((message) => !!message)
               .join(' ')
           ),
-          this.command.create('Try Again', PROCESS_TRY_AGAIN_COMMAND),
+          this.commandFactory.create('Try Again', PROCESS_TRY_AGAIN_COMMAND),
         ];
       default:
         return [];

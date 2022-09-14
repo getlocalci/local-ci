@@ -1,11 +1,11 @@
-import onlyJobsYml from 'test-tools/fixture/only-jobs.yml';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
-import ParsedConfig from 'config/ParsedConfig';
 import FakeFsGateway from 'gateway/FakeFsGateway';
+import onlyJobsYml from 'test-tools/fixture/only-jobs.yml';
+import ParsedConfig from 'config/ParsedConfig';
 
-let testHarness: AppTestHarness;
-let parsedConfig: ParsedConfig;
 let fsGateway: FakeFsGateway;
+let parsedConfig: ParsedConfig;
+let testHarness: AppTestHarness;
 
 describe('ParsedConfig', () => {
   beforeEach(() => {

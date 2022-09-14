@@ -1,12 +1,13 @@
 import { injectable, inject } from 'inversify';
+import Types from 'common/Types';
 import * as path from 'path';
 import * as yaml from 'js-yaml';
+import FsGateway from 'gateway/FsGateway';
 import getAttachWorkspaceCommand from 'config/getAttachWorkspaceCommand';
 import getConfig from 'config/getConfig';
 import getRestoreCacheCommand from 'cache/getRestoreCacheCommand';
 import getSaveCacheCommand from 'cache/getSaveCacheCommand';
 import getSaveCacheSteps from 'cache/getSaveCacheSteps';
-import Types from 'common/Types';
 import {
   CONTAINER_STORAGE_DIRECTORY,
   CONTINUE_PIPELINE_STEP_NAME,
@@ -14,7 +15,6 @@ import {
   DYNAMIC_CONFIG_PATH_IN_CONTAINER,
 } from 'constant';
 import { addEnvVars } from 'script';
-import FsGateway from 'gateway/FsGateway';
 
 @injectable()
 export default class ProcessFile {

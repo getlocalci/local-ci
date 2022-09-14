@@ -1,9 +1,9 @@
 import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
-import { SELECTED_CONFIG_PATH } from 'constant';
+import Types from 'common/Types';
 import getRepoBasename from 'common/getRepoBasename';
 import EditorGateway from 'gateway/EditorGateway';
-import Types from 'common/Types';
+import { SELECTED_CONFIG_PATH } from 'constant';
 
 @injectable()
 export default class AllConfigFiles {

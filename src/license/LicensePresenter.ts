@@ -4,6 +4,7 @@ import getLicenseErrorMessage from './getLicenseErrorMessage';
 import getTimeRemainingInTrial from './getTimeRemainingInTrial';
 import getTrialLength from './getTrialLength';
 import isTrialExpired from './isTrialExpired';
+import License from './License';
 import {
   DAY_IN_MILLISECONDS,
   GET_LICENSE_KEY_URL,
@@ -13,7 +14,6 @@ import {
   SCHEDULE_INTERVIEW_URL,
   TRIAL_STARTED_TIMESTAMP,
 } from 'constant';
-import License from './License';
 
 @injectable()
 export default class LicensePresenter {

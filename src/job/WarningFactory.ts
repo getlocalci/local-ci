@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
-import EditorGateway from 'gateway/EditorGateway';
 import type vscode from 'vscode';
 import Types from 'common/Types';
+import EditorGateway from 'gateway/EditorGateway';
 
 @injectable()
 export default class WarningFactory {

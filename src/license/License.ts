@@ -1,7 +1,9 @@
 import { inject, injectable } from 'inversify';
+import type vscode from 'vscode';
 import Types from 'common/Types';
 import EditorGateway from 'gateway/EditorGateway';
-import type vscode from 'vscode';
+import getHash from './getHash';
+import HttpGateway from 'gateway/HttpGateway';
 import {
   DAY_IN_MILLISECONDS,
   LICENSE_ERROR,
@@ -10,9 +12,6 @@ import {
   LICENSE_VALIDITY,
   LICENSE_VALIDITY_CACHE_EXPIRATION,
 } from 'constant';
-import getHash from './getHash';
-import HttpGateway from 'gateway/HttpGateway';
-
 const licenseValidationEndpoint = 'https://getlocalci.com';
 const fiveMinutesInMilliseconds = 300000;
 

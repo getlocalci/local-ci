@@ -1,14 +1,14 @@
 import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
 import type { Command } from './index';
-import { DO_NOT_CONFIRM_RUN_JOB } from 'constant';
 import Types from 'common/Types';
+import EditorGateway from 'gateway/EditorGateway';
 import JobProvider from 'job/JobProvider';
 import ReporterGateway from 'gateway/ReporterGateway';
-import EditorGateway from 'gateway/EditorGateway';
 import JobRunner from 'job/JobRunner';
-import JobTreeItem from 'job/JobTreeItem';
 import JobTerminals from 'terminal/JobTerminals';
+import JobTreeItem from 'job/JobTreeItem';
+import { DO_NOT_CONFIRM_RUN_JOB } from 'constant';
 
 @injectable()
 export default class ReRunJob implements Command {

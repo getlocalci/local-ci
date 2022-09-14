@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
+import ChildProcessGateway from 'gateway/ChildProcessGateway';
 import Spawn from 'common/Spawn';
 import Types from 'common/Types';
-import ChildProcessGateway from 'gateway/ChildProcessGateway';
 
 @injectable()
 export default class CommittedImages {

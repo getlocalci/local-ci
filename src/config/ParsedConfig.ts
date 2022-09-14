@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
-import getConfig from './getConfig';
-import FsGateway from 'gateway/FsGateway';
 import Types from 'common/Types';
+import FsGateway from 'gateway/FsGateway';
+import getConfig from './getConfig';
 
 @injectable()
 export default class ParsedConfig {

@@ -1,12 +1,12 @@
 import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
 import type { Command } from './index';
-import { EXIT_JOB_COMMAND } from 'constant';
+import JobFactory from 'job/JobFactory';
 import JobProvider from 'job/JobProvider';
 import JobRunner from 'job/JobRunner';
-import JobFactory from 'job/JobFactory';
 import JobTerminals from 'terminal/JobTerminals';
 import JobTreeItem from 'job/JobTreeItem';
+import { EXIT_JOB_COMMAND } from 'constant';
 
 @injectable()
 export default class ExitJob implements Command {

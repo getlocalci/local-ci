@@ -1,8 +1,8 @@
 import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
-import { SHOW_LOG_FILE_COMMAND } from 'constant';
 import EditorGateway from 'gateway/EditorGateway';
 import Types from 'common/Types';
+import { SHOW_LOG_FILE_COMMAND } from 'constant';
 
 @injectable()
 export default class LogFactory {

@@ -1,8 +1,8 @@
 import { inject, injectable } from 'inversify';
 import Types from 'common/Types';
-import Spawn from 'common/Spawn';
 import ChildProcessGateway from 'gateway/ChildProcessGateway';
 import EditorGateway from 'gateway/EditorGateway';
+import Spawn from 'common/Spawn';
 
 @injectable()
 export default class FinalTerminal {

@@ -1,18 +1,18 @@
 import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
 import type { Command } from './index';
+import Types from 'common/Types';
+import AllConfigFiles from 'config/AllConfigFiles';
+import CommittedImages from 'containerization/CommittedImages';
+import EditorGateway from 'gateway/EditorGateway';
+import getRepoBasename from 'common/getRepoBasename';
+import JobProvider from 'job/JobProvider';
+import ReporterGateway from 'gateway/ReporterGateway';
 import {
   CREATE_CONFIG_FILE_COMMAND,
   JOB_TREE_VIEW_ID,
   SELECTED_CONFIG_PATH,
 } from 'constant';
-import Types from 'common/Types';
-import JobProvider from 'job/JobProvider';
-import ReporterGateway from 'gateway/ReporterGateway';
-import EditorGateway from 'gateway/EditorGateway';
-import CommittedImages from 'containerization/CommittedImages';
-import AllConfigFiles from 'config/AllConfigFiles';
-import getRepoBasename from 'common/getRepoBasename';
 
 @injectable()
 export default class SelectRepo implements Command {

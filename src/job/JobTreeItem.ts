@@ -1,5 +1,5 @@
-import EditorGateway from 'gateway/EditorGateway';
 import type vscode from 'vscode';
+import EditorGateway from 'gateway/EditorGateway';
 import { EXIT_JOB_COMMAND, RUN_JOB_COMMAND } from '../constant';
 
 export default class JobTreeItem implements vscode.TreeItem {

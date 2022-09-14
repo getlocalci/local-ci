@@ -1,12 +1,12 @@
 import { Container } from 'inversify';
 import Types from 'common/Types';
 import BaseIOC from 'common/BaseIoc';
+import FakeChildProcessGateway from 'gateway/FakeChildProcessGateway';
 import FakeEditorGateway from 'gateway/FakeEditorGateway';
 import FakeFsGateway from 'gateway/FakeFsGateway';
-import FakeChildProcessGateway from 'gateway/FakeChildProcessGateway';
+import FakeHttpGateway from 'gateway/FakeHttpGateway';
 import FakeOsGateway from 'gateway/FakeOsGateway';
 import FakeProcessGateway from 'gateway/FakeProcessGateway';
-import FakeHttpGateway from 'gateway/FakeHttpGateway';
 import FakeReporterGateway from 'gateway/FakeReporterGateway';
 
 export default class AppTestHarness {

@@ -1,6 +1,6 @@
 import * as path from 'path';
-import { HOST_TMP_DIRECTORY } from 'constant';
 import getRepoPath from 'common/getRepoBasename';
+import { HOST_TMP_DIRECTORY } from 'constant';
 
 /** Gets the log files directory for the log file(s) for a job. */
 export default function getLogFilesDirectory(

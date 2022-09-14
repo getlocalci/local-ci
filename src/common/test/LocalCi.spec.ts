@@ -1,15 +1,13 @@
-import type vscode from 'vscode';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
-import LocalCi from 'common/LocalCi';
-import { Substitute } from '@fluffy-spoon/substitute';
 import FakeEditorGateway from 'gateway/FakeEditorGateway';
 import FakeFsGateway from 'gateway/FakeFsGateway';
-const getContext = () => Substitute.for<vscode.ExtensionContext>();
+import getContextStub from 'test-tools/helpers/getContextStub';
+import LocalCi from 'common/LocalCi';
 
-let testHarness: AppTestHarness;
-let localCi: LocalCi;
 let editorGateway: FakeEditorGateway;
 let fsGateway: FakeFsGateway;
+let localCi: LocalCi;
+let testHarness: AppTestHarness;
 
 describe('LocalCi', () => {
   beforeEach(() => {
@@ -42,7 +40,7 @@ describe('LocalCi', () => {
 
     const spy = jest.fn();
     editorGateway.editor.commands.registerCommand = spy;
-    localCi.activate(getContext());
+    localCi.activate(getContextStub());
 
     const actualRegisteredCommands = spy.mock.calls.map((call) => {
       return call[0];

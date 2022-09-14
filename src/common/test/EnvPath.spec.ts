@@ -1,5 +1,5 @@
-import EnvPath from 'common/EnvPath';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
+import EnvPath from 'common/EnvPath';
 import FakeOsGateway from 'gateway/FakeOsGateway';
 import FakeProcessGateway from 'gateway/FakeProcessGateway';
 

@@ -1,9 +1,9 @@
 import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
-import { CREATE_CONFIG_FILE_COMMAND, SELECTED_CONFIG_PATH } from 'constant';
+import Types from 'common/Types';
 import AllConfigFiles from './AllConfigFiles';
 import EditorGateway from 'gateway/EditorGateway';
-import Types from 'common/Types';
+import { CREATE_CONFIG_FILE_COMMAND, SELECTED_CONFIG_PATH } from 'constant';
 
 @injectable()
 export default class ConfigFile {

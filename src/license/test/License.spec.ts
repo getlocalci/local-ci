@@ -1,7 +1,7 @@
-import { LICENSE_VALIDITY, LICENSE_VALIDITY_CACHE_EXPIRATION } from 'constant';
-import License from 'license/License';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
 import getContextStub from 'test-tools/helpers/getContextStub';
+import License from 'license/License';
+import { LICENSE_VALIDITY, LICENSE_VALIDITY_CACHE_EXPIRATION } from 'constant';
 
 let testHarness: AppTestHarness;
 let license: License;

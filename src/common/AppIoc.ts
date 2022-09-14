@@ -6,8 +6,8 @@ import FsGateway from 'gateway/FsGateway';
 import HttpGateway from 'gateway/HttpGateway';
 import OsGateway from 'gateway/OsGateway';
 import ProcessGateway from 'gateway/ProcessGateway';
-import Types from 'common/Types';
 import ReporterGateway from 'gateway/ReporterGateway';
+import Types from 'common/Types';
 
 export const iocContainer = new BaseIoc().buildBaseTemplate();
 

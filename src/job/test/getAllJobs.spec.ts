@@ -1,5 +1,5 @@
-import getConfig from 'config/getConfig';
 import getAllJobs from 'job/getJobs';
+import getConfig from 'config/getConfig';
 import withCacheFixture from 'test-tools/fixture/with-cache.yml';
 
 describe('getAllJobs', () => {

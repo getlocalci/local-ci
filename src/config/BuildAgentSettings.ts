@@ -1,8 +1,8 @@
 import { inject, injectable } from 'inversify';
-import Spawn from 'common/Spawn';
-import OsGateway from 'gateway/OsGateway';
-import Types from 'common/Types';
 import ChildProcessGateway from 'gateway/ChildProcessGateway';
+import OsGateway from 'gateway/OsGateway';
+import Spawn from 'common/Spawn';
+import Types from 'common/Types';
 import { writeBuildAgentSettings } from 'script';
 
 @injectable()

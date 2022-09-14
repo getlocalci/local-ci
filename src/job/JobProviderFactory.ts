@@ -1,20 +1,20 @@
+import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
 import Types from 'common/Types';
 import AllConfigFiles from 'config/AllConfigFiles';
+import AllJobs from './AllJobs';
+import CommandFactory from './ComandFactory';
 import Config from 'config/Config';
 import ConfigFile from 'config/ConfigFile';
 import Docker from 'containerization/Docker';
+import EditorGateway from 'gateway/EditorGateway';
+import FsGateway from 'gateway/FsGateway';
+import JobFactory from './JobFactory';
+import JobProvider from './JobProvider';
 import License from 'license/License';
 import LogFactory from 'log/LogFactory';
-import CommandFactory from './ComandFactory';
-import JobFactory from './JobFactory';
-import WarningFactory from './WarningFactory';
-import AllJobs from './AllJobs';
-import { inject, injectable } from 'inversify';
-import FsGateway from 'gateway/FsGateway';
-import EditorGateway from 'gateway/EditorGateway';
-import JobProvider from './JobProvider';
 import ReporterGateway from 'gateway/ReporterGateway';
+import WarningFactory from './WarningFactory';
 
 @injectable()
 export default class JobProviderFactory {

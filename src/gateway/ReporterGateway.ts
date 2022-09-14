@@ -1,8 +1,8 @@
 import { inject, injectable } from 'inversify';
-import TelemetryReporter from '@vscode/extension-telemetry';
-import { EXTENSION_ID, TELEMETRY_KEY } from 'constant';
 import Types from 'common/Types';
 import EditorGateway from './EditorGateway';
+import TelemetryReporter from '@vscode/extension-telemetry';
+import { EXTENSION_ID, TELEMETRY_KEY } from 'constant';
 
 @injectable()
 export default class ReporterGateway {

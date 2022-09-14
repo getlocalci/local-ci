@@ -1,17 +1,17 @@
 import { inject, injectable } from 'inversify';
-import * as fs from 'fs';
 import type vscode from 'vscode';
-import JobProvider from 'job/JobProvider';
-import JobTreeItem from 'job/JobTreeItem';
-import { SUPPRESS_JOB_COMPLETE_MESSAGE } from 'constant';
-import ParsedConfig from 'config/ParsedConfig';
-import getDynamicConfigPath from 'config/getDynamicConfigPath';
-import Spawn from 'common/Spawn';
-import LogFile from 'log/LogFile';
 import Types from 'common/Types';
 import ChildProcessGateway from 'gateway/ChildProcessGateway';
 import ConfigFile from 'config/ConfigFile';
 import EditorGateway from 'gateway/EditorGateway';
+import FsGateway from 'gateway/FsGateway';
+import getDynamicConfigPath from 'config/getDynamicConfigPath';
+import JobProvider from 'job/JobProvider';
+import JobTreeItem from 'job/JobTreeItem';
+import LogFile from 'log/LogFile';
+import ParsedConfig from 'config/ParsedConfig';
+import Spawn from 'common/Spawn';
+import { SUPPRESS_JOB_COMPLETE_MESSAGE } from 'constant';
 import { getPicardContainerFunction } from 'script';
 
 @injectable()
@@ -19,11 +19,14 @@ export default class JobListener {
   @inject(Types.IChildProcessGateway)
   childProcessGateway!: ChildProcessGateway;
 
+  @inject(ConfigFile)
+  configFile!: ConfigFile;
+
   @inject(Types.IEditorGateway)
   editorGateway!: EditorGateway;
 
-  @inject(ConfigFile)
-  configFile!: ConfigFile;
+  @inject(FsGateway)
+  fsGateway!: FsGateway;
 
   @inject(LogFile)
   logFile!: LogFile;
@@ -44,22 +47,23 @@ export default class JobListener {
     logFilePath: string
   ) {
     const jobName = job?.getJobName();
-    fs.writeFileSync(
+    this.fsGateway.fs.writeFileSync(
       logFilePath,
       `Log for CircleCI® job ${jobName} \n${new Date()} \n\n`
     );
 
-    const command = `cat ${jobConfigPath} >> ${logFilePath}
-    ${getPicardContainerFunction}
-    until [ -n "$(get_picard_container ${jobName})" ]
-    do
-      sleep 2
-    done
-    docker logs --follow "$(get_picard_container ${jobName})"`;
-
     const process = this.childProcessGateway.cp.spawn(
       '/bin/sh',
-      ['-c', command],
+      [
+        '-c',
+        `cat ${jobConfigPath} >> ${logFilePath}
+        ${getPicardContainerFunction}
+        until [ -n "$(get_picard_container ${jobName})" ]
+        do
+          sleep 2
+        done
+        docker logs --follow "$(get_picard_container ${jobName})"`,
+      ],
       this.spawn.getOptions()
     );
 
@@ -69,7 +73,7 @@ export default class JobListener {
         return;
       }
 
-      fs.appendFileSync(
+      this.fsGateway.fs.appendFileSync(
         logFilePath,
         // Remove terminal color encoding, like [32m
         // Convert this: [32mSuccess![0m

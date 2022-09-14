@@ -1,12 +1,11 @@
-import type vscode from 'vscode';
-import { Substitute } from '@fluffy-spoon/substitute';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
-import UncommittedFile from 'containerization/UncommittedFile';
-import FakeEditorGateway from 'gateway/FakeEditorGateway';
 import FakeChildProcessGateway from 'gateway/FakeChildProcessGateway';
+import FakeEditorGateway from 'gateway/FakeEditorGateway';
+import getContextStub from 'test-tools/helpers/getContextStub';
+import UncommittedFile from 'containerization/UncommittedFile';
 
 function getMockContext(isSuppressed: boolean) {
-  const initialContext = Substitute.for<vscode.ExtensionContext>();
+  const initialContext = getContextStub();
   return {
     ...initialContext,
     globalState: {
@@ -18,10 +17,10 @@ function getMockContext(isSuppressed: boolean) {
   };
 }
 
-let testHarness: AppTestHarness;
-let uncommittedFile: UncommittedFile;
 let childProcessGateway: FakeChildProcessGateway;
 let editorGateway: FakeEditorGateway;
+let uncommittedFile: UncommittedFile;
+let testHarness: AppTestHarness;
 
 describe('uncommittedWarning', () => {
   beforeEach(() => {

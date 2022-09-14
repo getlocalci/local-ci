@@ -1,7 +1,7 @@
-import EditorGateway from 'gateway/EditorGateway';
-import Types from 'common/Types';
 import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
+import Types from 'common/Types';
+import EditorGateway from 'gateway/EditorGateway';
 import License from './License';
 import LicenseInput from './LicenseInput';
 import LicensePresenter from './LicensePresenter';

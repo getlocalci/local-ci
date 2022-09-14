@@ -1,16 +1,17 @@
 import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
 import Types from 'common/Types';
-import JobProvider from 'job/JobProvider';
-import ReporterGateway from 'gateway/ReporterGateway';
-import EditorGateway from 'gateway/EditorGateway';
-import { RUN_JOB_COMMAND } from 'constant';
-import getDebuggingTerminalName from 'terminal/getDebuggingTerminalName';
-import getFinalTerminalName from 'terminal/getFinalTerminalName';
-import getCheckoutJobs from 'job/getCheckoutJobs';
-import getConfig from 'config/getConfig';
 import Config from 'config/Config';
 import ConfigFile from 'config/ConfigFile';
+import EditorGateway from 'gateway/EditorGateway';
+import getCheckoutJobs from 'job/getCheckoutJobs';
+import getConfig from 'config/getConfig';
+import getDebuggingTerminalName from 'terminal/getDebuggingTerminalName';
+import getFinalTerminalName from 'terminal/getFinalTerminalName';
+import JobProvider from 'job/JobProvider';
+import ReporterGateway from 'gateway/ReporterGateway';
+
+import { RUN_JOB_COMMAND } from 'constant';
 
 @injectable()
 export default class RunWalkthroughJob {

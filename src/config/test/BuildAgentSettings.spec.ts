@@ -1,12 +1,12 @@
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
+import BuildAgentSettings from 'config/BuildAgentSettings';
 import FakeChildProcessGateway from 'gateway/FakeChildProcessGateway';
 import FakeOsGateway from 'gateway/FakeOsGateway';
-import BuildAgentSettings from 'config/BuildAgentSettings';
 
-let testHarness: AppTestHarness;
 let buildAgentSettings: BuildAgentSettings;
 let childProcessGateway: FakeChildProcessGateway;
 let osGateway: FakeOsGateway;
+let testHarness: AppTestHarness;
 
 describe('BuildAgentSettings', () => {
   beforeEach(() => {

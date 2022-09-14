@@ -1,11 +1,11 @@
-import Email from 'license/Email';
-import { EMAIL_ENDPOINT } from 'constant';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
+import Email from 'license/Email';
 import FakeHttpGateway from 'gateway/FakeHttpGateway';
+import { EMAIL_ENDPOINT } from 'constant';
 
-let testHarness: AppTestHarness;
 let email: Email;
 let httpGateway: FakeHttpGateway;
+let testHarness: AppTestHarness;
 
 describe('Email', () => {
   beforeEach(() => {

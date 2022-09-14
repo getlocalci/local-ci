@@ -1,6 +1,5 @@
-import type vscode from 'vscode';
-import { Substitute } from '@fluffy-spoon/substitute';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
+import getContextStub from 'test-tools/helpers/getContextStub';
 import LicenseInput from 'license/LicenseInput';
 
 let testHarness: AppTestHarness;
@@ -14,11 +13,10 @@ describe('LicenseInput', () => {
   });
 
   test('license is not valid', async () => {
-    const mockedContext = Substitute.for<vscode.ExtensionContext>();
     const completedCallbackSpy = jest.fn();
     const successCallbackSpy = jest.fn();
     await licenseInput.show(
-      mockedContext,
+      getContextStub(),
       completedCallbackSpy,
       successCallbackSpy
     );

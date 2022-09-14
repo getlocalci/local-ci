@@ -1,5 +1,5 @@
-import normalize from 'test-tools/helpers/normalize';
 import getAttachWorkspaceCommand from 'config/getAttachWorkspaceCommand';
+import normalize from 'test-tools/helpers/normalize';
 
 describe('getAttachWorkspaceCommand', () => {
   test('no attach_workspace', () => {

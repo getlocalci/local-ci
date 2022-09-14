@@ -1,13 +1,8 @@
-import type vscode from 'vscode';
-import { Substitute } from '@fluffy-spoon/substitute';
-import JobFactory from 'job/JobFactory';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
+import getContextStub from 'test-tools/helpers/getContextStub';
 import JobProviderFactory from 'job/JobProviderFactory';
+import JobFactory from 'job/JobFactory';
 import JobTreeItem from 'job/JobTreeItem';
-
-function getStub() {
-  return Substitute.for<vscode.ExtensionContext>();
-}
 
 let testHarness: AppTestHarness;
 let jobProviderFactory: JobProviderFactory;
@@ -22,11 +17,13 @@ describe('JobProvider', () => {
   });
 
   test('no element passed', () => {
-    expect(jobProviderFactory.create(getStub()).getChildren()).toEqual([]);
+    expect(jobProviderFactory.create(getContextStub()).getChildren()).toEqual(
+      []
+    );
   });
 
   test('no child', () => {
-    const provider = jobProviderFactory.create(getStub());
+    const provider = jobProviderFactory.create(getContextStub());
     expect(
       provider.getChildren(jobFactory.create('foo', false, false))
     ).toEqual([]);
@@ -39,7 +36,7 @@ describe('JobProvider', () => {
     allJobs.set('example', ['foo']);
 
     const children = jobProviderFactory
-      .create(getStub(), allJobs)
+      .create(getContextStub(), allJobs)
       .getChildren(jobFactory.create('foo', false, false));
 
     expect(children.length).toEqual(2);

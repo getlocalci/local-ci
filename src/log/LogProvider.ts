@@ -1,5 +1,5 @@
-import FsGateway from 'gateway/FsGateway';
 import type vscode from 'vscode';
+import FsGateway from 'gateway/FsGateway';
 
 export default class LogProvider implements vscode.TextDocumentContentProvider {
   constructor(private fsGateway: FsGateway) {}

@@ -1,11 +1,11 @@
 import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
-import { LICENSE_ERROR, GET_LICENSE_KEY_URL, LICENSE_KEY } from 'constant';
+import Types from 'common/Types';
+import EditorGateway from 'gateway/EditorGateway';
 import getLicenseErrorMessage from 'license/getLicenseErrorMessage';
 import License from './License';
 import sanitizeLicenseKey from './sanitizeLicenseKey';
-import EditorGateway from 'gateway/EditorGateway';
-import Types from 'common/Types';
+import { LICENSE_ERROR, GET_LICENSE_KEY_URL, LICENSE_KEY } from 'constant';
 
 @injectable()
 export default class LicenseInput {

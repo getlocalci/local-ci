@@ -1,10 +1,10 @@
-import JobFactory from 'job/JobFactory';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
 import FakeEditorGateway from 'gateway/FakeEditorGateway';
+import JobFactory from 'job/JobFactory';
 
-let testHarness: AppTestHarness;
-let jobFactory: JobFactory;
 let editorGateway: FakeEditorGateway;
+let jobFactory: JobFactory;
+let testHarness: AppTestHarness;
 
 describe('Job', () => {
   beforeEach(() => {

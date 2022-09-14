@@ -1,5 +1,5 @@
-import * as os from 'os';
 import { injectable } from 'inversify';
+import * as os from 'os';
 
 @injectable()
 export default class OsGateway {

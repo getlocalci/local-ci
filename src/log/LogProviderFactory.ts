@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
-import FsGateway from 'gateway/FsGateway';
 import Types from 'common/Types';
+import FsGateway from 'gateway/FsGateway';
 import LogProvider from './LogProvider';
 
 @injectable()

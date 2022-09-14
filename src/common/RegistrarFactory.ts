@@ -1,30 +1,30 @@
 import { inject, injectable } from 'inversify';
+import type vscode from 'vscode';
+import Types from 'common/Types';
+import ConfigFile from 'config/ConfigFile';
+import CreateConfigFile from 'command/CreateConfigFile';
+import DebugRepo from 'command/DebugRepo';
+import EditorGateway from 'gateway/EditorGateway';
+import EnterLicense from 'command/EnterLicense';
 import EnterToken from 'command/EnterToken';
 import ExitAllJobs from 'command/ExitAllJobs';
-import SelectRepo from 'command/SelectRepo';
-import EditorGateway from 'gateway/EditorGateway';
-import Types from 'common/Types';
+import ExitJob from 'command/ExitJob';
+import FirstActivation from 'job/FirstActivation';
+import GetLicense from 'command/GetLicense';
+import Help from 'command/Help';
 import JobProvider from 'job/JobProvider';
-import type vscode from 'vscode';
-import Refresh from '../command/Refresh';
-import TryProcessAgain from '../command/TryProcessAgain';
+import LicenseInput from 'license/LicenseInput';
+import LogProviderFactory from 'log/LogProviderFactory';
 import LicenseProvider from 'license/LicenseProvider';
 import Registrar from './Registrar';
 import RunJob from 'command/RunJob';
-import ExitJob from 'command/ExitJob';
 import ReRunJob from 'command/ReRunJob';
-import LicenseInput from 'license/LicenseInput';
 import RunWalkthroughJob from 'command/RunWalkthroughJob';
-import LogProviderFactory from 'log/LogProviderFactory';
-import ConfigFile from 'config/ConfigFile';
-import CreateConfigFile from 'command/CreateConfigFile';
-import EnterLicense from 'command/EnterLicense';
-import GetLicense from 'command/GetLicense';
-import FirstActivation from 'job/FirstActivation';
-import DebugRepo from 'command/DebugRepo';
-import Help from 'command/Help';
+import Refresh from '../command/Refresh';
 import RefreshLicenseTree from 'command/RefreshLicenseTree';
+import SelectRepo from 'command/SelectRepo';
 import ShowLogFile from 'command/ShowLogFile';
+import TryProcessAgain from '../command/TryProcessAgain';
 
 @injectable()
 export default class RegistrarFactory {

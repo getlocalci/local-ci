@@ -1,11 +1,11 @@
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
-import Docker from 'containerization/Docker';
 import ChildProcessGateway from 'gateway/ChildProcessGateway';
+import Docker from 'containerization/Docker';
 import Types from 'common/Types';
 
-let testHarness: AppTestHarness;
-let docker: Docker;
 let childProcessGateway: ChildProcessGateway;
+let docker: Docker;
+let testHarness: AppTestHarness;
 
 describe('Docker', () => {
   beforeEach(() => {

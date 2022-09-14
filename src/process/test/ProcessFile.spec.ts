@@ -1,14 +1,14 @@
-import normalize from 'test-tools/helpers/normalize';
 import AppTestHarness from 'test-tools/helpers/AppTestHarness';
+import dynamicConfigExpected from 'test-tools/expected/dynamic-config.yml';
+import dyanamicConfigFixture from 'test-tools/fixture/dynamic-config.yml';
 import ProcessFile from 'process/ProcessFile';
 import FakeFsGateway from 'gateway/FakeFsGateway';
-import withCacheFixture from 'test-tools/fixture/with-cache.yml';
+import normalize from 'test-tools/helpers/normalize';
 import withCacheExpected from 'test-tools/expected/with-cache.yml';
-import dyanamicConfigFixture from 'test-tools/fixture/dynamic-config.yml';
-import dynamicConfigExpected from 'test-tools/expected/dynamic-config.yml';
+import withCacheFixture from 'test-tools/fixture/with-cache.yml';
 
-let testHarness: AppTestHarness;
 let fsGateway: FakeFsGateway;
+let testHarness: AppTestHarness;
 
 describe('ProcessFile', () => {
   beforeEach(() => {

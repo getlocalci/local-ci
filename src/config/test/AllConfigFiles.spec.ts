@@ -1,13 +1,11 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-import type vscode from 'vscode';
-import { Substitute } from '@fluffy-spoon/substitute';
-import AppTestHarness from 'test-tools/helpers/AppTestHarness';
 import Types from 'common/Types';
 import AllConfigFiles from 'config/AllConfigFiles';
+import AppTestHarness from 'test-tools/helpers/AppTestHarness';
 import FakeEditorGateway from 'gateway/FakeEditorGateway';
+import getContextStub from 'test-tools/helpers/getContextStub';
 
 function getMockContext(filePath: string) {
-  const initialContext = Substitute.for<vscode.ExtensionContext>();
+  const initialContext = getContextStub();
 
   return {
     ...initialContext,
@@ -16,7 +14,7 @@ function getMockContext(filePath: string) {
       get: () => {
         return filePath;
       },
-      update: async () => {},
+      update: async () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
     },
   };
 }
