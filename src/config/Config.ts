@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import * as path from 'path';
-import applyPipelineParameters from './applyPipelineParameters';
+import PipelineParameter from './PipelineParameter';
 import ChildProcessGateway from 'gateway/ChildProcessGateway';
 import EditorGateway from 'gateway/EditorGateway';
 import FsGateway from 'gateway/FsGateway';
@@ -23,6 +23,9 @@ export default class Config {
 
   @inject(Types.IFsGateway)
   fsGateway!: FsGateway;
+
+  @inject(PipelineParameter)
+  pipelineParameter!: PipelineParameter;
 
   @inject(ProcessFile)
   processFile!: ProcessFile;
@@ -56,7 +59,7 @@ export default class Config {
 
       const dynamicConfigFilePath = getDynamicConfigPath(configFilePath);
       if (this.fsGateway.fs.existsSync(dynamicConfigFilePath)) {
-        applyPipelineParameters(
+        this.pipelineParameter.replace(
           getDynamicConfigParametersPath(configFilePath),
           dynamicConfigFilePath
         );
