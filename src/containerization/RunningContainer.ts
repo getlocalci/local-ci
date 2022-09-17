@@ -2,7 +2,7 @@ import { inject, injectable } from 'inversify';
 import ChildProcessGateway from 'gateway/ChildProcessGateway';
 import Spawn from 'common/Spawn';
 import Types from 'common/Types';
-import { getRunningContainerFunction } from 'script';
+import { commitContainer, getRunningContainerFunction } from 'script';
 
 @injectable()
 export default class RunningContainer {
@@ -27,28 +27,9 @@ export default class RunningContainer {
       [
         '-c',
         `${getRunningContainerFunction}
-
-        while [ true ]
-          do
-          running_container=$(get_running_container ${dockerImage})
-          if [[ -n $running_container ]]
-            then
-            committed_image=$(docker commit --pause=false $running_container ${imageRepo}:$(date +"%s"))
-            if [[ -n $committed_image ]]
-              then
-              latest_committed_image=$(docker images ${imageRepo} --format "{{.ID}} {{.Tag}}" | sort -k 2 -h | tail -n1 | awk '{print $1}')
-              for previous_image in $(docker images -q "${imageRepo}")
-                do
-                if [[ $previous_image != $latest_committed_image ]]
-                  then
-                  docker rmi $previous_image
-                fi
-              done
-            fi
-          fi
-
-          sleep 2
-        done`,
+        docker_image=${dockerImage}
+        image_repo=${imageRepo}
+        ${commitContainer}`,
       ],
       this.spawn.getOptions()
     );
