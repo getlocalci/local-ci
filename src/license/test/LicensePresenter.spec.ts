@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import AppTestHarness from 'test-tool/helpers/AppTestHarness';
+import AppTestHarness from 'test-tool/helper/AppTestHarness';
 import LicensePresenter from 'license/LicensePresenter';
 import { LICENSE_VALIDITY, LICENSE_VALIDITY_CACHE_EXPIRATION } from 'constant';
-import getContextStub from 'test-tool/helpers/getContextStub';
+import getContextStub from 'test-tool/helper/getContextStub';
 
 function getMockContext(licenseKey: string, cachedValidity: boolean) {
   const initialContext = getContextStub();

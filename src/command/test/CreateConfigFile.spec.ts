@@ -1,8 +1,8 @@
-import AppTestHarness from 'test-tool/helpers/AppTestHarness';
+import AppTestHarness from 'test-tool/helper/AppTestHarness';
 import CreateConfigFile from 'command/CreateConfigFile';
 import FakeEditorGateway from 'gateway/FakeEditorGateway';
 import FakeReporterGateway from 'gateway/FakeReporterGateway';
-import getContextStub from 'test-tool/helpers/getContextStub';
+import getContextStub from 'test-tool/helper/getContextStub';
 import JobProviderFactory from 'job/JobProviderFactory';
 
 let createConfigFile: CreateConfigFile;

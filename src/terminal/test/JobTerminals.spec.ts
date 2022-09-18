@@ -1,4 +1,4 @@
-import AppTestHarness from 'test-tool/helpers/AppTestHarness';
+import AppTestHarness from 'test-tool/helper/AppTestHarness';
 import FakeEditorGateway from 'gateway/FakeEditorGateway';
 import JobTerminals from 'terminal/JobTerminals';
 

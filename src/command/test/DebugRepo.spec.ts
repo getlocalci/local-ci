@@ -1,6 +1,6 @@
-import AppTestHarness from 'test-tool/helpers/AppTestHarness';
+import AppTestHarness from 'test-tool/helper/AppTestHarness';
 import DebugRepo from 'command/DebugRepo';
-import getContextStub from 'test-tool/helpers/getContextStub';
+import getContextStub from 'test-tool/helper/getContextStub';
 import JobProviderFactory from 'job/JobProviderFactory';
 
 let debugRepo: DebugRepo;

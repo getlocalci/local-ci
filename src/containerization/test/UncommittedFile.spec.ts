@@ -1,7 +1,7 @@
-import AppTestHarness from 'test-tool/helpers/AppTestHarness';
+import AppTestHarness from 'test-tool/helper/AppTestHarness';
 import FakeChildProcessGateway from 'gateway/FakeChildProcessGateway';
 import FakeEditorGateway from 'gateway/FakeEditorGateway';
-import getContextStub from 'test-tool/helpers/getContextStub';
+import getContextStub from 'test-tool/helper/getContextStub';
 import UncommittedFile from 'containerization/UncommittedFile';
 
 function getMockContext(isSuppressed: boolean) {
