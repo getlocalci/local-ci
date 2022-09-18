@@ -1,5 +1,5 @@
-import AppTestHarness from 'test-tool/helpers/AppTestHarness';
-import getContextStub from 'test-tool/helpers/getContextStub';
+import AppTestHarness from 'test-tool/helper/AppTestHarness';
+import getContextStub from 'test-tool/helper/getContextStub';
 import LicenseInput from 'license/LicenseInput';
 
 let testHarness: AppTestHarness;

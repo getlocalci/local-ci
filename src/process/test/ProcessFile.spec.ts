@@ -1,9 +1,9 @@
-import AppTestHarness from 'test-tool/helpers/AppTestHarness';
+import AppTestHarness from 'test-tool/helper/AppTestHarness';
 import dynamicConfigExpected from 'test-tool/expected/dynamic-config.yml';
 import dyanamicConfigFixture from 'test-tool/fixture/dynamic-config.yml';
 import ProcessFile from 'process/ProcessFile';
 import FakeFsGateway from 'gateway/FakeFsGateway';
-import normalize from 'test-tool/helpers/normalize';
+import normalize from 'test-tool/helper/normalize';
 import withCacheExpected from 'test-tool/expected/with-cache.yml';
 import withCacheFixture from 'test-tool/fixture/with-cache.yml';
 
