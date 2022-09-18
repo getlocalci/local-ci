@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import BaseIoc from 'common/BaseIoc';
-import ChildProcessGateway from 'gateway/ChildProcessGateway';
+import LoggingChildProcessGateway from 'gateway/LoggingChildProcessGateway';
 import EditorGateway from 'gateway/EditorGateway';
 import FsGateway from 'gateway/FsGateway';
 import HttpGateway from 'gateway/HttpGateway';
@@ -13,7 +13,7 @@ export const iocContainer = new BaseIoc().buildBaseTemplate();
 
 iocContainer
   .bind(Types.IChildProcessGateway)
-  .to(ChildProcessGateway)
+  .to(LoggingChildProcessGateway)
   .inSingletonScope();
 iocContainer.bind(Types.IEditorGateway).to(EditorGateway).inSingletonScope();
 iocContainer.bind(Types.IFsGateway).to(FsGateway).inSingletonScope();
