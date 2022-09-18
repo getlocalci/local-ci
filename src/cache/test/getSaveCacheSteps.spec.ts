@@ -1,4 +1,4 @@
-import configWithCache from 'test-tools/fixture/with-cache.yml';
+import configWithCache from 'test-tool/fixture/with-cache.yml';
 import getConfig from 'config/getConfig';
 import getSaveCacheSteps from 'cache/getSaveCacheSteps';
 

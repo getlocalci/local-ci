@@ -1,5 +1,5 @@
-import AppTestHarness from 'test-tools/helpers/AppTestHarness';
-import getContextStub from 'test-tools/helpers/getContextStub';
+import AppTestHarness from 'test-tool/helpers/AppTestHarness';
+import getContextStub from 'test-tool/helpers/getContextStub';
 import License from 'license/License';
 import { LICENSE_VALIDITY, LICENSE_VALIDITY_CACHE_EXPIRATION } from 'constant';
 

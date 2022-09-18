@@ -1,6 +1,6 @@
-import AppTestHarness from 'test-tools/helpers/AppTestHarness';
+import AppTestHarness from 'test-tool/helpers/AppTestHarness';
 import FakeFsGateway from 'gateway/FakeFsGateway';
-import onlyJobsYml from 'test-tools/fixture/only-jobs.yml';
+import onlyJobsYml from 'test-tool/fixture/only-jobs.yml';
 import ParsedConfig from 'config/ParsedConfig';
 
 let fsGateway: FakeFsGateway;
