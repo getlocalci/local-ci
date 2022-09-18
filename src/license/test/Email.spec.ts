@@ -1,4 +1,4 @@
-import AppTestHarness from 'test-tools/helpers/AppTestHarness';
+import AppTestHarness from 'test-tools/helper/AppTestHarness';
 import Email from 'license/Email';
 import FakeHttpGateway from 'gateway/FakeHttpGateway';
 import { EMAIL_ENDPOINT } from 'constant';

@@ -1,4 +1,4 @@
-import AppTestHarness from 'test-tools/helpers/AppTestHarness';
+import AppTestHarness from 'test-tools/helper/AppTestHarness';
 import CommittedImages from 'containerization/CommittedImages';
 import FakeChildProcessGateway from 'gateway/FakeChildProcessGateway';
 

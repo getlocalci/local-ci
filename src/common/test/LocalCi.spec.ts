@@ -1,7 +1,7 @@
-import AppTestHarness from 'test-tools/helpers/AppTestHarness';
+import AppTestHarness from 'test-tools/helper/AppTestHarness';
 import FakeEditorGateway from 'gateway/FakeEditorGateway';
 import FakeFsGateway from 'gateway/FakeFsGateway';
-import getContextStub from 'test-tools/helpers/getContextStub';
+import getContextStub from 'test-tools/helper/getContextStub';
 import LocalCi from 'common/LocalCi';
 
 let editorGateway: FakeEditorGateway;

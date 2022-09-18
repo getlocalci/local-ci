@@ -1,4 +1,4 @@
-import AppTestHarness from 'test-tools/helpers/AppTestHarness';
+import AppTestHarness from 'test-tools/helper/AppTestHarness';
 import BuildAgentSettings from 'config/BuildAgentSettings';
 import FakeChildProcessGateway from 'gateway/FakeChildProcessGateway';
 import FakeOsGateway from 'gateway/FakeOsGateway';

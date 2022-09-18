@@ -1,4 +1,4 @@
-import AppTestHarness from 'test-tools/helpers/AppTestHarness';
+import AppTestHarness from 'test-tools/helper/AppTestHarness';
 import FakeEditorGateway from 'gateway/FakeEditorGateway';
 import FakeReporterGateway from 'gateway/FakeReporterGateway';
 import Help from 'command/Help';
