@@ -1,5 +1,8 @@
 # Change Log
 
+## 1.9.0 - 18 September 2022
+- Add shellcheck for scripts, add dependency injection. [#182](https://github.com/getlocalci/local-ci/pull/182)
+
 ## 1.8.0 - 9 September 2022
 - Extend preview to 30 days. [#180](https://github.com/getlocalci/local-ci/pull/180)
 - Fix an issue on Intel Mac, where it fails from the wrong build agent. [#179](https://github.com/getlocalci/local-ci/pull/179)
