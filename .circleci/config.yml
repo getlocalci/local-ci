@@ -6,11 +6,12 @@ orbs:
 jobs:
   test:
     docker:
-      - image: cimg/node:16.8.0-browsers
+      - image: cimg/node:16.17
     steps:
       - checkout
       - node/install-packages
       - run: npm test
+      - run: npm run lint
     resource_class: large
   package:
     docker:

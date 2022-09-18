@@ -1,5 +1,4 @@
 .vscode/**
-.vscode-test/**
 .circleci/**
 .husky/**
 artifacts/**
@@ -9,7 +8,8 @@ src/**
 CONTRIBUTING.md
 .gitignore
 .nvmrc
-**/tsconfig.json
-**/.eslintrc.json
+tsconfig.json
+.eslintrc.json
+jest.config.js
 **/*.map
 **/*.ts
