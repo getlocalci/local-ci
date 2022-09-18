@@ -1,8 +1,8 @@
 import Types from 'common/Types';
 import AllConfigFiles from 'config/AllConfigFiles';
-import AppTestHarness from 'test-tools/helpers/AppTestHarness';
+import AppTestHarness from 'test-tool/helpers/AppTestHarness';
 import FakeEditorGateway from 'gateway/FakeEditorGateway';
-import getContextStub from 'test-tools/helpers/getContextStub';
+import getContextStub from 'test-tool/helpers/getContextStub';
 
 function getMockContext(filePath: string) {
   const initialContext = getContextStub();

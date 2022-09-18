@@ -1,6 +1,6 @@
 import getConfig from 'config/getConfig';
 import getJobs from 'job/getJobs';
-import configWithCache from 'test-tools/fixture/with-cache.yml';
+import configWithCache from 'test-tool/fixture/with-cache.yml';
 
 describe('getJobs', () => {
   test('single job', () => {

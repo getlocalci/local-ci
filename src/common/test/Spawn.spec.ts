@@ -1,4 +1,4 @@
-import AppTestHarness from 'test-tools/helpers/AppTestHarness';
+import AppTestHarness from 'test-tool/helpers/AppTestHarness';
 import FakeEditorGateway from 'gateway/FakeEditorGateway';
 import FakeOsGateway from 'gateway/FakeOsGateway';
 import Spawn from 'common/Spawn';
