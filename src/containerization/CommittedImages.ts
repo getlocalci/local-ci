@@ -18,7 +18,7 @@ export default class CommittedImages {
       [
         '-c',
         `lci_image_pattern=${imagePattern}
-        ${ imageIdToExclude ? `lci_image_to_exclude=${imageIdToExclude}` : '' }
+        lci_image_to_exclude=${imageIdToExclude}
         ${cleanUpCommittedImages}`,
       ],
       this.spawn.getOptions()
