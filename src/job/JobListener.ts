@@ -51,6 +51,8 @@ export default class JobListener {
       logFilePath,
       `Log for CircleCI® job ${jobName} \n${new Date()} \n\n`
     );
+    const complainToMeLink =
+      'mailto:ryan@getlocalci.com?subject=There was an error using Local CI&body=Hi Ryan, Could you help with this error I saw with Local CI: <!-- please fill in error here -->';
 
     const process = this.childProcessGateway.cp.spawn(
       '/bin/sh',
@@ -124,10 +126,19 @@ export default class JobListener {
 
       dockerRelatedErrors.forEach((errorMessage) => {
         if (output?.includes(errorMessage)) {
-          this.editorGateway.editor.window.showErrorMessage(
-            `Restarting Docker Desktop should fix that error '${errorMessage}', though that's not fun`,
-            { detail: 'Possible solution' }
-          );
+          const complainToMeText = 'Complain to me';
+          this.editorGateway.editor.window
+            .showErrorMessage(
+              `Restarting Docker Desktop should fix that error '${errorMessage}', though that's not fun`,
+              { detail: 'Possible solution' }
+            )
+            .then((clicked) => {
+              if (clicked === complainToMeText) {
+                this.editorGateway.editor.env.openExternal(
+                  this.editorGateway.editor.Uri.parse(complainToMeLink)
+                );
+              }
+            });
         }
       });
 
@@ -152,16 +163,24 @@ export default class JobListener {
       errors.forEach((error) => {
         if (output?.includes(error.message)) {
           const getBashCommandsText = 'Get Bash commands';
+          const complainToMeText = 'Complain to me';
           this.editorGateway.editor.window
             .showErrorMessage(
               'You might be able to fix this failed job with Bash commands',
               { detail: 'Possible solution' },
-              getBashCommandsText
+              getBashCommandsText,
+              complainToMeText
             )
             .then((clicked) => {
               if (clicked === getBashCommandsText) {
                 this.editorGateway.editor.env.openExternal(
                   this.editorGateway.editor.Uri.parse(error.solutionUrl)
+                );
+              }
+
+              if (clicked === complainToMeText) {
+                this.editorGateway.editor.env.openExternal(
+                  this.editorGateway.editor.Uri.parse(complainToMeLink)
                 );
               }
             });
