@@ -130,7 +130,8 @@ export default class JobListener {
           this.editorGateway.editor.window
             .showErrorMessage(
               `Restarting Docker Desktop should fix that error '${errorMessage}', though that's not fun`,
-              { detail: 'Possible solution' }
+              { detail: 'Possible solution' },
+              complainToMeText
             )
             .then((clicked) => {
               if (clicked === complainToMeText) {
