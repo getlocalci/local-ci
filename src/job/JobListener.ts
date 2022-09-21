@@ -208,12 +208,17 @@ export default class JobListener {
     }
 
     const showJobOutput = 'Show job log';
+    const complainToMeText = 'Complain to me';
+    const complainToMeLink =
+      'mailto:ryan@getlocalci.com?subject=A job failed with Local Ci, and I do not know why&body=Hi Ryan, Could you help with this error I saw with a Local CI job: <!-- please fill in error here -->';
     const dontShowAgain = `Don't show again`;
+
     this.editorGateway.editor.window
       .showInformationMessage(
         `The job ${job?.getJobName()} ${didSucceed ? 'succeeded' : 'failed'}`,
-        showJobOutput,
-        dontShowAgain
+        ...(didSucceed
+          ? [showJobOutput, dontShowAgain]
+          : [showJobOutput, complainToMeText, dontShowAgain])
       )
       .then((clicked) => {
         if (clicked === showJobOutput) {
@@ -222,6 +227,12 @@ export default class JobListener {
 
         if (clicked === dontShowAgain) {
           context.globalState.update(SUPPRESS_JOB_COMPLETE_MESSAGE, true);
+        }
+
+        if (clicked === complainToMeText) {
+          this.editorGateway.editor.env.openExternal(
+            this.editorGateway.editor.Uri.parse(complainToMeLink)
+          );
         }
       });
   }
