@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.9.1 - 20 September 2022
+- Bump the binary version to the latest: v0.1.21194. [#189](https://github.com/getlocalci/local-ci/pull/189)
+- Add a button to complain to me. [#188](https://github.com/getlocalci/local-ci/pull/188)
+
 ## 1.9.0 - 18 September 2022
 - Add shellcheck for scripts, add dependency injection. [#182](https://github.com/getlocalci/local-ci/pull/182)
 
