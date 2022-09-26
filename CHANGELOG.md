@@ -1,5 +1,8 @@
 # Change Log
 
+## 1.9.2 - 26 September 2022
+- Bump the binary version to the latest: 0.1.21412. [#191](https://github.com/getlocalci/local-ci/pull/191)
+
 ## 1.9.1 - 20 September 2022
 - Bump the binary version to the latest: v0.1.21194. [#189](https://github.com/getlocalci/local-ci/pull/189)
 - Add a button to complain to me. [#188](https://github.com/getlocalci/local-ci/pull/188)
