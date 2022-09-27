@@ -280,13 +280,13 @@ export default class JobProvider
             'Create a config for me',
             CREATE_CONFIG_FILE_COMMAND
           ),
-          this.commandFactory.create('Complain To Me', COMPLAIN_COMMAND),
+          this.commandFactory.create('Complain to me', COMPLAIN_COMMAND),
         ];
       case JobError.NoConfigFilePathSelected:
         return [
           this.warningFactory.create('Error: No jobs found'),
           this.commandFactory.create('Select repo', 'localCiJobs.selectRepo'),
-          this.commandFactory.create('Complain To Me', COMPLAIN_COMMAND),
+          this.commandFactory.create('Complain to me', COMPLAIN_COMMAND),
         ];
       case JobError.ProcessFile:
         return [
