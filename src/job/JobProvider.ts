@@ -19,6 +19,7 @@ import LogFactory from '../log/LogFactory';
 import ReporterGateway from 'gateway/ReporterGateway';
 import WarningFactory from './WarningFactory';
 import {
+  COMPLAIN_COMMAND,
   CREATE_CONFIG_FILE_COMMAND,
   ENTER_LICENSE_COMMAND,
   GET_LICENSE_COMMAND,
@@ -263,12 +264,14 @@ export default class JobProvider
             'Try Again',
             `${JOB_TREE_VIEW_ID}.refresh`
           ),
+          this.commandFactory.create('Complain To Me', COMPLAIN_COMMAND),
         ];
       case JobError.LicenseKey:
         return [
           this.warningFactory.create('Please enter a Local CI license key.'),
           this.commandFactory.create('Get License', GET_LICENSE_COMMAND),
           this.commandFactory.create('Enter License', ENTER_LICENSE_COMMAND),
+          this.commandFactory.create('Complain To Me', COMPLAIN_COMMAND),
         ];
       case JobError.NoConfigFilePathInWorkspace:
         return [
@@ -277,11 +280,13 @@ export default class JobProvider
             'Create a config for me',
             CREATE_CONFIG_FILE_COMMAND
           ),
+          this.commandFactory.create('Complain To Me', COMPLAIN_COMMAND),
         ];
       case JobError.NoConfigFilePathSelected:
         return [
           this.warningFactory.create('Error: No jobs found'),
           this.commandFactory.create('Select repo', 'localCiJobs.selectRepo'),
+          this.commandFactory.create('Complain To Me', COMPLAIN_COMMAND),
         ];
       case JobError.ProcessFile:
         return [
@@ -298,6 +303,7 @@ export default class JobProvider
               .join(' ')
           ),
           this.commandFactory.create('Try Again', PROCESS_TRY_AGAIN_COMMAND),
+          this.commandFactory.create('Complain To Me', COMPLAIN_COMMAND),
         ];
       default:
         return [];
