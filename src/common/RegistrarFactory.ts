@@ -1,6 +1,7 @@
 import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
 import Types from 'common/Types';
+import Complain from 'command/Complain';
 import ConfigFile from 'config/ConfigFile';
 import CreateConfigFile from 'command/CreateConfigFile';
 import DebugRepo from 'command/DebugRepo';
@@ -29,6 +30,7 @@ import TryProcessAgain from '../command/TryProcessAgain';
 @injectable()
 export default class RegistrarFactory {
   constructor(
+    @inject(Complain) private complain: Complain,
     @inject(ConfigFile) private configFile: ConfigFile,
     @inject(CreateConfigFile) private createConfigFile: CreateConfigFile,
     @inject(DebugRepo) private debugRepo: DebugRepo,
@@ -61,6 +63,7 @@ export default class RegistrarFactory {
       context,
       jobProvider,
       licenseProvider,
+      this.complain,
       this.configFile,
       this.createConfigFile,
       this.debugRepo,

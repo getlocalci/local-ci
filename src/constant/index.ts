@@ -6,6 +6,9 @@ export const SELECTED_CONFIG_PATH = 'local-ci.config.path';
 export const LICENSE_ERROR = 'localCiLicenseKeyError';
 export const GET_LICENSE_COMMAND = 'local-ci.license.get';
 export const ENTER_LICENSE_COMMAND = 'local-ci.license.enter';
+export const COMPLAIN_COMMAND = 'local-ci.email.complain';
+export const COMPLAIN_URL =
+  'mailto:ryan@getlocalci.com?subject=Something went wrong in Local CI&body=Hi Ryan, Could you help with this problem in Local CI: <!-- please fill in problem here -->';
 export const EXIT_JOB_COMMAND = 'local-ci.job.exit';
 export const PROCESS_TRY_AGAIN_COMMAND = 'local-ci.process-error.try-again';
 export const GET_LICENSE_KEY_URL =
