@@ -1,5 +1,8 @@
 # Change Log
 
+## 1.9.3 - 27 September 2022
+- Add more 'Complain To Me' links. [#193](https://github.com/getlocalci/local-ci/pull/193)
+
 ## 1.9.2 - 26 September 2022
 - Bump the binary version to the latest: 0.1.21412. [#191](https://github.com/getlocalci/local-ci/pull/191)
 
