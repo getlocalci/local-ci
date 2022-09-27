@@ -5,7 +5,7 @@ import EditorGateway from 'gateway/EditorGateway';
 import { COMPLAIN_COMMAND, COMPLAIN_URL } from 'constant';
 
 @injectable()
-export default class GetLicense implements Command {
+export default class Complain implements Command {
   @inject(Types.IEditorGateway)
   editorGateway!: EditorGateway;
 
