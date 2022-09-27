@@ -52,7 +52,7 @@ export default class JobListener {
       `Log for CircleCI® job ${jobName} \n${new Date()} \n\n`
     );
     const complainToMeLink =
-      'mailto:ryan@getlocalci.com?subject=There was an error using Local CI&body=Hi Ryan, Could you help with this error I saw with Local CI: <!-- please fill in error here -->';
+      'mailto:ryan@getlocalci.com?subject=There was an error using Local CI&body=Hi Ryan, Could you help with this error in Local CI: <!-- please fill in error here -->';
 
     const process = this.childProcessGateway.cp.spawn(
       '/bin/sh',
@@ -210,7 +210,7 @@ export default class JobListener {
     const showJobOutput = 'Show job log';
     const complainToMeText = 'Complain to me';
     const complainToMeLink =
-      'mailto:ryan@getlocalci.com?subject=A job failed with Local Ci, and I do not know why&body=Hi Ryan, Could you help with this error I saw with a Local CI job: <!-- please fill in error here -->';
+      'mailto:ryan@getlocalci.com?subject=A job failed with Local Ci, and I do not know why&body=Hi Ryan, Could you help with this error in a Local CI job: <!-- please fill in error here -->';
     const dontShowAgain = `Don't show again`;
 
     this.editorGateway.editor.window
