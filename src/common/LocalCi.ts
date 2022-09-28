@@ -6,10 +6,14 @@ import JobProviderFactory from 'job/JobProviderFactory';
 import LicenseProviderFactory from 'license/LicenseProviderFactory';
 import RegistrarFactory from './RegistrarFactory';
 import ReporterGateway from 'gateway/ReporterGateway';
-import { HOST_TMP_DIRECTORY } from 'constant';
+import { HOST_TMP_DIRECTORY, JOB_TREE_VIEW_ID } from 'constant';
+import EditorGateway from 'gateway/EditorGateway';
 
 @injectable()
 export default class LocalCi {
+  @inject(Types.IEditorGateway)
+  editorGateway!: EditorGateway;
+
   @inject(Types.IFsGateway)
   fsGateway!: FsGateway;
 
@@ -28,7 +32,12 @@ export default class LocalCi {
   activate(context: vscode.ExtensionContext) {
     this.reporterGateway.reporter.sendTelemetryEvent('activate');
     const jobProvider = this.jobProviderFactory.create(context);
-    jobProvider.init();
+    jobProvider.init().then(() => {
+      this.editorGateway.editor.window.registerTreeDataProvider(
+        JOB_TREE_VIEW_ID,
+        jobProvider
+      );
+    });
 
     const licenseProvider = this.licenseProviderFactory.create(context, () =>
       jobProvider.hardRefresh()
