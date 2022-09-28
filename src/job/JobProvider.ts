@@ -77,6 +77,9 @@ export default class JobProvider
   async init() {
     await this.loadJobs();
     await this.loadLogs();
+    if (this._onDidChangeTreeData) {
+      this._onDidChangeTreeData.fire(undefined);
+    }
   }
 
   /** Refreshes the TreeView, without processing the config file. */
