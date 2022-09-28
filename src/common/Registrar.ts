@@ -97,6 +97,10 @@ export default class Registrar {
       this.editorGateway.editor.window.createTreeView(JOB_TREE_VIEW_ID, {
         treeDataProvider: this.jobProvider,
       }),
+      this.editorGateway.editor.window.registerTreeDataProvider(
+        JOB_TREE_VIEW_ID,
+        this.jobProvider
+      ),
       this.editorGateway.editor.window.registerWebviewViewProvider(
         LICENSE_TREE_VIEW_ID,
         this.licenseProvider
