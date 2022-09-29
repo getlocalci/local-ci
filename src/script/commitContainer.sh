@@ -7,9 +7,9 @@ while true
   if [ -n "$running_container" ]
     then
     committed_image=$(docker commit --pause=false "$running_container" "$image_repo":"$(date +"%s")")
-    if [ -n "$committed_image" ]
+    if [ "$committed_image" ]
       then
-      latest_committed_image=$(docker images "$image_repo" --format "{{.ID}} {{.Tag}}" | sort -k 2 -h | tail -n1 | awk "{print $1}")
+      latest_committed_image=$(docker images "$image_repo" --format "{{.ID}}" | head -n1)
       for previous_image in $(docker images -q "$image_repo")
         do
         if [ "$previous_image" != "$latest_committed_image" ]

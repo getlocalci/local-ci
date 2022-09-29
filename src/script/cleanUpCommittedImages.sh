@@ -15,4 +15,8 @@ echo "$local_ci_images" | while read -r image
     docker rm "$lci_containers"
   fi
 done
-docker rmi "$lci_images"
+
+if [ "$lci_images" ]
+  then
+  docker rmi "$lci_images"
+fi
