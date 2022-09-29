@@ -1,5 +1,8 @@
 # Change Log
 
+## 1.9.5 - 29 September 2022
+- Make the final terminal appear more. [#197](https://github.com/getlocalci/local-ci/pull/197)
+
 ## 1.9.4 - 28 September 2022
 - Fix a bug where there was no error in tree view. [#195](https://github.com/getlocalci/local-ci/pull/195)
 
