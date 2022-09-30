@@ -1,32 +1,22 @@
 version: 2.1
-
 orbs:
-  node: circleci/node@5.0.0
-
+  continuation: circleci/continuation@0.3
+  node: circleci/node@5.0
+setup: true
 jobs:
-  test:
-    docker:
-      - image: cimg/node:16.17
+  generate-config:
+    executor: node/default
     steps:
       - checkout
-      - node/install-packages
-      - run: npm test
-      - run: npm run lint
-    resource_class: large
-  package:
-    docker:
-      - image: cimg/node:16.8.0-browsers
-    steps:
-      - checkout
-      - node/install-packages
-      - run: npm run vsix
-      - run: mkdir /tmp/artifacts && mv local-ci*.vsix /tmp/artifacts
-      - store_artifacts:
-          path: /tmp/artifacts
-    resource_class: large
-
+      - node/install-packages:
+          app-dir: .circleci/dynamic
+      - run:
+          name: Generate config
+          command: npm start
+          working_directory: .circleci/dynamic
+      - continuation/continue:
+          configuration_path: .circleci/dynamic/dynamicConfig.yml
 workflows:
-  test-lint:
+  dynamic-workflow:
     jobs:
-      - test
-      - package
+      - generate-config

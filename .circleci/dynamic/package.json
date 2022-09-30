@@ -1,0 +1,22 @@
+{
+  "name": "local-ci-dynamic-config",
+  "version": "0.1.0",
+  "description": "Dynamic config for Local CI",
+  "author": "Ryan Kienstra",
+  "main": "index.ts",
+  "type": "module",
+  "scripts": {
+    "lint": "prettier --check index.ts",
+    "lint:fix": "prettier --write index.ts",
+    "start": "ts-node --esm index.ts"
+  },
+  "license": "GPL-2.0-or-later",
+  "devDependencies": {
+    "@circleci/circleci-config-sdk": "^0.10.1",
+    "@types/node": "^18.7.20",
+    "prettier": "^2.7.1",
+    "ts-node": "^10.9.1",
+    "tslib": "^2.4.0",
+    "typescript": "^4.8.3"
+  }
+}
