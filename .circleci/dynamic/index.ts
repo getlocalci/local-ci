@@ -11,7 +11,9 @@ config.addWorkflow(workflow);
     new CircleCI.executors.DockerExecutor("cimg/node:16.17", "large"),
     [
       new CircleCI.commands.Checkout(),
-      new CircleCI.commands.Run({ command: "npm ci && npm test && npm run lint" }),
+      new CircleCI.commands.Run({
+        command: "npm ci && npm test && npm run lint",
+      }),
     ]
   ),
   new CircleCI.Job(
@@ -20,10 +22,12 @@ config.addWorkflow(workflow);
     [
       new CircleCI.commands.Checkout(),
       new CircleCI.commands.Run({ command: "npm ci && npm run vsix" }),
-      new CircleCI.commands.Run({ command: "mkdir /tmp/artifacts && mv local-ci*.vsix /tmp/artifacts" }),
+      new CircleCI.commands.Run({
+        command: "mkdir /tmp/artifacts && mv local-ci*.vsix /tmp/artifacts",
+      }),
       new CircleCI.commands.StoreArtifacts({ path: "/tmp/artifacts" }),
-    ],
-  )
+    ]
+  ),
 ].forEach((job) => {
   config.addJob(job);
   workflow.addJob(job);
