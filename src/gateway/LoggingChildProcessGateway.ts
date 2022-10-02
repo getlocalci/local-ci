@@ -38,15 +38,15 @@ export default class LoggingChildProcessGateway {
     childProcess: cp.ChildProcessWithoutNullStreams,
     args: string[]
   ) {
-    childProcess?.stderr.on('data', (data) => {
-      this.outputChannel?.append(`Error when running:
+    childProcess?.stdout.on('data', (data) => {
+      this.outputChannel?.append(`Running:
         ${args.join(`\n`)}
       `);
       this.outputChannel?.append(data?.toString());
     });
 
-    childProcess?.stdout.on('data', (data) => {
-      this.outputChannel?.append(`Running:
+    childProcess?.stderr.on('data', (data) => {
+      this.outputChannel?.append(`Error when running:
         ${args.join(`\n`)}
       `);
       this.outputChannel?.append(data?.toString());
