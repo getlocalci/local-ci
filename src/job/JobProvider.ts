@@ -46,8 +46,9 @@ export default class JobProvider
     vscode.TreeItem | undefined
   >;
   private jobs: string[] = [];
-  private jobErrorMessage?: string;
-  private jobErrorType?: JobError;
+  private isError?: boolean;
+  private errorType?: JobError;
+  private errorMessage?: string;
   private logs: Record<string, string[]> = {};
   private runningJob?: string;
 
@@ -108,9 +109,8 @@ export default class JobProvider
     skipMessage?: boolean
   ): Promise<void> {
     this.jobs = [];
-    this.jobErrorType = undefined;
-    this.jobErrorMessage = undefined;
     this.runningJob = undefined;
+    this.resetErrors();
 
     const configFilePath = await this.configFile.getPath(this.context);
     if (!configFilePath || !this.fsGateway.fs.existsSync(configFilePath)) {
@@ -120,10 +120,10 @@ export default class JobProvider
         await this.allConfigFiles.getPaths(this.context)
       ).length;
       if (doExistConfigPaths) {
-        this.jobErrorType = JobError.NoConfigFilePathSelected;
+        this.setError(JobError.NoConfigFilePathSelected);
       } else {
         this.reporterGateway.reporter.sendTelemetryErrorEvent('noConfigFile');
-        this.jobErrorType = JobError.NoConfigFilePathInWorkspace;
+        this.setError(JobError.NoConfigFilePathInWorkspace);
       }
 
       return;
@@ -151,20 +151,20 @@ export default class JobProvider
       );
 
     if (!shouldEnableExtension) {
-      this.jobErrorType = JobError.LicenseKey;
+      this.setError(JobError.LicenseKey);
       return;
     }
 
     if (!this.docker.isRunning()) {
       this.reporterGateway.reporter.sendTelemetryErrorEvent('dockerNotRunning');
-      this.jobErrorType = JobError.DockerNotRunning;
-      this.jobErrorMessage = this.docker.getError();
+      this.setError(JobError.DockerNotRunning, this.docker.getError());
+
+      this.retryLater();
       return;
     }
 
     if (processError) {
-      this.jobErrorType = JobError.ProcessFile;
-      this.jobErrorMessage = processError;
+      this.setError(JobError.ProcessFile, processError);
       return;
     }
 
@@ -176,6 +176,25 @@ export default class JobProvider
     for (const jobName of this.jobDependencies.keys()) {
       this.jobs.push(jobName);
     }
+  }
+
+  setError(errorType: JobError, errorMessage?: string) {
+    this.errorType = errorType;
+    this.errorMessage = errorMessage;
+    this.isError = true;
+  }
+
+  resetErrors() {
+    this.isError = false;
+    this.errorType = undefined;
+    this.errorMessage = undefined;
+  }
+
+  retryLater() {
+    const millisecondsToWait = 10000;
+    setInterval(async () => {
+      await this.loadJobs();
+    }, millisecondsToWait);
   }
 
   async loadLogs() {
@@ -258,7 +277,7 @@ export default class JobProvider
   getErrorTreeItems(): Array<vscode.TreeItem> {
     const errorMessage = this.getJobErrorMessage();
 
-    switch (this.jobErrorType) {
+    switch (this.errorType) {
       case JobError.DockerNotRunning:
         return [
           this.warningFactory.create('Error: is Docker running?'),
@@ -314,7 +333,7 @@ export default class JobProvider
   }
 
   getJobErrorMessage(): string {
-    return this.jobErrorMessage || '';
+    return this.errorMessage || '';
   }
 
   /**
