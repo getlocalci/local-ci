@@ -44,5 +44,12 @@ export default class LoggingChildProcessGateway {
       `);
       this.outputChannel?.append(data?.toString());
     });
+
+    childProcess?.stdout.on('data', (data) => {
+      this.outputChannel?.append(`Running:
+        ${args.join(`\n`)}
+      `);
+      this.outputChannel?.append(data?.toString());
+    });
   }
 }
