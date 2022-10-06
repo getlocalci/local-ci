@@ -12,7 +12,7 @@
   },
   "license": "GPL-2.0-or-later",
   "devDependencies": {
-    "@getlocalci/create-config": "github:getlocalci/create-config",
+    "@getlocalci/create-config": "github:getlocalci/create-config^0.1.0",
     "@types/node": "^18.7.20",
     "prettier": "^2.7.1",
     "ts-node": "^10.9.1",
