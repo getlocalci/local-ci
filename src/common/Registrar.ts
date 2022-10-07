@@ -119,7 +119,7 @@ export default class Registrar {
     this.editorGateway.editor.window.registerUriHandler({
       handleUri: (uri: vscode.Uri) => {
         // Entering this URI in the browser will show the license key input:
-        // vscode://LocalCI.local-ci/EnterLicense
+        // vscode://LocalCI.local-ci/enterLicense
         if (uri.path === '/enterLicense') {
           this.licenseInput.show(
             this.context,
