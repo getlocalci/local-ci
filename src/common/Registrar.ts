@@ -27,6 +27,7 @@ import ShowLogFile from 'command/ShowLogFile';
 import TryProcessAgain from '../command/TryProcessAgain';
 
 import {
+  EXTENSION_ID,
   JOB_TREE_VIEW_ID,
   LICENSE_TREE_VIEW_ID,
   LOG_FILE_SCHEME,
@@ -115,15 +116,23 @@ export default class Registrar {
   registerHandlers() {
     this.firstActivation.handle(this.context);
 
-    // Entering this URI in the browser will show the license key input:
-    // vscode://LocalCI.local-ci/enterLicense
     this.editorGateway.editor.window.registerUriHandler({
       handleUri: (uri: vscode.Uri) => {
+        // Entering this URI in the browser will show the license key input:
+        // vscode://LocalCI.local-ci/enterLicense
         if (uri.path === '/enterLicense') {
           this.licenseInput.show(
             this.context,
             () => this.licenseProvider.load(),
             () => this.jobProvider.hardRefresh()
+          );
+        }
+
+        // vscode://LocalCI.local-ci/walkthrough
+        if (uri.path === '/walkthrough') {
+          this.editorGateway.editor.commands.executeCommand(
+            'workbench.action.openWalkthrough',
+            `${EXTENSION_ID}#welcomeLocalCi`
           );
         }
       },
