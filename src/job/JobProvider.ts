@@ -1,7 +1,7 @@
 import { injectable } from 'inversify';
 import * as path from 'path';
 import type vscode from 'vscode';
-import type Delayer from './Delayer';
+import type Retryer from './Retryer';
 import CommandFactory from './ComandFactory';
 import Config from 'config/Config';
 import Docker from 'containerization/Docker';
@@ -47,8 +47,6 @@ export default class JobProvider
     vscode.TreeItem | undefined
   >;
   private jobs: string[] = [];
-  private retryCount = 0;
-  private maxRetries = 10;
   private errorType?: JobError;
   private errorMessage?: string;
   private logs: Record<string, string[]> = {};
@@ -67,9 +65,9 @@ export default class JobProvider
     private processedConfig: Config,
     private jobFactory: JobFactory,
     private logFactory: LogFactory,
+    private retryer: Retryer,
     private warningFactory: WarningFactory,
     private allJobs: AllJobs,
-    private delayer: Delayer<void>,
     private jobDependencies?: Map<string, string[] | null>
   ) {
     this._onDidChangeTreeData = new this.editorGateway.editor.EventEmitter<
@@ -79,6 +77,7 @@ export default class JobProvider
   }
 
   async init() {
+    this.retryer.init(() => this.hardRefresh());
     await this.loadJobs();
     await this.loadLogs();
     if (this._onDidChangeTreeData) {
@@ -127,7 +126,7 @@ export default class JobProvider
       } else {
         this.reporterGateway.reporter.sendTelemetryErrorEvent('noConfigFile');
         this.setError(JobError.NoConfigFilePathInWorkspace);
-        this.retryLater();
+        this.retryer.run();
       }
 
       return;
@@ -163,13 +162,13 @@ export default class JobProvider
       this.reporterGateway.reporter.sendTelemetryErrorEvent('dockerNotRunning');
       this.setError(JobError.DockerNotRunning, this.docker.getError());
 
-      this.retryLater();
+      this.retryer.run();
       return;
     }
 
     if (processError) {
       this.setError(JobError.ProcessFile, processError);
-      this.retryLater();
+      this.retryer.run();
       return;
     }
 
@@ -191,15 +190,6 @@ export default class JobProvider
   clearErrors() {
     this.errorType = undefined;
     this.errorMessage = undefined;
-  }
-
-  retryLater() {
-    if (this.retryCount > this.maxRetries) {
-      return;
-    }
-
-    this.retryCount++;
-    this.delayer.trigger(this.hardRefresh);
   }
 
   async loadLogs() {

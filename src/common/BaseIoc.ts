@@ -34,6 +34,7 @@ import ProcessFile from 'process/ProcessFile';
 import Refresh from 'command/Refresh';
 import RegistrarFactory from 'common/RegistrarFactory';
 import ReRunJob from 'command/ReRunJob';
+import Retryer from 'job/Retryer';
 import RunJob from 'command/RunJob';
 import RunningContainer from 'containerization/RunningContainer';
 import RunWalkthroughJob from 'command/RunWalkthroughJob';
@@ -95,6 +96,7 @@ export default class BaseIoc {
     this.container.bind(Refresh).toSelf();
     this.container.bind(RegistrarFactory).toSelf();
     this.container.bind(ReRunJob).toSelf();
+    this.container.bind(Retryer).toSelf();
     this.container.bind(RunWalkthroughJob).toSelf();
     this.container.bind(RunJob).toSelf();
     this.container.bind(RunningContainer).toSelf();

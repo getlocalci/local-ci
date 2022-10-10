@@ -15,7 +15,7 @@ import License from 'license/License';
 import LogFactory from 'log/LogFactory';
 import ReporterGateway from 'gateway/ReporterGateway';
 import WarningFactory from './WarningFactory';
-import Delayer from './Delayer';
+import Retryer from './Retryer';
 
 @injectable()
 export default class JobProviderFactory {
@@ -52,6 +52,9 @@ export default class JobProviderFactory {
   @inject(Types.IReporterGateway)
   reporterGateway!: ReporterGateway;
 
+  @inject(Retryer)
+  retryer!: Retryer;
+
   @inject(WarningFactory)
   warningFactory!: WarningFactory;
 
@@ -77,9 +80,9 @@ export default class JobProviderFactory {
       this.config,
       this.jobFactory,
       this.logFactory,
+      this.retryer,
       this.warningFactory,
       this.allJobs,
-      new Delayer(this.defaultDelay),
       jobDependencies
     );
   }
