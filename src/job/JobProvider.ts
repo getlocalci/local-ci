@@ -1,6 +1,7 @@
 import { injectable } from 'inversify';
 import * as path from 'path';
 import type vscode from 'vscode';
+import type Delayer from './Delayer';
 import CommandFactory from './ComandFactory';
 import Config from 'config/Config';
 import Docker from 'containerization/Docker';
@@ -46,7 +47,8 @@ export default class JobProvider
     vscode.TreeItem | undefined
   >;
   private jobs: string[] = [];
-  private isError?: boolean;
+  private retryCount = 0;
+  private maxRetries = 10;
   private errorType?: JobError;
   private errorMessage?: string;
   private logs: Record<string, string[]> = {};
@@ -67,6 +69,7 @@ export default class JobProvider
     private logFactory: LogFactory,
     private warningFactory: WarningFactory,
     private allJobs: AllJobs,
+    private delayer: Delayer<void>,
     private jobDependencies?: Map<string, string[] | null>
   ) {
     this._onDidChangeTreeData = new this.editorGateway.editor.EventEmitter<
@@ -110,7 +113,7 @@ export default class JobProvider
   ): Promise<void> {
     this.jobs = [];
     this.runningJob = undefined;
-    this.resetErrors();
+    this.clearErrors();
 
     const configFilePath = await this.configFile.getPath(this.context);
     if (!configFilePath || !this.fsGateway.fs.existsSync(configFilePath)) {
@@ -124,6 +127,7 @@ export default class JobProvider
       } else {
         this.reporterGateway.reporter.sendTelemetryErrorEvent('noConfigFile');
         this.setError(JobError.NoConfigFilePathInWorkspace);
+        this.retryLater();
       }
 
       return;
@@ -165,6 +169,7 @@ export default class JobProvider
 
     if (processError) {
       this.setError(JobError.ProcessFile, processError);
+      this.retryLater();
       return;
     }
 
@@ -181,20 +186,20 @@ export default class JobProvider
   setError(errorType: JobError, errorMessage?: string) {
     this.errorType = errorType;
     this.errorMessage = errorMessage;
-    this.isError = true;
   }
 
-  resetErrors() {
-    this.isError = false;
+  clearErrors() {
     this.errorType = undefined;
     this.errorMessage = undefined;
   }
 
   retryLater() {
-    const millisecondsToWait = 10000;
-    setInterval(async () => {
-      await this.loadJobs();
-    }, millisecondsToWait);
+    if (this.retryCount > this.maxRetries) {
+      return;
+    }
+
+    this.retryCount++;
+    this.delayer.trigger(() => this.hardRefresh());
   }
 
   async loadLogs() {

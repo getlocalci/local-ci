@@ -15,6 +15,7 @@ import License from 'license/License';
 import LogFactory from 'log/LogFactory';
 import ReporterGateway from 'gateway/ReporterGateway';
 import WarningFactory from './WarningFactory';
+import Delayer from './Delayer';
 
 @injectable()
 export default class JobProviderFactory {
@@ -57,6 +58,8 @@ export default class JobProviderFactory {
   @inject(AllJobs)
   allJobs!: AllJobs;
 
+  defaultDelay = 5000;
+
   create(
     context: vscode.ExtensionContext,
     jobDependencies?: Map<string, string[] | null>
@@ -76,6 +79,7 @@ export default class JobProviderFactory {
       this.logFactory,
       this.warningFactory,
       this.allJobs,
+      new Delayer(this.defaultDelay),
       jobDependencies
     );
   }
