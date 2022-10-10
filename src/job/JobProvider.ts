@@ -199,7 +199,7 @@ export default class JobProvider
     }
 
     this.retryCount++;
-    this.delayer.trigger(() => this.hardRefresh());
+    this.delayer.trigger(this.hardRefresh);
   }
 
   async loadLogs() {
