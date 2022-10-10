@@ -8,11 +8,11 @@
   "scripts": {
     "lint": "prettier --check index.ts",
     "lint:fix": "prettier --write index.ts",
-    "start": "ts-node --esm index.ts"
+    "start": "ts-node --esm --skipIgnore index.ts"
   },
   "license": "GPL-2.0-or-later",
   "devDependencies": {
-    "@circleci/circleci-config-sdk": "^0.11.0",
+    "@getlocalci/create-config": "github:getlocalci/create-config",
     "@types/node": "^18.7.20",
     "prettier": "^2.7.1",
     "ts-node": "^10.9.1",

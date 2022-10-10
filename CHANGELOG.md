@@ -1,5 +1,14 @@
 # Change Log
 
+## 1.9.7 - 6 October 2022
+- Add a link to the walkthrough page. [#205](https://github.com/getlocalci/local-ci/pull/205)
+- Bump the CircleCI binary version. [#206](https://github.com/getlocalci/local-ci/pull/206)
+
+## 1.9.6 - 2 October 2022
+- Bump the binary version to the latest, v0.1.21812. [#202](https://github.com/getlocalci/local-ci/pull/202)
+- Use the new CircleCI Config SDK. [#199](https://github.com/getlocalci/local-ci/pull/199)
+- Add more logging to a development logging file. [#201](https://github.com/getlocalci/local-ci/pull/201)
+
 ## 1.9.5 - 29 September 2022
 - Make the final terminal appear more. [#197](https://github.com/getlocalci/local-ci/pull/197)
 
