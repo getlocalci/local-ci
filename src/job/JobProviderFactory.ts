@@ -61,8 +61,6 @@ export default class JobProviderFactory {
   @inject(AllJobs)
   allJobs!: AllJobs;
 
-  defaultDelay = 5000;
-
   create(
     context: vscode.ExtensionContext,
     jobDependencies?: Map<string, string[] | null>

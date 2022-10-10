@@ -19,14 +19,10 @@ export default class Retryer {
       return;
     }
 
-    if (!this.callback) {
+    if (!this.callback || !this.delayer) {
       throw new Error(
         'Retryer called .run() without having set the callback in .init()'
       );
-    }
-
-    if (!this.delayer) {
-      throw new Error('Retryer called .run() without having called .init()');
     }
 
     this.retryCount++;
