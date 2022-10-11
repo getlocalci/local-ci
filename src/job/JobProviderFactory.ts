@@ -3,6 +3,7 @@ import type vscode from 'vscode';
 import Types from 'common/Types';
 import AllConfigFiles from 'config/AllConfigFiles';
 import AllJobs from './AllJobs';
+import Children from './Children';
 import CommandFactory from './ComandFactory';
 import Config from 'config/Config';
 import ConfigFile from 'config/ConfigFile';
@@ -21,6 +22,9 @@ import Retryer from './Retryer';
 export default class JobProviderFactory {
   @inject(AllConfigFiles)
   allConfigFiles!: AllConfigFiles;
+
+  @inject(Children)
+  children!: Children;
 
   @inject(ConfigFile)
   configFile!: ConfigFile;
@@ -69,17 +73,14 @@ export default class JobProviderFactory {
       context,
       this.reporterGateway,
       this.allConfigFiles,
+      this.children,
       this.configFile,
-      this.commandFactory,
       this.docker,
       this.editorGateway,
       this.fsGateway,
       this.license,
       this.config,
-      this.jobFactory,
-      this.logFactory,
       this.retryer,
-      this.warningFactory,
       this.allJobs,
       jobDependencies
     );

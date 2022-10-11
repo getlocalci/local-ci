@@ -2,34 +2,23 @@ import { injectable } from 'inversify';
 import * as path from 'path';
 import type vscode from 'vscode';
 import type Retryer from './Retryer';
-import CommandFactory from './ComandFactory';
 import Config from 'config/Config';
 import Docker from 'containerization/Docker';
 import AllConfigFiles from 'config/AllConfigFiles';
 import AllJobs from 'job/AllJobs';
+import Children from 'job/Children';
 import ConfigFile from 'config/ConfigFile';
 import EditorGateway from 'gateway/EditorGateway';
 import FsGateway from 'gateway/FsGateway';
 import getLogFilesDirectory from 'log/getLogFilesDirectory';
 import getTrialLength from 'license/getTrialLength';
 import isTrialExpired from 'license/isTrialExpired';
-import JobFactory from './JobFactory';
 import JobTreeItem from './JobTreeItem';
 import License from 'license/License';
-import LogFactory from '../log/LogFactory';
 import ReporterGateway from 'gateway/ReporterGateway';
-import WarningFactory from './WarningFactory';
-import {
-  COMPLAIN_COMMAND,
-  CREATE_CONFIG_FILE_COMMAND,
-  ENTER_LICENSE_COMMAND,
-  GET_LICENSE_COMMAND,
-  JOB_TREE_VIEW_ID,
-  PROCESS_TRY_AGAIN_COMMAND,
-  TRIAL_STARTED_TIMESTAMP,
-} from '../constant';
+import { TRIAL_STARTED_TIMESTAMP } from '../constant';
 
-enum JobError {
+export enum JobError {
   DockerNotRunning,
   LicenseKey,
   NoConfigFilePathInWorkspace,
@@ -56,17 +45,14 @@ export default class JobProvider
     private readonly context: vscode.ExtensionContext,
     private readonly reporterGateway: ReporterGateway,
     private allConfigFiles: AllConfigFiles,
+    private children: Children,
     private configFile: ConfigFile,
-    private commandFactory: CommandFactory,
     private docker: Docker,
     private editorGateway: EditorGateway,
     private fsGateway: FsGateway,
     private license: License,
     private processedConfig: Config,
-    private jobFactory: JobFactory,
-    private logFactory: LogFactory,
     private retryer: Retryer,
-    private warningFactory: WarningFactory,
     private allJobs: AllJobs,
     private jobDependencies?: Map<string, string[] | null>
   ) {
@@ -212,146 +198,15 @@ export default class JobProvider
   }
 
   getChildren(parentElement?: JobTreeItem): Array<vscode.TreeItem> {
-    if (!parentElement) {
-      return this.jobs.length
-        ? this.getJobTreeItems(
-            this.jobs.filter((jobName) => {
-              return !this?.jobDependencies?.get(jobName);
-            })
-          )
-        : this.getErrorTreeItems();
-    }
-
-    const jobNames = this.jobDependencies?.keys();
-    if (
-      !jobNames ||
-      ('getJobName' in parentElement && !parentElement?.getJobName())
-    ) {
-      return [];
-    }
-
-    const children = [];
-    for (const jobName of jobNames) {
-      const jobDependencies = this?.jobDependencies?.get(jobName) ?? [];
-      const dependencyLength = jobDependencies?.length;
-      // This element's children include the jobs that list it as their last dependency in the requires array.
-      if (
-        dependencyLength &&
-        parentElement.label === jobDependencies[dependencyLength - 1]
-      ) {
-        children.push(jobName);
-      }
-    }
-
-    return [
-      ...this.getLogTreeItems(
-        'getJobName' in parentElement ? parentElement.getJobName() : ''
-      ),
-      ...this.getJobTreeItems(children),
-    ];
-  }
-
-  getLogTreeItems(jobName: string): vscode.TreeItem[] {
-    return (
-      this.logs[jobName]?.map((logFile) =>
-        this.logFactory.create(path.basename(logFile), logFile)
-      ) ?? []
+    return this.children.get(
+      this.jobs,
+      this.logs,
+      this.jobDependencies,
+      this.runningJob,
+      this.errorType,
+      this.errorMessage,
+      parentElement
     );
-  }
-
-  getJobTreeItems(jobs: string[]): vscode.TreeItem[] {
-    return jobs.map((jobName) =>
-      this.jobFactory.create(
-        jobName,
-        jobName === this.runningJob,
-        this.hasChild(jobName)
-      )
-    );
-  }
-
-  getErrorTreeItems(): Array<vscode.TreeItem> {
-    const errorMessage = this.getJobErrorMessage();
-
-    switch (this.errorType) {
-      case JobError.DockerNotRunning:
-        return [
-          this.warningFactory.create('Error: is Docker running?'),
-          new this.editorGateway.editor.TreeItem(errorMessage),
-          this.commandFactory.create(
-            'Try Again',
-            `${JOB_TREE_VIEW_ID}.refresh`
-          ),
-          this.commandFactory.create('Complain To Me', COMPLAIN_COMMAND),
-        ];
-      case JobError.LicenseKey:
-        return [
-          this.warningFactory.create('Please enter a Local CI license key.'),
-          this.commandFactory.create('Get License', GET_LICENSE_COMMAND),
-          this.commandFactory.create('Enter License', ENTER_LICENSE_COMMAND),
-          this.commandFactory.create('Complain To Me', COMPLAIN_COMMAND),
-        ];
-      case JobError.NoConfigFilePathInWorkspace:
-        return [
-          this.warningFactory.create('Error: No .circleci/config.yml found'),
-          this.commandFactory.create(
-            'Create a config for me',
-            CREATE_CONFIG_FILE_COMMAND
-          ),
-          this.commandFactory.create('Complain to me', COMPLAIN_COMMAND),
-        ];
-      case JobError.NoConfigFilePathSelected:
-        return [
-          this.warningFactory.create('Error: No jobs found'),
-          this.commandFactory.create('Select repo', 'localCiJobs.selectRepo'),
-          this.commandFactory.create('Complain to me', COMPLAIN_COMMAND),
-        ];
-      case JobError.ProcessFile:
-        return [
-          this.warningFactory.create('Error processing the CircleCI config:'),
-          new this.editorGateway.editor.TreeItem(
-            [
-              errorMessage?.includes('connection refused') ||
-              errorMessage?.includes('timeout')
-                ? 'Is your machine connected to the internet?'
-                : '',
-              errorMessage,
-            ]
-              .filter((message) => !!message)
-              .join(' ')
-          ),
-          this.commandFactory.create('Try Again', PROCESS_TRY_AGAIN_COMMAND),
-          this.commandFactory.create('Complain To Me', COMPLAIN_COMMAND),
-        ];
-      default:
-        return [];
-    }
-  }
-
-  getJobErrorMessage(): string {
-    return this.errorMessage || '';
-  }
-
-  /**
-   * A job has a child if either:
-   *
-   * 1. It has a log
-   * 2. It's a dependency of another job (another job has it as the last value in its requires array)
-   */
-  hasChild(jobName: string): boolean {
-    if (this.logs[jobName]) {
-      return true;
-    }
-
-    for (const [, dependecies] of this?.jobDependencies ?? []) {
-      if (
-        dependecies?.length &&
-        jobName === dependecies[dependecies.length - 1]
-      ) {
-        return true;
-      }
-    }
-
-    return false;
   }
 
   setRunningJob(jobName: string): void {
