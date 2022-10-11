@@ -1,5 +1,8 @@
 # Change Log
 
+## 1.9.8 - 10 October 2022
+- Reload after certain failures, like if Docker isn't running. [#208](https://github.com/getlocalci/local-ci/pull/208)
+
 ## 1.9.7 - 6 October 2022
 - Add a link to the walkthrough page. [#205](https://github.com/getlocalci/local-ci/pull/205)
 - Bump the CircleCI binary version. [#206](https://github.com/getlocalci/local-ci/pull/206)
