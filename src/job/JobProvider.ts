@@ -98,7 +98,7 @@ export default class JobProvider
   ): Promise<void> {
     this.jobs = [];
     this.runningJob = undefined;
-    this.clearErrors();
+    this.clearError();
 
     const configFilePath = await this.configFile.getPath(this.context);
     if (!configFilePath || !this.fsGateway.fs.existsSync(configFilePath)) {
@@ -173,7 +173,7 @@ export default class JobProvider
     this.errorMessage = errorMessage;
   }
 
-  clearErrors() {
+  clearError() {
     this.errorType = undefined;
     this.errorMessage = undefined;
   }
