@@ -4,3 +4,4 @@ bin
 node_modules
 *.vsix
 .DS_Store
+.circleci/dynamic/dynamicConfig.yml
