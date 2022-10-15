@@ -15,11 +15,19 @@ import {
   DYNAMIC_CONFIG_PATH_IN_CONTAINER,
 } from 'constant';
 import { addEnvVars } from 'script';
+import ChildProcessGateway from 'gateway/ChildProcessGateway';
+import Spawn from 'common/Spawn';
 
 @injectable()
 export default class ProcessFile {
+  @inject(Types.IChildProcessGateway)
+  childProcessGateway!: ChildProcessGateway;
+
   @inject(Types.IFsGateway)
   fsGateway!: FsGateway;
+
+  @inject(Spawn)
+  spawn!: Spawn;
 
   /**
    * Overwrites parts of the process.yml file.
@@ -28,9 +36,9 @@ export default class ProcessFile {
    * this copies the files inside the container to the volume shared with the local machine.
    * This way, they can persist between jobs.
    * Likewise, on attach_workspace, it copies from the volume.
-   * The processedConfig was already compiled by the CircleCI® CLI binary.
+   * The processedConfig was already compiled by the CircleCI CLI binary.
    */
-  write(processedConfig: string, processFilePath: string) {
+  write(processedConfig: string, processFilePath: string, repoPath: string) {
     const config = getConfig(processedConfig);
 
     if (!config) {
@@ -134,21 +142,13 @@ export default class ProcessFile {
             return step;
           });
 
-          // If a 'checkout' step exists, insert env vars right after it.
-          if (newSteps?.includes('checkout')) {
-            newSteps?.splice(
-              newSteps?.indexOf('checkout') + 1,
-              0,
-              this.getEnvVarStep()
-            );
-          }
-
           return {
             ...accumulator,
             [jobName]: {
               ...configJobs[jobName],
               steps: [
                 this.getEnsureVolumeIsWritableStep(),
+                this.getEnvVarStep(repoPath),
                 ...(newSteps ?? []),
               ],
             },
@@ -225,11 +225,27 @@ export default class ProcessFile {
     };
   }
 
-  private getEnvVarStep() {
+  private getEnvVarStep(repoPath: string) {
+    let command;
+    try {
+      const exportVars = this.childProcessGateway.cp
+        .execSync(addEnvVars, {
+          ...this.spawn.getOptions(repoPath),
+          timeout: 2000,
+        })
+        .toString();
+
+      command = `echo '${exportVars}' >> $BASH_ENV`;
+    } catch (error) {
+      command = `There was an error setting the variables: ${
+        (error as ErrorWithMessage).message
+      }`;
+    }
+
     return {
       run: {
         name: 'Set more environment variables',
-        command: addEnvVars,
+        command,
       },
     };
   }

@@ -12,6 +12,7 @@ import ProcessFile from 'process/ProcessFile';
 import ReporterGateway from 'gateway/ReporterGateway';
 import Spawn from 'common/Spawn';
 import Types from 'common/Types';
+import getRepoPath from 'common/getRepoPath';
 
 @injectable()
 export default class Config {
@@ -55,7 +56,11 @@ export default class Config {
         this.childProcessGateway.cp,
         this.spawn.getOptions()
       );
-      this.processFile.write(processedConfig, processFilePath);
+      this.processFile.write(
+        processedConfig,
+        processFilePath,
+        getRepoPath(configFilePath)
+      );
 
       const dynamicConfigFilePath = getDynamicConfigPath(configFilePath);
       if (this.fsGateway.fs.existsSync(dynamicConfigFilePath)) {
@@ -70,7 +75,8 @@ export default class Config {
             this.childProcessGateway.cp,
             this.spawn.getOptions()
           ),
-          dynamicConfigFilePath
+          dynamicConfigFilePath,
+          getRepoPath(configFilePath)
         );
       }
     } catch (e) {

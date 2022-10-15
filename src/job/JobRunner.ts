@@ -36,6 +36,7 @@ import {
   dockerExecRunningContainer,
   getRunningContainerFunction,
 } from 'script';
+import getRepoPath from 'common/getRepoPath';
 
 @injectable()
 export default class JobRunner {
@@ -87,7 +88,7 @@ export default class JobRunner {
     }
 
     const configFilePath = await this.configFile.getPath(context);
-    const repoPath = path.dirname(path.dirname(configFilePath));
+    const repoPath = getRepoPath(configFilePath);
     const terminal = this.editorGateway.editor.window.createTerminal({
       name: getTerminalName(jobName),
       message: `Running the CircleCI® job ${jobName}…`,
