@@ -56,15 +56,15 @@ export default class ConfigFile {
       return allConfigFilePaths[0].fsPath;
     }
 
-    const chooseRepoText = 'Choose repo';
+    const selectRepoText = 'Select repo';
     this.editorGateway.editor.window
       .showInformationMessage(
         'Please select the repo to run Local CI on',
         { detail: 'There is no repo selected to run Local CI on' },
-        chooseRepoText
+        selectRepoText
       )
       .then((clicked) => {
-        if (clicked === chooseRepoText) {
+        if (clicked === selectRepoText) {
           this.editorGateway.editor.commands.executeCommand(
             'localCiJobs.selectRepo'
           );
