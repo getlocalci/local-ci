@@ -43,6 +43,7 @@ import SelectRepo from 'command/SelectRepo';
 import Spawn from 'common/Spawn';
 import TryProcessAgain from 'command/TryProcessAgain';
 import UncommittedFile from 'containerization/UncommittedFile';
+import WarningCommandFactory from 'job/WarningCommandFactory';
 import WarningFactory from 'job/WarningFactory';
 import Workspace from 'common/Workspace';
 
@@ -106,6 +107,7 @@ export default class BaseIoc {
     this.container.bind(Spawn).toSelf();
     this.container.bind(TryProcessAgain).toSelf();
     this.container.bind(UncommittedFile).toSelf();
+    this.container.bind(WarningCommandFactory).toSelf();
     this.container.bind(WarningFactory).toSelf();
     this.container.bind(Workspace).toSelf();
 

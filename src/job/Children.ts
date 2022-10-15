@@ -8,6 +8,7 @@ import CommandFactory from './ComandFactory';
 import JobFactory from './JobFactory';
 import JobTreeItem from './JobTreeItem';
 import WarningFactory from './WarningFactory';
+import WarningCommandFactory from './WarningCommandFactory';
 import type EditorGateway from 'gateway/EditorGateway';
 import {
   COMPLAIN_COMMAND,
@@ -16,6 +17,7 @@ import {
   GET_LICENSE_COMMAND,
   JOB_TREE_VIEW_ID,
   PROCESS_TRY_AGAIN_COMMAND,
+  SELECT_REPO_COMMAND,
 } from 'constant';
 
 type Logs = Record<string, string[]>;
@@ -34,6 +36,9 @@ export default class Children {
 
   @inject(LogFactory)
   logFactory!: LogFactory;
+
+  @inject(WarningCommandFactory)
+  warningCommandFactory!: WarningCommandFactory;
 
   @inject(WarningFactory)
   warningFactory!: WarningFactory;
@@ -149,8 +154,11 @@ export default class Children {
         ];
       case JobError.NoConfigFilePathSelected:
         return [
-          this.warningFactory.create('Please select repo'),
-          this.commandFactory.create('Select repo', 'localCiJobs.selectRepo'),
+          this.warningCommandFactory.create(
+            'Please select repo',
+            SELECT_REPO_COMMAND
+          ),
+          this.commandFactory.create('Select repo', SELECT_REPO_COMMAND),
           this.commandFactory.create('Complain to me', COMPLAIN_COMMAND),
         ];
       case JobError.ProcessFile:

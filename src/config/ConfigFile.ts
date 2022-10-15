@@ -3,7 +3,11 @@ import type vscode from 'vscode';
 import Types from 'common/Types';
 import AllConfigFiles from './AllConfigFiles';
 import EditorGateway from 'gateway/EditorGateway';
-import { CREATE_CONFIG_FILE_COMMAND, SELECTED_CONFIG_PATH } from 'constant';
+import {
+  CREATE_CONFIG_FILE_COMMAND,
+  SELECTED_CONFIG_PATH,
+  SELECT_REPO_COMMAND,
+} from 'constant';
 
 @injectable()
 export default class ConfigFile {
@@ -56,17 +60,17 @@ export default class ConfigFile {
       return allConfigFilePaths[0].fsPath;
     }
 
-    const chooseRepoText = 'Choose repo';
+    const selectRepoText = 'Select repo';
     this.editorGateway.editor.window
       .showInformationMessage(
         'Please select the repo to run Local CI on',
         { detail: 'There is no repo selected to run Local CI on' },
-        chooseRepoText
+        selectRepoText
       )
       .then((clicked) => {
-        if (clicked === chooseRepoText) {
+        if (clicked === selectRepoText) {
           this.editorGateway.editor.commands.executeCommand(
-            'localCiJobs.selectRepo'
+            SELECT_REPO_COMMAND
           );
         }
       });
