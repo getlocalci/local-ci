@@ -8,13 +8,13 @@ export default class WarningCommandFactory {
   warningFactory!: WarningFactory;
 
   create(label: string, command: string): vscode.TreeItem {
-    const warning = this.warningFactory.create(label);
-    warning.command = {
-      command,
-      title: label,
-      tooltip: label,
+    return {
+      ...this.warningFactory.create(label),
+      command: {
+        command,
+        title: label,
+        tooltip: label,
+      },
     };
-
-    return warning;
   }
 }
