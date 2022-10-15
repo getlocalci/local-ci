@@ -149,7 +149,7 @@ export default class Children {
         ];
       case JobError.NoConfigFilePathSelected:
         return [
-          this.warningFactory.create('Error: No jobs found'),
+          this.warningFactory.create('Please select repo'),
           this.commandFactory.create('Select repo', 'localCiJobs.selectRepo'),
           this.commandFactory.create('Complain to me', COMPLAIN_COMMAND),
         ];
