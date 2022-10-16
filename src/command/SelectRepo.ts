@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
-import type { Command } from './index';
+import type { Command } from '.';
 import Types from 'common/Types';
 import AllConfigFiles from 'config/AllConfigFiles';
 import CommittedImages from 'containerization/CommittedImages';

@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
-import type { Command } from './index';
+import type { Command } from '.';
 import JobProvider from 'job/JobProvider';
 import LicenseInput from 'license/LicenseInput';
 import LicenseProvider from 'license/LicenseProvider';

@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
-import type { Command } from './index';
+import type { Command } from '.';
 import { START_DOCKER_COMMAND } from 'constant';
 import Types from 'common/Types';
 import ChildProcessGateway from 'gateway/ChildProcessGateway';

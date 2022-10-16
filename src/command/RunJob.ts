@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
-import type { Command } from './index';
+import type { Command } from '.';
 import Types from 'common/Types';
 import EditorGateway from 'gateway/EditorGateway';
 import JobProvider from 'job/JobProvider';

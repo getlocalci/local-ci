@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
-import type { Command } from './index';
+import type { Command } from '.';
 import JobFactory from 'job/JobFactory';
 import JobProvider from 'job/JobProvider';
 import JobRunner from 'job/JobRunner';
