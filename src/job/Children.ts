@@ -129,7 +129,10 @@ export default class Children {
     switch (errorType) {
       case JobError.DockerNotRunning:
         return [
-          this.warningFactory.create(`Docker isn't running`),
+          this.warningCommandFactory.create(
+            `Please start Docker`,
+            START_DOCKER_COMMAND
+          ),
           this.commandFactory.create('Start Docker', START_DOCKER_COMMAND),
           this.commandFactory.create(
             'Try Again',
