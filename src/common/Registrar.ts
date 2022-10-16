@@ -24,6 +24,7 @@ import ReRunJob from 'command/ReRunJob';
 import RunJob from 'command/RunJob';
 import RunWalkthroughJob from 'command/RunWalkthroughJob';
 import ShowLogFile from 'command/ShowLogFile';
+import StartDocker from 'command/StartDocker';
 import TryProcessAgain from '../command/TryProcessAgain';
 
 import {
@@ -59,6 +60,7 @@ export default class Registrar {
     private runWalkthroughJob: RunWalkthroughJob,
     private selectRepo: SelectRepo,
     private showLogFile: ShowLogFile,
+    private startDocker: StartDocker,
     private tryProcessAgain: TryProcessAgain
   ) {}
 
@@ -80,6 +82,7 @@ export default class Registrar {
       this.runWalkthroughJob,
       this.selectRepo,
       this.showLogFile,
+      this.startDocker,
       this.tryProcessAgain,
     ].map((command: Command) => {
       return this.editorGateway.editor.commands.registerCommand(

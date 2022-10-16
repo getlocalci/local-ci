@@ -19,7 +19,7 @@ export default class EnvPath {
    * Must be whole, i.e. the left side must be the beginning of the string or :, and the right side must be the end of the string or :
    * Case-insensitive, because Mac is.
    */
-  get(): string {
+  get() {
     const path = this.processGateway.process.env.PATH || '';
 
     return this.isMac() && !/(?<=^|:)\/usr\/local\/bin(?=$|:)/i.test(path)
@@ -27,7 +27,7 @@ export default class EnvPath {
       : path;
   }
 
-  isMac(): boolean {
+  isMac() {
     return this.osGateway.os.type() === 'Darwin';
   }
 }

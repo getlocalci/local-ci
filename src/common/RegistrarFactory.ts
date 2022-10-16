@@ -25,6 +25,7 @@ import Refresh from '../command/Refresh';
 import RefreshLicenseTree from 'command/RefreshLicenseTree';
 import SelectRepo from 'command/SelectRepo';
 import ShowLogFile from 'command/ShowLogFile';
+import StartDocker from 'command/StartDocker';
 import TryProcessAgain from '../command/TryProcessAgain';
 
 @injectable()
@@ -50,6 +51,7 @@ export default class RegistrarFactory {
     @inject(RunWalkthroughJob) private runWalkthroughJob: RunWalkthroughJob,
     @inject(SelectRepo) private selectRepo: SelectRepo,
     @inject(ShowLogFile) private showLogFile: ShowLogFile,
+    @inject(StartDocker) private startDocker: StartDocker,
     @inject(TryProcessAgain) private tryProcessAgain: TryProcessAgain,
     @inject(Types.IEditorGateway) private editorGateway: EditorGateway
   ) {}
@@ -84,6 +86,7 @@ export default class RegistrarFactory {
       this.runWalkthroughJob,
       this.selectRepo,
       this.showLogFile,
+      this.startDocker,
       this.tryProcessAgain
     );
   }

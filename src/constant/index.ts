@@ -42,6 +42,7 @@ export const HOST_TMP_DIRECTORY = '/tmp/local-ci';
 export const RUN_JOB_COMMAND = 'local-ci.job.run';
 export const CREATE_CONFIG_FILE_COMMAND = 'local-ci.create.config';
 export const SELECT_REPO_COMMAND = 'localCiJobs.selectRepo';
+export const START_DOCKER_COMMAND = 'local-ci.docker.start';
 export const SHOW_LOG_FILE_COMMAND = 'local-ci.show.log-file';
 export const LOG_FILE_SCHEME = 'local-ci-log';
 export const CONTINUE_PIPELINE_STEP_NAME = 'Continue the pipeline';
