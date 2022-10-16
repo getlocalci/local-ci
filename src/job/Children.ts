@@ -130,7 +130,7 @@ export default class Children {
       case JobError.DockerNotRunning:
         return [
           this.warningCommandFactory.create(
-            `Please start Docker`,
+            'Please start Docker',
             START_DOCKER_COMMAND
           ),
           this.commandFactory.create('Start Docker', START_DOCKER_COMMAND),
