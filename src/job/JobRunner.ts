@@ -17,6 +17,7 @@ import getImageFromJob from 'containerization/getImageFromJob';
 import getLogFilePath from 'log/getLogFilePath';
 import getLocalVolumePath from 'containerization/getLocalVolumePath';
 import getProcessFilePath from 'process/getProcessFilePath';
+import getRepoPath from 'common/getRepoPath';
 import getTerminalName from 'terminal/getTerminalName';
 import JobFactory from 'job/JobFactory';
 import JobListener from './JobListener';
@@ -36,7 +37,6 @@ import {
   dockerExecRunningContainer,
   getRunningContainerFunction,
 } from 'script';
-import getRepoPath from 'common/getRepoPath';
 
 @injectable()
 export default class JobRunner {

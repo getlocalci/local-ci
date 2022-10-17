@@ -8,11 +8,11 @@ import getDynamicConfigParametersPath from './getDynamicConfigParametersPath';
 import getDynamicConfigPath from './getDynamicConfigPath';
 import getProcessedConfig from './getProcessedConfig';
 import getProcessFilePath from 'process/getProcessFilePath';
+import getRepoPath from 'common/getRepoPath';
 import ProcessFile from 'process/ProcessFile';
 import ReporterGateway from 'gateway/ReporterGateway';
 import Spawn from 'common/Spawn';
 import Types from 'common/Types';
-import getRepoPath from 'common/getRepoPath';
 
 @injectable()
 export default class Config {

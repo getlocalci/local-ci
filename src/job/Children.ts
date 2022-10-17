@@ -89,7 +89,7 @@ export default class Children {
     return [
       ...this.getLogTreeItems(
         logs,
-        'getJobName' in parentElement ? parentElement.getJobName() : ''
+        'getJobName' in parentElement ? parentElement?.getJobName() : ''
       ),
       ...this.getJobTreeItems(children, logs, runningJob, jobDependencies),
     ];

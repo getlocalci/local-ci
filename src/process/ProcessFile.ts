@@ -14,15 +14,11 @@ import {
   DYNAMIC_CONFIG_PARAMETERS_FILE_NAME,
   DYNAMIC_CONFIG_PATH_IN_CONTAINER,
 } from 'constant';
-import ChildProcessGateway from 'gateway/ChildProcessGateway';
 import Spawn from 'common/Spawn';
 import EnvVar from './EnvVar';
 
 @injectable()
 export default class ProcessFile {
-  @inject(Types.IChildProcessGateway)
-  childProcessGateway!: ChildProcessGateway;
-
   @inject(Types.IEnvVar)
   envVar!: EnvVar;
 
