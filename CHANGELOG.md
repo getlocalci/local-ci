@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.0.0 - 17 October 2022
+- Add a button 'Start Docker'. [#214](https://github.com/getlocalci/local-ci/pull/214)
+- Bump the binary version to the latest: v0.1.22272. [#212](https://github.com/getlocalci/local-ci/pull/212)
+- Make the additional env vars more robust. [#213](https://github.com/getlocalci/local-ci/pull/213)
+- Allow clicking a warning, like 'Please select repo'. [#211](https://github.com/getlocalci/local-ci/pull/211)
+
 ## 1.9.8 - 10 October 2022
 - Reload after certain failures, like if Docker isn't running. [#208](https://github.com/getlocalci/local-ci/pull/208)
 
