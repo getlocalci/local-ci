@@ -27,7 +27,7 @@ export default class StartDocker implements Command {
   }
 
   getCallback(context: vscode.ExtensionContext, jobProvider: JobProvider) {
-    return async (commandTreeItem: CommandTreeItem) => {
+    return (commandTreeItem: CommandTreeItem) => {
       commandTreeItem.setIsRunning();
       jobProvider.refresh(commandTreeItem);
 
