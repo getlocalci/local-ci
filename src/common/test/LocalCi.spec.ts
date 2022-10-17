@@ -36,6 +36,7 @@ describe('LocalCi', () => {
       'local-ci.runWalkthroughJob',
       'localCiJobs.selectRepo',
       'local-ci.show.log-file',
+      'local-ci.docker.start',
       'local-ci.process-error.try-again',
     ];
 

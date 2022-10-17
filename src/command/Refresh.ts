@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
 import type vscode from 'vscode';
-import type { Command } from './index';
+import type { Command } from '.';
 import JobProvider from 'job/JobProvider';
 import { JOB_TREE_VIEW_ID } from 'constant';
 

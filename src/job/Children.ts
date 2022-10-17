@@ -18,6 +18,7 @@ import {
   JOB_TREE_VIEW_ID,
   PROCESS_TRY_AGAIN_COMMAND,
   SELECT_REPO_COMMAND,
+  START_DOCKER_COMMAND,
 } from 'constant';
 
 type Logs = Record<string, string[]>;
@@ -128,8 +129,11 @@ export default class Children {
     switch (errorType) {
       case JobError.DockerNotRunning:
         return [
-          this.warningFactory.create('Error: is Docker running?'),
-          new this.editorGateway.editor.TreeItem(errorMessage ?? ''),
+          this.warningCommandFactory.create(
+            'Please Start Docker',
+            START_DOCKER_COMMAND
+          ),
+          this.commandFactory.create('Start Docker', START_DOCKER_COMMAND),
           this.commandFactory.create(
             'Try Again',
             `${JOB_TREE_VIEW_ID}.refresh`

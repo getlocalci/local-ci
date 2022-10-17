@@ -1,5 +1,5 @@
 import { inject, injectable } from 'inversify';
-import type { Command } from './index';
+import type { Command } from '.';
 import type vscode from 'vscode';
 import ConfigFile from 'config/ConfigFile';
 import FsGateway from 'gateway/FsGateway';
