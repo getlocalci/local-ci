@@ -7,16 +7,12 @@ import ChildProcessGateway from 'gateway/ChildProcessGateway';
 import CommandTreeItem from 'job/CommandTreeItem';
 import Spawn from 'common/Spawn';
 import EnvPath from 'common/EnvPath';
-import EditorGateway from 'gateway/EditorGateway';
 import JobProvider from 'job/JobProvider';
 
 @injectable()
 export default class StartDocker implements Command {
   @inject(Types.IChildProcessGateway)
   childProcessGateway!: ChildProcessGateway;
-
-  @inject(Types.IEditorGateway)
-  editorGateway!: EditorGateway;
 
   @inject(EnvPath)
   envPath!: EnvPath;
