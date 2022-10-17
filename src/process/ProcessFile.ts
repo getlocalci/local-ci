@@ -134,12 +134,7 @@ export default class ProcessFile {
               };
             }
 
-            const clonePattern = /git clone .* \$CIRCLE_REPOSITORY_URL/;
-            if (
-              (typeof step?.run === 'string' && step.run.match(clonePattern)) ||
-              (typeof step?.run !== 'string' &&
-                step?.run?.command?.match(clonePattern))
-            ) {
+            if (this.isCustomClone(step)) {
               return 'checkout';
             }
 
@@ -175,7 +170,7 @@ export default class ProcessFile {
    *
    * https://circleci.com/developer/orbs/orb/circleci/path-filtering#commands
    */
-  private getOutputPath(steps: Job['steps']): string | undefined {
+  getOutputPath(steps: Job['steps']): string | undefined {
     if (!steps) {
       return;
     }
@@ -192,7 +187,7 @@ export default class ProcessFile {
     }
   }
 
-  private getPersistToWorkspaceCommand(step: FullStep): string | undefined {
+  getPersistToWorkspaceCommand(step: FullStep): string | undefined {
     if (typeof step?.persist_to_workspace?.paths === 'string') {
       const pathToPersist = path.join(
         step?.persist_to_workspace?.root ?? '.',
@@ -217,7 +212,7 @@ export default class ProcessFile {
     );
   }
 
-  private getEnsureVolumeIsWritableStep() {
+  getEnsureVolumeIsWritableStep() {
     return {
       run: {
         name: 'Ensure volume is writable',
@@ -227,5 +222,22 @@ export default class ProcessFile {
         fi`,
       },
     };
+  }
+
+  /**
+   * Gets whether there's a custom `git clone` command.
+   *
+   * Local CI doesn't work with that.
+   * The idea of Local CI is to use your local commits, not to git clone from the remote repo.
+   * So this will find if there's a custom `git clone` command,
+   * so it can replace it with `checkout`.
+   */
+  isCustomClone(step: FullStep): boolean {
+    const clonePattern = /git clone[^\n]+\$CIRCLE_REPOSITORY_URL/;
+    return (
+      (typeof step?.run === 'string' && !!step.run.match(clonePattern)) ||
+      (typeof step?.run !== 'string' &&
+        !!step?.run?.command?.match(clonePattern))
+    );
   }
 }
