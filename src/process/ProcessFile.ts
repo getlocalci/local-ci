@@ -231,6 +231,7 @@ export default class ProcessFile {
    * The idea of Local CI is to use your local commits, not to git clone from the remote repo.
    * So this will find if there's a custom `git clone` command,
    * so it can replace it with `checkout`.
+   * The CLI handles `checkout` well.
    */
   isCustomClone(step: FullStep): boolean {
     const clonePattern = /git clone[^\n]+\$CIRCLE_REPOSITORY_URL/;
