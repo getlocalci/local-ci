@@ -2,21 +2,18 @@
 
 # shellcheck disable=SC2154
 lci_images=$(docker images -q "$lci_image_pattern")
-echo "$local_ci_images" | while read -r image
+echo "$lci_images" | while read -r image
   do
-  if [ "$lci_image_to_exclude" = "$image" ]
+  if [ ! "$image" ] || [ "$lci_image_to_exclude" = "$image" ]
     then
     continue
   fi
   lci_containers=$(docker ps --filter ancestor="$image" -q)
-  if [ -n "$lci_containers" ]
+  if [ "$lci_containers" ]
     then
-    docker stop "$lci_containers"
-    docker rm "$lci_containers"
+    echo "$lci_containers" | xargs docker stop
+    echo "$lci_containers" | xargs docker rm
   fi
-done
 
-if [ "$lci_images" ]
-  then
-  docker rmi "$lci_images"
-fi
+  docker rmi "$image"
+done
