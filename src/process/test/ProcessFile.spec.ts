@@ -21,7 +21,7 @@ describe('ProcessFile', () => {
     const processFile = testHarness.container.get(ProcessFile);
     const writeFileSpy = jest.fn();
     fsGateway.fs.writeFileSync = writeFileSpy;
-    processFile.write(withCacheFixture, '/foo/baz/');
+    processFile.write(withCacheFixture, '/foo/baz/', '/your/repo/');
 
     expect(writeFileSpy).toHaveBeenCalledTimes(1);
     expect(normalize(writeFileSpy.mock.lastCall[1])).toEqual(
@@ -33,7 +33,7 @@ describe('ProcessFile', () => {
     const processFile = testHarness.container.get(ProcessFile);
     const writeFileSpy = jest.fn();
     fsGateway.fs.writeFileSync = writeFileSpy;
-    processFile.write(dyanamicConfigFixture, '/foo/baz/');
+    processFile.write(dyanamicConfigFixture, '/foo/baz/', '/your/repo/');
 
     expect(writeFileSpy).toHaveBeenCalledTimes(1);
     expect(normalize(writeFileSpy.mock.lastCall[1])).toEqual(

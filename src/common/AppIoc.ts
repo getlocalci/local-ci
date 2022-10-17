@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import BaseIoc from 'common/BaseIoc';
 import ChildProcessGateway from 'gateway/ChildProcessGateway';
 import EditorGateway from 'gateway/EditorGateway';
+import EnvVar from 'process/EnvVar';
 import FsGateway from 'gateway/FsGateway';
 import HttpGateway from 'gateway/HttpGateway';
 import OsGateway from 'gateway/OsGateway';
@@ -16,6 +17,7 @@ iocContainer
   .to(ChildProcessGateway)
   .inSingletonScope();
 iocContainer.bind(Types.IEditorGateway).to(EditorGateway).inSingletonScope();
+iocContainer.bind(Types.IEnvVar).to(EnvVar).inSingletonScope();
 iocContainer.bind(Types.IFsGateway).to(FsGateway).inSingletonScope();
 iocContainer.bind(Types.IHttpGateway).to(HttpGateway).inSingletonScope();
 iocContainer.bind(Types.IOsGateway).to(OsGateway).inSingletonScope();

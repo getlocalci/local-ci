@@ -17,6 +17,7 @@ import getImageFromJob from 'containerization/getImageFromJob';
 import getLogFilePath from 'log/getLogFilePath';
 import getLocalVolumePath from 'containerization/getLocalVolumePath';
 import getProcessFilePath from 'process/getProcessFilePath';
+import getRepoPath from 'common/getRepoPath';
 import getTerminalName from 'terminal/getTerminalName';
 import JobFactory from 'job/JobFactory';
 import JobListener from './JobListener';
@@ -87,7 +88,7 @@ export default class JobRunner {
     }
 
     const configFilePath = await this.configFile.getPath(context);
-    const repoPath = path.dirname(path.dirname(configFilePath));
+    const repoPath = getRepoPath(configFilePath);
     const terminal = this.editorGateway.editor.window.createTerminal({
       name: getTerminalName(jobName),
       message: `Running the CircleCI® job ${jobName}…`,

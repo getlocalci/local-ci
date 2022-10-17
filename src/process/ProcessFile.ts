@@ -14,10 +14,13 @@ import {
   DYNAMIC_CONFIG_PARAMETERS_FILE_NAME,
   DYNAMIC_CONFIG_PATH_IN_CONTAINER,
 } from 'constant';
-import { addEnvVars } from 'script';
+import EnvVar from './EnvVar';
 
 @injectable()
 export default class ProcessFile {
+  @inject(Types.IEnvVar)
+  envVar!: EnvVar;
+
   @inject(Types.IFsGateway)
   fsGateway!: FsGateway;
 
@@ -28,9 +31,9 @@ export default class ProcessFile {
    * this copies the files inside the container to the volume shared with the local machine.
    * This way, they can persist between jobs.
    * Likewise, on attach_workspace, it copies from the volume.
-   * The processedConfig was already compiled by the CircleCI® CLI binary.
+   * The processedConfig was already compiled by the CircleCI CLI binary.
    */
-  write(processedConfig: string, processFilePath: string) {
+  write(processedConfig: string, processFilePath: string, repoPath: string) {
     const config = getConfig(processedConfig);
 
     if (!config) {
@@ -134,21 +137,13 @@ export default class ProcessFile {
             return step;
           });
 
-          // If a 'checkout' step exists, insert env vars right after it.
-          if (newSteps?.includes('checkout')) {
-            newSteps?.splice(
-              newSteps?.indexOf('checkout') + 1,
-              0,
-              this.getEnvVarStep()
-            );
-          }
-
           return {
             ...accumulator,
             [jobName]: {
               ...configJobs[jobName],
               steps: [
                 this.getEnsureVolumeIsWritableStep(),
+                this.envVar.getStep(repoPath),
                 ...(newSteps ?? []),
               ],
             },
@@ -221,15 +216,6 @@ export default class ProcessFile {
           then
           sudo chown $(whoami) ${CONTAINER_STORAGE_DIRECTORY}
         fi`,
-      },
-    };
-  }
-
-  private getEnvVarStep() {
-    return {
-      run: {
-        name: 'Set more environment variables',
-        command: addEnvVars,
       },
     };
   }

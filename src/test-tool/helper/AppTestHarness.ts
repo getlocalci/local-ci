@@ -8,6 +8,7 @@ import FakeHttpGateway from 'gateway/FakeHttpGateway';
 import FakeOsGateway from 'gateway/FakeOsGateway';
 import FakeProcessGateway from 'gateway/FakeProcessGateway';
 import FakeReporterGateway from 'gateway/FakeReporterGateway';
+import FakeEnvVar from 'process/FakeEnvVar';
 
 export default class AppTestHarness {
   container!: Container;
@@ -25,6 +26,7 @@ export default class AppTestHarness {
       .bind(Types.IChildProcessGateway)
       .to(FakeChildProcessGateway)
       .inSingletonScope();
+    this.container.bind(Types.IEnvVar).to(FakeEnvVar).inSingletonScope();
     this.container
       .bind(Types.IEditorGateway)
       .to(FakeEditorGateway)
