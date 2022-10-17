@@ -14,7 +14,6 @@ import {
   DYNAMIC_CONFIG_PARAMETERS_FILE_NAME,
   DYNAMIC_CONFIG_PATH_IN_CONTAINER,
 } from 'constant';
-import Spawn from 'common/Spawn';
 import EnvVar from './EnvVar';
 
 @injectable()
@@ -24,9 +23,6 @@ export default class ProcessFile {
 
   @inject(Types.IFsGateway)
   fsGateway!: FsGateway;
-
-  @inject(Spawn)
-  spawn!: Spawn;
 
   /**
    * Overwrites parts of the process.yml file.
