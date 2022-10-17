@@ -134,6 +134,15 @@ export default class ProcessFile {
               };
             }
 
+            const clonePattern = /git clone .* \$CIRCLE_REPOSITORY_URL/;
+            if (
+              (typeof step?.run === 'string' && step.run.match(clonePattern)) ||
+              (typeof step?.run !== 'string' &&
+                step?.run?.command?.match(clonePattern))
+            ) {
+              return 'checkout';
+            }
+
             return step;
           });
 

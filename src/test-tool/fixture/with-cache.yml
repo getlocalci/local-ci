@@ -9,7 +9,7 @@ jobs:
   set-up-dependencies:
     executor: default-executor
     steps:
-      - checkout
+      - run: git clone --depth 1 --verbose $CIRCLE_REPOSITORY_URL
 
       - restore_cache:
           keys:
