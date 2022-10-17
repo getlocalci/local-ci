@@ -225,7 +225,7 @@ export default class ProcessFile {
   }
 
   /**
-   * Gets whether there's a custom `git clone` command.
+   * Gets whether this is a custom `git clone` command.
    *
    * Local CI doesn't work with that.
    * The idea of Local CI is to use your local commits, not to git clone from the remote repo.
