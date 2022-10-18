@@ -79,7 +79,9 @@ jobs:
                 fi
       - run:
           name: Persist to workspace
-          command: cp -rn . /tmp/local-ci || cp -ru . /tmp/local-ci
+          command: |-
+            echo "Persisting ."
+            cp -rn . /tmp/local-ci || cp -ru . /tmp/local-ci
   run-prettier:
     executor: default-executor
     steps:
@@ -107,6 +109,7 @@ jobs:
                 then
                 echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
               else
+                echo "Attaching /tmp/local-ci/."
                 cp -rn /tmp/local-ci/. . || cp -ru /tmp/local-ci/. .
               fi
       - run:
@@ -153,6 +156,7 @@ jobs:
               then
               echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
             else
+              echo "Attaching /tmp/local-ci/."
               cp -rn /tmp/local-ci/. . || cp -ru /tmp/local-ci/. .
             fi
       - run:
@@ -185,6 +189,7 @@ jobs:
               then
               echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
             else
+              echo "Attaching /tmp/local-ci/."
               cp -rn /tmp/local-ci/. . || cp -ru /tmp/local-ci/. .
             fi
       - run:
@@ -217,6 +222,7 @@ jobs:
               then
               echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
             else
+              echo "Attaching /tmp/local-ci/."
               cp -rn /tmp/local-ci/. . || cp -ru /tmp/local-ci/. .
             fi
       - run:
@@ -276,6 +282,7 @@ jobs:
               then
               echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
             else
+              echo "Attaching /tmp/local-ci/."
               cp -rn /tmp/local-ci/. . || cp -ru /tmp/local-ci/. .
             fi
       - run:
@@ -283,7 +290,9 @@ jobs:
           command: npm run build
       - run:
           name: Persist to workspace
-          command: cp -rn . /tmp/local-ci || cp -ru . /tmp/local-ci
+          command: |-
+            echo "Persisting ."
+            cp -rn . /tmp/local-ci || cp -ru . /tmp/local-ci
   verify-bundles-sizes:
     executor: default-executor
     steps:
@@ -311,6 +320,7 @@ jobs:
               then
               echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
             else
+              echo "Attaching /tmp/local-ci/."
               cp -rn /tmp/local-ci/. . || cp -ru /tmp/local-ci/. .
             fi
       - run:
@@ -343,6 +353,7 @@ jobs:
               then
               echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
             else
+              echo "Attaching /tmp/local-ci/."
               cp -rn /tmp/local-ci/. . || cp -ru /tmp/local-ci/. .
             fi
       - run:

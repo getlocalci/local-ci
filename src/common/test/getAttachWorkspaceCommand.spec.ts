@@ -20,6 +20,7 @@ describe('getAttachWorkspaceCommand', () => {
           then
           echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
         else
+          echo "Attaching /tmp/local-ci/."
           cp -rn /tmp/local-ci/. /foo/baz || cp -ru /tmp/local-ci/. /foo/baz
         fi`
       )
