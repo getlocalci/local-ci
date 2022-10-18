@@ -24,7 +24,7 @@ export default function getSaveCacheCommand(
     else
       echo "Saving ${directory} to the cache"
       mkdir -p ${destination}
-      cp -Lrn ${directory} ${destinationWhenCopied} || cp -Lru ${directory} ${destinationWhenCopied}
+      cp -Lr ${directory} ${destinationWhenCopied} || cp -Lr ${directory} ${destinationWhenCopied}
     fi \n`;
   }, '');
 }
