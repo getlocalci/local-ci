@@ -1,5 +1,9 @@
 # Change Log
 
+## 2.0.1 - 18 October 2022
+- Replace custom checkout steps so they work in Local CI. [#216](https://github.com/getlocalci/local-ci/pull/216)
+- Give feedback when persisting to workspace. [#217](https://github.com/getlocalci/local-ci/pull/217)
+
 ## 2.0.0 - 17 October 2022
 - Add a button 'Start Docker'. [#214](https://github.com/getlocalci/local-ci/pull/214)
 - Bump the binary version to the latest: v0.1.22272. [#212](https://github.com/getlocalci/local-ci/pull/212)
