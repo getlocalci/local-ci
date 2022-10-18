@@ -7,7 +7,7 @@ for directory_candidate in $restore_from_directories
     then
     verified_directory=$(find "$directory_candidate" | tail -n1)
     echo "Restoring cached directory $verified_directory";
-    cp -rn "$verified_directory" "$lci_restore_cache_dirname" || cp -ru "$verified_directory" "$lci_restore_cache_dirname";
+    cp -Lrn "$verified_directory" "$lci_restore_cache_dirname" || cp -Lru "$verified_directory" "$lci_restore_cache_dirname";
     break;
   fi
 done
