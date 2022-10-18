@@ -15,6 +15,7 @@ export default function getSaveCacheCommand(
       path.basename(directory)
     );
 
+    // BusyBox doesn't allow cp -n.
     return `${accumulator} if [ -d ${destinationWhenCopied} ]
       then
       echo "${directory} is already cached, skipping"

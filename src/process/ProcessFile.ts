@@ -194,7 +194,6 @@ export default class ProcessFile {
         step?.persist_to_workspace?.paths
       );
 
-      // BusyBox doesn't have the -n option.
       return `echo "Persisting ${pathToPersist}"
         cp -Lr ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY}`;
     }
@@ -206,7 +205,6 @@ export default class ProcessFile {
           workspacePath
         );
 
-        // BusyBox doesn't have the -n option.
         return `${accumulator} echo "Persisting ${pathToPersist}"
           cp -Lr ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY}\n`;
       },
