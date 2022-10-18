@@ -24,7 +24,7 @@ export default function getSaveCacheCommand(
     else
       echo "Saving ${directory} to the cache"
       mkdir -p ${destination}
-      rsync --copy-links ${directory} ${destinationWhenCopied}
+      cp -rn ${directory} ${destinationWhenCopied} || cp -ru ${directory} ${destinationWhenCopied}
     fi \n`;
   }, '');
 }

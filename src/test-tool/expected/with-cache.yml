@@ -32,8 +32,8 @@ jobs:
               if [ "$(find "$directory_candidate" 2>/dev/null)" ]
                 then
                 verified_directory=$(find "$directory_candidate" | tail -n1)
-                echo "Restoring cached directory $verified_directory"
-                rsync --copy-links "$verified_directory" "$lci_restore_cache_dirname"
+                echo "Restoring cached directory $verified_directory";
+                cp -rn "$verified_directory" "$lci_restore_cache_dirname" || cp -ru "$verified_directory" "$lci_restore_cache_dirname";
                 break;
               fi
             done
@@ -44,9 +44,9 @@ jobs:
               if [ "$(find "$directory_candidate" 2>/dev/null)" ]
                 then
                 verified_directory=$(find "$directory_candidate" | tail -n1)
-                echo "Restoring cached directory $verified_directory"
-                rsync --copy-links "$verified_directory" "$lci_restore_cache_dirname"
-                break
+                echo "Restoring cached directory $verified_directory";
+                cp -rn "$verified_directory" "$lci_restore_cache_dirname" || cp -ru "$verified_directory" "$lci_restore_cache_dirname";
+                break;
               fi
             done
       - run:
@@ -64,7 +64,7 @@ jobs:
                 else
                   echo "Saving ~/.npm to the cache"
                   mkdir -p /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then (shasum "package-lock.json" 2>/dev/null || sha256sum "package-lock.json" 2>/dev/null)  | awk '{print $1}'; fi )
-                  rsync --copy-links ~/.npm /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then (shasum "package-lock.json" 2>/dev/null || sha256sum "package-lock.json" 2>/dev/null)  | awk '{print $1}'; fi )/.npm || cp -ru ~/.npm /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then (shasum "package-lock.json" 2>/dev/null || sha256sum "package-lock.json" 2>/dev/null)  | awk '{print $1}'; fi )/.npm
+                  cp -rn ~/.npm /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then (shasum "package-lock.json" 2>/dev/null || sha256sum "package-lock.json" 2>/dev/null)  | awk '{print $1}'; fi )/.npm || cp -ru ~/.npm /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then (shasum "package-lock.json" 2>/dev/null || sha256sum "package-lock.json" 2>/dev/null)  | awk '{print $1}'; fi )/.npm
                 fi
              if [ -d /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then (shasum "package-lock.json" 2>/dev/null || sha256sum "package-lock.json" 2>/dev/null)  | awk '{print $1}'; fi )/.cache ]
                   then
@@ -75,13 +75,13 @@ jobs:
                 else
                   echo "Saving ~/.cache to the cache"
                   mkdir -p /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then (shasum "package-lock.json" 2>/dev/null || sha256sum "package-lock.json" 2>/dev/null)  | awk '{print $1}'; fi )
-                  rsync --copy-links ~/.cache /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then (shasum "package-lock.json" 2>/dev/null || sha256sum "package-lock.json" 2>/dev/null)  | awk '{print $1}'; fi )/.cache || cp -ru ~/.cache /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then (shasum "package-lock.json" 2>/dev/null || sha256sum "package-lock.json" 2>/dev/null)  | awk '{print $1}'; fi )/.cache
+                  cp -rn ~/.cache /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then (shasum "package-lock.json" 2>/dev/null || sha256sum "package-lock.json" 2>/dev/null)  | awk '{print $1}'; fi )/.cache || cp -ru ~/.cache /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then (shasum "package-lock.json" 2>/dev/null || sha256sum "package-lock.json" 2>/dev/null)  | awk '{print $1}'; fi )/.cache
                 fi
       - run:
           name: Persist to workspace
           command: |-
             echo "Persisting ."
-            rsync --copy-links . /tmp/local-ci
+            cp -rn . /tmp/local-ci || cp -ru . /tmp/local-ci
   run-prettier:
     executor: default-executor
     steps:
@@ -110,7 +110,7 @@ jobs:
                 echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
               else
                 echo "Attaching /tmp/local-ci/."
-                rsync --copy-links /tmp/local-ci/. .
+                cp -rn /tmp/local-ci/. . || cp -ru /tmp/local-ci/. .
               fi
       - run:
           name: Run prettier check on project files
@@ -127,7 +127,7 @@ jobs:
             else
               echo "Saving node_modules to the cache"
               mkdir -p /tmp/local-ci/node-modules-$( if [ -f "package-lock.json" ]; then (shasum "package-lock.json" 2>/dev/null || sha256sum "package-lock.json" 2>/dev/null)  | awk '{print $1}'; fi )
-              rsync --copy-links node_modules /tmp/local-ci/node-modules-$( if [ -f "package-lock.json" ]; then (shasum "package-lock.json" 2>/dev/null || sha256sum "package-lock.json" 2>/dev/null)  | awk '{print $1}'; fi )/node_modules || cp -ru node_modules /tmp/local-ci/node-modules-$( if [ -f "package-lock.json" ]; then (shasum "package-lock.json" 2>/dev/null || sha256sum "package-lock.json" 2>/dev/null)  | awk '{print $1}'; fi )/node_modules
+              cp -rn node_modules /tmp/local-ci/node-modules-$( if [ -f "package-lock.json" ]; then (shasum "package-lock.json" 2>/dev/null || sha256sum "package-lock.json" 2>/dev/null)  | awk '{print $1}'; fi )/node_modules || cp -ru node_modules /tmp/local-ci/node-modules-$( if [ -f "package-lock.json" ]; then (shasum "package-lock.json" 2>/dev/null || sha256sum "package-lock.json" 2>/dev/null)  | awk '{print $1}'; fi )/node_modules
             fi
   run-linter:
     executor: default-executor
@@ -157,7 +157,7 @@ jobs:
               echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
             else
               echo "Attaching /tmp/local-ci/."
-              rsync --copy-links /tmp/local-ci/. .
+              cp -rn /tmp/local-ci/. . || cp -ru /tmp/local-ci/. .
             fi
       - run:
           name: Run linter
@@ -190,7 +190,7 @@ jobs:
               echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
             else
               echo "Attaching /tmp/local-ci/."
-              rsync --copy-links /tmp/local-ci/. .
+              cp -rn /tmp/local-ci/. . || cp -ru /tmp/local-ci/. .
             fi
       - run:
           name: Run unit tests
@@ -223,7 +223,7 @@ jobs:
               echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
             else
               echo "Attaching /tmp/local-ci/."
-              rsync --copy-links /tmp/local-ci/. .
+              cp -rn /tmp/local-ci/. . || cp -ru /tmp/local-ci/. .
             fi
       - run:
           name: Restore cache
@@ -235,8 +235,8 @@ jobs:
               if [ "$(find "$directory_candidate" 2>/dev/null)" ]
                 then
                 verified_directory=$(find "$directory_candidate" | tail -n1)
-                echo "Restoring cached directory $verified_directory"
-                rsync --copy-links "$verified_directory" "$lci_restore_cache_dirname"
+                echo "Restoring cached directory $verified_directory";
+                cp -rn "$verified_directory" "$lci_restore_cache_dirname" || cp -ru "$verified_directory" "$lci_restore_cache_dirname";
                 break;
               fi
             done
@@ -247,8 +247,8 @@ jobs:
               if [ "$(find "$directory_candidate" 2>/dev/null)" ]
                 then
                 verified_directory=$(find "$directory_candidate" | tail -n1)
-                echo "Restoring cached directory $verified_directory"
-                rsync --copy-links "$verified_directory" "$lci_restore_cache_dirname"
+                echo "Restoring cached directory $verified_directory";
+                cp -rn "$verified_directory" "$lci_restore_cache_dirname" || cp -ru "$verified_directory" "$lci_restore_cache_dirname";
                 break;
               fi
             done
@@ -283,7 +283,7 @@ jobs:
               echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
             else
               echo "Attaching /tmp/local-ci/."
-              rsync --copy-links /tmp/local-ci/. .
+              cp -rn /tmp/local-ci/. . || cp -ru /tmp/local-ci/. .
             fi
       - run:
           name: Build
@@ -292,7 +292,7 @@ jobs:
           name: Persist to workspace
           command: |-
             echo "Persisting ."
-            rsync --copy-links . /tmp/local-ci
+            cp -rn . /tmp/local-ci || cp -ru . /tmp/local-ci
   verify-bundles-sizes:
     executor: default-executor
     steps:
@@ -321,7 +321,7 @@ jobs:
               echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
             else
               echo "Attaching /tmp/local-ci/."
-              rsync --copy-links /tmp/local-ci/. .
+              cp -rn /tmp/local-ci/. . || cp -ru /tmp/local-ci/. .
             fi
       - run:
           name: Check bundles sizes
@@ -354,7 +354,7 @@ jobs:
               echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
             else
               echo "Attaching /tmp/local-ci/."
-              rsync --copy-links /tmp/local-ci/. .
+              cp -rn /tmp/local-ci/. . || cp -ru /tmp/local-ci/. .
             fi
       - run:
           name: Firebase deploy
