@@ -32,8 +32,8 @@ jobs:
               if [ "$(find "$directory_candidate" 2>/dev/null)" ]
                 then
                 verified_directory=$(find "$directory_candidate" | tail -n1)
-                echo "Restoring cached directory $verified_directory"
-                cp -Lr "$verified_directory" "$lci_restore_cache_dirname"
+                echo "Restoring cached directory $verified_directory";
+                cp -rn "$verified_directory" "$lci_restore_cache_dirname" || cp -ru "$verified_directory" "$lci_restore_cache_dirname";
                 break;
               fi
             done
@@ -44,8 +44,8 @@ jobs:
               if [ "$(find "$directory_candidate" 2>/dev/null)" ]
                 then
                 verified_directory=$(find "$directory_candidate" | tail -n1)
-                echo "Restoring cached directory $verified_directory"
-                cp -Lr "$verified_directory" "$lci_restore_cache_dirname"
+                echo "Restoring cached directory $verified_directory";
+                cp -rn "$verified_directory" "$lci_restore_cache_dirname" || cp -ru "$verified_directory" "$lci_restore_cache_dirname";
                 break;
               fi
             done
@@ -64,7 +64,7 @@ jobs:
                 else
                   echo "Saving ~/.npm to the cache"
                   mkdir -p /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then (shasum "package-lock.json" 2>/dev/null || sha256sum "package-lock.json" 2>/dev/null)  | awk '{print $1}'; fi )
-                  cp -Lr ~/.npm /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then (shasum "package-lock.json" 2>/dev/null || sha256sum "package-lock.json" 2>/dev/null)  | awk '{print $1}'; fi )/.npm
+                  cp -rn ~/.npm /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then (shasum "package-lock.json" 2>/dev/null || sha256sum "package-lock.json" 2>/dev/null)  | awk '{print $1}'; fi )/.npm || cp -ru ~/.npm /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then (shasum "package-lock.json" 2>/dev/null || sha256sum "package-lock.json" 2>/dev/null)  | awk '{print $1}'; fi )/.npm
                 fi
              if [ -d /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then (shasum "package-lock.json" 2>/dev/null || sha256sum "package-lock.json" 2>/dev/null)  | awk '{print $1}'; fi )/.cache ]
                   then
@@ -75,7 +75,7 @@ jobs:
                 else
                   echo "Saving ~/.cache to the cache"
                   mkdir -p /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then (shasum "package-lock.json" 2>/dev/null || sha256sum "package-lock.json" 2>/dev/null)  | awk '{print $1}'; fi )
-                  cp -Lr ~/.cache /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then (shasum "package-lock.json" 2>/dev/null || sha256sum "package-lock.json" 2>/dev/null)  | awk '{print $1}'; fi )/.cache
+                  cp -rn ~/.cache /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then (shasum "package-lock.json" 2>/dev/null || sha256sum "package-lock.json" 2>/dev/null)  | awk '{print $1}'; fi )/.cache || cp -ru ~/.cache /tmp/local-ci/v2-deps-$( if [ -f "package-lock.json" ]; then (shasum "package-lock.json" 2>/dev/null || sha256sum "package-lock.json" 2>/dev/null)  | awk '{print $1}'; fi )/.cache
                 fi
       - run:
           name: Persist to workspace
@@ -111,7 +111,7 @@ jobs:
               else
                 echo "Attaching /tmp/local-ci/."
                 cp -Lr /tmp/local-ci/. .
-              fi
+            fi
       - run:
           name: Run prettier check on project files
           command: npm run prettier:check
@@ -127,7 +127,7 @@ jobs:
             else
               echo "Saving node_modules to the cache"
               mkdir -p /tmp/local-ci/node-modules-$( if [ -f "package-lock.json" ]; then (shasum "package-lock.json" 2>/dev/null || sha256sum "package-lock.json" 2>/dev/null)  | awk '{print $1}'; fi )
-              cp -Lr node_modules /tmp/local-ci/node-modules-$( if [ -f "package-lock.json" ]; then (shasum "package-lock.json" 2>/dev/null || sha256sum "package-lock.json" 2>/dev/null)  | awk '{print $1}'; fi )/node_modules
+              cp -rn node_modules /tmp/local-ci/node-modules-$( if [ -f "package-lock.json" ]; then (shasum "package-lock.json" 2>/dev/null || sha256sum "package-lock.json" 2>/dev/null)  | awk '{print $1}'; fi )/node_modules || cp -ru node_modules /tmp/local-ci/node-modules-$( if [ -f "package-lock.json" ]; then (shasum "package-lock.json" 2>/dev/null || sha256sum "package-lock.json" 2>/dev/null)  | awk '{print $1}'; fi )/node_modules
             fi
   run-linter:
     executor: default-executor
@@ -150,14 +150,14 @@ jobs:
           name: Attach workspace
           command: |-
             if [ ! -d /tmp/local-ci ]
-            then
-              echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's not a directory. It might require a job to run before it."
-            elif [ ! "$(ls -A /tmp/local-ci)" ]
               then
-              echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
-            else
-              echo "Attaching /tmp/local-ci/."
-              cp -Lr /tmp/local-ci/. .
+                echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's not a directory. It might require a job to run before it."
+              elif [ ! "$(ls -A /tmp/local-ci)" ]
+                then
+                echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
+              else
+                echo "Attaching /tmp/local-ci/."
+                cp -Lr /tmp/local-ci/. .
             fi
       - run:
           name: Run linter
@@ -183,14 +183,14 @@ jobs:
           name: Attach workspace
           command: |-
             if [ ! -d /tmp/local-ci ]
-            then
-              echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's not a directory. It might require a job to run before it."
-            elif [ ! "$(ls -A /tmp/local-ci)" ]
               then
-              echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
-            else
-              echo "Attaching /tmp/local-ci/."
-              cp -Lr /tmp/local-ci/. .
+                echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's not a directory. It might require a job to run before it."
+              elif [ ! "$(ls -A /tmp/local-ci)" ]
+                then
+                echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
+              else
+                echo "Attaching /tmp/local-ci/."
+                cp -Lr /tmp/local-ci/. .
             fi
       - run:
           name: Run unit tests
@@ -216,14 +216,14 @@ jobs:
           name: Attach workspace
           command: |-
             if [ ! -d /tmp/local-ci ]
-            then
-              echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's not a directory. It might require a job to run before it."
-            elif [ ! "$(ls -A /tmp/local-ci)" ]
               then
-              echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
-            else
-              echo "Attaching /tmp/local-ci/."
-              cp -Lr /tmp/local-ci/. .
+                echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's not a directory. It might require a job to run before it."
+              elif [ ! "$(ls -A /tmp/local-ci)" ]
+                then
+                echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
+              else
+                echo "Attaching /tmp/local-ci/."
+                cp -Lr /tmp/local-ci/. .
             fi
       - run:
           name: Restore cache
@@ -235,8 +235,8 @@ jobs:
               if [ "$(find "$directory_candidate" 2>/dev/null)" ]
                 then
                 verified_directory=$(find "$directory_candidate" | tail -n1)
-                echo "Restoring cached directory $verified_directory"
-                cp -Lr "$verified_directory" "$lci_restore_cache_dirname"
+                echo "Restoring cached directory $verified_directory";
+                cp -rn "$verified_directory" "$lci_restore_cache_dirname" || cp -ru "$verified_directory" "$lci_restore_cache_dirname";
                 break;
               fi
             done
@@ -247,8 +247,8 @@ jobs:
               if [ "$(find "$directory_candidate" 2>/dev/null)" ]
                 then
                 verified_directory=$(find "$directory_candidate" | tail -n1)
-                echo "Restoring cached directory $verified_directory"
-                cp -Lr "$verified_directory" "$lci_restore_cache_dirname"
+                echo "Restoring cached directory $verified_directory";
+                cp -rn "$verified_directory" "$lci_restore_cache_dirname" || cp -ru "$verified_directory" "$lci_restore_cache_dirname";
                 break;
               fi
             done
@@ -276,14 +276,14 @@ jobs:
           name: Attach workspace
           command: |-
             if [ ! -d /tmp/local-ci ]
-            then
-              echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's not a directory. It might require a job to run before it."
-            elif [ ! "$(ls -A /tmp/local-ci)" ]
               then
-              echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
-            else
-              echo "Attaching /tmp/local-ci/."
-              cp -Lr /tmp/local-ci/. .
+                echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's not a directory. It might require a job to run before it."
+              elif [ ! "$(ls -A /tmp/local-ci)" ]
+                then
+                echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
+              else
+                echo "Attaching /tmp/local-ci/."
+                cp -Lr /tmp/local-ci/. .
             fi
       - run:
           name: Build
@@ -314,14 +314,14 @@ jobs:
           name: Attach workspace
           command: |-
             if [ ! -d /tmp/local-ci ]
-            then
-              echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's not a directory. It might require a job to run before it."
-            elif [ ! "$(ls -A /tmp/local-ci)" ]
               then
-              echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
-            else
-              echo "Attaching /tmp/local-ci/."
-              cp -Lr /tmp/local-ci/. .
+                echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's not a directory. It might require a job to run before it."
+              elif [ ! "$(ls -A /tmp/local-ci)" ]
+                then
+                echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
+              else
+                echo "Attaching /tmp/local-ci/."
+                cp -Lr /tmp/local-ci/. .
             fi
       - run:
           name: Check bundles sizes
@@ -347,14 +347,14 @@ jobs:
           name: Attach workspace
           command: |-
             if [ ! -d /tmp/local-ci ]
-            then
-              echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's not a directory. It might require a job to run before it."
-            elif [ ! "$(ls -A /tmp/local-ci)" ]
               then
-              echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
-            else
-              echo "Attaching /tmp/local-ci/."
-              cp -Lr /tmp/local-ci/. .
+                echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's not a directory. It might require a job to run before it."
+              elif [ ! "$(ls -A /tmp/local-ci)" ]
+                then
+                echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
+              else
+                echo "Attaching /tmp/local-ci/."
+                cp -Lr /tmp/local-ci/. .
             fi
       - run:
           name: Firebase deploy
