@@ -32,7 +32,7 @@ describe('getRestoreCacheCommand', () => {
           if [ "$(find "$directory_candidate" 2>/dev/null)" ]
             then
             verified_directory=$(find "$directory_candidate" | tail -n1) echo "Restoring cached directory $verified_directory";
-            cp -rn "$verified_directory" "$lci_restore_cache_dirname" || cp -ru "$verified_directory" "$lci_restore_cache_dirname";
+            rsync --copy-links "$verified_directory" "$lci_restore_cache_dirname";
             break;
           fi
         done
@@ -44,7 +44,7 @@ describe('getRestoreCacheCommand', () => {
             then
             verified_directory=$(find "$directory_candidate" | tail -n1)
             echo "Restoring cached directory $verified_directory";
-            cp -rn "$verified_directory" "$lci_restore_cache_dirname" || cp -ru "$verified_directory" "$lci_restore_cache_dirname";
+            rsync --copy-links "$verified_directory" "$lci_restore_cache_dirname";
             break;
           fi
         done`
@@ -83,7 +83,7 @@ describe('getRestoreCacheCommand', () => {
             then
             verified_directory=$(find "$directory_candidate" | tail -n1)
             echo "Restoring cached directory $verified_directory";
-            cp -rn "$verified_directory" "$lci_restore_cache_dirname" || cp -ru "$verified_directory" "$lci_restore_cache_dirname";
+            rsync --copy-links "$verified_directory" "$lci_restore_cache_dirname";
             break;
           fi
         done
@@ -94,8 +94,8 @@ describe('getRestoreCacheCommand', () => {
           if [ "$(find "$directory_candidate" 2>/dev/null)" ]
           then
             verified_directory=$(find "$directory_candidate" | tail -n1)
-            echo "Restoring cached directory $verified_directory";
-            cp -rn "$verified_directory" "$lci_restore_cache_dirname" || cp -ru "$verified_directory" "$lci_restore_cache_dirname";
+            echo "Restoring cached directory $verified_directory;
+            rsync --copy-links "$verified_directory" "$lci_restore_cache_dirname;
             break;
           fi
         done`
