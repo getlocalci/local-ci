@@ -1,0 +1,31 @@
+version: 2.1
+orbs:
+  node: circleci/node@5.0
+jobs:
+  build:
+    executor: node/default
+    steps:
+      - checkout:
+          path: repo
+      - run:
+          command: npm ci && npm run build
+          working_directory: repo
+      - persist_to_workspace:
+          paths:
+            - repo
+  test:
+    executor: node/default
+    steps:
+      - run:
+          command: npm ci && npm run build
+          working_directory: repo
+      - run:
+          command: npm test
+          working_directory: repo
+workflows:
+  build-test:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
