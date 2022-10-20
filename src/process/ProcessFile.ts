@@ -35,7 +35,20 @@ export default class ProcessFile {
       return;
     }
 
-    const newConfig = {
+    if (!this.fsGateway.fs.existsSync(path.dirname(processFilePath))) {
+      this.fsGateway.fs.mkdirSync(path.dirname(processFilePath), {
+        recursive: true,
+      });
+    }
+
+    this.fsGateway.fs.writeFileSync(
+      processFilePath,
+      yaml.dump(this.getWriteableConfig(config, repoPath))
+    );
+  }
+
+  getWriteableConfig(config: CiConfig, repoPath: string) {
+    return {
       ...config,
       jobs: Object.entries(config?.jobs ?? {}).reduce(
         (
@@ -64,35 +77,6 @@ export default class ProcessFile {
         {}
       ),
     };
-
-    if (!this.fsGateway.fs.existsSync(path.dirname(processFilePath))) {
-      this.fsGateway.fs.mkdirSync(path.dirname(processFilePath), {
-        recursive: true,
-      });
-    }
-    this.fsGateway.fs.writeFileSync(processFilePath, yaml.dump(newConfig));
-  }
-
-  /**
-   * Gets the output-path environment variable from the path-filtering orb.
-   *
-   * https://circleci.com/developer/orbs/orb/circleci/path-filtering#commands
-   */
-  getOutputPath(steps: Job['steps']): string | undefined {
-    if (!steps) {
-      return;
-    }
-
-    for (const step of steps) {
-      if (
-        typeof step !== 'string' &&
-        typeof step?.run !== 'string' &&
-        step?.run?.environment &&
-        step?.run?.environment['OUTPUT_PATH']
-      ) {
-        return step?.run?.environment['OUTPUT_PATH'];
-      }
-    }
   }
 
   getEnsureVolumeIsWritableStep() {
@@ -105,23 +89,5 @@ export default class ProcessFile {
         fi`,
       },
     };
-  }
-
-  /**
-   * Gets whether this is a custom `git clone` command.
-   *
-   * Local CI doesn't work with that.
-   * The idea of Local CI is to use your local commits, not to git clone from the remote repo.
-   * So this will find if there's a custom `git clone` command,
-   * so it can replace it with `checkout`.
-   * The CLI handles `checkout` well.
-   */
-  isCustomClone(step: FullStep): boolean {
-    const clonePattern = /git clone[^\n]+\$CIRCLE_REPOSITORY_URL/;
-    return (
-      (typeof step?.run === 'string' && !!step.run.match(clonePattern)) ||
-      (typeof step?.run !== 'string' &&
-        !!step?.run?.command?.match(clonePattern))
-    );
   }
 }
