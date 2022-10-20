@@ -44,16 +44,19 @@ export default class ProcessFile {
 
     const newConfig = {
       ...config,
-      jobs: Object.keys(configJobs).reduce(
-        (accumulator: Jobs | Record<string, unknown>, jobName: string) => {
-          if (!config || !configJobs[jobName]?.steps) {
+      jobs: Object.entries(configJobs).reduce(
+        (
+          accumulator: Jobs | Record<string, unknown>,
+          [jobName, job]: [string, Job]
+        ) => {
+          if (!config || !job?.steps) {
             return {
               ...accumulator,
-              [jobName]: configJobs[jobName],
+              [jobName]: job,
             };
           }
 
-          const newSteps = configJobs[jobName].steps?.map((step: Step) => {
+          const newSteps = job.steps?.map((step: Step) => {
             if (typeof step === 'string') {
               return step;
             }
@@ -107,7 +110,7 @@ export default class ProcessFile {
               step?.run?.environment &&
               step?.run?.environment['CONFIG_PATH']
             ) {
-              const outputPath = this.getOutputPath(configJobs[jobName].steps);
+              const outputPath = this.getOutputPath(job.steps);
 
               return {
                 run: {
@@ -144,7 +147,7 @@ export default class ProcessFile {
           return {
             ...accumulator,
             [jobName]: {
-              ...configJobs[jobName],
+              ...job,
               steps: [
                 this.getEnsureVolumeIsWritableStep(),
                 this.envVar.getStep(repoPath),
