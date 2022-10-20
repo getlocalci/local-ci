@@ -3,17 +3,9 @@ import Types from 'common/Types';
 import * as path from 'path';
 import * as yaml from 'js-yaml';
 import FsGateway from 'gateway/FsGateway';
-import getAttachWorkspaceCommand from 'config/getAttachWorkspaceCommand';
 import getConfig from 'config/getConfig';
-import getRestoreCacheCommand from 'cache/getRestoreCacheCommand';
-import getSaveCacheCommand from 'cache/getSaveCacheCommand';
-import getSaveCacheSteps from 'cache/getSaveCacheSteps';
-import {
-  CONTAINER_STORAGE_DIRECTORY,
-  CONTINUE_PIPELINE_STEP_NAME,
-  DYNAMIC_CONFIG_PARAMETERS_FILE_NAME,
-  DYNAMIC_CONFIG_PATH_IN_CONTAINER,
-} from 'constant';
+import Persistence from './Persistence';
+import { CONTAINER_STORAGE_DIRECTORY } from 'constant';
 import EnvVar from './EnvVar';
 
 @injectable()
@@ -23,6 +15,9 @@ export default class ProcessFile {
 
   @inject(Types.IFsGateway)
   fsGateway!: FsGateway;
+
+  @inject(Persistence)
+  persistence!: Persistence;
 
   /**
    * Overwrites parts of the process.yml file.
@@ -61,7 +56,7 @@ export default class ProcessFile {
               steps: [
                 this.getEnsureVolumeIsWritableStep(),
                 this.envVar.getStep(repoPath),
-                ...(this.replacePersistenceSteps(job, config) ?? []),
+                ...(this.persistence.replaceSteps(job, config) ?? []),
               ],
             },
           };
@@ -100,30 +95,6 @@ export default class ProcessFile {
     }
   }
 
-  getPersistToWorkspaceCommand(step: FullStep): string {
-    if (typeof step?.persist_to_workspace?.paths === 'string') {
-      const pathToPersist = path.join(
-        step?.persist_to_workspace?.root ?? '.',
-        step?.persist_to_workspace?.paths
-      );
-
-      return `echo "Persisting ${pathToPersist}"
-        cp -Lr ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY}`;
-    }
-
-    return (
-      step?.persist_to_workspace?.paths.reduce((accumulator, workspacePath) => {
-        const pathToPersist = path.join(
-          step?.persist_to_workspace?.root ?? '.',
-          workspacePath
-        );
-
-        return `${accumulator} echo "Persisting ${pathToPersist}"
-          cp -Lr ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY}\n`;
-      }, '') ?? ''
-    );
-  }
-
   getEnsureVolumeIsWritableStep() {
     return {
       run: {
@@ -152,92 +123,5 @@ export default class ProcessFile {
       (typeof step?.run !== 'string' &&
         !!step?.run?.command?.match(clonePattern))
     );
-  }
-
-  replacePersistenceSteps(job: Job, config: CiConfig): Job['steps'] {
-    return job.steps?.map((step: Step) => {
-      if (typeof step === 'string') {
-        return step;
-      }
-
-      if (step?.attach_workspace) {
-        return {
-          run: {
-            name: 'Attach workspace',
-            command: getAttachWorkspaceCommand(step),
-          },
-        };
-      }
-
-      if (step?.persist_to_workspace) {
-        return {
-          run: {
-            name: 'Persist to workspace',
-            command: this.getPersistToWorkspaceCommand(step),
-          },
-        };
-      }
-
-      if (step?.restore_cache) {
-        return {
-          run: {
-            name: 'Restore cache',
-            command: getRestoreCacheCommand(step, getSaveCacheSteps(config)),
-          },
-        };
-      }
-
-      if (step?.save_cache) {
-        return {
-          run: {
-            name: 'Save cache',
-            command: getSaveCacheCommand(step),
-          },
-        };
-      }
-
-      // Look for the circleci/continuation orb, which continues a dynamic config.
-      // That orb is also in the circleci/path-filtering orb.
-      // https://circleci.com/developer/orbs/orb/circleci/continuation
-      // https://circleci.com/developer/orbs/orb/circleci/path-filtering
-      if (
-        typeof step?.run !== 'string' &&
-        step?.run?.command?.includes('$CIRCLE_CONTINUATION_KEY') &&
-        step?.run?.environment &&
-        step?.run?.environment['CONFIG_PATH']
-      ) {
-        const outputPath = this.getOutputPath(job.steps);
-
-        return {
-          run: {
-            name: CONTINUE_PIPELINE_STEP_NAME,
-            command: `if [ -f ${DYNAMIC_CONFIG_PATH_IN_CONTAINER} ]
-            then
-              rm ${DYNAMIC_CONFIG_PATH_IN_CONTAINER}
-            fi
-            cp ${
-              step?.run?.environment['CONFIG_PATH']
-            } ${DYNAMIC_CONFIG_PATH_IN_CONTAINER}
-            ${
-              outputPath
-                ? `if [ -f ${outputPath} ]
-                  then
-                    cp ${outputPath} ${path.join(
-                    CONTAINER_STORAGE_DIRECTORY,
-                    DYNAMIC_CONFIG_PARAMETERS_FILE_NAME
-                  )}
-                  fi`
-                : ``
-            }`,
-          },
-        };
-      }
-
-      if (this.isCustomClone(step)) {
-        return 'checkout';
-      }
-
-      return step;
-    });
   }
 }
