@@ -12,7 +12,32 @@ import {
 } from 'constant';
 
 @injectable()
-export default class ProcessFile {
+export default class Persistence {
+  removeCheckoutAndPersistenceSteps(steps: Step[]): Step[] {
+    return steps.filter((step) => {
+      return (
+        step !== 'checkout' &&
+        !(step as FullStep)?.attach_workspace &&
+        !(step as FullStep)?.persist_to_workspace
+      );
+    });
+  }
+
+  getDependencies(
+    dependencies: string[] | null | undefined,
+    allDependencies: Map<string, string[] | null>
+  ): string[] | undefined {
+    return dependencies?.reduce((accumulator: string[], jobName) => {
+      const dependencies = allDependencies.get(jobName);
+      return dependencies?.length
+        ? [
+            ...(this.getDependencies(dependencies, allDependencies) || []),
+            ...accumulator,
+          ]
+        : accumulator;
+    }, []);
+  }
+
   replaceSteps(job: Job, config: CiConfig): Job['steps'] {
     return job.steps?.map((step: Step) => {
       if (typeof step === 'string') {
