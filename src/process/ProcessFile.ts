@@ -42,7 +42,32 @@ export default class ProcessFile {
 
     const newConfig = {
       ...config,
-      jobs: this.replacePersistenceSteps(config, repoPath),
+      jobs: Object.entries(config?.jobs ?? {}).reduce(
+        (
+          accumulator: Jobs | Record<string, unknown>,
+          [jobName, job]: [string, Job]
+        ) => {
+          if (!config || !job?.steps) {
+            return {
+              ...accumulator,
+              [jobName]: job,
+            };
+          }
+
+          return {
+            ...accumulator,
+            [jobName]: {
+              ...job,
+              steps: [
+                this.getEnsureVolumeIsWritableStep(),
+                this.envVar.getStep(repoPath),
+                ...(this.replacePersistenceSteps(job, config) ?? []),
+              ],
+            },
+          };
+        },
+        {}
+      ),
     };
 
     if (!this.fsGateway.fs.existsSync(path.dirname(processFilePath))) {
@@ -75,7 +100,7 @@ export default class ProcessFile {
     }
   }
 
-  getPersistToWorkspaceCommand(step: FullStep): string | undefined {
+  getPersistToWorkspaceCommand(step: FullStep): string {
     if (typeof step?.persist_to_workspace?.paths === 'string') {
       const pathToPersist = path.join(
         step?.persist_to_workspace?.root ?? '.',
@@ -86,8 +111,8 @@ export default class ProcessFile {
         cp -Lr ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY}`;
     }
 
-    return step?.persist_to_workspace?.paths.reduce(
-      (accumulator, workspacePath) => {
+    return (
+      step?.persist_to_workspace?.paths.reduce((accumulator, workspacePath) => {
         const pathToPersist = path.join(
           step?.persist_to_workspace?.root ?? '.',
           workspacePath
@@ -95,8 +120,7 @@ export default class ProcessFile {
 
         return `${accumulator} echo "Persisting ${pathToPersist}"
           cp -Lr ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY}\n`;
-      },
-      ''
+      }, '') ?? ''
     );
   }
 
@@ -130,120 +154,90 @@ export default class ProcessFile {
     );
   }
 
-  replacePersistenceSteps(config: CiConfig, repoPath: string) {
-    return Object.entries(config?.jobs ?? {}).reduce(
-      (
-        accumulator: Jobs | Record<string, unknown>,
-        [jobName, job]: [string, Job]
-      ) => {
-        if (!config || !job?.steps) {
-          return {
-            ...accumulator,
-            [jobName]: job,
-          };
-        }
+  replacePersistenceSteps(job: Job, config: CiConfig): Job['steps'] {
+    return job.steps?.map((step: Step) => {
+      if (typeof step === 'string') {
+        return step;
+      }
 
-        const newSteps = job.steps?.map((step: Step) => {
-          if (typeof step === 'string') {
-            return step;
-          }
-
-          if (step?.attach_workspace) {
-            return {
-              run: {
-                name: 'Attach workspace',
-                command: getAttachWorkspaceCommand(step),
-              },
-            };
-          }
-
-          if (step?.persist_to_workspace) {
-            return {
-              run: {
-                name: 'Persist to workspace',
-                command: this.getPersistToWorkspaceCommand(step),
-              },
-            };
-          }
-
-          if (step?.restore_cache) {
-            return {
-              run: {
-                name: 'Restore cache',
-                command: getRestoreCacheCommand(
-                  step,
-                  getSaveCacheSteps(config)
-                ),
-              },
-            };
-          }
-
-          if (step?.save_cache) {
-            return {
-              run: {
-                name: 'Save cache',
-                command: getSaveCacheCommand(step),
-              },
-            };
-          }
-
-          // Look for the circleci/continuation orb, which continues a dynamic config.
-          // That orb is also in the circleci/path-filtering orb.
-          // https://circleci.com/developer/orbs/orb/circleci/continuation
-          // https://circleci.com/developer/orbs/orb/circleci/path-filtering
-          if (
-            typeof step?.run !== 'string' &&
-            step?.run?.command?.includes('$CIRCLE_CONTINUATION_KEY') &&
-            step?.run?.environment &&
-            step?.run?.environment['CONFIG_PATH']
-          ) {
-            const outputPath = this.getOutputPath(job.steps);
-
-            return {
-              run: {
-                name: CONTINUE_PIPELINE_STEP_NAME,
-                command: `if [ -f ${DYNAMIC_CONFIG_PATH_IN_CONTAINER} ]
-                then
-                  rm ${DYNAMIC_CONFIG_PATH_IN_CONTAINER}
-                fi
-                cp ${
-                  step?.run?.environment['CONFIG_PATH']
-                } ${DYNAMIC_CONFIG_PATH_IN_CONTAINER}
-                ${
-                  outputPath
-                    ? `if [ -f ${outputPath} ]
-                      then
-                        cp ${outputPath} ${path.join(
-                        CONTAINER_STORAGE_DIRECTORY,
-                        DYNAMIC_CONFIG_PARAMETERS_FILE_NAME
-                      )}
-                      fi`
-                    : ``
-                }`,
-              },
-            };
-          }
-
-          if (this.isCustomClone(step)) {
-            return 'checkout';
-          }
-
-          return step;
-        });
-
+      if (step?.attach_workspace) {
         return {
-          ...accumulator,
-          [jobName]: {
-            ...job,
-            steps: [
-              this.getEnsureVolumeIsWritableStep(),
-              this.envVar.getStep(repoPath),
-              ...(newSteps ?? []),
-            ],
+          run: {
+            name: 'Attach workspace',
+            command: getAttachWorkspaceCommand(step),
           },
         };
-      },
-      {}
-    );
+      }
+
+      if (step?.persist_to_workspace) {
+        return {
+          run: {
+            name: 'Persist to workspace',
+            command: this.getPersistToWorkspaceCommand(step),
+          },
+        };
+      }
+
+      if (step?.restore_cache) {
+        return {
+          run: {
+            name: 'Restore cache',
+            command: getRestoreCacheCommand(step, getSaveCacheSteps(config)),
+          },
+        };
+      }
+
+      if (step?.save_cache) {
+        return {
+          run: {
+            name: 'Save cache',
+            command: getSaveCacheCommand(step),
+          },
+        };
+      }
+
+      // Look for the circleci/continuation orb, which continues a dynamic config.
+      // That orb is also in the circleci/path-filtering orb.
+      // https://circleci.com/developer/orbs/orb/circleci/continuation
+      // https://circleci.com/developer/orbs/orb/circleci/path-filtering
+      if (
+        typeof step?.run !== 'string' &&
+        step?.run?.command?.includes('$CIRCLE_CONTINUATION_KEY') &&
+        step?.run?.environment &&
+        step?.run?.environment['CONFIG_PATH']
+      ) {
+        const outputPath = this.getOutputPath(job.steps);
+
+        return {
+          run: {
+            name: CONTINUE_PIPELINE_STEP_NAME,
+            command: `if [ -f ${DYNAMIC_CONFIG_PATH_IN_CONTAINER} ]
+            then
+              rm ${DYNAMIC_CONFIG_PATH_IN_CONTAINER}
+            fi
+            cp ${
+              step?.run?.environment['CONFIG_PATH']
+            } ${DYNAMIC_CONFIG_PATH_IN_CONTAINER}
+            ${
+              outputPath
+                ? `if [ -f ${outputPath} ]
+                  then
+                    cp ${outputPath} ${path.join(
+                    CONTAINER_STORAGE_DIRECTORY,
+                    DYNAMIC_CONFIG_PARAMETERS_FILE_NAME
+                  )}
+                  fi`
+                : ``
+            }`,
+          },
+        };
+      }
+
+      if (this.isCustomClone(step)) {
+        return 'checkout';
+      }
+
+      return step;
+    });
   }
 }
