@@ -195,7 +195,7 @@ export default class ProcessFile {
       );
 
       return `echo "Persisting ${pathToPersist}"
-        cp -Lr ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY}`;
+        cp -rn ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY} || cp -ru ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY}`;
     }
 
     return step?.persist_to_workspace?.paths.reduce(
@@ -206,7 +206,7 @@ export default class ProcessFile {
         );
 
         return `${accumulator} echo "Persisting ${pathToPersist}"
-          cp -Lr ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY}\n`;
+          cp -rn ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY} || cp -ru ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY}\n`;
       },
       ''
     );
