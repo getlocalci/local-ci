@@ -34,8 +34,12 @@ interface FullStep {
 
 type Step = FullStep | string | 'checkout';
 
+interface Docker {
+  [key: string]: string;
+}
+
 interface Job {
-  docker?: Array<Record<string, string>>;
+  docker?: Docker[];
   steps?: Step[];
   working_directory?: string;
   machine?: { image?: string };

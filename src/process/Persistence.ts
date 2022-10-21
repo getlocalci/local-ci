@@ -10,6 +10,7 @@ import {
   DYNAMIC_CONFIG_PARAMETERS_FILE_NAME,
   DYNAMIC_CONFIG_PATH_IN_CONTAINER,
 } from 'constant';
+import getJobs from 'job/getJobs';
 
 @injectable()
 export default class Persistence {
@@ -23,19 +24,76 @@ export default class Persistence {
     });
   }
 
-  getDependencies(
-    dependencies: string[] | null | undefined,
-    allDependencies: Map<string, string[] | null>
-  ): string[] | undefined {
-    return dependencies?.reduce((accumulator: string[], jobName) => {
-      const dependencies = allDependencies.get(jobName);
-      return dependencies?.length
-        ? [
-            ...(this.getDependencies(dependencies, allDependencies) || []),
+  simulateAttachWorkspace(config: CiConfig): CiConfig {
+    const jobs = config?.jobs ?? {};
+    const jobDependencies = getJobs(config);
+
+    if (!config) {
+      return config;
+    }
+
+    return {
+      ...config,
+      jobs: Object.entries(jobs).reduce(
+        (accumulator: Jobs, [jobName, job]: [string, Job]) => {
+          if (!config || !job?.steps) {
+            return {
+              ...accumulator,
+              [jobName]: job,
+            };
+          }
+
+          return {
             ...accumulator,
-          ]
-        : accumulator;
-    }, []);
+            [jobName]: {
+              ...job,
+              steps: [
+                'checkout',
+                ...this.getDependencies(jobName, jobDependencies)
+                  .filter((jobName) => {
+                    return jobs[jobName]?.steps?.some((step: Step) => {
+                      return (
+                        typeof step !== 'string' && step?.persist_to_workspace
+                      );
+                    });
+                  })
+                  .map((jobName) => {
+                    return jobs[jobName]?.steps ?? [];
+                  })
+                  .reduce((accumulator, steps) => {
+                    return [...accumulator, ...steps];
+                  }, [])
+                  .filter(this.stepIsNotCheckout),
+                ...job.steps.filter(this.stepIsNotCheckout),
+              ],
+            },
+          };
+        },
+        {}
+      ),
+    };
+  }
+
+  getDependencies(
+    jobName: string,
+    allDependencies: Map<string, string[] | null>
+  ) {
+    const dependencies = allDependencies.get(jobName);
+    return (
+      dependencies?.reduce(
+        (accumulator: string[], depName: string): string[] => {
+          return [
+            ...this.getDependencies(depName, allDependencies),
+            ...accumulator,
+          ];
+        },
+        dependencies
+      ) ?? []
+    );
+  }
+
+  stepIsNotCheckout(step: Step): boolean {
+    return step !== 'checkout';
   }
 
   replaceSteps(job: Job, config: CiConfig): Job['steps'] {

@@ -43,7 +43,12 @@ export default class ProcessFile {
 
     this.fsGateway.fs.writeFileSync(
       processFilePath,
-      yaml.dump(this.getWriteableConfig(config, repoPath))
+      yaml.dump(
+        this.getWriteableConfig(
+          this.persistence.simulateAttachWorkspace(config),
+          repoPath
+        )
+      )
     );
   }
 
