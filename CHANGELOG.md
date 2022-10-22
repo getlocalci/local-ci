@@ -1,5 +1,8 @@
 # Change Log
 
+## 2.0.2 - 21 October 2022
+- Revert `cp -Lr`, which caused issues with the volume. [#221](https://github.com/getlocalci/local-ci/pull/221)
+
 ## 2.0.1 - 18 October 2022
 - Replace custom checkout steps so they work in Local CI. [#216](https://github.com/getlocalci/local-ci/pull/216)
 - Give feedback when persisting to workspace. [#217](https://github.com/getlocalci/local-ci/pull/217)
