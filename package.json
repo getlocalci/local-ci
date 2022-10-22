@@ -2,7 +2,7 @@
   "name": "local-ci",
   "displayName": "Local CI",
   "description": "Debug CircleCI® workflows locally, with Bash access during and after. Free preview, then paid.",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "publisher": "LocalCI",
   "contributors": [
     "Ryan Kienstra"
@@ -242,7 +242,7 @@
       "description": "Buy license key"
     },
     {
-      "url": "https://img.shields.io/badge/trial-15%20day-orange",
+      "url": "https://img.shields.io/badge/trial-30%20day-orange",
       "href": "https://getlocalci.com/pricing/?utm_medium=extension&utm_source=badge",
       "description": "30 day free preview"
     },
