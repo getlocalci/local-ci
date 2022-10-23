@@ -81,7 +81,7 @@ jobs:
           name: Persist to workspace
           command: |-
             echo "Persisting ."
-            cp -Lr . /tmp/local-ci
+            cp -rn . /tmp/local-ci || cp -ru . /tmp/local-ci
   run-prettier:
     executor: default-executor
     steps:
@@ -110,7 +110,7 @@ jobs:
                 echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
               else
                 echo "Attaching /tmp/local-ci/."
-                cp -Lr /tmp/local-ci/. .
+                cp -rn /tmp/local-ci/. . || cp -ru /tmp/local-ci/. .
             fi
       - run:
           name: Run prettier check on project files
@@ -157,7 +157,7 @@ jobs:
                 echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
               else
                 echo "Attaching /tmp/local-ci/."
-                cp -Lr /tmp/local-ci/. .
+                cp -rn /tmp/local-ci/. . || cp -ru /tmp/local-ci/. .
             fi
       - run:
           name: Run linter
@@ -190,7 +190,7 @@ jobs:
                 echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
               else
                 echo "Attaching /tmp/local-ci/."
-                cp -Lr /tmp/local-ci/. .
+                cp -rn /tmp/local-ci/. . || cp -ru /tmp/local-ci/. .
             fi
       - run:
           name: Run unit tests
@@ -223,7 +223,7 @@ jobs:
                 echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
               else
                 echo "Attaching /tmp/local-ci/."
-                cp -Lr /tmp/local-ci/. .
+                cp -rn /tmp/local-ci/. . || cp -ru /tmp/local-ci/. .
             fi
       - run:
           name: Restore cache
@@ -283,7 +283,7 @@ jobs:
                 echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
               else
                 echo "Attaching /tmp/local-ci/."
-                cp -Lr /tmp/local-ci/. .
+                cp -rn /tmp/local-ci/. . || cp -ru /tmp/local-ci/. .
             fi
       - run:
           name: Build
@@ -292,7 +292,7 @@ jobs:
           name: Persist to workspace
           command: |-
             echo "Persisting ."
-            cp -Lr . /tmp/local-ci
+            cp -rn . /tmp/local-ci || cp -ru . /tmp/local-ci
   verify-bundles-sizes:
     executor: default-executor
     steps:
@@ -321,7 +321,7 @@ jobs:
                 echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
               else
                 echo "Attaching /tmp/local-ci/."
-                cp -Lr /tmp/local-ci/. .
+                cp -rn /tmp/local-ci/. . || cp -ru /tmp/local-ci/. .
             fi
       - run:
           name: Check bundles sizes
@@ -354,7 +354,7 @@ jobs:
                 echo "Warning: tried to attach_workspace to /tmp/local-ci, but it's empty. It might require a job to run before it."
               else
                 echo "Attaching /tmp/local-ci/."
-                cp -Lr /tmp/local-ci/. .
+                cp -rn /tmp/local-ci/. . || cp -ru /tmp/local-ci/. .
             fi
       - run:
           name: Firebase deploy

@@ -16,6 +16,6 @@ export default function getAttachWorkspaceCommand(step: Step): string {
       echo "Warning: tried to attach_workspace to ${CONTAINER_STORAGE_DIRECTORY}, but it's empty. It might require a job to run before it."
     else
       echo "Attaching ${attachFrom}"
-      cp -Lr ${attachFrom} ${step?.attach_workspace?.at}
+      cp -rn ${attachFrom} ${step?.attach_workspace?.at} || cp -ru ${attachFrom} ${step?.attach_workspace?.at}
     fi`;
 }

@@ -213,7 +213,7 @@ export default class Persistence {
       );
 
       return `echo "Persisting ${pathToPersist}"
-        cp -Lr ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY}`;
+        cp -rn ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY} || cp -ru ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY}`;
     }
 
     return (
@@ -224,7 +224,7 @@ export default class Persistence {
         );
 
         return `${accumulator} echo "Persisting ${pathToPersist}"
-          cp -Lr ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY}\n`;
+          cp -rn ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY} || cp -ru ${pathToPersist} ${CONTAINER_STORAGE_DIRECTORY}\n`;
       }, '') ?? ''
     );
   }
