@@ -36,7 +36,13 @@ export default class Persistence {
       ...config,
       jobs: Object.entries(jobs).reduce(
         (accumulator: Jobs, [jobName, job]: [string, Job]) => {
-          if (!config || !job?.steps) {
+          if (
+            !config ||
+            !job?.steps ||
+            !jobs[jobName]?.steps?.some((step: Step) => {
+              return typeof step !== 'string' && step?.attach_workspace;
+            })
+          ) {
             return {
               ...accumulator,
               [jobName]: job,
@@ -63,8 +69,20 @@ export default class Persistence {
                   .reduce((accumulator, steps) => {
                     return [...accumulator, ...steps];
                   }, [])
-                  .filter(this.stepIsNotCheckout),
-                ...job.steps.filter(this.stepIsNotCheckout),
+                  .filter((step: Step) => {
+                    return (
+                      !this.stepIsCheckout(step) &&
+                      !this.isCustomClone(step) &&
+                      !this.stepIsPersistent(step)
+                    );
+                  }),
+                ...job.steps.filter((step: Step) => {
+                  return (
+                    !this.stepIsCheckout(step) &&
+                    !this.isCustomClone(step) &&
+                    !this.stepIsPersistent(step)
+                  );
+                }),
               ],
             },
           };
@@ -92,8 +110,18 @@ export default class Persistence {
     );
   }
 
-  stepIsNotCheckout(step: Step): boolean {
-    return step !== 'checkout';
+  stepIsCheckout(step: Step): boolean {
+    return step === 'checkout';
+  }
+
+  stepIsPersistent(step: Step): boolean {
+    return (
+      typeof step === 'string' ||
+      !!step.attach_workspace ||
+      !!step.persist_to_workspace ||
+      !!step.restore_cache ||
+      !!step.save_cache
+    );
   }
 
   replaceSteps(job: Job, config: CiConfig): Job['steps'] {
@@ -153,7 +181,7 @@ export default class Persistence {
         return {
           run: {
             name: CONTINUE_PIPELINE_STEP_NAME,
-            command: `if [ -f ${DYNAMIC_CONFIG_PATH_IN_CONTAINER} ]
+            command: `if [ -e ${DYNAMIC_CONFIG_PATH_IN_CONTAINER} ]
             then
               rm ${DYNAMIC_CONFIG_PATH_IN_CONTAINER}
             fi
@@ -238,7 +266,11 @@ export default class Persistence {
    * so it can replace it with `checkout`.
    * The CLI handles `checkout` well.
    */
-  isCustomClone(step: FullStep): boolean {
+  isCustomClone(step: Step): boolean {
+    if (typeof step === 'string') {
+      return false;
+    }
+
     const clonePattern = /git clone[^\n]+\$CIRCLE_REPOSITORY_URL/;
     return (
       (typeof step?.run === 'string' && !!step.run.match(clonePattern)) ||
