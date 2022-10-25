@@ -4,6 +4,7 @@ import * as path from 'path';
 import * as yaml from 'js-yaml';
 import FsGateway from 'gateway/FsGateway';
 import getConfig from 'config/getConfig';
+import getRepoPath from 'common/getRepoPath';
 import Persistence from './Persistence';
 import { CONTAINER_STORAGE_DIRECTORY } from 'constant';
 import EnvVar from './EnvVar';
@@ -82,7 +83,7 @@ export default class ProcessFile {
               ...job,
               steps: [
                 this.getEnsureVolumeIsWritableStep(),
-                this.envVar.getStep(configFilePath),
+                this.envVar.getStep(getRepoPath(configFilePath)),
                 ...(this.persistence.replaceSteps(job, config) ?? []),
               ],
             },
