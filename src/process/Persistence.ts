@@ -19,7 +19,10 @@ export default class Persistence {
   @inject(Types.IVolume)
   volume!: Volume;
 
-  simulateAttachWorkspace(config: CiConfig, configFilePath: string): CiConfig {
+  simulateAttachWorkspace(
+    config: CiConfigWithJobs,
+    configFilePath: string
+  ): CiConfigWithJobs {
     const jobs = config?.jobs ?? {};
     const jobDependencies = getJobs(config);
 
@@ -99,7 +102,7 @@ export default class Persistence {
   getDependencies(
     jobName: string,
     allDependencies: Map<string, string[] | null>
-  ) {
+  ): string[] {
     const dependencies = allDependencies.get(jobName);
     return (
       dependencies?.reduce(

@@ -51,14 +51,20 @@ export default class ProcessFile {
     );
   }
 
-  getWriteableConfig(config: CiConfig, configFilePath: string) {
+  getWriteableConfig(
+    config: CiConfigWithJobs,
+    configFilePath: string
+  ): CiConfigWithJobs {
     return this.substituteSteps(
       this.persistence.simulateAttachWorkspace(config, configFilePath),
       configFilePath
     );
   }
 
-  substituteSteps(config: CiConfig, configFilePath: string) {
+  substituteSteps(
+    config: CiConfigWithJobs,
+    configFilePath: string
+  ): CiConfigWithJobs {
     return {
       ...config,
       jobs: Object.entries(config?.jobs ?? {}).reduce(

@@ -33,7 +33,10 @@ describe('ProcessFile', () => {
       expect(
         normalize(
           yaml.dump(
-            processFile.getWriteableConfig(getConfig(fixture), '/foo/baz/')
+            processFile.getWriteableConfig(
+              getConfig(fixture) as CiConfigWithJobs,
+              '/foo/baz/'
+            )
           )
         )
       ).toEqual(normalize(expected));
@@ -50,7 +53,7 @@ describe('ProcessFile', () => {
       normalize(
         yaml.dump(
           processFile.getWriteableConfig(
-            getConfig(simulatedAttachWorkspaceFixture),
+            getConfig(simulatedAttachWorkspaceFixture) as CiConfigWithJobs,
             '/foo/baz/'
           ),
           { noRefs: true }

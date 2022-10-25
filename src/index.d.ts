@@ -64,13 +64,15 @@ interface Jobs {
   [key: string]: Job;
 }
 
+interface WorkflowJobs {
+  jobs: {[key: string]: {[key: string]: unknown} | string }[];
+}
+
 interface CiConfigWithJobs {
   orbs?: { [key: string]: Orb };
   jobs?: Jobs;
   workflows: {
-    [key: string]: {
-      jobs: (Record<string, Record<string, unknown>>|string)[];
-    }
+    [key: string]: WorkflowJobs;
   }
 }
 
