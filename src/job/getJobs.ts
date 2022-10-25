@@ -24,7 +24,10 @@ export default function getJobs(
         const jobConfig = Object.values(job).length
           ? Object.values(job)[0]
           : null;
-        allJobs.set(jobName, jobConfig?.requires);
+
+        if (typeof jobConfig !== 'string') {
+          allJobs.set(jobName, jobConfig?.requires);
+        }
       }
     }
   }
