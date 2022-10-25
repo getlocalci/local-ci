@@ -6,6 +6,7 @@ import EditorGateway from 'gateway/EditorGateway';
 import FsGateway from 'gateway/FsGateway';
 import getDynamicConfigParametersPath from './getDynamicConfigParametersPath';
 import getDynamicConfigPath from './getDynamicConfigPath';
+import getDynamicConfigProcessFilePath from 'process/getDynamicConfigProcessFilePath';
 import getProcessedConfig from './getProcessedConfig';
 import getProcessFilePath from 'process/getProcessFilePath';
 import ProcessFile from 'process/ProcessFile';
@@ -70,7 +71,7 @@ export default class Config {
             this.childProcessGateway.cp,
             this.spawn.getOptions()
           ),
-          dynamicConfigFilePath,
+          getDynamicConfigProcessFilePath(configFilePath),
           configFilePath
         );
       }
