@@ -3,9 +3,13 @@ interface SaveCache {
   paths: Array<string>;
 }
 
+interface Checkout {
+  path: string;
+}
+
 // See https://circleci.com/docs/2.0/configuration-reference/
 interface FullStep {
-  checkout?: Record<string, unknown> | string;
+  checkout?: Checkout;
   attach_workspace?: {
     at: string;
   };

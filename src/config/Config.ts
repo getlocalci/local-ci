@@ -8,7 +8,6 @@ import getDynamicConfigParametersPath from './getDynamicConfigParametersPath';
 import getDynamicConfigPath from './getDynamicConfigPath';
 import getProcessedConfig from './getProcessedConfig';
 import getProcessFilePath from 'process/getProcessFilePath';
-import getRepoPath from 'common/getRepoPath';
 import ProcessFile from 'process/ProcessFile';
 import ReporterGateway from 'gateway/ReporterGateway';
 import Spawn from 'common/Spawn';
@@ -56,11 +55,7 @@ export default class Config {
         this.childProcessGateway.cp,
         this.spawn.getOptions()
       );
-      this.processFile.write(
-        processedConfig,
-        processFilePath,
-        getRepoPath(configFilePath)
-      );
+      this.processFile.write(processedConfig, processFilePath, configFilePath);
 
       const dynamicConfigFilePath = getDynamicConfigPath(configFilePath);
       if (this.fsGateway.fs.existsSync(dynamicConfigFilePath)) {
@@ -76,7 +71,7 @@ export default class Config {
             this.spawn.getOptions()
           ),
           dynamicConfigFilePath,
-          getRepoPath(configFilePath)
+          configFilePath
         );
       }
     } catch (e) {

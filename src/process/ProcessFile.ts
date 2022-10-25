@@ -28,7 +28,11 @@ export default class ProcessFile {
    * Likewise, on attach_workspace, it copies from the volume.
    * The processedConfig was already compiled by the CircleCI CLI binary.
    */
-  write(processedConfig: string, processFilePath: string, repoPath: string) {
+  write(
+    processedConfig: string,
+    processFilePath: string,
+    configFilePath: string
+  ) {
     const config = getConfig(processedConfig);
 
     if (!config) {
@@ -43,23 +47,22 @@ export default class ProcessFile {
 
     this.fsGateway.fs.writeFileSync(
       processFilePath,
-      yaml.dump(
-        this.getWriteableConfig(
-          this.persistence.simulateAttachWorkspace(config),
-          repoPath
-        )
-      )
+      yaml.dump(this.getWriteableConfig(config, configFilePath))
     );
   }
 
-  getWriteableConfig(config: CiConfig, repoPath: string) {
+  getWriteableConfig(config: CiConfig, configFilePath: string) {
+    return this.substituteSteps(
+      this.persistence.simulateAttachWorkspace(config, configFilePath),
+      configFilePath
+    );
+  }
+
+  substituteSteps(config: CiConfig, configFilePath: string) {
     return {
       ...config,
       jobs: Object.entries(config?.jobs ?? {}).reduce(
-        (
-          accumulator: Jobs | Record<string, unknown>,
-          [jobName, job]: [string, Job]
-        ) => {
+        (accumulator, [jobName, job]: [string, Job]) => {
           if (!config || !job?.steps) {
             return {
               ...accumulator,
@@ -73,7 +76,7 @@ export default class ProcessFile {
               ...job,
               steps: [
                 this.getEnsureVolumeIsWritableStep(),
-                this.envVar.getStep(repoPath),
+                this.envVar.getStep(configFilePath),
                 ...(this.persistence.replaceSteps(job, config) ?? []),
               ],
             },

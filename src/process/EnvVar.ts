@@ -2,6 +2,7 @@ import { injectable, inject } from 'inversify';
 import Types from 'common/Types';
 import { addEnvVars } from 'script';
 import ChildProcessGateway from 'gateway/ChildProcessGateway';
+import getRepoPath from 'common/getRepoPath';
 import Spawn from 'common/Spawn';
 
 @injectable()
@@ -12,12 +13,12 @@ export default class EnvVar {
   @inject(Spawn)
   spawn!: Spawn;
 
-  getStep(repoPath: string) {
+  getStep(configFilePath: string) {
     let command;
     try {
       const exportVars = this.childProcessGateway.cp
         .execSync(addEnvVars, {
-          ...this.spawn.getOptions(repoPath),
+          ...this.spawn.getOptions(getRepoPath(configFilePath)),
           timeout: 2000,
         })
         .toString();

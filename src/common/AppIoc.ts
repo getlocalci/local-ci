@@ -9,6 +9,7 @@ import OsGateway from 'gateway/OsGateway';
 import ProcessGateway from 'gateway/ProcessGateway';
 import ReporterGateway from 'gateway/ReporterGateway';
 import Types from 'common/Types';
+import Volume from 'containerization/Volume';
 
 export const iocContainer = new BaseIoc().buildBaseTemplate();
 
@@ -26,3 +27,4 @@ iocContainer
   .bind(Types.IReporterGateway)
   .to(ReporterGateway)
   .inSingletonScope();
+iocContainer.bind(Types.IVolume).to(Volume).inSingletonScope();

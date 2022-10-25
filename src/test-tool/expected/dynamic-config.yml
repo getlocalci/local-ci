@@ -32,12 +32,12 @@ jobs:
       - run:
           name: Continue the pipeline
           command: |-
-            if [ -f /tmp/local-ci/dynamic-config.yml ]
+            if [ -e /tmp/local-ci/dynamic-config.yml ]
             then
               rm /tmp/local-ci/dynamic-config.yml
             fi
             cp .circleci/continue_config.yml /tmp/local-ci/dynamic-config.yml
-            if [ -f /tmp/pipeline-parameters.json ]
+            if [ -e /tmp/pipeline-parameters.json ]
             then
               cp /tmp/pipeline-parameters.json /tmp/local-ci/dynamic-config-parameters.json
             fi

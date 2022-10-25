@@ -10,6 +10,8 @@ import simulatedAttachWorkspaceFixture from 'test-tool/fixture/simulated-attach-
 
 import withCacheExpected from 'test-tool/expected/with-cache.yml';
 import withCacheFixture from 'test-tool/fixture/with-cache.yml';
+import Types from 'common/Types';
+import Volume from 'containerization/Volume';
 
 let testHarness: AppTestHarness;
 
@@ -20,10 +22,9 @@ describe('ProcessFile', () => {
   });
 
   it.each`
-    fixture                            | expected                            | name
-    ${withCacheFixture}                | ${withCacheExpected}                | ${'withCache'}
-    ${dyanamicConfigFixture}           | ${dynamicConfigExpected}            | ${'dynamicConfig'}
-    ${simulatedAttachWorkspaceFixture} | ${simulatedAttachWorkspaceExpected} | ${'simulatedAttachWorkspace'}
+    fixture                  | expected                 | name
+    ${withCacheFixture}      | ${withCacheExpected}     | ${'withCache'}
+    ${dyanamicConfigFixture} | ${dynamicConfigExpected} | ${'dynamicConfig'}
   `(
     'converts $name from \n $fixture \n …to: \n\n $expected',
     ({ fixture, expected }) => {
@@ -38,4 +39,23 @@ describe('ProcessFile', () => {
       ).toEqual(normalize(expected));
     }
   );
+
+  test('simulates attach_workspace', () => {
+    const volume: Volume = testHarness.container.get(Types.IVolume);
+    volume.isEmpty = jest.fn(() => true);
+
+    const processFile = testHarness.container.get(ProcessFile);
+
+    expect(
+      normalize(
+        yaml.dump(
+          processFile.getWriteableConfig(
+            getConfig(simulatedAttachWorkspaceFixture),
+            '/foo/baz/'
+          ),
+          { noRefs: true }
+        )
+      )
+    ).toEqual(normalize(simulatedAttachWorkspaceExpected));
+  });
 });

@@ -1,4 +1,4 @@
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import * as path from 'path';
 import getAttachWorkspaceCommand from 'config/getAttachWorkspaceCommand';
 import getRestoreCacheCommand from 'cache/getRestoreCacheCommand';
@@ -11,35 +11,33 @@ import {
   DYNAMIC_CONFIG_PATH_IN_CONTAINER,
 } from 'constant';
 import getJobs from 'job/getJobs';
+import Types from 'common/Types';
+import Volume from 'containerization/Volume';
 
 @injectable()
 export default class Persistence {
-  removeCheckoutAndPersistenceSteps(steps: Step[]): Step[] {
-    return steps.filter((step) => {
-      return (
-        step !== 'checkout' &&
-        !(step as FullStep)?.attach_workspace &&
-        !(step as FullStep)?.persist_to_workspace
-      );
-    });
-  }
+  @inject(Types.IVolume)
+  volume!: Volume;
 
-  simulateAttachWorkspace(config: CiConfig): CiConfig {
+  simulateAttachWorkspace(config: CiConfig, configFilePath: string): CiConfig {
     const jobs = config?.jobs ?? {};
     const jobDependencies = getJobs(config);
 
-    if (!config) {
+    if (!config || !this.volume.isEmpty(configFilePath)) {
+      // If the volume isn't empty, maybe they're running the whole workflow,
+      // and want to do attach_workspace.
       return config;
     }
 
     return {
       ...config,
       jobs: Object.entries(jobs).reduce(
-        (accumulator: Jobs, [jobName, job]: [string, Job]) => {
+        (accumulator, [jobName, job]: [string, Job]) => {
           if (
             !config ||
             !job?.steps ||
             !jobs[jobName]?.steps?.some((step: Step) => {
+              // Only simulate attach_workspace if this job has an attach_workspace step.
               return typeof step !== 'string' && step?.attach_workspace;
             })
           ) {
@@ -49,33 +47,39 @@ export default class Persistence {
             };
           }
 
+          const dependencies = this.getDependencies(jobName, jobDependencies)
+            .filter((jobName) => {
+              return jobs[jobName]?.steps?.some((step: Step) => {
+                return typeof step !== 'string' && step?.persist_to_workspace;
+              });
+            })
+            .map((jobName) => {
+              return jobs[jobName]?.steps ?? [];
+            })
+            .reduce((accumulator, steps) => {
+              return [...accumulator, ...steps];
+            }, []);
+
+          const checkoutStep = dependencies.find((step: Step) => {
+            return typeof step !== 'string' && !!step?.checkout?.path;
+          });
+
           return {
             ...accumulator,
             [jobName]: {
               ...job,
               steps: [
-                'checkout',
-                ...this.getDependencies(jobName, jobDependencies)
-                  .filter((jobName) => {
-                    return jobs[jobName]?.steps?.some((step: Step) => {
-                      return (
-                        typeof step !== 'string' && step?.persist_to_workspace
-                      );
-                    });
-                  })
-                  .map((jobName) => {
-                    return jobs[jobName]?.steps ?? [];
-                  })
-                  .reduce((accumulator, steps) => {
-                    return [...accumulator, ...steps];
-                  }, [])
-                  .filter((step: Step) => {
-                    return (
-                      !this.stepIsCheckout(step) &&
-                      !this.isCustomClone(step) &&
-                      !this.stepIsPersistent(step)
-                    );
-                  }),
+                typeof checkoutStep !== 'string' &&
+                !!checkoutStep?.checkout?.path
+                  ? { checkout: { path: checkoutStep?.checkout?.path } }
+                  : 'checkout',
+                ...dependencies.filter((step: Step) => {
+                  return (
+                    !this.stepIsCheckout(step) &&
+                    !this.isCustomClone(step) &&
+                    !this.stepIsPersistent(step)
+                  );
+                }),
                 ...job.steps.filter((step: Step) => {
                   return (
                     !this.stepIsCheckout(step) &&
@@ -111,16 +115,18 @@ export default class Persistence {
   }
 
   stepIsCheckout(step: Step): boolean {
-    return step === 'checkout';
+    return (
+      step === 'checkout' || (typeof step !== 'string' && !!step?.checkout)
+    );
   }
 
   stepIsPersistent(step: Step): boolean {
     return (
-      typeof step === 'string' ||
-      !!step.attach_workspace ||
-      !!step.persist_to_workspace ||
-      !!step.restore_cache ||
-      !!step.save_cache
+      typeof step !== 'string' &&
+      (!!step.attach_workspace ||
+        !!step.persist_to_workspace ||
+        !!step.restore_cache ||
+        !!step.save_cache)
     );
   }
 
@@ -190,7 +196,7 @@ export default class Persistence {
             } ${DYNAMIC_CONFIG_PATH_IN_CONTAINER}
             ${
               outputPath
-                ? `if [ -f ${outputPath} ]
+                ? `if [ -e ${outputPath} ]
                   then
                     cp ${outputPath} ${path.join(
                     CONTAINER_STORAGE_DIRECTORY,
