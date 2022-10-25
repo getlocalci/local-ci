@@ -11,7 +11,7 @@ import FinalTerminal from 'terminal/FinalTerminal';
 import FsGateway from 'gateway/FsGateway';
 import getCheckoutJobs from './getCheckoutJobs';
 import getDebuggingTerminalName from 'terminal/getDebuggingTerminalName';
-import getDynamicConfigPath from 'config/getDynamicConfigPath';
+import getDynamicConfigProcessFilePath from 'process/getDynamicConfigProcessFilePath';
 import getFinalDebuggingTerminalName from 'terminal/getFinalTerminalName';
 import getImageFromJob from 'containerization/getImageFromJob';
 import getLogFilePath from 'log/getLogFilePath';
@@ -104,7 +104,8 @@ export default class JobRunner {
     const processFilePath = getProcessFilePath(configFilePath);
     const parsedProcessFile = this.parsedConfig.get(processFilePath);
 
-    const dynamicConfigFilePath = getDynamicConfigPath(configFilePath);
+    const dynamicConfigFilePath =
+      getDynamicConfigProcessFilePath(configFilePath);
     const parsedDynamicConfigFile = this.parsedConfig.get(
       dynamicConfigFilePath
     );

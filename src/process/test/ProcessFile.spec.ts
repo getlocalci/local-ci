@@ -1,43 +1,63 @@
+import * as yaml from 'js-yaml';
+import Types from 'common/Types';
 import AppTestHarness from 'test-tool/helper/AppTestHarness';
 import dynamicConfigExpected from 'test-tool/expected/dynamic-config.yml';
 import dyanamicConfigFixture from 'test-tool/fixture/dynamic-config.yml';
+import getConfig from 'config/getConfig';
 import ProcessFile from 'process/ProcessFile';
-import FakeFsGateway from 'gateway/FakeFsGateway';
 import normalize from 'test-tool/helper/normalize';
+import simulatedAttachWorkspaceExpected from 'test-tool/expected/simulated-attach-workspace.yml';
+import simulatedAttachWorkspaceFixture from 'test-tool/fixture/simulated-attach-workspace.yml';
 import withCacheExpected from 'test-tool/expected/with-cache.yml';
 import withCacheFixture from 'test-tool/fixture/with-cache.yml';
+import Volume from 'containerization/Volume';
 
-let fsGateway: FakeFsGateway;
 let testHarness: AppTestHarness;
 
 describe('ProcessFile', () => {
   beforeEach(() => {
     testHarness = new AppTestHarness();
     testHarness.init();
-    fsGateway = testHarness.fsGateway;
   });
 
-  test('full config file with cache', () => {
+  it.each`
+    fixture                  | expected                 | name
+    ${withCacheFixture}      | ${withCacheExpected}     | ${'withCache'}
+    ${dyanamicConfigFixture} | ${dynamicConfigExpected} | ${'dynamicConfig'}
+  `(
+    'converts $name from \n $fixture \n …to: \n\n $expected',
+    ({ fixture, expected }) => {
+      const processFile = testHarness.container.get(ProcessFile);
+
+      expect(
+        normalize(
+          yaml.dump(
+            processFile.getWriteableConfig(
+              getConfig(fixture) as NonNullable<CiConfig>,
+              '/foo/baz/'
+            )
+          )
+        )
+      ).toEqual(normalize(expected));
+    }
+  );
+
+  test('simulates attach_workspace', () => {
+    const volume: Volume = testHarness.container.get(Types.IVolume);
+    volume.isEmpty = jest.fn(() => true);
+
     const processFile = testHarness.container.get(ProcessFile);
-    const writeFileSpy = jest.fn();
-    fsGateway.fs.writeFileSync = writeFileSpy;
-    processFile.write(withCacheFixture, '/foo/baz/', '/your/repo/');
 
-    expect(writeFileSpy).toHaveBeenCalledTimes(1);
-    expect(normalize(writeFileSpy.mock.lastCall[1])).toEqual(
-      normalize(withCacheExpected)
-    );
-  });
-
-  test('dynamic config', () => {
-    const processFile = testHarness.container.get(ProcessFile);
-    const writeFileSpy = jest.fn();
-    fsGateway.fs.writeFileSync = writeFileSpy;
-    processFile.write(dyanamicConfigFixture, '/foo/baz/', '/your/repo/');
-
-    expect(writeFileSpy).toHaveBeenCalledTimes(1);
-    expect(normalize(writeFileSpy.mock.lastCall[1])).toEqual(
-      normalize(dynamicConfigExpected)
-    );
+    expect(
+      normalize(
+        yaml.dump(
+          processFile.getWriteableConfig(
+            getConfig(simulatedAttachWorkspaceFixture) as NonNullable<CiConfig>,
+            '/foo/baz/'
+          ),
+          { noRefs: true }
+        )
+      )
+    ).toEqual(normalize(simulatedAttachWorkspaceExpected));
   });
 });

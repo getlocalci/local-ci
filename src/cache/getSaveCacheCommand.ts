@@ -2,21 +2,20 @@ import * as path from 'path';
 import convertToBash from './convertToBash';
 import { CONTAINER_STORAGE_DIRECTORY } from 'constant';
 
-export default function getSaveCacheCommand(
-  step: FullStep
-): string | undefined {
-  return step?.save_cache?.paths.reduce((accumulator, directory) => {
-    const destination = path.join(
-      CONTAINER_STORAGE_DIRECTORY,
-      convertToBash(step?.save_cache?.key ?? '')
-    );
-    const destinationWhenCopied = path.join(
-      destination,
-      path.basename(directory)
-    );
+export default function getSaveCacheCommand(step: FullStep): string {
+  return (
+    step?.save_cache?.paths.reduce((accumulator, directory) => {
+      const destination = path.join(
+        CONTAINER_STORAGE_DIRECTORY,
+        convertToBash(step?.save_cache?.key ?? '')
+      );
+      const destinationWhenCopied = path.join(
+        destination,
+        path.basename(directory)
+      );
 
-    // BusyBox doesn't allow cp -n.
-    return `${accumulator} if [ -d ${destinationWhenCopied} ]
+      // BusyBox doesn't allow cp -n.
+      return `${accumulator} if [ -d ${destinationWhenCopied} ]
       then
       echo "${directory} is already cached, skipping"
     elif [ ! -d ${directory} ]
@@ -27,5 +26,6 @@ export default function getSaveCacheCommand(
       mkdir -p ${destination}
       cp -rn ${directory} ${destinationWhenCopied} || cp -ru ${directory} ${destinationWhenCopied}
     fi \n`;
-  }, '');
+    }, '') ?? ''
+  );
 }

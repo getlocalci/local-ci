@@ -6,7 +6,7 @@ import { restoreCache } from 'script';
 export default function getRestoreCacheCommand(
   restoreCacheStep: FullStep,
   saveCacheSteps: (SaveCache | undefined)[]
-): string | undefined {
+): string {
   const originalSaveCacheStep = saveCacheSteps.find(
     (saveCacheStep) =>
       (!!restoreCacheStep?.restore_cache?.key &&

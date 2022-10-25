@@ -30,6 +30,7 @@ import LogFactory from 'log/LogFactory';
 import LogFile from 'log/LogFile';
 import LogProviderFactory from 'log/LogProviderFactory';
 import ParsedConfig from 'config/ParsedConfig';
+import Persistence from 'process/Persistence';
 import PipelineParameter from 'config/PipelineParameter';
 import ProcessFile from 'process/ProcessFile';
 import Refresh from 'command/Refresh';
@@ -94,6 +95,7 @@ export default class BaseIoc {
     this.container.bind(LicenseProviderFactory).toSelf();
     this.container.bind(LogProviderFactory).toSelf();
     this.container.bind(ParsedConfig).toSelf();
+    this.container.bind(Persistence).toSelf();
     this.container.bind(PipelineParameter).toSelf();
     this.container.bind(ProcessFile).toSelf();
     this.container.bind(Refresh).toSelf();

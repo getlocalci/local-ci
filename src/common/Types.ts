@@ -7,4 +7,5 @@ export default {
   IOsGateway: Symbol.for('IOsGateway'),
   IProcessGateway: Symbol.for('IProcessGateway'),
   IReporterGateway: Symbol.for('IReporterGateway'),
+  IVolume: Symbol.for('IVolume'),
 };

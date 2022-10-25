@@ -3,9 +3,13 @@ interface SaveCache {
   paths: Array<string>;
 }
 
+interface Checkout {
+  path: string;
+}
+
 // See https://circleci.com/docs/2.0/configuration-reference/
 interface FullStep {
-  checkout?: Record<string, unknown> | string;
+  checkout?: Checkout;
   attach_workspace?: {
     at: string;
   };
@@ -34,8 +38,12 @@ interface FullStep {
 
 type Step = FullStep | string | 'checkout';
 
+interface Docker {
+  [key: string]: string;
+}
+
 interface Job {
-  docker?: Array<Record<string, string>>;
+  docker?: Docker[];
   steps?: Step[];
   working_directory?: string;
   machine?: { image?: string };
@@ -56,17 +64,19 @@ interface Jobs {
   [key: string]: Job;
 }
 
-interface CiConfigWithJobs {
+interface WorkflowJobs {
+  jobs: {[key: string]: {[key: string]: unknown} | string }[];
+}
+
+interface CiConfigWithWorkflows {
   orbs?: { [key: string]: Orb };
   jobs?: Jobs;
   workflows: {
-    [key: string]: {
-      jobs: (Record<string, Record<string, unknown>>|string)[];
-    }
+    [key: string]: WorkflowJobs;
   }
 }
 
-type CiConfig = CiConfigWithJobs | undefined;
+type CiConfig = CiConfigWithWorkflows | undefined;
 
 interface ConfigFileQuickPick {
   label: string;

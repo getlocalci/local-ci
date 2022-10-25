@@ -3,12 +3,13 @@ import Types from 'common/Types';
 import BaseIOC from 'common/BaseIoc';
 import FakeChildProcessGateway from 'gateway/FakeChildProcessGateway';
 import FakeEditorGateway from 'gateway/FakeEditorGateway';
+import FakeEnvVar from 'process/FakeEnvVar';
 import FakeFsGateway from 'gateway/FakeFsGateway';
 import FakeHttpGateway from 'gateway/FakeHttpGateway';
 import FakeOsGateway from 'gateway/FakeOsGateway';
 import FakeProcessGateway from 'gateway/FakeProcessGateway';
 import FakeReporterGateway from 'gateway/FakeReporterGateway';
-import FakeEnvVar from 'process/FakeEnvVar';
+import FakeVolume from 'containerization/FakeVolume';
 
 export default class AppTestHarness {
   container!: Container;
@@ -45,6 +46,7 @@ export default class AppTestHarness {
       .bind(Types.IReporterGateway)
       .to(FakeReporterGateway)
       .inSingletonScope();
+    this.container.bind(Types.IVolume).to(FakeVolume).inSingletonScope();
 
     this.childProcessGateway = this.container.get(Types.IChildProcessGateway);
     this.editorGateway = this.container.get(Types.IEditorGateway);
