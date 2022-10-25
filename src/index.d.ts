@@ -68,7 +68,7 @@ interface WorkflowJobs {
   jobs: {[key: string]: {[key: string]: unknown} | string }[];
 }
 
-interface CiConfigWithJobs {
+interface CiConfigWithWorkflows {
   orbs?: { [key: string]: Orb };
   jobs?: Jobs;
   workflows: {
@@ -76,7 +76,7 @@ interface CiConfigWithJobs {
   }
 }
 
-type CiConfig = CiConfigWithJobs | undefined;
+type CiConfig = CiConfigWithWorkflows | undefined;
 
 interface ConfigFileQuickPick {
   label: string;

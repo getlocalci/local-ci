@@ -34,7 +34,7 @@ describe('ProcessFile', () => {
         normalize(
           yaml.dump(
             processFile.getWriteableConfig(
-              getConfig(fixture) as CiConfigWithJobs,
+              getConfig(fixture) as NonNullable<CiConfig>,
               '/foo/baz/'
             )
           )
@@ -53,7 +53,7 @@ describe('ProcessFile', () => {
       normalize(
         yaml.dump(
           processFile.getWriteableConfig(
-            getConfig(simulatedAttachWorkspaceFixture) as CiConfigWithJobs,
+            getConfig(simulatedAttachWorkspaceFixture) as NonNullable<CiConfig>,
             '/foo/baz/'
           ),
           { noRefs: true }

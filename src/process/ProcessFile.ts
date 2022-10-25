@@ -52,9 +52,9 @@ export default class ProcessFile {
   }
 
   getWriteableConfig(
-    config: CiConfigWithJobs,
+    config: NonNullable<CiConfig>,
     configFilePath: string
-  ): CiConfigWithJobs {
+  ): NonNullable<CiConfig> {
     return this.substituteSteps(
       this.persistence.simulateAttachWorkspace(config, configFilePath),
       configFilePath
@@ -62,9 +62,9 @@ export default class ProcessFile {
   }
 
   substituteSteps(
-    config: CiConfigWithJobs,
+    config: NonNullable<CiConfig>,
     configFilePath: string
-  ): CiConfigWithJobs {
+  ): NonNullable<CiConfig> {
     return {
       ...config,
       jobs: Object.entries(config?.jobs ?? {}).reduce(

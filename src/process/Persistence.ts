@@ -20,9 +20,9 @@ export default class Persistence {
   volume!: Volume;
 
   simulateAttachWorkspace(
-    config: CiConfigWithJobs,
+    config: NonNullable<CiConfig>,
     configFilePath: string
-  ): CiConfigWithJobs {
+  ): NonNullable<CiConfig> {
     const jobs = config?.jobs ?? {};
     const jobDependencies = getJobs(config);
 
