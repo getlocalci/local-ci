@@ -1,8 +1,8 @@
-import Types from 'common/Types';
-import getLocalVolumePath from 'containerization/getLocalVolumePath';
-import FsGateway from 'gateway/FsGateway';
 import { inject, injectable } from 'inversify';
+import Types from 'common/Types';
 import ConfigFile from '../config/ConfigFile';
+import FsGateway from 'gateway/FsGateway';
+import getLocalVolumePath from 'containerization/getLocalVolumePath';
 import { DYNAMIC_CONFIG_FILE_NAME } from 'constant';
 
 @injectable()
@@ -19,8 +19,7 @@ export default class Volume {
       return true;
     }
 
-    const files = this.fsGateway.fs.readdirSync(localConfigFile);
-    return !files.some((file) => {
+    return !this.fsGateway.fs.readdirSync(localConfigFile).some((file) => {
       return file !== DYNAMIC_CONFIG_FILE_NAME;
     });
   }
