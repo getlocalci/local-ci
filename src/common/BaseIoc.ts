@@ -94,8 +94,8 @@ export default class BaseIoc {
     this.container.bind(LicenseInput).toSelf();
     this.container.bind(LicenseProviderFactory).toSelf();
     this.container.bind(LogProviderFactory).toSelf();
-    this.container.bind(Persistence).toSelf();
     this.container.bind(ParsedConfig).toSelf();
+    this.container.bind(Persistence).toSelf();
     this.container.bind(PipelineParameter).toSelf();
     this.container.bind(ProcessFile).toSelf();
     this.container.bind(Refresh).toSelf();
