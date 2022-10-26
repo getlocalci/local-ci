@@ -8,6 +8,7 @@ import {
   SELECTED_CONFIG_PATH,
   SELECT_REPO_COMMAND,
 } from 'constant';
+import ReporterGateway from 'gateway/ReporterGateway';
 
 @injectable()
 export default class ConfigFile {
@@ -16,6 +17,9 @@ export default class ConfigFile {
 
   @inject(Types.IEditorGateway)
   editorGateway!: EditorGateway;
+
+  @inject(Types.IReporterGateway)
+  reporterGateway!: ReporterGateway;
 
   /**
    * Gets the absolute path of the selected .circleci/config.yml to run the jobs on.
@@ -37,6 +41,7 @@ export default class ConfigFile {
     }
 
     if (!this.editorGateway.editor.workspace.workspaceFolders?.length) {
+      this.reporterGateway.reporter.sendTelemetryErrorEvent('noFolderOpen');
       const openFolderText = 'Open folder';
       this.editorGateway.editor.window
         .showInformationMessage(
@@ -46,6 +51,7 @@ export default class ConfigFile {
         )
         .then((clicked) => {
           if (clicked === openFolderText) {
+            this.reporterGateway.reporter.sendTelemetryEvent('openFolder');
             this.editorGateway.editor.commands.executeCommand(
               'workbench.action.files.openFileFolder'
             );
