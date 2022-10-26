@@ -16,7 +16,7 @@ describe('areTerminalsClosed', () => {
   test('only one is closed', () => {
     expect(
       areTerminalsClosed(
-        { ...baseTerminal, exitStatus: { code: 1 } },
+        { ...baseTerminal, exitStatus: { code: 1, reason: 1 } },
         baseTerminal
       )
     ).toEqual(false);
@@ -25,8 +25,8 @@ describe('areTerminalsClosed', () => {
   test('all are closed', () => {
     expect(
       areTerminalsClosed(
-        { ...baseTerminal, exitStatus: { code: 0 } },
-        { ...baseTerminal, exitStatus: { code: 1 } }
+        { ...baseTerminal, exitStatus: { code: 0, reason: 1 } },
+        { ...baseTerminal, exitStatus: { code: 1, reason: 1 } }
       )
     ).toEqual(true);
   });
@@ -34,7 +34,7 @@ describe('areTerminalsClosed', () => {
   test('one undefined, one closed', () => {
     expect(
       areTerminalsClosed(
-        { ...baseTerminal, exitStatus: { code: 0 } },
+        { ...baseTerminal, exitStatus: { code: 0, reason: 1 } },
         undefined
       )
     ).toEqual(true);
