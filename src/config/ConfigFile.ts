@@ -36,6 +36,25 @@ export default class ConfigFile {
       return Promise.resolve(selectedConfigPath);
     }
 
+    if (!this.editorGateway.editor.workspace.workspaceFolders?.length) {
+      const openFolderText = 'Open folder';
+      this.editorGateway.editor.window
+        .showInformationMessage(
+          `Please open a folder so you can run Local CI`,
+          { detail: 'There is no folder selected' },
+          openFolderText
+        )
+        .then((clicked) => {
+          if (clicked === openFolderText) {
+            this.editorGateway.editor.commands.executeCommand(
+              'workbench.action.files.openFileFolder'
+            );
+          }
+        });
+
+      return '';
+    }
+
     const allConfigFilePaths = await this.allConfigFiles.getPaths(context);
     if (!allConfigFilePaths.length) {
       const createConfigText = 'Create a config for me';
