@@ -23,6 +23,7 @@ export enum JobError {
   LicenseKey,
   NoConfigFilePathInWorkspace,
   NoConfigFilePathSelected,
+  NoFolderOpen,
   ProcessFile,
 }
 
@@ -103,6 +104,12 @@ export default class JobProvider
     const configFilePath = await this.configFile.getPath(this.context);
     if (!configFilePath || !this.fsGateway.fs.existsSync(configFilePath)) {
       this.reporterGateway.reporter.sendTelemetryEvent('configFilePath');
+
+      if (!this.editorGateway.editor.workspace.workspaceFolders?.length) {
+        this.reporterGateway.reporter.sendTelemetryErrorEvent('noFolderOpen');
+        this.setError(JobError.NoFolderOpen);
+        return;
+      }
 
       const doExistConfigPaths = !!(
         await this.allConfigFiles.getPaths(this.context)

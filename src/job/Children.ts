@@ -7,6 +7,7 @@ import type vscode from 'vscode';
 import CommandFactory from './ComandFactory';
 import JobFactory from './JobFactory';
 import JobTreeItem from './JobTreeItem';
+import NativeCommandFactory from './NativeComandFactory';
 import WarningFactory from './WarningFactory';
 import WarningCommandFactory from './WarningCommandFactory';
 import type EditorGateway from 'gateway/EditorGateway';
@@ -37,6 +38,9 @@ export default class Children {
 
   @inject(LogFactory)
   logFactory!: LogFactory;
+
+  @inject(NativeCommandFactory)
+  nativeCommandFactory!: NativeCommandFactory;
 
   @inject(WarningCommandFactory)
   warningCommandFactory!: WarningCommandFactory;
@@ -146,6 +150,18 @@ export default class Children {
           this.commandFactory.create('Get License', GET_LICENSE_COMMAND),
           this.commandFactory.create('Enter License', ENTER_LICENSE_COMMAND),
           this.commandFactory.create('Complain To Me', COMPLAIN_COMMAND),
+        ];
+      case JobError.NoFolderOpen:
+        return [
+          this.warningCommandFactory.create(
+            'Please open a folder',
+            'workbench.action.files.openFileFolder'
+          ),
+          this.nativeCommandFactory.create(
+            'Open a folder',
+            'workbench.action.files.openFileFolder'
+          ),
+          this.commandFactory.create('Complain to me', COMPLAIN_COMMAND),
         ];
       case JobError.NoConfigFilePathInWorkspace:
         return [
