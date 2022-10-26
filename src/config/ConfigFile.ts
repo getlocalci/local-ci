@@ -3,6 +3,7 @@ import type vscode from 'vscode';
 import Types from 'common/Types';
 import AllConfigFiles from './AllConfigFiles';
 import EditorGateway from 'gateway/EditorGateway';
+import ReporterGateway from 'gateway/ReporterGateway';
 import {
   CREATE_CONFIG_FILE_COMMAND,
   SELECTED_CONFIG_PATH,
@@ -16,6 +17,9 @@ export default class ConfigFile {
 
   @inject(Types.IEditorGateway)
   editorGateway!: EditorGateway;
+
+  @inject(Types.IReporterGateway)
+  reporterGateway!: ReporterGateway;
 
   /**
    * Gets the absolute path of the selected .circleci/config.yml to run the jobs on.
@@ -34,6 +38,28 @@ export default class ConfigFile {
 
     if (isConfigInWorkspace) {
       return Promise.resolve(selectedConfigPath);
+    }
+
+    if (!this.editorGateway.editor.workspace.workspaceFolders?.length) {
+      this.reporterGateway.reporter.sendTelemetryErrorEvent('noFolderOpen');
+
+      const openFolderText = 'Open folder';
+      this.editorGateway.editor.window
+        .showInformationMessage(
+          'Please open a folder so you can run Local CI',
+          { detail: 'There is no folder selected' },
+          openFolderText
+        )
+        .then((clicked) => {
+          if (clicked === openFolderText) {
+            this.reporterGateway.reporter.sendTelemetryEvent('openFolder');
+            this.editorGateway.editor.commands.executeCommand(
+              'workbench.action.files.openFileFolder'
+            );
+          }
+        });
+
+      return '';
     }
 
     const allConfigFilePaths = await this.allConfigFiles.getPaths(context);
