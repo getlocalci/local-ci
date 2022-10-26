@@ -1,5 +1,8 @@
 # Change Log
 
+## 2.0.3 - 25 October 2022
+- Simulate `attach_workspace` so you don't have to run all of the requires jobs. [#219](https://github.com/getlocalci/local-ci/pull/219)
+
 ## 2.0.2 - 21 October 2022
 - Revert `cp -Lr`, which caused issues with the volume. [#221](https://github.com/getlocalci/local-ci/pull/221)
 
