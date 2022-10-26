@@ -42,6 +42,7 @@ export default class ConfigFile {
 
     if (!this.editorGateway.editor.workspace.workspaceFolders?.length) {
       this.reporterGateway.reporter.sendTelemetryErrorEvent('noFolderOpen');
+
       const openFolderText = 'Open folder';
       this.editorGateway.editor.window
         .showInformationMessage(
