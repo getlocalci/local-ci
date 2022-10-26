@@ -3,12 +3,12 @@ import type vscode from 'vscode';
 import Types from 'common/Types';
 import AllConfigFiles from './AllConfigFiles';
 import EditorGateway from 'gateway/EditorGateway';
+import ReporterGateway from 'gateway/ReporterGateway';
 import {
   CREATE_CONFIG_FILE_COMMAND,
   SELECTED_CONFIG_PATH,
   SELECT_REPO_COMMAND,
 } from 'constant';
-import ReporterGateway from 'gateway/ReporterGateway';
 
 @injectable()
 export default class ConfigFile {
