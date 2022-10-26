@@ -8,7 +8,7 @@ import ReporterGateway from 'gateway/ReporterGateway';
 import JobRunner from 'job/JobRunner';
 import JobTerminals from 'terminal/JobTerminals';
 import JobTreeItem from 'job/JobTreeItem';
-import { DO_NOT_CONFIRM_RUN_JOB } from 'constant';
+import { DO_NOT_CONFIRM_RUN_JOB, RERUN_JOB_COMMAND } from 'constant';
 
 @injectable()
 export default class ReRunJob implements Command {
@@ -27,7 +27,7 @@ export default class ReRunJob implements Command {
   commandName: string;
 
   constructor() {
-    this.commandName = 'local-ci.job.rerun';
+    this.commandName = RERUN_JOB_COMMAND;
   }
 
   getCallback(context: vscode.ExtensionContext, jobProvider: JobProvider) {

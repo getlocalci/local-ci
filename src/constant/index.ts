@@ -40,6 +40,7 @@ export const DYNAMIC_CONFIG_PATH_IN_CONTAINER = path.join(
 );
 export const HOST_TMP_DIRECTORY = '/tmp/local-ci';
 export const RUN_JOB_COMMAND = 'local-ci.job.run';
+export const RERUN_JOB_COMMAND = 'local-ci.job.rerun';
 export const CREATE_CONFIG_FILE_COMMAND = 'local-ci.create.config';
 export const SELECT_REPO_COMMAND = 'localCiJobs.selectRepo';
 export const START_DOCKER_COMMAND = 'local-ci.docker.start';

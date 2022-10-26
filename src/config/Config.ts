@@ -13,6 +13,7 @@ import ProcessFile from 'process/ProcessFile';
 import ReporterGateway from 'gateway/ReporterGateway';
 import Spawn from 'common/Spawn';
 import Types from 'common/Types';
+import { RERUN_JOB_COMMAND } from 'constant';
 
 @injectable()
 export default class Config {
@@ -79,16 +80,27 @@ export default class Config {
       processError = (e as ErrorWithMessage)?.message;
       if (!suppressMessage) {
         const message = (e as ErrorWithMessage)?.message;
-        this.editorGateway.editor.window.showErrorMessage(
-          [
-            message?.includes('connection refused')
-              ? 'Is your machine connected to the internet? '
-              : '',
-            `There was an error processing the CircleCI config: ${message}`,
-          ]
-            .filter((message) => !!message)
-            .join(' ')
-        );
+        const retryText = 'Retry';
+        this.editorGateway.editor.window
+          .showErrorMessage(
+            [
+              message?.includes('connection refused')
+                ? 'Is your machine connected to the internet? '
+                : '',
+              `There was an error processing the CircleCI config: ${message}`,
+            ]
+              .filter(Boolean)
+              .join(' '),
+            { detail: 'Possible solution' },
+            retryText
+          )
+          .then((clicked) => {
+            if (clicked === retryText) {
+              this.editorGateway.editor.commands.executeCommand(
+                RERUN_JOB_COMMAND
+              );
+            }
+          });
       }
 
       reporter.sendTelemetryErrorEvent('writeProcessFile');
