@@ -46,7 +46,7 @@ export default class ConfigFile {
       const openFolderText = 'Open folder';
       this.editorGateway.editor.window
         .showInformationMessage(
-          `Please open a folder so you can run Local CI`,
+          'Please open a folder so you can run Local CI',
           { detail: 'There is no folder selected' },
           openFolderText
         )
