@@ -80,7 +80,7 @@ export default class Config {
       processError = (e as ErrorWithMessage)?.message;
       if (!suppressMessage) {
         const message = (e as ErrorWithMessage)?.message;
-        const retryText = 'Retry';
+        const tryAgain = 'Try Again';
         this.editorGateway.editor.window
           .showErrorMessage(
             [
@@ -91,11 +91,11 @@ export default class Config {
             ]
               .filter(Boolean)
               .join(' '),
-            { detail: 'Possible solution' },
-            retryText
+            { detail: 'Error processing config' },
+            tryAgain
           )
           .then((clicked) => {
-            if (clicked === retryText) {
+            if (clicked === tryAgain) {
               this.editorGateway.editor.commands.executeCommand(
                 RERUN_JOB_COMMAND
               );
