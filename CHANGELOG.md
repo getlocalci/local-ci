@@ -1,5 +1,9 @@
 # Change Log
 
+## 2.0.4 - 30 October 2022
+- On a process error, add a button to retry. [#226](https://github.com/getlocalci/local-ci/pull/226)
+- Add a button to open a folder if there isn't one open. [#227](https://github.com/getlocalci/local-ci/pull/227)
+
 ## 2.0.3 - 25 October 2022
 - Simulate `attach_workspace` so you don't have to run all of the requires jobs. [#219](https://github.com/getlocalci/local-ci/pull/219)
 
