@@ -1,5 +1,8 @@
 # Change Log
 
+## 2.0.5 - 16 November 2022
+- Bump the binary version to the latest: `v0.1.22426`. [#229](https://github.com/getlocalci/local-ci/pull/229)
+
 ## 2.0.4 - 30 October 2022
 - On a process error, add a button to retry. [#226](https://github.com/getlocalci/local-ci/pull/226)
 - Add a button to open a folder if there isn't one open. [#227](https://github.com/getlocalci/local-ci/pull/227)
