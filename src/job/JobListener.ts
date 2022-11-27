@@ -2,7 +2,7 @@ import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
 import Types from 'common/Types';
 import ChildProcessGateway from 'gateway/ChildProcessGateway';
-import CommittedImages from 'containerization/CommittedImages';
+import Images from 'containerization/Images';
 import ConfigFile from 'config/ConfigFile';
 import EditorGateway from 'gateway/EditorGateway';
 import FsGateway from 'gateway/FsGateway';
@@ -23,8 +23,8 @@ export default class JobListener {
   @inject(Types.IChildProcessGateway)
   childProcessGateway!: ChildProcessGateway;
 
-  @inject(CommittedImages)
-  committedImages!: CommittedImages;
+  @inject(Images)
+  images!: Images;
 
   @inject(ConfigFile)
   configFile!: ConfigFile;
@@ -196,9 +196,9 @@ export default class JobListener {
       });
 
       if (output?.includes('no space left on device')) {
-        this.committedImages.cleanUp(`${COMMITTED_IMAGE_NAMESPACE}/*`);
-        this.committedImages.cleanUp('circleci/*');
-        this.committedImages.cleanUp('cimg/*');
+        this.images.cleanUp(`${COMMITTED_IMAGE_NAMESPACE}/*`);
+        this.images.cleanUp('circleci/*');
+        this.images.cleanUp('cimg/*');
       }
     });
 

@@ -5,7 +5,7 @@ import Types from 'common/Types';
 import { cleanUpCommittedImages } from 'script';
 
 @injectable()
-export default class CommittedImages {
+export default class Images {
   @inject(Types.IChildProcessGateway)
   childProcessGateway!: ChildProcessGateway;
 

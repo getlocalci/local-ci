@@ -3,7 +3,7 @@ import type vscode from 'vscode';
 import type { Command } from '.';
 import Types from 'common/Types';
 import AllConfigFiles from 'config/AllConfigFiles';
-import CommittedImages from 'containerization/CommittedImages';
+import Images from 'containerization/Images';
 import EditorGateway from 'gateway/EditorGateway';
 import getRepoBasename from 'common/getRepoBasename';
 import JobProvider from 'job/JobProvider';
@@ -19,8 +19,8 @@ export default class SelectRepo implements Command {
   @inject(AllConfigFiles)
   allConfigFiles!: AllConfigFiles;
 
-  @inject(CommittedImages)
-  committedImages!: CommittedImages;
+  @inject(Images)
+  images!: Images;
 
   @inject(Types.IEditorGateway)
   editorGateway!: EditorGateway;

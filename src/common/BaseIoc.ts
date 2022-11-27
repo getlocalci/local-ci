@@ -3,7 +3,7 @@ import AllConfigFiles from 'config/AllConfigFiles';
 import AllJobs from 'job/AllJobs';
 import BuildAgentSettings from 'config/BuildAgentSettings';
 import Children from 'job/Children';
-import CommittedImages from 'containerization/CommittedImages';
+import CommittedImages from 'containerization/Images';
 import CommandFactory from 'job/ComandFactory';
 import Config from 'config/Config';
 import ConfigFile from 'config/ConfigFile';
