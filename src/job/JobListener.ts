@@ -2,6 +2,7 @@ import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
 import Types from 'common/Types';
 import ChildProcessGateway from 'gateway/ChildProcessGateway';
+import CommittedImages from 'containerization/CommittedImages';
 import ConfigFile from 'config/ConfigFile';
 import EditorGateway from 'gateway/EditorGateway';
 import FsGateway from 'gateway/FsGateway';
@@ -11,13 +12,19 @@ import JobTreeItem from 'job/JobTreeItem';
 import LogFile from 'log/LogFile';
 import ParsedConfig from 'config/ParsedConfig';
 import Spawn from 'common/Spawn';
-import { SUPPRESS_JOB_COMPLETE_MESSAGE } from 'constant';
+import {
+  COMMITTED_IMAGE_NAMESPACE,
+  SUPPRESS_JOB_COMPLETE_MESSAGE,
+} from 'constant';
 import { getPicardContainerFunction } from 'script';
 
 @injectable()
 export default class JobListener {
   @inject(Types.IChildProcessGateway)
   childProcessGateway!: ChildProcessGateway;
+
+  @inject(CommittedImages)
+  committedImages!: CommittedImages;
 
   @inject(ConfigFile)
   configFile!: ConfigFile;
@@ -187,6 +194,12 @@ export default class JobListener {
             });
         }
       });
+
+      if (output?.includes('no space left on device')) {
+        this.committedImages.cleanUp(`${COMMITTED_IMAGE_NAMESPACE}/*`);
+        this.committedImages.cleanUp('circleci/*');
+        this.committedImages.cleanUp('cimg/*');
+      }
     });
 
     return process;
