@@ -195,7 +195,7 @@ export default class JobListener {
         }
       });
 
-      if (output?.includes('no space left on device')) {
+      if (output?.toLowerCase()?.includes('no space left on device')) {
         this.images.cleanUp(`${COMMITTED_IMAGE_NAMESPACE}/*`);
         this.images.cleanUp('circleci/*');
         this.images.cleanUp('cimg/*');
