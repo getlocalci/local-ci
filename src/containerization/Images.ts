@@ -2,7 +2,7 @@ import { inject, injectable } from 'inversify';
 import ChildProcessGateway from 'gateway/ChildProcessGateway';
 import Spawn from 'common/Spawn';
 import Types from 'common/Types';
-import { cleanUpCommittedImages } from 'script';
+import { cleanUpImages } from 'script';
 
 @injectable()
 export default class Images {
@@ -19,7 +19,7 @@ export default class Images {
         '-c',
         `lci_image_pattern=${imagePattern}
         lci_image_to_exclude=${imageIdToExclude}
-        ${cleanUpCommittedImages}`,
+        ${cleanUpImages}`,
       ],
       this.spawn.getOptions()
     );

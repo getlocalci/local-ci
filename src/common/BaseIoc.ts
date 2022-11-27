@@ -3,7 +3,7 @@ import AllConfigFiles from 'config/AllConfigFiles';
 import AllJobs from 'job/AllJobs';
 import BuildAgentSettings from 'config/BuildAgentSettings';
 import Children from 'job/Children';
-import CommittedImages from 'containerization/Images';
+import Images from 'containerization/Images';
 import CommandFactory from 'job/ComandFactory';
 import Config from 'config/Config';
 import ConfigFile from 'config/ConfigFile';
@@ -70,7 +70,7 @@ export default class BaseIoc {
     this.container.bind(BuildAgentSettings).toSelf();
     this.container.bind(Children).toSelf();
     this.container.bind(CommandFactory).toSelf();
-    this.container.bind(CommittedImages).toSelf();
+    this.container.bind(Images).toSelf();
     this.container.bind(Config).toSelf();
     this.container.bind(ConfigFile).toSelf();
     this.container.bind(CreateConfigFile).toSelf();
