@@ -6,7 +6,7 @@ import EnvVar from 'process/EnvVar';
 import FsGateway from 'gateway/FsGateway';
 import HttpGateway from 'gateway/HttpGateway';
 import OsGateway from 'gateway/OsGateway';
-import LoggingChildProcessGateway from 'gateway/LoggingChildProcessGateway';
+import ProcessGateway from 'gateway/ProcessGateway';
 import ReporterGateway from 'gateway/ReporterGateway';
 import Types from 'common/Types';
 import Volume from 'containerization/Volume';
@@ -22,10 +22,7 @@ iocContainer.bind(Types.IEnvVar).to(EnvVar).inSingletonScope();
 iocContainer.bind(Types.IFsGateway).to(FsGateway).inSingletonScope();
 iocContainer.bind(Types.IHttpGateway).to(HttpGateway).inSingletonScope();
 iocContainer.bind(Types.IOsGateway).to(OsGateway).inSingletonScope();
-iocContainer
-  .bind(Types.IProcessGateway)
-  .to(LoggingChildProcessGateway)
-  .inSingletonScope();
+iocContainer.bind(Types.IProcessGateway).to(ProcessGateway).inSingletonScope();
 iocContainer
   .bind(Types.IReporterGateway)
   .to(ReporterGateway)
