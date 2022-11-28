@@ -199,6 +199,23 @@ export default class JobListener {
         this.images.cleanUp(`${COMMITTED_IMAGE_NAMESPACE}/*`);
         this.images.cleanUp('circleci/*');
         this.images.cleanUp('cimg/*');
+
+        const warningMessage = 'No space left on device';
+        const fixText = 'Fix by removing all stopped containers';
+        const clicked =
+          await this.editorGateway.editor.window.showWarningMessage(
+            warningMessage,
+            { detail: 'Docker is probably using too much space' },
+            fixText
+          );
+
+        if (clicked === fixText) {
+          this.childProcessGateway.cp.spawn(
+            '/bin/sh',
+            ['-c', `docker container prune -f`],
+            this.spawn.getOptions()
+          );
+        }
       }
     });
 
