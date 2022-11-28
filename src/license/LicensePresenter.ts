@@ -43,7 +43,7 @@ export default class LicensePresenter {
 
     const shouldOfferInterview = isTrialExpired(
       previewStartedTimeStamp,
-      trialLengthInMilliseconds + 5 * DAY_IN_MILLISECONDS
+      trialLengthInMilliseconds + 40 * DAY_IN_MILLISECONDS
     );
 
     if (isValid) {

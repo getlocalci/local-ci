@@ -1,16 +1,16 @@
 import AppTestHarness from 'test-tool/helper/AppTestHarness';
-import CommittedImages from 'containerization/CommittedImages';
+import Images from 'containerization/Images';
 import FakeChildProcessGateway from 'gateway/FakeChildProcessGateway';
 
 let childProcessGateway: FakeChildProcessGateway;
-let committedImages: CommittedImages;
+let images: Images;
 let testHarness: AppTestHarness;
 
-describe('CommittedImages', () => {
+describe('Images', () => {
   beforeEach(() => {
     testHarness = new AppTestHarness();
     testHarness.init();
-    committedImages = testHarness.container.get(CommittedImages);
+    images = testHarness.container.get(Images);
     childProcessGateway = testHarness.childProcessGateway;
   });
 
@@ -18,7 +18,7 @@ describe('CommittedImages', () => {
     const spawnSpy = jest.fn();
     childProcessGateway.cp.spawn = spawnSpy;
 
-    committedImages.cleanUp('local-ci-lint');
+    images.cleanUp('local-ci/lint');
     expect(spawnSpy).toHaveBeenCalledTimes(1);
   });
 });

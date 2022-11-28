@@ -2,6 +2,7 @@ import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
 import Types from 'common/Types';
 import ChildProcessGateway from 'gateway/ChildProcessGateway';
+import Images from 'containerization/Images';
 import ConfigFile from 'config/ConfigFile';
 import EditorGateway from 'gateway/EditorGateway';
 import FsGateway from 'gateway/FsGateway';
@@ -11,13 +12,19 @@ import JobTreeItem from 'job/JobTreeItem';
 import LogFile from 'log/LogFile';
 import ParsedConfig from 'config/ParsedConfig';
 import Spawn from 'common/Spawn';
-import { SUPPRESS_JOB_COMPLETE_MESSAGE } from 'constant';
+import {
+  COMMITTED_IMAGE_NAMESPACE,
+  SUPPRESS_JOB_COMPLETE_MESSAGE,
+} from 'constant';
 import { getPicardContainerFunction } from 'script';
 
 @injectable()
 export default class JobListener {
   @inject(Types.IChildProcessGateway)
   childProcessGateway!: ChildProcessGateway;
+
+  @inject(Images)
+  images!: Images;
 
   @inject(ConfigFile)
   configFile!: ConfigFile;
@@ -187,6 +194,29 @@ export default class JobListener {
             });
         }
       });
+
+      if (output?.toLowerCase()?.includes('no space left on device')) {
+        this.images.cleanUp(`${COMMITTED_IMAGE_NAMESPACE}/*`);
+        this.images.cleanUp('circleci/*');
+        this.images.cleanUp('cimg/*');
+
+        const warningMessage = 'No space left on device';
+        const fixText = 'Fix by removing all stopped containers';
+        const clicked =
+          await this.editorGateway.editor.window.showWarningMessage(
+            warningMessage,
+            { detail: 'Docker probably needs more space' },
+            fixText
+          );
+
+        if (clicked === fixText) {
+          this.childProcessGateway.cp.spawn(
+            '/bin/sh',
+            ['-c', `docker container prune -f`],
+            this.spawn.getOptions()
+          );
+        }
+      }
     });
 
     return process;

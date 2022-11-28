@@ -4,7 +4,7 @@ import type vscode from 'vscode';
 import { getBinaryPath } from '../../node/binary';
 import areTerminalsClosed from 'terminal/areTerminalsClosed';
 import BuildAgentSettings from 'config/BuildAgentSettings';
-import CommittedImages from 'containerization/CommittedImages';
+import Images from 'containerization/Images';
 import ConfigFile from 'config/ConfigFile';
 import EditorGateway from 'gateway/EditorGateway';
 import FinalTerminal from 'terminal/FinalTerminal';
@@ -43,8 +43,8 @@ export default class JobRunner {
   @inject(BuildAgentSettings)
   buildAgentSettings!: BuildAgentSettings;
 
-  @inject(CommittedImages)
-  committedImages!: CommittedImages;
+  @inject(Images)
+  images!: Images;
 
   @inject(ConfigFile)
   configFile!: ConfigFile;
@@ -254,7 +254,7 @@ export default class JobRunner {
     this.editorGateway.editor.window.onDidCloseTerminal(() => {
       if (areTerminalsClosed(terminal, debuggingTerminal, finalTerminal)) {
         listeningProcess.kill();
-        this.committedImages.cleanUp(committedImageRepo);
+        this.images.cleanUp(committedImageRepo);
       }
     });
   }

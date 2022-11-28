@@ -2,7 +2,7 @@ import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
 import type { Command } from '.';
 import Types from 'common/Types';
-import CommittedImages from 'containerization/CommittedImages';
+import Images from 'containerization/Images';
 import EditorGateway from 'gateway/EditorGateway';
 import JobProvider from 'job/JobProvider';
 import ReporterGateway from 'gateway/ReporterGateway';
@@ -10,8 +10,8 @@ import { COMMITTED_IMAGE_NAMESPACE, JOB_TREE_VIEW_ID } from 'constant';
 
 @injectable()
 export default class ExitAllJobs implements Command {
-  @inject(CommittedImages)
-  committedImages!: CommittedImages;
+  @inject(Images)
+  images!: Images;
 
   @inject(Types.IEditorGateway)
   editorGateway!: EditorGateway;
@@ -47,7 +47,7 @@ export default class ExitAllJobs implements Command {
             terminal.dispose();
           });
 
-        this.committedImages.cleanUp(`${COMMITTED_IMAGE_NAMESPACE}/*`);
+        this.images.cleanUp(`${COMMITTED_IMAGE_NAMESPACE}/*`);
       }
     };
   }

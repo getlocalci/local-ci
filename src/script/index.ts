@@ -1,5 +1,5 @@
 import scriptAddEnvVars from './addEnvVars.sh';
-import scriptCleanUpCommittedImages from './cleanUpCommittedImages.sh';
+import scriptCleanUpImages from './cleanUpImages.sh';
 import scriptCommitContainer from './commitContainer.sh';
 import scriptDockerExecRunningContainer from './dockerExecRunningContainer.sh';
 import scriptGetPicardContainerFunction from './getPicardContainerFunction.sh';
@@ -15,9 +15,7 @@ function stripDevSyntax(file: string) {
 }
 
 export const addEnvVars = stripDevSyntax(scriptAddEnvVars);
-export const cleanUpCommittedImages = stripDevSyntax(
-  scriptCleanUpCommittedImages
-);
+export const cleanUpImages = stripDevSyntax(scriptCleanUpImages);
 export const commitContainer = stripDevSyntax(scriptCommitContainer);
 export const dockerExecRunningContainer = stripDevSyntax(
   scriptDockerExecRunningContainer
