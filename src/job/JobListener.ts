@@ -205,7 +205,7 @@ export default class JobListener {
         const clicked =
           await this.editorGateway.editor.window.showWarningMessage(
             warningMessage,
-            { detail: 'Docker is probably using too much space' },
+            { detail: 'Docker probably needs more space' },
             fixText
           );
 
