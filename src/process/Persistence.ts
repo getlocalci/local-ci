@@ -234,8 +234,7 @@ export default class Persistence {
       if (
         typeof step !== 'string' &&
         typeof step?.run !== 'string' &&
-        step?.run?.environment &&
-        step?.run?.environment['OUTPUT_PATH']
+        step?.run?.environment?.['OUTPUT_PATH']
       ) {
         return step?.run?.environment['OUTPUT_PATH'];
       }
