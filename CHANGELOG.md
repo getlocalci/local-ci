@@ -1,5 +1,8 @@
 # Change Log
 
+## 2.0.6 - 27 November 2022
+- Remove images if 'no space left on device'. [#231](https://github.com/getlocalci/local-ci/pull/231)
+
 ## 2.0.5 - 16 November 2022
 - Bump the binary version to the latest: `v0.1.22426`. [#229](https://github.com/getlocalci/local-ci/pull/229)
 
