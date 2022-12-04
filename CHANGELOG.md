@@ -1,5 +1,9 @@
 # Change Log
 
+## 2.0.7 - 4 December 2022
+- Bump the CCI binary to the latest. [#234](https://github.com/getlocalci/local-ci/pull/234)
+- Raise the price to $20/month only for new users, existing users stay at $15/month. [#234](https://github.com/getlocalci/local-ci/pull/234)
+
 ## 2.0.6 - 27 November 2022
 - Remove images if 'no space left on device'. [#231](https://github.com/getlocalci/local-ci/pull/231)
 
