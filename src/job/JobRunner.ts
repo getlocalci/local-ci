@@ -4,7 +4,7 @@ import type vscode from 'vscode';
 import { getBinaryPath } from '../../node/binary';
 import areTerminalsClosed from 'terminal/areTerminalsClosed';
 import BuildAgentSettings from 'config/BuildAgentSettings';
-import Images from 'containerization/Images';
+import CommandDecorators from 'terminal/CommandDecorators';
 import ConfigFile from 'config/ConfigFile';
 import EditorGateway from 'gateway/EditorGateway';
 import FinalTerminal from 'terminal/FinalTerminal';
@@ -19,6 +19,7 @@ import getLocalVolumePath from 'containerization/getLocalVolumePath';
 import getProcessFilePath from 'process/getProcessFilePath';
 import getRepoPath from 'common/getRepoPath';
 import getTerminalName from 'terminal/getTerminalName';
+import Images from 'containerization/Images';
 import JobFactory from 'job/JobFactory';
 import JobListener from './JobListener';
 import JobProvider from 'job/JobProvider';
@@ -37,7 +38,6 @@ import {
   dockerExecRunningContainer,
   getRunningContainerFunction,
 } from 'script';
-import CommandDecorators from 'terminal/CommandDecorators';
 
 @injectable()
 export default class JobRunner {
