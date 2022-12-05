@@ -4,7 +4,7 @@ import type vscode from 'vscode';
 import { getBinaryPath } from '../../node/binary';
 import areTerminalsClosed from 'terminal/areTerminalsClosed';
 import BuildAgentSettings from 'config/BuildAgentSettings';
-import Images from 'containerization/Images';
+import CommandDecorators from 'terminal/CommandDecorators';
 import ConfigFile from 'config/ConfigFile';
 import EditorGateway from 'gateway/EditorGateway';
 import FinalTerminal from 'terminal/FinalTerminal';
@@ -19,6 +19,7 @@ import getLocalVolumePath from 'containerization/getLocalVolumePath';
 import getProcessFilePath from 'process/getProcessFilePath';
 import getRepoPath from 'common/getRepoPath';
 import getTerminalName from 'terminal/getTerminalName';
+import Images from 'containerization/Images';
 import JobFactory from 'job/JobFactory';
 import JobListener from './JobListener';
 import JobProvider from 'job/JobProvider';
@@ -43,8 +44,8 @@ export default class JobRunner {
   @inject(BuildAgentSettings)
   buildAgentSettings!: BuildAgentSettings;
 
-  @inject(Images)
-  images!: Images;
+  @inject(CommandDecorators)
+  commandDecorators!: CommandDecorators;
 
   @inject(ConfigFile)
   configFile!: ConfigFile;
@@ -57,6 +58,9 @@ export default class JobRunner {
 
   @inject(Types.IFsGateway)
   fsGateway!: FsGateway;
+
+  @inject(Images)
+  images!: Images;
 
   @inject(JobFactory)
   jobFactory!: JobFactory;
@@ -139,15 +143,18 @@ export default class JobRunner {
       this.fsGateway.fs.mkdirSync(localVolume, { recursive: true });
     }
 
-    // This allows persisting files between jobs with persist_to_workspace and attach_workspace.
+    // This allows persisting files between jobs with persist_to_workspace and attach_workspace, and caching.
     const volume = `${localVolume}:${CONTAINER_STORAGE_DIRECTORY}`;
     const jobConfigPath = isJobInDynamicConfig
       ? dynamicConfigFilePath
       : processFilePath;
 
+    const { getPreCommand, getPostCommand, evalPreCommand, evalPostCommand } =
+      this.commandDecorators.get();
+
     terminal.sendText(
       `cat ${jobConfigPath} | docker run -i --rm mikefarah/yq -C
-      ${getBinaryPath()} local execute --job '${jobName}' --config ${jobConfigPath} -v ${volume}`
+      ${getPreCommand} ${getPostCommand} ${evalPreCommand} ${getBinaryPath()} local execute --job '${jobName}' --config ${jobConfigPath} -v ${volume} ${evalPostCommand}`
     );
 
     const committedImageRepo = `${COMMITTED_IMAGE_NAMESPACE}/${jobName}`;
