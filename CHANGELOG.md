@@ -1,7 +1,7 @@
 # Change Log
 
 ## 2.0.8 - 5 December 2022
-- Allow injecting environment variables to jobs. [#177](https://github.com/getlocalci/local-ci/pull/177)
+- Allow injecting environment variables to jobs. [#237](https://github.com/getlocalci/local-ci/pull/237)
 
 ## 2.0.7 - 4 December 2022
 - Bump the CCI binary to the latest. [#234](https://github.com/getlocalci/local-ci/pull/234)
