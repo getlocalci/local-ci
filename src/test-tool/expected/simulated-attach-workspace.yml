@@ -1,0 +1,57 @@
+version: 2.1
+orbs:
+  node: circleci/node@5.0
+jobs:
+  build:
+    executor: node/default
+    steps:
+      - run:
+          name: Ensure volume is writable
+          command: >-
+            if [ "$(ls -ld /tmp/local-ci | awk '{print $3}')" != "$(whoami)" ] && [ "$(sudo -V 2>/dev/null)" ]
+              then
+              sudo chown $(whoami) /tmp/local-ci
+            fi
+      - run:
+          name: Set more environment variables
+          command: >-
+            echo 'echo "export CIRCLE_SHA1=037f2d35d59080dc313608c565b55f37d2f42c7e"
+            echo "export CIRCLE_BRANCH=develop"
+            echo "export CIRCLE_PROJECT_REPONAME=local-ci"
+            echo "export CIRCLE_REPOSITORY_URL=git@github.com:getlocalci/local-ci.git"' >> $BASH_ENV
+      - checkout:
+          path: repo
+      - run: npm ci && npm run build
+      - run:
+          name: Persist to workspace
+          command: |2
+            echo "Persisting repo"
+            cp -rn repo /tmp/local-ci || cp -ru repo /tmp/local-ci
+  test:
+    executor: node/default
+    steps:
+      - run:
+          name: Ensure volume is writable
+          command: >-
+            if [ "$(ls -ld /tmp/local-ci | awk '{print $3}')" != "$(whoami)" ] && [ "$(sudo -V 2>/dev/null)" ]
+              then
+              sudo chown $(whoami) /tmp/local-ci
+            fi
+      - run:
+          name: Set more environment variables
+          command: >-
+            echo 'echo "export CIRCLE_SHA1=037f2d35d59080dc313608c565b55f37d2f42c7e"
+            echo "export CIRCLE_BRANCH=develop"
+            echo "export CIRCLE_PROJECT_REPONAME=local-ci"
+            echo "export CIRCLE_REPOSITORY_URL=git@github.com:getlocalci/local-ci.git"' >> $BASH_ENV
+      - checkout:
+          path: repo
+      - run: npm ci && npm run build
+      - run: npm test
+workflows:
+  build-test:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build

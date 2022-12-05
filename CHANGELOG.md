@@ -1,5 +1,70 @@
 # Change Log
 
+## 2.0.7 - 4 December 2022
+- Bump the CCI binary to the latest. [#234](https://github.com/getlocalci/local-ci/pull/234)
+- Raise the price to $20/month only for new users, existing users stay at $15/month. [#234](https://github.com/getlocalci/local-ci/pull/234)
+
+## 2.0.6 - 27 November 2022
+- Remove images if 'no space left on device'. [#231](https://github.com/getlocalci/local-ci/pull/231)
+
+## 2.0.5 - 16 November 2022
+- Bump the binary version to the latest: `v0.1.22426`. [#229](https://github.com/getlocalci/local-ci/pull/229)
+
+## 2.0.4 - 30 October 2022
+- On a process error, add a button to retry. [#226](https://github.com/getlocalci/local-ci/pull/226)
+- Add a button to open a folder if there isn't one open. [#227](https://github.com/getlocalci/local-ci/pull/227)
+
+## 2.0.3 - 25 October 2022
+- Simulate `attach_workspace` so you don't have to run all of the requires jobs. [#219](https://github.com/getlocalci/local-ci/pull/219)
+
+## 2.0.2 - 21 October 2022
+- Revert `cp -Lr`, which caused issues with the volume. [#221](https://github.com/getlocalci/local-ci/pull/221)
+
+## 2.0.1 - 18 October 2022
+- Replace custom checkout steps so they work in Local CI. [#216](https://github.com/getlocalci/local-ci/pull/216)
+- Give feedback when persisting to workspace. [#217](https://github.com/getlocalci/local-ci/pull/217)
+
+## 2.0.0 - 17 October 2022
+- Add a button 'Start Docker'. [#214](https://github.com/getlocalci/local-ci/pull/214)
+- Bump the binary version to the latest: v0.1.22272. [#212](https://github.com/getlocalci/local-ci/pull/212)
+- Make the additional env vars more robust. [#213](https://github.com/getlocalci/local-ci/pull/213)
+- Allow clicking a warning, like 'Please select repo'. [#211](https://github.com/getlocalci/local-ci/pull/211)
+
+## 1.9.8 - 10 October 2022
+- Reload after certain failures, like if Docker isn't running. [#208](https://github.com/getlocalci/local-ci/pull/208)
+
+## 1.9.7 - 6 October 2022
+- Add a link to the walkthrough page. [#205](https://github.com/getlocalci/local-ci/pull/205)
+- Bump the CircleCI binary version. [#206](https://github.com/getlocalci/local-ci/pull/206)
+
+## 1.9.6 - 2 October 2022
+- Bump the binary version to the latest, v0.1.21812. [#202](https://github.com/getlocalci/local-ci/pull/202)
+- Use the new CircleCI Config SDK. [#199](https://github.com/getlocalci/local-ci/pull/199)
+- Add more logging to a development logging file. [#201](https://github.com/getlocalci/local-ci/pull/201)
+
+## 1.9.5 - 29 September 2022
+- Make the final terminal appear more. [#197](https://github.com/getlocalci/local-ci/pull/197)
+
+## 1.9.4 - 28 September 2022
+- Fix a bug where there was no error in tree view. [#195](https://github.com/getlocalci/local-ci/pull/195)
+
+## 1.9.3 - 27 September 2022
+- Add more 'Complain To Me' links. [#193](https://github.com/getlocalci/local-ci/pull/193)
+
+## 1.9.2 - 26 September 2022
+- Bump the binary version to the latest: 0.1.21412. [#191](https://github.com/getlocalci/local-ci/pull/191)
+
+## 1.9.1 - 20 September 2022
+- Bump the binary version to the latest: v0.1.21194. [#189](https://github.com/getlocalci/local-ci/pull/189)
+- Add a button to complain to me. [#188](https://github.com/getlocalci/local-ci/pull/188)
+
+## 1.9.0 - 18 September 2022
+- Add shellcheck for scripts, add dependency injection. [#182](https://github.com/getlocalci/local-ci/pull/182)
+
+## 1.8.0 - 9 September 2022
+- Extend preview to 30 days. [#180](https://github.com/getlocalci/local-ci/pull/180)
+- Fix an issue on Intel Mac, where it fails from the wrong build agent. [#179](https://github.com/getlocalci/local-ci/pull/179)
+
 ## 1.7.10 - 27 August 2022
 - Add a notice for the --storage-opt error. [#174](https://github.com/getlocalci/local-ci/pull/174)
 - Bump the binary version to v0.1.20788. [#178](https://github.com/getlocalci/local-ci/pull/178)

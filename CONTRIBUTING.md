@@ -22,6 +22,8 @@
   <img src="https://user-images.githubusercontent.com/4063887/138581226-9aeb09aa-e9c4-44e3-8b22-a6022080119b.gif" alt="restarting the editor">
 </p>
 
+9. If step 3 causes the warning "The task 'npm: watch' cannot be tracked," you can either activate the extension [TypeScript + Webpack Problem Matchers](https://marketplace.visualstudio.com/items?itemName=amodio.tsl-problem-matcher), or manually do `npm run watch` and click "Debug Anyway."
+
 ## Linting
 
 `npm run lint`

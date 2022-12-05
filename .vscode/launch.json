@@ -6,25 +6,20 @@
       "type": "extensionHost",
       "request": "launch",
       "args": [
-        "--extensionDevelopmentPath=${workspaceFolder}"
+        "--extensionDevelopmentPath=${workspaceFolder}",
+        "--profile-temp"
       ],
       "outFiles": [
         "${workspaceFolder}/dist/**/*.js"
       ],
-      "preLaunchTask": "${defaultBuildTask}"
+      "preLaunchTask": "npm: watch"
     },
     {
-      "name": "Extension Tests",
-      "type": "extensionHost",
+      "name": "Unit Tests",
+      "type": "node",
       "request": "launch",
-      "args": [
-        "--extensionDevelopmentPath=${workspaceFolder}",
-        "--extensionTestsPath=${workspaceFolder}/out/test/suite/index"
-      ],
-      "outFiles": [
-        "${workspaceFolder}/out/test/**/*.js"
-      ],
-      "preLaunchTask": "npm: test-watch"
+      "program": "${workspaceFolder}/node_modules/.bin/jest",
+      "console": "integratedTerminal"
     }
   ]
 }

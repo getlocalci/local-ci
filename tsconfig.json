@@ -7,12 +7,16 @@
       "es6"
     ],
     "sourceMap": true,
+    "types": ["jest", "node", "reflect-metadata"],
     "rootDir": "src",
-    "strict": true
+    "baseUrl": "src",
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true
   },
   "exclude": [
     "node_modules",
-    ".vscode-test",
     "node"
   ]
 }

@@ -4,16 +4,15 @@
   function addLicenseHandlers() {
     const vscode = acquireVsCodeApi();
     const listenerElements = {
-      'take-survey': 'takeSurvey',
       'enter-license': 'enterLicense',
       'retry-license-validation': 'retryLicenseValidation',
     };
 
-    Object.keys(listenerElements).forEach((elementId) => {
+    Object.entries(listenerElements).forEach(([elementId, listener]) => {
       const element = document.getElementById(elementId)
       if (element) {
         element.addEventListener('click', () =>
-          vscode.postMessage({ type: listenerElements[elementId] })
+          vscode.postMessage({ type: listener })
         );
       }
     });
