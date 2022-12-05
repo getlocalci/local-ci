@@ -39,7 +39,7 @@ export default class FakeEditorGateway {
       asRelativePath: (path: string) => path,
       findFiles: () => Promise.resolve([{ fsPath: 'one/two/' }]),
       getConfiguration: () => {
-        return { get: () => false };
+        return { get: (config: string) => false }; // eslint-disable-line @typescript-eslint/no-unused-vars
       },
       getWorkspaceFolder: () => '',
       onDidSaveTextDocument: () => null,
