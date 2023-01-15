@@ -1,5 +1,8 @@
 # Change Log
 
+## 2.0.9 - 14 January 2023
+- Bump the CLI binary version to `v0.1.22924`. [#239](https://github.com/getlocalci/local-ci/pull/239)
+
 ## 2.0.8 - 5 December 2022
 - Allow injecting environment variables to jobs. [#237](https://github.com/getlocalci/local-ci/pull/237)
 
