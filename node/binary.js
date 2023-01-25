@@ -4,7 +4,6 @@ const { type, arch } = require('os');
 const path = require('path');
 
 const binaryVersion = '0.1.23241';
-const intelMacBinaryVersion = '0.1.17087';
 
 const supportedPlatforms = [
   {
@@ -20,7 +19,7 @@ const supportedPlatforms = [
   {
     type: "Darwin",
     architecture: "x64",
-    url: `https://github.com/CircleCI-Public/circleci-cli/releases/download/v${intelMacBinaryVersion}/circleci-cli_${intelMacBinaryVersion}_darwin_amd64.tar.gz`,
+    url: `https://github.com/CircleCI-Public/circleci-cli/releases/download/v${binaryVersion}/circleci-cli_${binaryVersion}_darwin_amd64.tar.gz`,
   },
   {
     type: "Darwin",
