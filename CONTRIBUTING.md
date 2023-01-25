@@ -2,7 +2,7 @@
 
 ## Local Setup
 
-1. `npm i`
+1. `nvm use && npm i`
 2. Open VS Code with this repo at the root of the workspace
 3. VS Code > View > Run > Run Extension:
 <p align="left">
