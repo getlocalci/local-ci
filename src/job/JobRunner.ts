@@ -154,7 +154,7 @@ export default class JobRunner {
 
     terminal.sendText(
       `cat ${jobConfigPath} | docker run -i --rm mikefarah/yq -C
-      ${getPreCommand} ${getPostCommand} ${evalPreCommand} ${getBinaryPath()} local execute --job '${jobName}' --config ${jobConfigPath} -v ${volume} ${evalPostCommand}`
+      ${getPreCommand} ${getPostCommand} ${evalPreCommand} ${getBinaryPath()} local execute '${jobName}' --config ${jobConfigPath} -v ${volume} ${evalPostCommand}`
     );
 
     const committedImageRepo = `${COMMITTED_IMAGE_NAMESPACE}/${jobName}`;
