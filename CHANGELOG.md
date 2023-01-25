@@ -1,5 +1,8 @@
 # Change Log
 
+## 2.0.10 - 24 January 2023
+- Bump the CLI binary version to `v0.1.23241`. [#241](https://github.com/getlocalci/local-ci/pull/241)
+
 ## 2.0.9 - 14 January 2023
 - Bump the CLI binary version to `v0.1.22924`. [#239](https://github.com/getlocalci/local-ci/pull/239)
 
