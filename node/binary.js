@@ -3,7 +3,7 @@ const { Binary } = require('@cloudflare/binary-install');
 const { type, arch } = require('os');
 const path = require('path');
 
-const binaryVersion = '0.1.23241';
+const binaryVersion = '0.1.23667';
 
 const supportedPlatforms = [
   {
