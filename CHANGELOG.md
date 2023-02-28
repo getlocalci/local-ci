@@ -1,5 +1,8 @@
 # Change Log
 
+## 2.1.1 - 28 February 2023
+- Bump the binary version to `0.1.23667`. [#246](https://github.com/getlocalci/local-ci/pull/246)
+
 ## 2.1.0 - 25 January 2023
 - fix: job is now an argument of local execute and not an option. [#243](https://github.com/getlocalci/local-ci/pull/243)
 - Let Intel Macs use the same binary version as M1 Macs. [#244](https://github.com/getlocalci/local-ci/pull/244)
