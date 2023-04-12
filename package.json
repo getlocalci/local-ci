@@ -1,13 +1,13 @@
 {
   "name": "local-ci",
   "displayName": "Local CI",
-  "description": "Debug CircleCI® workflows locally, with Bash access during and after. Free preview, then paid.",
+  "description": "Debug CircleCI® workflows locally, with Bash access during and after. Free trial, then paid.",
   "version": "2.1.1",
   "publisher": "LocalCI",
   "contributors": [
     "Ryan Kienstra"
   ],
-  "preview": true,
+  "pricing": "Trial",
   "license": "GPL-2.0-or-later",
   "repository": {
     "type": "git",
@@ -259,7 +259,7 @@
     {
       "url": "https://img.shields.io/badge/trial-30%20day-orange",
       "href": "https://getlocalci.com/pricing/?utm_medium=extension&utm_source=badge",
-      "description": "30 day free preview"
+      "description": "30 day free trial"
     },
     {
       "url": "https://img.shields.io/badge/platform-macOS-yellow",

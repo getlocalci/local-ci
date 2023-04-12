@@ -22,7 +22,7 @@ export default class LicensePresenter {
 
   async getView(context: vscode.ExtensionContext): Promise<string> {
     context.secrets.delete(LICENSE_VALIDITY);
-    const previewStartedTimeStamp = context.globalState.get(
+    const trialStartedTimeStamp = context.globalState.get(
       TRIAL_STARTED_TIMESTAMP
     );
     const licenseKey = await context.secrets.get(LICENSE_KEY);
@@ -36,13 +36,13 @@ export default class LicensePresenter {
 
     const isValid = await this.license.isValid(context);
     const trialLengthInMilliseconds = getTrialLength(context);
-    const isPreviewExpired = isTrialExpired(
-      previewStartedTimeStamp,
+    const isExpired = isTrialExpired(
+      trialStartedTimeStamp,
       trialLengthInMilliseconds
     );
 
     const shouldOfferInterview = isTrialExpired(
-      previewStartedTimeStamp,
+      trialStartedTimeStamp,
       trialLengthInMilliseconds + 40 * DAY_IN_MILLISECONDS
     );
 
@@ -52,7 +52,7 @@ export default class LicensePresenter {
         <p>${complainLink}</p>`;
     }
 
-    if (isPreviewExpired && !!licenseKey && !isValid) {
+    if (isExpired && !!licenseKey && !isValid) {
       return `<p>There was an error validating the license key.</p>
       <p>${getLicenseErrorMessage(await context.secrets.get(LICENSE_ERROR))}</p>
       <p>${getLicenseLink}</p>
@@ -67,20 +67,20 @@ export default class LicensePresenter {
         <p>${enterLicenseButton}</p>`;
     }
 
-    if (isPreviewExpired) {
-      return `<p>Thanks for previewing Local CI! The free preview is over.</p>
+    if (isExpired) {
+      return `<p>Thanks for trying Local CI! The free trial is over.</p>
         <p>Please enter a Local CI license key to keep using this.</p>
         <p>${getLicenseLink}</p>
         <p>${enterLicenseButton}</p>
         <p>${complainLink}</p>`;
     }
 
-    return `<p>Thanks for previewing Local CI!</p>
+    return `<p>Thanks for trying Local CI!</p>
       <p>${getTimeRemainingInTrial(
         new Date().getTime(),
         context.globalState.get(TRIAL_STARTED_TIMESTAMP),
         trialLengthInMilliseconds
-      )} left in this free preview.</p>
+      )} left in this free trial.</p>
       <p>${getLicenseLink}</p>
       <p>${enterLicenseButton}</p>
       <p>${complainLink}</p>`;

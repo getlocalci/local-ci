@@ -20,7 +20,7 @@ export default class Email {
     const enteredEmail = await this.editorGateway.editor.window.showInputBox({
       title: 'Email',
       prompt:
-        'Could you please enter your email for your free preview of Local CI?',
+        'Could you please enter your email for your free trial of Local CI?',
     });
 
     if (enteredEmail === undefined) {
@@ -50,8 +50,8 @@ export default class Email {
     const getStartedText = 'Get started';
     const buttonClicked =
       await this.editorGateway.editor.window.showInformationMessage(
-        'Thanks a lot, your free preview has started!',
-        { detail: 'Local CI free preview' },
+        'Thanks a lot, your free trial has started!',
+        { detail: 'Local CI free trial' },
         getStartedText
       );
 
