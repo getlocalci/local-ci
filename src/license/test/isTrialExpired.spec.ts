@@ -9,13 +9,13 @@ const extendedTrial =
   TRIAL_LENGTH_IN_MILLISECONDS + EXTENDED_TRIAL_LENGTH_IN_MILLISECONDS;
 
 describe('isTrialExpired', () => {
-  test('preview just began', () => {
+  test('trial just began', () => {
     expect(
       isTrialExpired(new Date().getTime(), TRIAL_LENGTH_IN_MILLISECONDS)
     ).toEqual(false);
   });
 
-  test('preview barely expired', () => {
+  test('trial barely expired', () => {
     expect(
       isTrialExpired(
         new Date().getTime() - (30 * DAY_IN_MILLISECONDS + 1),
@@ -33,13 +33,13 @@ describe('isTrialExpired', () => {
     ).toEqual(true);
   });
 
-  test('preview just began and was extended', () => {
+  test('trial just began and was extended', () => {
     expect(
       isTrialExpired(new Date().getTime(), TRIAL_LENGTH_IN_MILLISECONDS)
     ).toEqual(false);
   });
 
-  test('preview began 30 days and 10 milliseconds ago and was extended', () => {
+  test('trial began 30 days and 10 milliseconds ago and was extended', () => {
     expect(
       isTrialExpired(
         new Date().getTime() - (30 * DAY_IN_MILLISECONDS + 10),
@@ -48,7 +48,7 @@ describe('isTrialExpired', () => {
     ).toEqual(false);
   });
 
-  test('preview began 32 days ago and was extended', () => {
+  test('trial began 32 days ago and was extended', () => {
     expect(
       isTrialExpired(
         new Date().getTime() - 32 * DAY_IN_MILLISECONDS,
@@ -57,7 +57,7 @@ describe('isTrialExpired', () => {
     ).toEqual(false);
   });
 
-  test('preview began 45 days and 1 millisecond ago and was extended', () => {
+  test('trial began 45 days and 1 millisecond ago and was extended', () => {
     expect(
       isTrialExpired(
         new Date().getTime() - 45 * DAY_IN_MILLISECONDS,

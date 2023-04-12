@@ -3,9 +3,9 @@ export default function getMillisecondsRemainingInTrial(
   trialStartedTimeStamp: number | unknown,
   trialLengthInMilliseconds: number
 ): number {
-  const previewTimeElapsed = currentTimeStamp - Number(trialStartedTimeStamp);
+  const trialTimeElapsed = currentTimeStamp - Number(trialStartedTimeStamp);
 
   return trialStartedTimeStamp
-    ? trialLengthInMilliseconds - previewTimeElapsed
+    ? trialLengthInMilliseconds - trialTimeElapsed
     : 0;
 }
