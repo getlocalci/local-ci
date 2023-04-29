@@ -1,5 +1,8 @@
 # Change Log
 
+## 2.1.2 - 29 April 2023
+- Show a notice of a free trial in the Marketplace. [#248](https://github.com/getlocalci/local-ci/pull/248)
+
 ## 2.1.1 - 28 February 2023
 - Bump the binary version to `0.1.23667`. [#246](https://github.com/getlocalci/local-ci/pull/246)
 
