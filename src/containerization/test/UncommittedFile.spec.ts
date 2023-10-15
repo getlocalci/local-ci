@@ -2,7 +2,7 @@ import ChildProcessGateway from 'gateway/ChildProcessGateway';
 import EditorGateway from 'gateway/EditorGateway';
 import getContextStub from 'test-tool/helper/getContextStub';
 import UncommittedFile from 'containerization/UncommittedFile';
-import container from 'common/TestAppRoot';
+import getContainer from 'common/TestAppRoot';
 
 function getMockContext(isSuppressed: boolean) {
   const initialContext = getContextStub();
@@ -23,6 +23,7 @@ let uncommittedFile: UncommittedFile;
 
 describe('uncommittedWarning', () => {
   beforeEach(() => {
+    const container = getContainer();
     uncommittedFile = container.uncommittedFile;
     childProcessGateway = container.childProcessGateway;
     editorGateway = container.editorGateway;

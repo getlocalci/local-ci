@@ -1,12 +1,13 @@
 import EditorGateway from 'gateway/EditorGateway';
 import CommandDecorators from '../CommandDecorators';
-import container from 'common/TestAppRoot';
+import getContainer from 'common/TestAppRoot';
 
 let editorGateway: EditorGateway;
 let commandDecorators: CommandDecorators;
 
 describe('CommandDecorators', () => {
   beforeEach(() => {
+    const container = getContainer();
     editorGateway = container.editorGateway;
     commandDecorators = container.commandDecorators;
   });

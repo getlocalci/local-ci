@@ -1,12 +1,13 @@
 import EditorGateway from 'gateway/EditorGateway';
 import Workspace from 'common/Workspace';
-import container from 'common/TestAppRoot';
+import getContainer from 'common/TestAppRoot';
 
 let editorGateway: EditorGateway;
 let workspace: Workspace;
 
 describe('Workspace', () => {
   beforeEach(() => {
+    const container = getContainer();
     workspace = container.workspace;
     editorGateway = container.editorGateway;
   });

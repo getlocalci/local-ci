@@ -2,13 +2,14 @@ import getContextStub from 'test-tool/helper/getContextStub';
 import JobProviderFactory from 'job/JobProviderFactory';
 import JobFactory from 'job/JobFactory';
 import JobTreeItem from 'job/JobTreeItem';
-import container from 'common/TestAppRoot';
+import getContainer from 'common/TestAppRoot';
 
 let jobProviderFactory: JobProviderFactory;
 let jobFactory: JobFactory;
 
 describe('JobProvider', () => {
   beforeEach(() => {
+    const container = getContainer();
     jobFactory = container.jobFactory;
     jobProviderFactory = container.jobProviderFactory;
   });

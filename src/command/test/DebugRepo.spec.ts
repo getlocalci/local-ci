@@ -1,18 +1,10 @@
-import DebugRepo from 'command/DebugRepo';
 import getContextStub from 'test-tool/helper/getContextStub';
-import JobProviderFactory from 'job/JobProviderFactory';
-import container from 'common/TestAppRoot';
-
-let debugRepo: DebugRepo;
-let jobProviderFactory: JobProviderFactory;
+import getContainer from 'common/TestAppRoot';
 
 describe('DebugRepo command', () => {
-  beforeEach(() => {
-    jobProviderFactory = container.jobProviderFactory;
-    debugRepo = container.debugRepo;
-  });
-
   test('selects the repo if there is a path', () => {
+    const { jobProviderFactory, debugRepo } = getContainer();
+
     const updateSpy = jest.fn().mockImplementationOnce(async () => null);
     const contextStub = {
       ...getContextStub(),

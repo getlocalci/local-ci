@@ -1,11 +1,12 @@
 import ChildProcessGateway from 'gateway/ChildProcessGateway';
 import Docker from 'containerization/Docker';
-import container from 'common/TestAppRoot';
+import getContainer from 'common/TestAppRoot';
 let childProcessGateway: ChildProcessGateway;
 let docker: Docker;
 
 describe('Docker', () => {
   beforeEach(() => {
+    const container = getContainer();
     childProcessGateway = container.childProcessGateway;
     docker = container.docker;
   });

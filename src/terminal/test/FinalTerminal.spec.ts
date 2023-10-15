@@ -1,7 +1,7 @@
 import ChildProcessGateway from 'gateway/ChildProcessGateway';
 import EditorGateway from 'gateway/EditorGateway';
 import FinalTerminal from '../FinalTerminal';
-import container from 'common/TestAppRoot';
+import getContainer from 'common/TestAppRoot';
 
 let childProcessGateway: ChildProcessGateway;
 let editorGateway: EditorGateway;
@@ -9,6 +9,7 @@ let finalTerminal: FinalTerminal;
 
 describe('FinalTerminal', () => {
   beforeEach(() => {
+    const container = getContainer();
     finalTerminal = container.finalTerminal;
     childProcessGateway = container.childProcessGateway;
     editorGateway = container.editorGateway;

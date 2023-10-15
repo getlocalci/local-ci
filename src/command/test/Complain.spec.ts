@@ -1,17 +1,8 @@
-import EditorGateway from 'gateway/EditorGateway';
-import Complain from 'command/Complain';
-import container from 'common/TestAppRoot';
-
-let complain: Complain;
-let editorGateway: EditorGateway;
+import getContainer from 'common/TestAppRoot';
 
 describe('Complain command', () => {
-  beforeEach(() => {
-    complain = container.complain;
-    editorGateway = container.editorGateway;
-  });
-
   test('opens the complain email url', () => {
+    const { complain, editorGateway } = getContainer();
     const editorSpy = jest.fn();
     editorGateway.editor.env.openExternal = editorSpy;
     const stubUri = 'emailto:ryan@getlocalci.com';

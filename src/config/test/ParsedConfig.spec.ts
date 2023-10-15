@@ -1,13 +1,14 @@
 import FsGateway from 'gateway/FsGateway';
 import onlyJobsYml from 'test-tool/fixture/only-jobs.yml';
 import ParsedConfig from 'config/ParsedConfig';
-import container from 'common/TestAppRoot';
+import getContainer from 'common/TestAppRoot';
 
 let fsGateway: FsGateway;
 let parsedConfig: ParsedConfig;
 
 describe('ParsedConfig', () => {
   beforeEach(() => {
+    const container = getContainer();
     parsedConfig = container.parsedConfig;
     fsGateway = container.fsGateway;
   });

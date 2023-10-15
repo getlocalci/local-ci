@@ -1,24 +1,14 @@
-import CreateConfigFile from 'command/CreateConfigFile';
-import EditorGateway from 'gateway/EditorGateway';
-import ReporterGateway from 'gateway/ReporterGateway';
 import getContextStub from 'test-tool/helper/getContextStub';
-import JobProviderFactory from 'job/JobProviderFactory';
-import container from 'common/TestAppRoot';
-
-let createConfigFile: CreateConfigFile;
-let editorGateway: EditorGateway;
-let jobProviderFactory: JobProviderFactory;
-let reporterGateway: ReporterGateway;
+import getContainer from 'common/TestAppRoot';
 
 describe('CreateConfigFile command', () => {
-  beforeEach(() => {
-    createConfigFile = container.createConfigFile;
-    editorGateway = container.editorGateway;
-    reporterGateway = container.reporterGateway;
-    jobProviderFactory = container.jobProviderFactory;
-  });
-
   test('creates the config when there is a workspace folder', async () => {
+    const {
+      createConfigFile,
+      editorGateway,
+      reporterGateway,
+      jobProviderFactory,
+    } = getContainer();
     const reporterSpy = jest.fn();
     reporterGateway.reporter.sendTelemetryEvent = reporterSpy;
 

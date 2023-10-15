@@ -1,7 +1,7 @@
 import EditorGateway from 'gateway/EditorGateway';
 import OsGateway from 'gateway/OsGateway';
 import Spawn from 'common/Spawn';
-import container from 'common/TestAppRoot';
+import getContainer from 'common/TestAppRoot';
 
 let editorGateway: EditorGateway;
 let osGateway: OsGateway;
@@ -9,6 +9,7 @@ let spawn: Spawn;
 
 describe('Spawn', () => {
   beforeEach(() => {
+    const container = getContainer();
     editorGateway = container.editorGateway;
 
     osGateway = container.osGateway;

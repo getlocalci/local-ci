@@ -1,15 +1,9 @@
 import getContextStub from 'test-tool/helper/getContextStub';
-import LicenseInput from 'license/LicenseInput';
-import container from 'common/TestAppRoot';
-
-let licenseInput: LicenseInput;
+import getContainer from 'common/TestAppRoot';
 
 describe('LicenseInput', () => {
-  beforeEach(() => {
-    licenseInput = container.licenseInput;
-  });
-
   test('license is not valid', async () => {
+    const { licenseInput } = getContainer();
     const completedCallbackSpy = jest.fn();
     const successCallbackSpy = jest.fn();
     await licenseInput.show(

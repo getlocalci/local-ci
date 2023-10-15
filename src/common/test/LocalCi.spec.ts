@@ -2,7 +2,7 @@ import EditorGateway from 'gateway/EditorGateway';
 import FsGateway from 'gateway/FsGateway';
 import getContextStub from 'test-tool/helper/getContextStub';
 import LocalCi from 'common/LocalCi';
-import container from 'common/TestAppRoot';
+import getContainer from 'common/TestAppRoot';
 
 let editorGateway: EditorGateway;
 let fsGateway: FsGateway;
@@ -10,6 +10,7 @@ let localCi: LocalCi;
 
 describe('LocalCi', () => {
   beforeEach(() => {
+    const container = getContainer();
     localCi = container.localCi;
     editorGateway = container.editorGateway;
     fsGateway = container.fsGateway;

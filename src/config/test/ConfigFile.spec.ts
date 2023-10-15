@@ -1,7 +1,7 @@
 import ConfigFile from 'config/ConfigFile';
 import EditorGateway from 'gateway/EditorGateway';
 import getContextStub from 'test-tool/helper/getContextStub';
-import container from 'common/TestAppRoot';
+import getContainer from 'common/TestAppRoot';
 
 function getMockContext(filePath: string) {
   const initialContext = getContextStub();
@@ -23,6 +23,7 @@ let editorGateway: EditorGateway;
 
 describe('ConfigFile', () => {
   beforeEach(() => {
+    const container = getContainer();
     configFile = container.configFile;
     editorGateway = container.editorGateway;
   });

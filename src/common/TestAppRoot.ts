@@ -1,4 +1,3 @@
-import Volume from 'containerization/Volume';
 import AllConfigFiles from 'config/AllConfigFiles';
 import AllJobs from 'job/AllJobs';
 import BuildAgentSettings from 'config/BuildAgentSettings';
@@ -74,215 +73,219 @@ import ProcessGateway from 'gateway/ProcessGateway';
 import HttpGateway from 'gateway/HttpGateway';
 import ReporterGateway from 'gateway/ReporterGateway';
 import EnvVar from 'process/EnvVar';
+import Volume from 'containerization/Volume';
 
-const childProcessGateway =
-  new FakeChildProcessGateway() as unknown as ChildProcessGateway;
-const editorGateway = new FakeEditorGateway() as unknown as EditorGateway;
-const envVar = new FakeEnvVar() as unknown as EnvVar;
-const fsGateway = new FakeFsGateway() as unknown as FsGateway;
-const httpGateway = new FakeHttpGateway() as unknown as HttpGateway;
-const osGateway = new FakeOsGateway() as unknown as OsGateway;
-const processGateway = new FakeProcessGateway() as unknown as ProcessGateway;
-const reporterGateway = new FakeReporterGateway() as unknown as ReporterGateway;
-const volume = new Volume(fsGateway);
+export default function getContainer() {
+  const childProcessGateway =
+    new FakeChildProcessGateway() as unknown as ChildProcessGateway;
+  const editorGateway = new FakeEditorGateway() as unknown as EditorGateway;
+  const envVar = new FakeEnvVar() as unknown as EnvVar;
+  const fsGateway = new FakeFsGateway() as unknown as FsGateway;
+  const httpGateway = new FakeHttpGateway() as unknown as HttpGateway;
+  const osGateway = new FakeOsGateway() as unknown as OsGateway;
+  const processGateway = new FakeProcessGateway() as unknown as ProcessGateway;
+  const reporterGateway =
+    new FakeReporterGateway() as unknown as ReporterGateway;
+  const volume = new Volume(fsGateway);
 
-const parsedConfig = new ParsedConfig(fsGateway);
+  const parsedConfig = new ParsedConfig(fsGateway);
 
-const allJobs = new AllJobs(parsedConfig);
-const envPath = new EnvPath(osGateway, processGateway);
-const workspace = new Workspace(editorGateway);
+  const allJobs = new AllJobs(parsedConfig);
+  const envPath = new EnvPath(osGateway, processGateway);
+  const workspace = new Workspace(editorGateway);
 
-const spawn = new Spawn(envPath, processGateway, workspace);
-const buildAgentSettings = new BuildAgentSettings(
-  childProcessGateway,
-  osGateway,
-  spawn
-);
-const commandFactory = new CommandFactory(editorGateway);
-const jobFactory = new JobFactory(editorGateway);
-const logFactory = new LogFactory(editorGateway);
-const warningFactory = new WarningFactory(editorGateway);
-const warningCommandFactory = new WarningCommandFactory(warningFactory);
+  const spawn = new Spawn(envPath, processGateway, workspace);
+  const buildAgentSettings = new BuildAgentSettings(
+    childProcessGateway,
+    osGateway,
+    spawn
+  );
+  const commandFactory = new CommandFactory(editorGateway);
+  const jobFactory = new JobFactory(editorGateway);
+  const logFactory = new LogFactory(editorGateway);
+  const warningFactory = new WarningFactory(editorGateway);
+  const warningCommandFactory = new WarningCommandFactory(warningFactory);
 
-const children = new Children(
-  commandFactory,
-  editorGateway,
-  jobFactory,
-  logFactory,
-  new NativeCommandFactory(),
-  warningCommandFactory,
-  warningFactory
-);
-const pipelineParameter = new PipelineParameter(fsGateway);
-const persistence = new Persistence(volume);
+  const children = new Children(
+    commandFactory,
+    editorGateway,
+    jobFactory,
+    logFactory,
+    new NativeCommandFactory(),
+    warningCommandFactory,
+    warningFactory
+  );
+  const pipelineParameter = new PipelineParameter(fsGateway);
+  const persistence = new Persistence(volume);
 
-const processFile = new ProcessFile(envVar, fsGateway, persistence);
+  const processFile = new ProcessFile(envVar, fsGateway, persistence);
 
-const config = new Config(
-  childProcessGateway,
-  editorGateway,
-  fsGateway,
-  pipelineParameter,
-  processFile,
-  spawn
-);
-const allConfigFiles = new AllConfigFiles(editorGateway);
-const configFile = new ConfigFile(
-  allConfigFiles,
-  editorGateway,
-  reporterGateway
-);
-const createConfigFile = new CreateConfigFile(editorGateway, reporterGateway);
-const debugRepo = new DebugRepo(editorGateway, reporterGateway);
-const docker = new Docker(childProcessGateway, spawn);
-const email = new Email(editorGateway, httpGateway, reporterGateway);
-const enterToken = new EnterToken(editorGateway);
-const images = new Images(childProcessGateway, spawn);
-const exitAllJobs = new ExitAllJobs(images, editorGateway, reporterGateway);
-const finalTerminal = new FinalTerminal(
-  childProcessGateway,
-  editorGateway,
-  spawn
-);
-const logFile = new LogFile(editorGateway);
-const jobListener = new JobListener(
-  childProcessGateway,
-  images,
-  configFile,
-  editorGateway,
-  fsGateway,
-  logFile,
-  parsedConfig,
-  spawn
-);
+  const config = new Config(
+    childProcessGateway,
+    editorGateway,
+    fsGateway,
+    pipelineParameter,
+    processFile,
+    spawn
+  );
+  const allConfigFiles = new AllConfigFiles(editorGateway);
+  const configFile = new ConfigFile(
+    allConfigFiles,
+    editorGateway,
+    reporterGateway
+  );
+  const createConfigFile = new CreateConfigFile(editorGateway, reporterGateway);
+  const debugRepo = new DebugRepo(editorGateway, reporterGateway);
+  const docker = new Docker(childProcessGateway, spawn);
+  const email = new Email(editorGateway, httpGateway, reporterGateway);
+  const enterToken = new EnterToken(editorGateway);
+  const images = new Images(childProcessGateway, spawn);
+  const exitAllJobs = new ExitAllJobs(images, editorGateway, reporterGateway);
+  const finalTerminal = new FinalTerminal(
+    childProcessGateway,
+    editorGateway,
+    spawn
+  );
+  const logFile = new LogFile(editorGateway);
+  const jobListener = new JobListener(
+    childProcessGateway,
+    images,
+    configFile,
+    editorGateway,
+    fsGateway,
+    logFile,
+    parsedConfig,
+    spawn
+  );
 
-const latestCommittedImage = new LatestCommittedImage(
-  spawn,
-  childProcessGateway
-);
-const runningContainer = new RunningContainer(spawn, childProcessGateway);
-const uncommittedFile = new UncommittedFile(
-  childProcessGateway,
-  editorGateway,
-  spawn
-);
+  const latestCommittedImage = new LatestCommittedImage(
+    spawn,
+    childProcessGateway
+  );
+  const runningContainer = new RunningContainer(spawn, childProcessGateway);
+  const uncommittedFile = new UncommittedFile(
+    childProcessGateway,
+    editorGateway,
+    spawn
+  );
 
-const commandDecorators = new CommandDecorators(editorGateway);
-const jobRunner = new JobRunner(
-  buildAgentSettings,
-  commandDecorators,
-  configFile,
-  editorGateway,
-  finalTerminal,
-  fsGateway,
-  images,
-  jobFactory,
-  jobListener,
-  latestCommittedImage,
-  parsedConfig,
-  runningContainer,
-  uncommittedFile
-);
-const jobTerminals = new JobTerminals(editorGateway);
-const exitJob = new ExitJob(jobFactory, jobRunner, jobTerminals);
-const getLicense = new GetLicense(editorGateway);
-const license = new License(editorGateway, httpGateway);
-const retryer = new Retryer();
-const jobProviderFactory = new JobProviderFactory(
-  allConfigFiles,
-  children,
-  configFile,
-  commandFactory,
-  docker,
-  editorGateway,
-  fsGateway,
-  license,
-  config,
-  jobFactory,
-  logFactory,
-  reporterGateway,
-  retryer,
-  warningFactory,
-  allJobs
-);
+  const commandDecorators = new CommandDecorators(editorGateway);
+  const jobRunner = new JobRunner(
+    buildAgentSettings,
+    commandDecorators,
+    configFile,
+    editorGateway,
+    finalTerminal,
+    fsGateway,
+    images,
+    jobFactory,
+    jobListener,
+    latestCommittedImage,
+    parsedConfig,
+    runningContainer,
+    uncommittedFile
+  );
+  const jobTerminals = new JobTerminals(editorGateway);
+  const exitJob = new ExitJob(jobFactory, jobRunner, jobTerminals);
+  const getLicense = new GetLicense(editorGateway);
+  const license = new License(editorGateway, httpGateway);
+  const retryer = new Retryer();
+  const jobProviderFactory = new JobProviderFactory(
+    allConfigFiles,
+    children,
+    configFile,
+    commandFactory,
+    docker,
+    editorGateway,
+    fsGateway,
+    license,
+    config,
+    jobFactory,
+    logFactory,
+    reporterGateway,
+    retryer,
+    warningFactory,
+    allJobs
+  );
 
-const licenseInput = new LicenseInput(editorGateway, license);
-const licensePresenter = new LicensePresenter(license);
-const licenseProviderFactory = new LicenseProviderFactory(
-  license,
-  licenseInput,
-  licensePresenter,
-  editorGateway
-);
-const complain = new Complain(editorGateway);
-const help = new Help(editorGateway, reporterGateway);
-const registrarFactory = new RegistrarFactory(
-  complain,
-  configFile,
-  createConfigFile,
-  debugRepo,
-  new EnterLicense(licenseInput),
-  enterToken,
-  exitAllJobs,
-  exitJob,
-  new FirstActivation(editorGateway, reporterGateway, email),
-  getLicense,
-  help,
-  licenseInput,
-  new LogProviderFactory(fsGateway),
-  new Refresh(),
-  new RefreshLicenseTree(editorGateway),
-  new ReRunJob(editorGateway, jobRunner, jobTerminals, reporterGateway),
-  new RunJob(editorGateway, jobRunner, reporterGateway),
-  new RunWalkthroughJob(config, configFile, editorGateway, reporterGateway),
-  new SelectRepo(allConfigFiles, images, editorGateway, reporterGateway),
-  new ShowLogFile(logFile),
-  new StartDocker(childProcessGateway, envPath, spawn),
-  new TryProcessAgain(configFile, fsGateway),
-  editorGateway
-);
+  const licenseInput = new LicenseInput(editorGateway, license);
+  const licensePresenter = new LicensePresenter(license);
+  const licenseProviderFactory = new LicenseProviderFactory(
+    license,
+    licenseInput,
+    licensePresenter,
+    editorGateway
+  );
+  const complain = new Complain(editorGateway);
+  const help = new Help(editorGateway, reporterGateway);
+  const registrarFactory = new RegistrarFactory(
+    complain,
+    configFile,
+    createConfigFile,
+    debugRepo,
+    new EnterLicense(licenseInput),
+    enterToken,
+    exitAllJobs,
+    exitJob,
+    new FirstActivation(editorGateway, reporterGateway, email),
+    getLicense,
+    help,
+    licenseInput,
+    new LogProviderFactory(fsGateway),
+    new Refresh(),
+    new RefreshLicenseTree(editorGateway),
+    new ReRunJob(editorGateway, jobRunner, jobTerminals, reporterGateway),
+    new RunJob(editorGateway, jobRunner, reporterGateway),
+    new RunWalkthroughJob(config, configFile, editorGateway, reporterGateway),
+    new SelectRepo(allConfigFiles, images, editorGateway, reporterGateway),
+    new ShowLogFile(logFile),
+    new StartDocker(childProcessGateway, envPath, spawn),
+    new TryProcessAgain(configFile, fsGateway),
+    editorGateway
+  );
 
-const localCi = new LocalCi(
-  fsGateway,
-  jobProviderFactory,
-  licenseProviderFactory,
-  registrarFactory,
-  reporterGateway
-);
+  const localCi = new LocalCi(
+    fsGateway,
+    jobProviderFactory,
+    licenseProviderFactory,
+    registrarFactory,
+    reporterGateway
+  );
 
-export default {
-  allConfigFiles,
-  buildAgentSettings,
-  childProcessGateway,
-  commandDecorators,
-  complain,
-  configFile,
-  createConfigFile,
-  debugRepo,
-  docker,
-  editorGateway,
-  email,
-  envPath,
-  envVar,
-  help,
-  images,
-  finalTerminal,
-  fsGateway,
-  httpGateway,
-  jobFactory,
-  jobProviderFactory,
-  license,
-  licenseInput,
-  licensePresenter,
-  localCi,
-  osGateway,
-  jobTerminals,
-  parsedConfig,
-  processFile,
-  processGateway,
-  reporterGateway,
-  spawn,
-  uncommittedFile,
-  volume,
-  workspace,
-};
+  return {
+    allConfigFiles,
+    buildAgentSettings,
+    childProcessGateway,
+    commandDecorators,
+    complain,
+    configFile,
+    createConfigFile,
+    debugRepo,
+    docker,
+    editorGateway,
+    email,
+    envPath,
+    envVar,
+    help,
+    images,
+    finalTerminal,
+    fsGateway,
+    httpGateway,
+    jobFactory,
+    jobProviderFactory,
+    license,
+    licenseInput,
+    licensePresenter,
+    localCi,
+    osGateway,
+    jobTerminals,
+    parsedConfig,
+    processFile,
+    processGateway,
+    reporterGateway,
+    spawn,
+    uncommittedFile,
+    volume,
+    workspace,
+  };
+}

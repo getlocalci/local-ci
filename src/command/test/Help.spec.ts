@@ -1,7 +1,7 @@
 import EditorGateway from 'gateway/EditorGateway';
 import ReporterGateway from 'gateway/ReporterGateway';
 import Help from 'command/Help';
-import container from 'common/TestAppRoot';
+import getContainer from 'common/TestAppRoot';
 
 let help: Help;
 let editorGateway: EditorGateway;
@@ -9,6 +9,7 @@ let reporterGateway: ReporterGateway;
 
 describe('Help command', () => {
   beforeEach(() => {
+    const container = getContainer();
     help = container.help;
     editorGateway = container.editorGateway;
     reporterGateway = container.reporterGateway;

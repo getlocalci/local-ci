@@ -1,13 +1,14 @@
 import Email from 'license/Email';
 import HttpGateway from 'gateway/HttpGateway';
 import { EMAIL_ENDPOINT } from 'constant';
-import container from 'common/TestAppRoot';
+import getContainer from 'common/TestAppRoot';
 
 let email: Email;
 let httpGateway: HttpGateway;
 
 describe('Email', () => {
   beforeEach(() => {
+    const container = getContainer();
     email = container.email;
     httpGateway = container.httpGateway;
   });

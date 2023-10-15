@@ -1,7 +1,7 @@
 import BuildAgentSettings from 'config/BuildAgentSettings';
 import ChildProcessGateway from 'gateway/ChildProcessGateway';
 import OsGateway from 'gateway/OsGateway';
-import container from 'common/TestAppRoot';
+import getContainer from 'common/TestAppRoot';
 
 let buildAgentSettings: BuildAgentSettings;
 let childProcessGateway: ChildProcessGateway;
@@ -9,6 +9,7 @@ let osGateway: OsGateway;
 
 describe('BuildAgentSettings', () => {
   beforeEach(() => {
+    const container = getContainer();
     buildAgentSettings = container.buildAgentSettings;
     osGateway = container.osGateway;
     childProcessGateway = container.childProcessGateway;

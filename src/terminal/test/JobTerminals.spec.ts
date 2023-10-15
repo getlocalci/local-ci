@@ -1,12 +1,13 @@
 import EditorGateway from 'gateway/EditorGateway';
 import JobTerminals from 'terminal/JobTerminals';
-import container from 'common/TestAppRoot';
+import getContainer from 'common/TestAppRoot';
 
 let editorGateway: EditorGateway;
 let jobTerminals: JobTerminals;
 
 describe('JobTerminals', () => {
   beforeEach(() => {
+    const container = getContainer();
     jobTerminals = container.jobTerminals;
     editorGateway = container.editorGateway;
   });

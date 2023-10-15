@@ -1,7 +1,7 @@
 import EnvPath from 'common/EnvPath';
 import OsGateway from 'gateway/OsGateway';
 import ProcessGateway from 'gateway/ProcessGateway';
-import container from 'common/TestAppRoot';
+import getContainer from 'common/TestAppRoot';
 
 let envPath: EnvPath;
 let osGateway: OsGateway;
@@ -9,6 +9,7 @@ let processGateway: ProcessGateway;
 
 describe('EnvPath', () => {
   beforeEach(() => {
+    const container = getContainer();
     envPath = container.envPath;
     osGateway = container.osGateway;
     processGateway = container.processGateway;

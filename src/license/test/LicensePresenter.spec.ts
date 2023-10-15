@@ -2,7 +2,7 @@
 import LicensePresenter from 'license/LicensePresenter';
 import { LICENSE_VALIDITY, LICENSE_VALIDITY_CACHE_EXPIRATION } from 'constant';
 import getContextStub from 'test-tool/helper/getContextStub';
-import container from 'common/TestAppRoot';
+import getContainer from 'common/TestAppRoot';
 
 function getMockContext(licenseKey: string, cachedValidity: boolean) {
   const initialContext = getContextStub();
@@ -36,7 +36,7 @@ let licensePresenter: LicensePresenter;
 
 describe('LicensePresenter', () => {
   beforeEach(() => {
-    licensePresenter = container.licensePresenter;
+    licensePresenter = getContainer().licensePresenter;
   });
 
   test('no license', async () => {

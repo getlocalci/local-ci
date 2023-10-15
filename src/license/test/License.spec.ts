@@ -1,13 +1,13 @@
 import getContextStub from 'test-tool/helper/getContextStub';
 import License from 'license/License';
 import { LICENSE_VALIDITY, LICENSE_VALIDITY_CACHE_EXPIRATION } from 'constant';
-import container from 'common/TestAppRoot';
+import getContainer from 'common/TestAppRoot';
 
 let license: License;
 
 describe('License', () => {
   beforeEach(() => {
-    license = container.license;
+    license = getContainer().license;
   });
 
   test('no license key', async () => {

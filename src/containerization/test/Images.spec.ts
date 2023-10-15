@@ -1,16 +1,8 @@
-import Images from 'containerization/Images';
-import ChildProcessGateway from 'gateway/ChildProcessGateway';
-import container from 'common/TestAppRoot';
-let childProcessGateway: ChildProcessGateway;
-let images: Images;
+import getContainer from 'common/TestAppRoot';
 
 describe('Images', () => {
-  beforeEach(() => {
-    images = container.images;
-    childProcessGateway = container.childProcessGateway;
-  });
-
   test('no error', () => {
+    const { images, childProcessGateway } = getContainer();
     const spawnSpy = jest.fn();
     childProcessGateway.cp.spawn = spawnSpy;
 

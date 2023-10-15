@@ -7,7 +7,7 @@ import simulatedAttachWorkspaceExpected from 'test-tool/expected/simulated-attac
 import simulatedAttachWorkspaceFixture from 'test-tool/fixture/simulated-attach-workspace.yml';
 import withCacheExpected from 'test-tool/expected/with-cache.yml';
 import withCacheFixture from 'test-tool/fixture/with-cache.yml';
-import container from 'common/TestAppRoot';
+import getContainer from 'common/TestAppRoot';
 
 describe('ProcessFile', () => {
   it.each`
@@ -17,7 +17,7 @@ describe('ProcessFile', () => {
   `(
     'converts $name from \n $fixture \n …to: \n\n $expected',
     ({ fixture, expected }) => {
-      const { processFile } = container;
+      const { processFile } = getContainer();
 
       expect(
         normalize(
@@ -33,10 +33,8 @@ describe('ProcessFile', () => {
   );
 
   test('simulates attach_workspace', () => {
-    const { volume } = container;
+    const { processFile, volume } = getContainer();
     volume.isEmpty = jest.fn(() => true);
-
-    const { processFile } = container;
 
     expect(
       normalize(
