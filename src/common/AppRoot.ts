@@ -69,8 +69,6 @@ import LocalCi from './LocalCi';
 
 const childProcessGateway = new ChildProcessGateway();
 const editorGateway = new EditorGateway();
-const spawn = new Spawn(envPath, processGateway, workspace);
-const envVar = new EnvVar(childProcessGateway, spawn);
 const fsGateway = new FsGateway();
 const httpGateway = new HttpGateway();
 const osGateway = new OsGateway();
@@ -83,17 +81,17 @@ const allJobs = new AllJobs(parsedConfig);
 const envPath = new EnvPath(osGateway, processGateway);
 const workspace = new Workspace(editorGateway);
 
-const buildAgentSettings = new BuildAgentSettings(
-  childProcessGateway,
-  osGateway,
-  spawn
-);
 const commandFactory = new CommandFactory(editorGateway);
 const jobFactory = new JobFactory(editorGateway);
 const logFactory = new LogFactory(editorGateway);
 const warningFactory = new WarningFactory(editorGateway);
 const warningCommandFactory = new WarningCommandFactory(warningFactory);
-
+const spawn = new Spawn(envPath, processGateway, workspace);
+const buildAgentSettings = new BuildAgentSettings(
+  childProcessGateway,
+  osGateway,
+  spawn
+);
 const children = new Children(
   commandFactory,
   editorGateway,
@@ -104,8 +102,9 @@ const children = new Children(
   warningFactory
 );
 const pipelineParameter = new PipelineParameter(fsGateway);
+const envVar = new EnvVar(childProcessGateway, spawn);
+const volume = new Volume(fsGateway);
 const persistence = new Persistence(volume);
-
 const processFile = new ProcessFile(envVar, fsGateway, persistence);
 
 const config = new Config(
@@ -122,7 +121,6 @@ const configFile = new ConfigFile(
   editorGateway,
   reporterGateway
 );
-const volume = new Volume(fsGateway, configFile);
 
 const createConfigFile = new CreateConfigFile(editorGateway, reporterGateway);
 const debugRepo = new DebugRepo(editorGateway, reporterGateway);
