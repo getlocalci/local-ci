@@ -1,5 +1,5 @@
 import getContextStub from 'test-tool/helper/getContextStub';
-import getContainer from 'common/TestAppRoot';
+import getContainer from 'test-tool/TestRoot';
 
 describe('DebugRepo command', () => {
   test('selects the repo if there is a path', () => {

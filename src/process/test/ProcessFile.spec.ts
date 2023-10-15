@@ -7,7 +7,7 @@ import simulatedAttachWorkspaceExpected from 'test-tool/expected/simulated-attac
 import simulatedAttachWorkspaceFixture from 'test-tool/fixture/simulated-attach-workspace.yml';
 import withCacheExpected from 'test-tool/expected/with-cache.yml';
 import withCacheFixture from 'test-tool/fixture/with-cache.yml';
-import getContainer from 'common/TestAppRoot';
+import getContainer from 'test-tool/TestRoot';
 
 describe('ProcessFile', () => {
   it.each`

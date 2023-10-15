@@ -1,5 +1,5 @@
 import getContextStub from 'test-tool/helper/getContextStub';
-import getContainer from 'common/TestAppRoot';
+import getContainer from 'test-tool/TestRoot';
 
 describe('CreateConfigFile command', () => {
   test('creates the config when there is a workspace folder', async () => {

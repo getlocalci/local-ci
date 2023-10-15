@@ -1,7 +1,7 @@
 import getContextStub from 'test-tool/helper/getContextStub';
 import License from 'license/License';
 import { LICENSE_VALIDITY, LICENSE_VALIDITY_CACHE_EXPIRATION } from 'constant';
-import getContainer from 'common/TestAppRoot';
+import getContainer from 'test-tool/TestRoot';
 
 let license: License;
 

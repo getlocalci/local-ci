@@ -2,7 +2,7 @@ import EditorGateway from 'gateway/EditorGateway';
 import FsGateway from 'gateway/FsGateway';
 import getContextStub from 'test-tool/helper/getContextStub';
 import LocalCi from 'common/LocalCi';
-import getContainer from 'common/TestAppRoot';
+import getContainer from 'test-tool/TestRoot';
 
 let editorGateway: EditorGateway;
 let fsGateway: FsGateway;

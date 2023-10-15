@@ -1,7 +1,7 @@
 import EditorGateway from 'gateway/EditorGateway';
 import OsGateway from 'gateway/OsGateway';
 import Spawn from 'common/Spawn';
-import getContainer from 'common/TestAppRoot';
+import getContainer from 'test-tool/TestRoot';
 
 let editorGateway: EditorGateway;
 let osGateway: OsGateway;

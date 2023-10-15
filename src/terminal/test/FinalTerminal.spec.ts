@@ -1,7 +1,7 @@
 import ChildProcessGateway from 'gateway/ChildProcessGateway';
 import EditorGateway from 'gateway/EditorGateway';
 import FinalTerminal from '../FinalTerminal';
-import getContainer from 'common/TestAppRoot';
+import getContainer from 'test-tool/TestRoot';
 
 let childProcessGateway: ChildProcessGateway;
 let editorGateway: EditorGateway;

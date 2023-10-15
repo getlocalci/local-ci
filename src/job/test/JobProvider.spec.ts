@@ -2,7 +2,7 @@ import getContextStub from 'test-tool/helper/getContextStub';
 import JobProviderFactory from 'job/JobProviderFactory';
 import JobFactory from 'job/JobFactory';
 import JobTreeItem from 'job/JobTreeItem';
-import getContainer from 'common/TestAppRoot';
+import getContainer from 'test-tool/TestRoot';
 
 let jobProviderFactory: JobProviderFactory;
 let jobFactory: JobFactory;

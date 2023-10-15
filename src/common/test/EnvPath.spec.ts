@@ -1,7 +1,7 @@
 import EnvPath from 'common/EnvPath';
 import OsGateway from 'gateway/OsGateway';
 import ProcessGateway from 'gateway/ProcessGateway';
-import getContainer from 'common/TestAppRoot';
+import getContainer from 'test-tool/TestRoot';
 
 let envPath: EnvPath;
 let osGateway: OsGateway;

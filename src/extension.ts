@@ -1,4 +1,4 @@
-import { localCi } from 'common/AppRoot';
+import { localCi } from 'CompositionRoot';
 import type vscode from 'vscode';
 
 export function activate(context: vscode.ExtensionContext) {

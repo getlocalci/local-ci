@@ -65,7 +65,7 @@ import Help from 'command/Help';
 import RefreshLicenseTree from 'command/RefreshLicenseTree';
 import ShowLogFile from 'command/ShowLogFile';
 import StartDocker from 'command/StartDocker';
-import LocalCi from './LocalCi';
+import LocalCi from './common/LocalCi';
 
 const childProcessGateway = new ChildProcessGateway();
 const editorGateway = new EditorGateway();

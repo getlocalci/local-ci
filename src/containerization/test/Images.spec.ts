@@ -1,4 +1,4 @@
-import getContainer from 'common/TestAppRoot';
+import getContainer from 'test-tool/TestRoot';
 
 describe('Images', () => {
   test('no error', () => {

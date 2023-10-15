@@ -1,6 +1,6 @@
 import ChildProcessGateway from 'gateway/ChildProcessGateway';
 import Docker from 'containerization/Docker';
-import getContainer from 'common/TestAppRoot';
+import getContainer from 'test-tool/TestRoot';
 let childProcessGateway: ChildProcessGateway;
 let docker: Docker;
 

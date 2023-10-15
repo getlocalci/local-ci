@@ -56,7 +56,7 @@ import Help from 'command/Help';
 import RefreshLicenseTree from 'command/RefreshLicenseTree';
 import ShowLogFile from 'command/ShowLogFile';
 import StartDocker from 'command/StartDocker';
-import LocalCi from './LocalCi';
+import LocalCi from '../common/LocalCi';
 import FakeChildProcessGateway from 'gateway/FakeChildProcessGateway';
 import FakeEditorGateway from 'gateway/FakeEditorGateway';
 import FakeEnvVar from 'process/FakeEnvVar';

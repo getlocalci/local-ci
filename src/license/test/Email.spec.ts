@@ -1,7 +1,7 @@
 import Email from 'license/Email';
 import HttpGateway from 'gateway/HttpGateway';
 import { EMAIL_ENDPOINT } from 'constant';
-import getContainer from 'common/TestAppRoot';
+import getContainer from 'test-tool/TestRoot';
 
 let email: Email;
 let httpGateway: HttpGateway;

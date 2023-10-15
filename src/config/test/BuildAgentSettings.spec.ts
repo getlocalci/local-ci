@@ -1,7 +1,7 @@
 import BuildAgentSettings from 'config/BuildAgentSettings';
 import ChildProcessGateway from 'gateway/ChildProcessGateway';
 import OsGateway from 'gateway/OsGateway';
-import getContainer from 'common/TestAppRoot';
+import getContainer from 'test-tool/TestRoot';
 
 let buildAgentSettings: BuildAgentSettings;
 let childProcessGateway: ChildProcessGateway;

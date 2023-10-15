@@ -1,6 +1,6 @@
 import EditorGateway from 'gateway/EditorGateway';
 import CommandDecorators from '../CommandDecorators';
-import getContainer from 'common/TestAppRoot';
+import getContainer from 'test-tool/TestRoot';
 
 let editorGateway: EditorGateway;
 let commandDecorators: CommandDecorators;

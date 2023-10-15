@@ -1,7 +1,7 @@
 import EditorGateway from 'gateway/EditorGateway';
 import ReporterGateway from 'gateway/ReporterGateway';
 import Help from 'command/Help';
-import getContainer from 'common/TestAppRoot';
+import getContainer from 'test-tool/TestRoot';
 
 let help: Help;
 let editorGateway: EditorGateway;

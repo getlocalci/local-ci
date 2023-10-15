@@ -1,7 +1,7 @@
 import FsGateway from 'gateway/FsGateway';
 import onlyJobsYml from 'test-tool/fixture/only-jobs.yml';
 import ParsedConfig from 'config/ParsedConfig';
-import getContainer from 'common/TestAppRoot';
+import getContainer from 'test-tool/TestRoot';
 
 let fsGateway: FsGateway;
 let parsedConfig: ParsedConfig;

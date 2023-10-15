@@ -1,7 +1,7 @@
 import AllConfigFiles from 'config/AllConfigFiles';
 import EditorGateway from 'gateway/EditorGateway';
 import getContextStub from 'test-tool/helper/getContextStub';
-import getContainer from 'common/TestAppRoot';
+import getContainer from 'test-tool/TestRoot';
 import type { Uri } from 'vscode';
 
 function getMockContext(filePath: string) {
