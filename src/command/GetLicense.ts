@@ -1,17 +1,11 @@
-import { inject, injectable } from 'inversify';
 import type { Command } from '.';
-import Types from 'common/Types';
 import EditorGateway from 'gateway/EditorGateway';
 import { GET_LICENSE_COMMAND, GET_LICENSE_KEY_URL } from 'constant';
 
-@injectable()
 export default class GetLicense implements Command {
-  @inject(Types.IEditorGateway)
-  editorGateway!: EditorGateway;
-
   commandName: string;
 
-  constructor() {
+  constructor(public editorGateway: EditorGateway) {
     this.commandName = GET_LICENSE_COMMAND;
   }
 

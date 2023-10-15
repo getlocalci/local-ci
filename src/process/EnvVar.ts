@@ -1,16 +1,12 @@
-import { injectable, inject } from 'inversify';
-import Types from 'common/Types';
 import { addEnvVars } from 'script';
 import ChildProcessGateway from 'gateway/ChildProcessGateway';
 import Spawn from 'common/Spawn';
 
-@injectable()
 export default class EnvVar {
-  @inject(Types.IChildProcessGateway)
-  childProcessGateway!: ChildProcessGateway;
-
-  @inject(Spawn)
-  spawn!: Spawn;
+  constructor(
+    public childProcessGateway: ChildProcessGateway,
+    public spawn: Spawn
+  ) {}
 
   getStep(repoPath: string) {
     let command;

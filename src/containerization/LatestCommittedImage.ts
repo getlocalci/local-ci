@@ -1,15 +1,11 @@
-import { inject, injectable } from 'inversify';
 import ChildProcessGateway from 'gateway/ChildProcessGateway';
 import Spawn from 'common/Spawn';
-import Types from 'common/Types';
 
-@injectable()
 export default class LatestCommittedImage {
-  @inject(Spawn)
-  spawn!: Spawn;
-
-  @inject(Types.IChildProcessGateway)
-  childProcessGateway!: ChildProcessGateway;
+  constructor(
+    public spawn: Spawn,
+    public childProcessGateway: ChildProcessGateway
+  ) {}
 
   get(committedImageName: string): Promise<string> {
     const { stdout, stderr } = this.childProcessGateway.cp.spawn(

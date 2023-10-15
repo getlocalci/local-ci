@@ -1,20 +1,17 @@
-import AppTestHarness from 'test-tool/helper/AppTestHarness';
-import FakeChildProcessGateway from 'gateway/FakeChildProcessGateway';
-import FakeEditorGateway from 'gateway/FakeEditorGateway';
+import ChildProcessGateway from 'gateway/ChildProcessGateway';
+import EditorGateway from 'gateway/EditorGateway';
 import FinalTerminal from '../FinalTerminal';
+import container from 'common/TestAppRoot';
 
-let childProcessGateway: FakeChildProcessGateway;
-let editorGateway: FakeEditorGateway;
+let childProcessGateway: ChildProcessGateway;
+let editorGateway: EditorGateway;
 let finalTerminal: FinalTerminal;
-let testHarness: AppTestHarness;
 
 describe('FinalTerminal', () => {
   beforeEach(() => {
-    testHarness = new AppTestHarness();
-    testHarness.init();
-    finalTerminal = testHarness.container.get(FinalTerminal);
-    childProcessGateway = testHarness.childProcessGateway;
-    editorGateway = testHarness.editorGateway;
+    finalTerminal = container.finalTerminal;
+    childProcessGateway = container.childProcessGateway;
+    editorGateway = container.editorGateway;
   });
 
   test('no helper message', async () => {

@@ -1,15 +1,12 @@
-import AppTestHarness from 'test-tool/helper/AppTestHarness';
 import getContextStub from 'test-tool/helper/getContextStub';
 import LicenseInput from 'license/LicenseInput';
+import container from 'common/TestAppRoot';
 
-let testHarness: AppTestHarness;
 let licenseInput: LicenseInput;
 
 describe('LicenseInput', () => {
   beforeEach(() => {
-    testHarness = new AppTestHarness();
-    testHarness.init();
-    licenseInput = testHarness.container.get(LicenseInput);
+    licenseInput = container.licenseInput;
   });
 
   test('license is not valid', async () => {

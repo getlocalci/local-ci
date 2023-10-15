@@ -1,17 +1,15 @@
-import AppTestHarness from 'test-tool/helper/AppTestHarness';
 import DebugRepo from 'command/DebugRepo';
 import getContextStub from 'test-tool/helper/getContextStub';
 import JobProviderFactory from 'job/JobProviderFactory';
+import container from 'common/TestAppRoot';
 
 let debugRepo: DebugRepo;
 let jobProviderFactory: JobProviderFactory;
 
 describe('DebugRepo command', () => {
   beforeEach(() => {
-    const testHarness = new AppTestHarness();
-    testHarness.init();
-    jobProviderFactory = testHarness.container.get(JobProviderFactory);
-    debugRepo = testHarness.container.get(DebugRepo);
+    jobProviderFactory = container.jobProviderFactory;
+    debugRepo = container.debugRepo;
   });
 
   test('selects the repo if there is a path', () => {

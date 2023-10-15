@@ -1,4 +1,3 @@
-import { inject, injectable } from 'inversify';
 import * as path from 'path';
 import getAttachWorkspaceCommand from 'config/getAttachWorkspaceCommand';
 import getRestoreCacheCommand from 'cache/getRestoreCacheCommand';
@@ -11,13 +10,10 @@ import {
   DYNAMIC_CONFIG_PATH_IN_CONTAINER,
 } from 'constant';
 import getJobs from 'job/getJobs';
-import Types from 'common/Types';
 import Volume from 'containerization/Volume';
 
-@injectable()
 export default class Persistence {
-  @inject(Types.IVolume)
-  volume!: Volume;
+  constructor(public volume: Volume) {}
 
   simulateAttachWorkspace(
     config: NonNullable<CiConfig>,

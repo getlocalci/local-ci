@@ -1,13 +1,10 @@
-import { inject, injectable } from 'inversify';
 import getConfig from 'config/getConfig';
 import getDynamicConfigPath from 'config/getDynamicConfigPath';
 import getJobs from './getJobs';
 import ParsedConfig from 'config/ParsedConfig';
 
-@injectable()
 export default class AllJobs {
-  @inject(ParsedConfig)
-  parsedConfig!: ParsedConfig;
+  constructor(public parsedConfig: ParsedConfig) {}
 
   get(
     processedConfig: string,

@@ -1,18 +1,15 @@
-import AppTestHarness from 'test-tool/helper/AppTestHarness';
 import Email from 'license/Email';
-import FakeHttpGateway from 'gateway/FakeHttpGateway';
+import HttpGateway from 'gateway/HttpGateway';
 import { EMAIL_ENDPOINT } from 'constant';
+import container from 'common/TestAppRoot';
 
 let email: Email;
-let httpGateway: FakeHttpGateway;
-let testHarness: AppTestHarness;
+let httpGateway: HttpGateway;
 
 describe('Email', () => {
   beforeEach(() => {
-    testHarness = new AppTestHarness();
-    testHarness.init();
-    email = testHarness.container.get(Email);
-    httpGateway = testHarness.httpGateway;
+    email = container.email;
+    httpGateway = container.httpGateway;
   });
 
   test('only email', async () => {

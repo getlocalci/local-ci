@@ -1,6 +1,4 @@
-import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
-import Types from 'common/Types';
 import Config from 'config/Config';
 import ConfigFile from 'config/ConfigFile';
 import EditorGateway from 'gateway/EditorGateway';
@@ -13,23 +11,15 @@ import ReporterGateway from 'gateway/ReporterGateway';
 
 import { RUN_JOB_COMMAND } from 'constant';
 
-@injectable()
 export default class RunWalkthroughJob {
-  @inject(Config)
-  config!: Config;
-
-  @inject(ConfigFile)
-  configFile!: ConfigFile;
-
-  @inject(Types.IEditorGateway)
-  editorGateway!: EditorGateway;
-
-  @inject(Types.IReporterGateway)
-  reporterGateway!: ReporterGateway;
-
   commandName: string;
 
-  constructor() {
+  constructor(
+    public config: Config,
+    public configFile: ConfigFile,
+    public editorGateway: EditorGateway,
+    public reporterGateway: ReporterGateway
+  ) {
     this.commandName = 'local-ci.runWalkthroughJob';
   }
 

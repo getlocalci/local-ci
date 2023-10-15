@@ -1,22 +1,20 @@
-import AppTestHarness from 'test-tool/helper/AppTestHarness';
-import FakeEditorGateway from 'gateway/FakeEditorGateway';
+import EditorGateway from 'gateway/EditorGateway';
 import JobTerminals from 'terminal/JobTerminals';
+import container from 'common/TestAppRoot';
 
-let editorGateway: FakeEditorGateway;
+let editorGateway: EditorGateway;
 let jobTerminals: JobTerminals;
-let testHarness: AppTestHarness;
 
 describe('JobTerminals', () => {
   beforeEach(() => {
-    testHarness = new AppTestHarness();
-    testHarness.init();
-    jobTerminals = testHarness.container.get(JobTerminals);
-    editorGateway = testHarness.editorGateway;
+    jobTerminals = container.jobTerminals;
+    editorGateway = container.editorGateway;
   });
 
   test('terminal is not disposed', async () => {
     const jobName = 'build';
     const disposeSpy = jest.fn();
+    // @ts-expect-error read-only property.
     editorGateway.editor.window.terminals = [
       {
         name: `Terminal unrelated to this extension   `,
@@ -31,6 +29,7 @@ describe('JobTerminals', () => {
   test('terminal is disposed', async () => {
     const jobName = 'build';
     const disposeSpy = jest.fn();
+    // @ts-expect-error read-only property.
     editorGateway.editor.window.terminals = [
       {
         name: `Local CI ${jobName}`,

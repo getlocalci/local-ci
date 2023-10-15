@@ -1,18 +1,15 @@
-import AppTestHarness from 'test-tool/helper/AppTestHarness';
-import FakeFsGateway from 'gateway/FakeFsGateway';
+import FsGateway from 'gateway/FsGateway';
 import onlyJobsYml from 'test-tool/fixture/only-jobs.yml';
 import ParsedConfig from 'config/ParsedConfig';
+import container from 'common/TestAppRoot';
 
-let fsGateway: FakeFsGateway;
+let fsGateway: FsGateway;
 let parsedConfig: ParsedConfig;
-let testHarness: AppTestHarness;
 
 describe('ParsedConfig', () => {
   beforeEach(() => {
-    testHarness = new AppTestHarness();
-    testHarness.init();
-    parsedConfig = testHarness.container.get(ParsedConfig);
-    fsGateway = testHarness.fsGateway;
+    parsedConfig = container.parsedConfig;
+    fsGateway = container.fsGateway;
   });
 
   test('no config', () => {

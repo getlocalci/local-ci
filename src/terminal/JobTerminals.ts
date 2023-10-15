@@ -1,14 +1,10 @@
-import { inject, injectable } from 'inversify';
-import Types from 'common/Types';
 import getDebuggingTerminalName from './getDebuggingTerminalName';
 import getTerminalName from './getTerminalName';
 import getFinalTerminalName from './getFinalTerminalName';
 import EditorGateway from 'gateway/EditorGateway';
 
-@injectable()
 export default class JobTerminals {
-  @inject(Types.IEditorGateway)
-  editorGateway!: EditorGateway;
+  constructor(public editorGateway: EditorGateway) {}
 
   /** Closes VS Code terminals for a job. */
   dispose(jobName: string): void {

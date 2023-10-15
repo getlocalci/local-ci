@@ -1,17 +1,13 @@
-import AppTestHarness from 'test-tool/helper/AppTestHarness';
 import Images from 'containerization/Images';
-import FakeChildProcessGateway from 'gateway/FakeChildProcessGateway';
-
-let childProcessGateway: FakeChildProcessGateway;
+import ChildProcessGateway from 'gateway/ChildProcessGateway';
+import container from 'common/TestAppRoot';
+let childProcessGateway: ChildProcessGateway;
 let images: Images;
-let testHarness: AppTestHarness;
 
 describe('Images', () => {
   beforeEach(() => {
-    testHarness = new AppTestHarness();
-    testHarness.init();
-    images = testHarness.container.get(Images);
-    childProcessGateway = testHarness.childProcessGateway;
+    images = container.images;
+    childProcessGateway = container.childProcessGateway;
   });
 
   test('no error', () => {

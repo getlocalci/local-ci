@@ -1,11 +1,10 @@
-import { iocContainer } from 'common/AppIoc';
+import { localCi } from 'common/AppRoot';
 import type vscode from 'vscode';
-import LocalCi from 'common/LocalCi';
 
 export function activate(context: vscode.ExtensionContext) {
-  iocContainer.get(LocalCi).activate(context);
+  localCi.activate(context);
 }
 
 export function deactivate() {
-  iocContainer.get(LocalCi).deactivate();
+  localCi.deactivate();
 }

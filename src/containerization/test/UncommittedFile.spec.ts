@@ -1,8 +1,8 @@
-import AppTestHarness from 'test-tool/helper/AppTestHarness';
-import FakeChildProcessGateway from 'gateway/FakeChildProcessGateway';
-import FakeEditorGateway from 'gateway/FakeEditorGateway';
+import ChildProcessGateway from 'gateway/ChildProcessGateway';
+import EditorGateway from 'gateway/EditorGateway';
 import getContextStub from 'test-tool/helper/getContextStub';
 import UncommittedFile from 'containerization/UncommittedFile';
+import container from 'common/TestAppRoot';
 
 function getMockContext(isSuppressed: boolean) {
   const initialContext = getContextStub();
@@ -17,18 +17,15 @@ function getMockContext(isSuppressed: boolean) {
   };
 }
 
-let childProcessGateway: FakeChildProcessGateway;
-let editorGateway: FakeEditorGateway;
+let childProcessGateway: ChildProcessGateway;
+let editorGateway: EditorGateway;
 let uncommittedFile: UncommittedFile;
-let testHarness: AppTestHarness;
 
 describe('uncommittedWarning', () => {
   beforeEach(() => {
-    testHarness = new AppTestHarness();
-    testHarness.init();
-    uncommittedFile = testHarness.container.get(UncommittedFile);
-    childProcessGateway = testHarness.childProcessGateway;
-    editorGateway = testHarness.editorGateway;
+    uncommittedFile = container.uncommittedFile;
+    childProcessGateway = container.childProcessGateway;
+    editorGateway = container.editorGateway;
   });
 
   test('warning is suppressed', async () => {

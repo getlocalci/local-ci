@@ -1,18 +1,13 @@
-import AppTestHarness from 'test-tool/helper/AppTestHarness';
 import ChildProcessGateway from 'gateway/ChildProcessGateway';
 import Docker from 'containerization/Docker';
-import Types from 'common/Types';
-
+import container from 'common/TestAppRoot';
 let childProcessGateway: ChildProcessGateway;
 let docker: Docker;
-let testHarness: AppTestHarness;
 
 describe('Docker', () => {
   beforeEach(() => {
-    testHarness = new AppTestHarness();
-    testHarness.init();
-    docker = testHarness.container.get(Docker);
-    childProcessGateway = testHarness.container.get(Types.IChildProcessGateway);
+    childProcessGateway = container.childProcessGateway;
+    docker = container.docker;
   });
 
   describe('getError', () => {

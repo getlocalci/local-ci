@@ -1,20 +1,14 @@
-import { inject, injectable } from 'inversify';
 import ChildProcessGateway from 'gateway/ChildProcessGateway';
 import OsGateway from 'gateway/OsGateway';
 import Spawn from 'common/Spawn';
-import Types from 'common/Types';
 import { writeBuildAgentSettings } from 'script';
 
-@injectable()
 export default class BuildAgentSettings {
-  @inject(Types.IChildProcessGateway)
-  childProcessGateway!: ChildProcessGateway;
-
-  @inject(Types.IOsGateway)
-  osGateway!: OsGateway;
-
-  @inject(Spawn)
-  spawn!: Spawn;
+  constructor(
+    public childProcessGateway: ChildProcessGateway,
+    public osGateway: OsGateway,
+    public spawn: Spawn
+  ) {}
 
   set() {
     if (!this.isIntelMac()) {

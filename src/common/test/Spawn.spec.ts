@@ -1,26 +1,24 @@
-import AppTestHarness from 'test-tool/helper/AppTestHarness';
-import FakeEditorGateway from 'gateway/FakeEditorGateway';
-import FakeOsGateway from 'gateway/FakeOsGateway';
+import EditorGateway from 'gateway/EditorGateway';
+import OsGateway from 'gateway/OsGateway';
 import Spawn from 'common/Spawn';
+import container from 'common/TestAppRoot';
 
-let editorGateway: FakeEditorGateway;
-let osGateway: FakeOsGateway;
+let editorGateway: EditorGateway;
+let osGateway: OsGateway;
 let spawn: Spawn;
-let testHarness: AppTestHarness;
 
 describe('Spawn', () => {
   beforeEach(() => {
-    testHarness = new AppTestHarness();
-    testHarness.init();
-    editorGateway = testHarness.editorGateway;
+    editorGateway = container.editorGateway;
 
-    osGateway = testHarness.osGateway;
-    spawn = testHarness.container.get(Spawn);
+    osGateway = container.osGateway;
+    spawn = container.spawn;
   });
 
   test('has working directory', () => {
     osGateway.os.platform = () => 'darwin';
     const path = 'example';
+    // @ts-expect-error read-only property.
     editorGateway.editor.workspace.workspaceFolders = [
       {
         uri: { path },

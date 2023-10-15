@@ -1,11 +1,7 @@
-import { inject, injectable } from 'inversify';
-import Types from 'common/Types';
 import EditorGateway from 'gateway/EditorGateway';
 
-@injectable()
 export default class Workspace {
-  @inject(Types.IEditorGateway)
-  editorGateway!: EditorGateway;
+  constructor(public editorGateway: EditorGateway) {}
 
   /**
    * Gets the absolute path to the 1st VS Code workspace folder.

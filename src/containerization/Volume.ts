@@ -1,17 +1,9 @@
-import { inject, injectable } from 'inversify';
-import Types from 'common/Types';
-import ConfigFile from '../config/ConfigFile';
 import FsGateway from 'gateway/FsGateway';
 import getLocalVolumePath from 'containerization/getLocalVolumePath';
 import { DYNAMIC_CONFIG_FILE_NAME } from 'constant';
 
-@injectable()
 export default class Volume {
-  @inject(Types.IFsGateway)
-  fsGateway!: FsGateway;
-
-  @inject(ConfigFile)
-  configFile!: ConfigFile;
+  constructor(public fsGateway: FsGateway) {}
 
   isEmpty(configFilePath: string): boolean {
     const localConfigFile = getLocalVolumePath(configFilePath);

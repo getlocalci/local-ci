@@ -1,6 +1,4 @@
-import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
-import Types from 'common/Types';
 import EditorGateway from 'gateway/EditorGateway';
 import getHash from './getHash';
 import HttpGateway from 'gateway/HttpGateway';
@@ -15,13 +13,11 @@ import {
 const licenseValidationEndpoint = 'https://getlocalci.com';
 const fiveMinutesInMilliseconds = 300000;
 
-@injectable()
 export default class License {
-  @inject(Types.IEditorGateway)
-  editorGateway!: EditorGateway;
-
-  @inject(Types.IHttpGateway)
-  httpGateway!: HttpGateway;
+  constructor(
+    public editorGateway: EditorGateway,
+    public httpGateway: HttpGateway
+  ) {}
 
   async isValid(
     context: vscode.ExtensionContext,

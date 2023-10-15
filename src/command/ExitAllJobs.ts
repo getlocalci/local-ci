@@ -1,27 +1,19 @@
-import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
 import type { Command } from '.';
-import Types from 'common/Types';
 import Images from 'containerization/Images';
 import EditorGateway from 'gateway/EditorGateway';
 import JobProvider from 'job/JobProvider';
 import ReporterGateway from 'gateway/ReporterGateway';
 import { COMMITTED_IMAGE_NAMESPACE, JOB_TREE_VIEW_ID } from 'constant';
 
-@injectable()
 export default class ExitAllJobs implements Command {
-  @inject(Images)
-  images!: Images;
-
-  @inject(Types.IEditorGateway)
-  editorGateway!: EditorGateway;
-
-  @inject(Types.IReporterGateway)
-  reporterGateway!: ReporterGateway;
-
   commandName: string;
 
-  constructor() {
+  constructor(
+    public images: Images,
+    public editorGateway: EditorGateway,
+    public reporterGateway: ReporterGateway
+  ) {
     this.commandName = `${JOB_TREE_VIEW_ID}.exitAllJobs`;
   }
 

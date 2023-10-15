@@ -1,8 +1,8 @@
-import Types from 'common/Types';
 import AllConfigFiles from 'config/AllConfigFiles';
-import AppTestHarness from 'test-tool/helper/AppTestHarness';
-import FakeEditorGateway from 'gateway/FakeEditorGateway';
+import EditorGateway from 'gateway/EditorGateway';
 import getContextStub from 'test-tool/helper/getContextStub';
+import container from 'common/TestAppRoot';
+import type { Uri } from 'vscode';
 
 function getMockContext(filePath: string) {
   const initialContext = getContextStub();
@@ -19,26 +19,25 @@ function getMockContext(filePath: string) {
   };
 }
 
-let testHarness: AppTestHarness;
 let allConfigFiles: AllConfigFiles;
-let editorGateway: FakeEditorGateway;
+let editorGateway: EditorGateway;
 
 describe('AllConfigFiles', () => {
   beforeEach(() => {
-    testHarness = new AppTestHarness();
-    testHarness.init();
-    allConfigFiles = testHarness.container.get(AllConfigFiles);
-    editorGateway = testHarness.container.get(Types.IEditorGateway);
+    allConfigFiles = container.allConfigFiles;
+    editorGateway = container.editorGateway;
   });
 
   test('stored config file', async () => {
     const selectedFilePath = '/baz/bar/ex';
     editorGateway.editor.workspace.findFiles = () =>
+      // @ts-expect-error type of stub is wrong.
       Promise.resolve([
         { fsPath: '/path/to/here' },
         { fsPath: selectedFilePath },
       ]);
-    editorGateway.editor.workspace.asRelativePath = (path: string) => path;
+    editorGateway.editor.workspace.asRelativePath = (pathOrUri: string | Uri) =>
+      String(pathOrUri);
 
     const actual = await allConfigFiles.getPaths(
       getMockContext(selectedFilePath)

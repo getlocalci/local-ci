@@ -1,7 +1,5 @@
-import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
 import type { Command } from '.';
-import Types from 'common/Types';
 import EditorGateway from 'gateway/EditorGateway';
 import JobProvider from 'job/JobProvider';
 import JobRunner from 'job/JobRunner';
@@ -9,20 +7,14 @@ import JobTreeItem from 'job/JobTreeItem';
 import ReporterGateway from 'gateway/ReporterGateway';
 import { DO_NOT_CONFIRM_RUN_JOB, RUN_JOB_COMMAND } from 'constant';
 
-@injectable()
 export default class RunJob implements Command {
-  @inject(Types.IEditorGateway)
-  editorGateway!: EditorGateway;
-
-  @inject(JobRunner)
-  jobRunner!: JobRunner;
-
-  @inject(Types.IReporterGateway)
-  reporterGateway!: ReporterGateway;
-
   commandName: string;
 
-  constructor() {
+  constructor(
+    public editorGateway: EditorGateway,
+    public jobRunner: JobRunner,
+    public reporterGateway: ReporterGateway
+  ) {
     this.commandName = RUN_JOB_COMMAND;
   }
 

@@ -1,8 +1,7 @@
 import ConfigFile from 'config/ConfigFile';
-import AppTestHarness from 'test-tool/helper/AppTestHarness';
 import EditorGateway from 'gateway/EditorGateway';
-import Types from 'common/Types';
 import getContextStub from 'test-tool/helper/getContextStub';
+import container from 'common/TestAppRoot';
 
 function getMockContext(filePath: string) {
   const initialContext = getContextStub();
@@ -19,16 +18,13 @@ function getMockContext(filePath: string) {
   };
 }
 
-let testHarness: AppTestHarness;
 let configFile: ConfigFile;
 let editorGateway: EditorGateway;
 
 describe('ConfigFile', () => {
   beforeEach(() => {
-    testHarness = new AppTestHarness();
-    testHarness.init();
-    configFile = testHarness.container.get(ConfigFile);
-    editorGateway = testHarness.container.get(Types.IEditorGateway);
+    configFile = container.configFile;
+    editorGateway = container.editorGateway;
   });
 
   test('stored config file', async () => {

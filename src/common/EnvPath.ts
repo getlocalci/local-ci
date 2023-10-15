@@ -1,15 +1,11 @@
-import { inject, injectable } from 'inversify';
 import OsGateway from 'gateway/OsGateway';
 import ProcessGateway from 'gateway/ProcessGateway';
-import Types from './Types';
 
-@injectable()
 export default class EnvPath {
-  @inject(Types.IOsGateway)
-  osGateway!: OsGateway;
-
-  @inject(Types.IProcessGateway)
-  processGateway!: ProcessGateway;
+  constructor(
+    public osGateway: OsGateway,
+    public processGateway: ProcessGateway
+  ) {}
 
   /**
    * Gets the environment path.

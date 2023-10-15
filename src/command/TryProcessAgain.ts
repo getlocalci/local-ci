@@ -1,24 +1,15 @@
-import { inject, injectable } from 'inversify';
 import type { Command } from '.';
 import type vscode from 'vscode';
 import ConfigFile from 'config/ConfigFile';
 import FsGateway from 'gateway/FsGateway';
 import getDynamicConfigPath from 'config/getDynamicConfigPath';
 import JobProvider from 'job/JobProvider';
-import Types from 'common/Types';
 import { PROCESS_TRY_AGAIN_COMMAND } from 'constant';
 
-@injectable()
 export default class TryProcessAgain implements Command {
-  @inject(ConfigFile)
-  configFile!: ConfigFile;
-
-  @inject(Types.IFsGateway)
-  fsGateway!: FsGateway;
-
   commandName: string;
 
-  constructor() {
+  constructor(public configFile: ConfigFile, public fsGateway: FsGateway) {
     this.commandName = PROCESS_TRY_AGAIN_COMMAND;
   }
 

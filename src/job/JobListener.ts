@@ -1,6 +1,4 @@
-import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
-import Types from 'common/Types';
 import ChildProcessGateway from 'gateway/ChildProcessGateway';
 import Images from 'containerization/Images';
 import ConfigFile from 'config/ConfigFile';
@@ -18,31 +16,17 @@ import {
 } from 'constant';
 import { getPicardContainerFunction } from 'script';
 
-@injectable()
 export default class JobListener {
-  @inject(Types.IChildProcessGateway)
-  childProcessGateway!: ChildProcessGateway;
-
-  @inject(Images)
-  images!: Images;
-
-  @inject(ConfigFile)
-  configFile!: ConfigFile;
-
-  @inject(Types.IEditorGateway)
-  editorGateway!: EditorGateway;
-
-  @inject(FsGateway)
-  fsGateway!: FsGateway;
-
-  @inject(LogFile)
-  logFile!: LogFile;
-
-  @inject(ParsedConfig)
-  parsedConfig!: ParsedConfig;
-
-  @inject(Spawn)
-  spawn!: Spawn;
+  constructor(
+    public childProcessGateway: ChildProcessGateway,
+    public images: Images,
+    public configFile: ConfigFile,
+    public editorGateway: EditorGateway,
+    public fsGateway: FsGateway,
+    public logFile: LogFile,
+    public parsedConfig: ParsedConfig,
+    public spawn: Spawn
+  ) {}
 
   listen(
     context: vscode.ExtensionContext,

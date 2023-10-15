@@ -1,19 +1,17 @@
-import AppTestHarness from 'test-tool/helper/AppTestHarness';
-import FakeEditorGateway from 'gateway/FakeEditorGateway';
-import FakeReporterGateway from 'gateway/FakeReporterGateway';
+import EditorGateway from 'gateway/EditorGateway';
+import ReporterGateway from 'gateway/ReporterGateway';
 import Help from 'command/Help';
+import container from 'common/TestAppRoot';
 
 let help: Help;
-let editorGateway: FakeEditorGateway;
-let reporterGateway: FakeReporterGateway;
+let editorGateway: EditorGateway;
+let reporterGateway: ReporterGateway;
 
 describe('Help command', () => {
   beforeEach(() => {
-    const testHarness = new AppTestHarness();
-    testHarness.init();
-    help = testHarness.container.get(Help);
-    editorGateway = testHarness.editorGateway;
-    reporterGateway = testHarness.reporterGateway;
+    help = container.help;
+    editorGateway = container.editorGateway;
+    reporterGateway = container.reporterGateway;
   });
 
   test('calls the reporter event', () => {
@@ -29,6 +27,7 @@ describe('Help command', () => {
     const editorSpy = jest.fn();
     editorGateway.editor.env.openExternal = editorSpy;
     const stubUri = 'https://example.com/stub';
+    // @ts-expect-error stubUri is the wrong type.
     editorGateway.editor.Uri.parse = () => stubUri;
 
     help.getCallback()();

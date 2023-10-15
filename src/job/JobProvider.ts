@@ -1,4 +1,3 @@
-import { injectable } from 'inversify';
 import * as path from 'path';
 import type vscode from 'vscode';
 import type Retryer from './Retryer';
@@ -27,7 +26,6 @@ export enum JobError {
   ProcessFile,
 }
 
-@injectable()
 export default class JobProvider
   implements vscode.TreeDataProvider<vscode.TreeItem>
 {

@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { injectable } from 'inversify';
 
 /** Stub class for the editor. */
-@injectable()
 export default class FakeEditorGateway {
   editor = {
     commands: {

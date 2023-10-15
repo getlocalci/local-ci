@@ -1,19 +1,16 @@
-import AppTestHarness from 'test-tool/helper/AppTestHarness';
 import getContextStub from 'test-tool/helper/getContextStub';
 import JobProviderFactory from 'job/JobProviderFactory';
 import JobFactory from 'job/JobFactory';
 import JobTreeItem from 'job/JobTreeItem';
+import container from 'common/TestAppRoot';
 
-let testHarness: AppTestHarness;
 let jobProviderFactory: JobProviderFactory;
 let jobFactory: JobFactory;
 
 describe('JobProvider', () => {
   beforeEach(() => {
-    testHarness = new AppTestHarness();
-    testHarness.init();
-    jobFactory = testHarness.container.get(JobFactory);
-    jobProviderFactory = testHarness.container.get(JobProviderFactory);
+    jobFactory = container.jobFactory;
+    jobProviderFactory = container.jobProviderFactory;
   });
 
   test('no element passed', () => {

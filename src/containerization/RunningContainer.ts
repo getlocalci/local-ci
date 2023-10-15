@@ -1,16 +1,12 @@
-import { inject, injectable } from 'inversify';
 import ChildProcessGateway from 'gateway/ChildProcessGateway';
 import Spawn from 'common/Spawn';
-import Types from 'common/Types';
 import { commitContainer, getRunningContainerFunction } from 'script';
 
-@injectable()
 export default class RunningContainer {
-  @inject(Spawn)
-  spawn!: Spawn;
-
-  @inject(Types.IChildProcessGateway)
-  childProcessGateway!: ChildProcessGateway;
+  constructor(
+    public spawn: Spawn,
+    public childProcessGateway: ChildProcessGateway
+  ) {}
 
   /**
    * Commits the latest container so that this can open an interactive session when it finishes.

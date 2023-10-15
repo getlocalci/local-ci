@@ -1,11 +1,8 @@
-import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
 import WarningFactory from './WarningFactory';
 
-@injectable()
 export default class WarningCommandFactory {
-  @inject(WarningFactory)
-  warningFactory!: WarningFactory;
+  constructor(public warningFactory: WarningFactory) {}
 
   create(label: string, command: string): vscode.TreeItem {
     return {

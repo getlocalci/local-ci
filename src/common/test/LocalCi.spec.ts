@@ -1,21 +1,18 @@
-import AppTestHarness from 'test-tool/helper/AppTestHarness';
-import FakeEditorGateway from 'gateway/FakeEditorGateway';
-import FakeFsGateway from 'gateway/FakeFsGateway';
+import EditorGateway from 'gateway/EditorGateway';
+import FsGateway from 'gateway/FsGateway';
 import getContextStub from 'test-tool/helper/getContextStub';
 import LocalCi from 'common/LocalCi';
+import container from 'common/TestAppRoot';
 
-let editorGateway: FakeEditorGateway;
-let fsGateway: FakeFsGateway;
+let editorGateway: EditorGateway;
+let fsGateway: FsGateway;
 let localCi: LocalCi;
-let testHarness: AppTestHarness;
 
 describe('LocalCi', () => {
   beforeEach(() => {
-    testHarness = new AppTestHarness();
-    testHarness.init();
-    localCi = testHarness.container.get(LocalCi);
-    editorGateway = testHarness.editorGateway;
-    fsGateway = testHarness.fsGateway;
+    localCi = container.localCi;
+    editorGateway = container.editorGateway;
+    fsGateway = container.fsGateway;
   });
 
   test('activate registers commands', () => {

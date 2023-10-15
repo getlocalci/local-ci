@@ -1,5 +1,3 @@
-import { injectable, inject } from 'inversify';
-import Types from 'common/Types';
 import * as path from 'path';
 import * as yaml from 'js-yaml';
 import FsGateway from 'gateway/FsGateway';
@@ -9,16 +7,12 @@ import Persistence from './Persistence';
 import { CONTAINER_STORAGE_DIRECTORY } from 'constant';
 import EnvVar from './EnvVar';
 
-@injectable()
 export default class ProcessFile {
-  @inject(Types.IEnvVar)
-  envVar!: EnvVar;
-
-  @inject(Types.IFsGateway)
-  fsGateway!: FsGateway;
-
-  @inject(Persistence)
-  persistence!: Persistence;
+  constructor(
+    public envVar: EnvVar,
+    public fsGateway: FsGateway,
+    public persistence: Persistence
+  ) {}
 
   /**
    * Overwrites parts of the process.yml file.

@@ -1,17 +1,14 @@
-import AppTestHarness from 'test-tool/helper/AppTestHarness';
-import FakeEditorGateway from 'gateway/FakeEditorGateway';
+import EditorGateway from 'gateway/EditorGateway';
 import JobFactory from 'job/JobFactory';
+import container from 'common/TestAppRoot';
 
-let editorGateway: FakeEditorGateway;
+let editorGateway: EditorGateway;
 let jobFactory: JobFactory;
-let testHarness: AppTestHarness;
 
 describe('Job', () => {
   beforeEach(() => {
-    testHarness = new AppTestHarness();
-    testHarness.init();
-    jobFactory = testHarness.container.get(JobFactory);
-    editorGateway = testHarness.editorGateway;
+    jobFactory = container.jobFactory;
+    editorGateway = container.editorGateway;
   });
 
   test('no element passed', () => {

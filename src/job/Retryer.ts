@@ -1,7 +1,5 @@
-import { injectable } from 'inversify';
 import Delayer from './Delayer';
 
-@injectable()
 export default class Retryer {
   delayer?: Delayer<void>;
   delayLength = 5000;

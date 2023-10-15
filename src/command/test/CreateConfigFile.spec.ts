@@ -1,23 +1,21 @@
-import AppTestHarness from 'test-tool/helper/AppTestHarness';
 import CreateConfigFile from 'command/CreateConfigFile';
-import FakeEditorGateway from 'gateway/FakeEditorGateway';
-import FakeReporterGateway from 'gateway/FakeReporterGateway';
+import EditorGateway from 'gateway/EditorGateway';
+import ReporterGateway from 'gateway/ReporterGateway';
 import getContextStub from 'test-tool/helper/getContextStub';
 import JobProviderFactory from 'job/JobProviderFactory';
+import container from 'common/TestAppRoot';
 
 let createConfigFile: CreateConfigFile;
-let editorGateway: FakeEditorGateway;
+let editorGateway: EditorGateway;
 let jobProviderFactory: JobProviderFactory;
-let reporterGateway: FakeReporterGateway;
+let reporterGateway: ReporterGateway;
 
 describe('CreateConfigFile command', () => {
   beforeEach(() => {
-    const testHarness = new AppTestHarness();
-    testHarness.init();
-    createConfigFile = testHarness.container.get(CreateConfigFile);
-    editorGateway = testHarness.editorGateway;
-    reporterGateway = testHarness.reporterGateway;
-    jobProviderFactory = testHarness.container.get(JobProviderFactory);
+    createConfigFile = container.createConfigFile;
+    editorGateway = container.editorGateway;
+    reporterGateway = container.reporterGateway;
+    jobProviderFactory = container.jobProviderFactory;
   });
 
   test('creates the config when there is a workspace folder', async () => {
@@ -25,6 +23,7 @@ describe('CreateConfigFile command', () => {
     reporterGateway.reporter.sendTelemetryEvent = reporterSpy;
 
     const uri = 'foo/baz/';
+    // @ts-expect-error read-only property.
     editorGateway.editor.workspace.workspaceFolders = [
       {
         uri: {

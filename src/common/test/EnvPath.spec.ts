@@ -1,20 +1,17 @@
-import AppTestHarness from 'test-tool/helper/AppTestHarness';
 import EnvPath from 'common/EnvPath';
-import FakeOsGateway from 'gateway/FakeOsGateway';
-import FakeProcessGateway from 'gateway/FakeProcessGateway';
+import OsGateway from 'gateway/OsGateway';
+import ProcessGateway from 'gateway/ProcessGateway';
+import container from 'common/TestAppRoot';
 
-let testHarness: AppTestHarness;
 let envPath: EnvPath;
-let osGateway: FakeOsGateway;
-let processGateway: FakeProcessGateway;
+let osGateway: OsGateway;
+let processGateway: ProcessGateway;
 
 describe('EnvPath', () => {
   beforeEach(() => {
-    testHarness = new AppTestHarness();
-    testHarness.init();
-    envPath = testHarness.container.get(EnvPath);
-    osGateway = testHarness.osGateway;
-    processGateway = testHarness.processGateway;
+    envPath = container.envPath;
+    osGateway = container.osGateway;
+    processGateway = container.processGateway;
   });
 
   describe('get', () => {

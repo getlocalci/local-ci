@@ -1,17 +1,14 @@
-import FakeEditorGateway from 'gateway/FakeEditorGateway';
-import AppTestHarness from 'test-tool/helper/AppTestHarness';
+import EditorGateway from 'gateway/EditorGateway';
 import CommandDecorators from '../CommandDecorators';
+import container from 'common/TestAppRoot';
 
-let editorGateway: FakeEditorGateway;
-let testHarness: AppTestHarness;
+let editorGateway: EditorGateway;
 let commandDecorators: CommandDecorators;
 
 describe('CommandDecorators', () => {
   beforeEach(() => {
-    testHarness = new AppTestHarness();
-    testHarness.init();
-    editorGateway = testHarness.editorGateway;
-    commandDecorators = testHarness.container.get(CommandDecorators);
+    editorGateway = container.editorGateway;
+    commandDecorators = container.commandDecorators;
   });
 
   test('neither pre nor post command enabled', () => {
@@ -24,6 +21,7 @@ describe('CommandDecorators', () => {
   });
 
   test('both pre and post command enabled', () => {
+    // @ts-expect-error stub is missing properties.
     editorGateway.editor.workspace.getConfiguration = jest.fn(() => {
       return {
         get: (configuration: string) => {

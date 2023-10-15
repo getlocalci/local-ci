@@ -1,13 +1,9 @@
-import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
 import EditorGateway from 'gateway/EditorGateway';
-import Types from 'common/Types';
 import { SHOW_LOG_FILE_COMMAND } from 'constant';
 
-@injectable()
 export default class LogFactory {
-  @inject(Types.IEditorGateway)
-  editorGateway!: EditorGateway;
+  constructor(public editorGateway: EditorGateway) {}
 
   create(label: string, filePath: string): vscode.TreeItem {
     const log = new this.editorGateway.editor.TreeItem(label);

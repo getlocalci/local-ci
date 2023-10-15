@@ -1,11 +1,7 @@
-import Types from 'common/Types';
 import EditorGateway from 'gateway/EditorGateway';
-import { inject, injectable } from 'inversify';
 
-@injectable()
 export default class CommandDecorators {
-  @inject(Types.IEditorGateway)
-  editorGateway!: EditorGateway;
+  constructor(public editorGateway: EditorGateway) {}
 
   get() {
     const isPreCommand = this.editorGateway.editor.workspace

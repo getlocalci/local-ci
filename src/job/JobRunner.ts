@@ -1,4 +1,3 @@
-import { inject, injectable } from 'inversify';
 import * as path from 'path';
 import type vscode from 'vscode';
 import { getBinaryPath } from '../../node/binary';
@@ -27,7 +26,6 @@ import JobTreeItem from './JobTreeItem';
 import LatestCommittedImage from 'containerization/LatestCommittedImage';
 import ParsedConfig from 'config/ParsedConfig';
 import RunningContainer from 'containerization/RunningContainer';
-import Types from 'common/Types';
 import UncommittedFile from '../containerization/UncommittedFile';
 import {
   COMMITTED_IMAGE_NAMESPACE,
@@ -39,46 +37,22 @@ import {
   getRunningContainerFunction,
 } from 'script';
 
-@injectable()
 export default class JobRunner {
-  @inject(BuildAgentSettings)
-  buildAgentSettings!: BuildAgentSettings;
-
-  @inject(CommandDecorators)
-  commandDecorators!: CommandDecorators;
-
-  @inject(ConfigFile)
-  configFile!: ConfigFile;
-
-  @inject(Types.IEditorGateway)
-  editorGateway!: EditorGateway;
-
-  @inject(FinalTerminal)
-  finalTerminal!: FinalTerminal;
-
-  @inject(Types.IFsGateway)
-  fsGateway!: FsGateway;
-
-  @inject(Images)
-  images!: Images;
-
-  @inject(JobFactory)
-  jobFactory!: JobFactory;
-
-  @inject(JobListener)
-  jobListener!: JobListener;
-
-  @inject(LatestCommittedImage)
-  latestCommittedImage!: LatestCommittedImage;
-
-  @inject(ParsedConfig)
-  parsedConfig!: ParsedConfig;
-
-  @inject(RunningContainer)
-  runningContainer!: RunningContainer;
-
-  @inject(UncommittedFile)
-  uncommittedFile!: UncommittedFile;
+  constructor(
+    public buildAgentSettings: BuildAgentSettings,
+    public commandDecorators: CommandDecorators,
+    public configFile: ConfigFile,
+    public editorGateway: EditorGateway,
+    public finalTerminal: FinalTerminal,
+    public fsGateway: FsGateway,
+    public images: Images,
+    public jobFactory: JobFactory,
+    public jobListener: JobListener,
+    public latestCommittedImage: LatestCommittedImage,
+    public parsedConfig: ParsedConfig,
+    public runningContainer: RunningContainer,
+    public uncommittedFile: UncommittedFile
+  ) {}
 
   async run(
     context: vscode.ExtensionContext,

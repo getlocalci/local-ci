@@ -1,26 +1,25 @@
-import AppTestHarness from 'test-tool/helper/AppTestHarness';
-import FakeEditorGateway from 'gateway/FakeEditorGateway';
+import EditorGateway from 'gateway/EditorGateway';
 import Workspace from 'common/Workspace';
+import container from 'common/TestAppRoot';
 
-let editorGateway: FakeEditorGateway;
-let testHarness: AppTestHarness;
+let editorGateway: EditorGateway;
 let workspace: Workspace;
 
 describe('Workspace', () => {
   beforeEach(() => {
-    testHarness = new AppTestHarness();
-    testHarness.init();
-    workspace = testHarness.container.get(Workspace);
-    editorGateway = testHarness.editorGateway;
+    workspace = container.workspace;
+    editorGateway = container.editorGateway;
   });
 
   test('with no workspaceFolders', () => {
+    // @ts-expect-error read-only property.
     editorGateway.editor.workspace.workspaceFolders = [];
     expect(workspace.getFirstWorkspaceRootPath()).toEqual('');
   });
 
-  test('Wwith workspaceFolders', () => {
+  test('with workspaceFolders', () => {
     const path = 'example';
+    // @ts-expect-error read-only property.
     editorGateway.editor.workspace.workspaceFolders = [
       {
         uri: { path },
