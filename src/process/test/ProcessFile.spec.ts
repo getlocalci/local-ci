@@ -8,6 +8,9 @@ import simulatedAttachWorkspaceFixture from 'test-tool/fixture/simulated-attach-
 import withCacheExpected from 'test-tool/expected/with-cache.yml';
 import withCacheFixture from 'test-tool/fixture/with-cache.yml';
 import getContainer from 'test-tool/TestRoot';
+import Volume from 'containerization/Volume';
+import Persistence from 'process/Persistence';
+import ProcessFile from 'process/ProcessFile';
 
 describe('ProcessFile', () => {
   it.each`
@@ -33,9 +36,11 @@ describe('ProcessFile', () => {
   );
 
   test('simulates attach_workspace', () => {
-    const { processFile, volume } = getContainer();
-
+    const { envVar, fsGateway } = getContainer();
+    const volume = new Volume(fsGateway);
+    const persistence = new Persistence(volume);
     volume.isEmpty = jest.fn(() => true);
+    const processFile = new ProcessFile(envVar, fsGateway, persistence);
 
     expect(
       normalize(
