@@ -34,6 +34,7 @@ describe('ProcessFile', () => {
 
   test('simulates attach_workspace', () => {
     const { processFile, volume } = getContainer();
+
     volume.isEmpty = jest.fn(() => true);
 
     expect(
