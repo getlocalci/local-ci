@@ -20,7 +20,11 @@ describe('ProcessFile', () => {
   `(
     'converts $name from \n $fixture \n …to: \n\n $expected',
     ({ fixture, expected }) => {
-      const { processFile } = getContainer();
+      const { envVar, fsGateway } = getContainer();
+      const volume = new Volume(fsGateway);
+      volume.isEmpty = jest.fn(() => false);
+      const persistence = new Persistence(volume);
+      const processFile = new ProcessFile(envVar, fsGateway, persistence);
 
       expect(
         normalize(
@@ -38,8 +42,8 @@ describe('ProcessFile', () => {
   test('simulates attach_workspace', () => {
     const { envVar, fsGateway } = getContainer();
     const volume = new Volume(fsGateway);
-    const persistence = new Persistence(volume);
     volume.isEmpty = jest.fn(() => true);
+    const persistence = new Persistence(volume);
     const processFile = new ProcessFile(envVar, fsGateway, persistence);
 
     expect(
