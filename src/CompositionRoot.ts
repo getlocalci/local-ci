@@ -227,7 +227,7 @@ const registrarFactory = new RegistrarFactory(
   editorGateway
 );
 
-export const localCi = new LocalCi(
+export const app = new LocalCi(
   fsGateway,
   jobProviderFactory,
   licenseProviderFactory,
