@@ -7,7 +7,7 @@
       "es6"
     ],
     "sourceMap": true,
-    "types": ["jest", "node", "reflect-metadata"],
+    "types": ["jest", "node"],
     "rootDir": "src",
     "baseUrl": "src",
     "strict": true,
