@@ -15,6 +15,7 @@ import ProcessFile from 'process/ProcessFile';
 describe('ProcessFile', () => {
   it.each`
     fixture                  | expected                 | name
+    ${withCacheFixture}      | ${withCacheExpected}     | ${'withCache'}
     ${dyanamicConfigFixture} | ${dynamicConfigExpected} | ${'dynamicConfig'}
   `(
     'converts $name from \n $fixture \n …to: \n\n $expected',
