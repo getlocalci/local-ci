@@ -5,6 +5,8 @@ import getConfig from 'config/getConfig';
 import normalize from 'test-tool/helper/normalize';
 import simulatedAttachWorkspaceExpected from 'test-tool/expected/simulated-attach-workspace.yml';
 import simulatedAttachWorkspaceFixture from 'test-tool/fixture/simulated-attach-workspace.yml';
+import withCacheExpected from 'test-tool/expected/with-cache.yml';
+import withCacheFixture from 'test-tool/fixture/with-cache.yml';
 import getContainer from 'test-tool/TestRoot';
 import Volume from 'containerization/Volume';
 import Persistence from 'process/Persistence';
