@@ -9,6 +9,8 @@ All in your local, no pushing commits and waiting. Not affiliated with CircleCIÂ
 
 ![Local CI Demo](https://user-images.githubusercontent.com/4063887/142807072-fe6a577e-3148-4208-afed-ebd98a2d4fb1.gif)
 
+I'm Ryan Kienstra, let me know what you think at [ryan@ryankienstra.com](emailto:ryan@getlocalci.com).
+
 ## Run Jobs Locally
 
 ![Running job](https://user-images.githubusercontent.com/4063887/142660667-827e3ce0-8969-4b5d-a72d-251831294fa9.gif)

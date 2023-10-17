@@ -1,5 +1,8 @@
 # Change Log
 
+## 2.1.3 - 16 October 2023
+- Add my email to the main page. [#252](https://github.com/getlocalci/local-ci/pull/252)
+
 ## 2.1.2 - 29 April 2023
 - Show a notice of a free trial in the Marketplace. [#248](https://github.com/getlocalci/local-ci/pull/248)
 
