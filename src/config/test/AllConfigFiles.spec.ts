@@ -1,5 +1,3 @@
-import AllConfigFiles from 'config/AllConfigFiles';
-import EditorGateway from 'gateway/EditorGateway';
 import getContextStub from 'test-tool/helper/getContextStub';
 import getContainer from 'test-tool/TestRoot';
 import type { Uri } from 'vscode';
@@ -19,17 +17,9 @@ function getMockContext(filePath: string) {
   };
 }
 
-let allConfigFiles: AllConfigFiles;
-let editorGateway: EditorGateway;
-
 describe('AllConfigFiles', () => {
-  beforeEach(() => {
-    const container = getContainer();
-    allConfigFiles = container.allConfigFiles;
-    editorGateway = container.editorGateway;
-  });
-
   test('stored config file', async () => {
+    const { allConfigFiles, editorGateway } = getContainer();
     const selectedFilePath = '/baz/bar/ex';
     editorGateway.editor.workspace.findFiles = () =>
       // @ts-expect-error type of stub is wrong.
