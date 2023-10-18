@@ -1,24 +1,9 @@
-import AppTestHarness from 'test-tool/helper/AppTestHarness';
-import FakeEditorGateway from 'gateway/FakeEditorGateway';
-import FakeFsGateway from 'gateway/FakeFsGateway';
 import getContextStub from 'test-tool/helper/getContextStub';
-import LocalCi from 'common/LocalCi';
-
-let editorGateway: FakeEditorGateway;
-let fsGateway: FakeFsGateway;
-let localCi: LocalCi;
-let testHarness: AppTestHarness;
+import getContainer from 'test-tool/TestRoot';
 
 describe('LocalCi', () => {
-  beforeEach(() => {
-    testHarness = new AppTestHarness();
-    testHarness.init();
-    localCi = testHarness.container.get(LocalCi);
-    editorGateway = testHarness.editorGateway;
-    fsGateway = testHarness.fsGateway;
-  });
-
   test('activate registers commands', () => {
+    const { localCi, editorGateway } = getContainer();
     const expectedCommands = [
       'local-ci.email.complain',
       'local-ci.create.config',
@@ -60,6 +45,7 @@ describe('LocalCi', () => {
   });
 
   test('deactivate removes the tmp/ file', () => {
+    const { localCi, fsGateway } = getContainer();
     fsGateway.fs.rmSync = jest.fn();
     localCi.deactivate();
 

@@ -1,23 +1,9 @@
-import AppTestHarness from 'test-tool/helper/AppTestHarness';
-import FakeChildProcessGateway from 'gateway/FakeChildProcessGateway';
-import FakeEditorGateway from 'gateway/FakeEditorGateway';
-import FinalTerminal from '../FinalTerminal';
-
-let childProcessGateway: FakeChildProcessGateway;
-let editorGateway: FakeEditorGateway;
-let finalTerminal: FinalTerminal;
-let testHarness: AppTestHarness;
+import getContainer from 'test-tool/TestRoot';
 
 describe('FinalTerminal', () => {
-  beforeEach(() => {
-    testHarness = new AppTestHarness();
-    testHarness.init();
-    finalTerminal = testHarness.container.get(FinalTerminal);
-    childProcessGateway = testHarness.childProcessGateway;
-    editorGateway = testHarness.editorGateway;
-  });
-
   test('no helper message', async () => {
+    const { childProcessGateway, editorGateway, finalTerminal } =
+      getContainer();
     const showInformationMessageSpy = jest.fn();
     editorGateway.editor.window.showInformationMessage =
       showInformationMessageSpy;
@@ -38,6 +24,8 @@ describe('FinalTerminal', () => {
   });
 
   test('with helper message', async () => {
+    const { childProcessGateway, editorGateway, finalTerminal } =
+      getContainer();
     const showInformationMessageSpy = jest.fn();
     editorGateway.editor.window.showInformationMessage =
       showInformationMessageSpy;

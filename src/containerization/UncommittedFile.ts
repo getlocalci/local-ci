@@ -1,21 +1,15 @@
-import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
 import ChildProcessGateway from 'gateway/ChildProcessGateway';
 import EditorGateway from 'gateway/EditorGateway';
 import Spawn from 'common/Spawn';
-import Types from 'common/Types';
 import { SUPPRESS_UNCOMMITTED_FILE_WARNING } from 'constant';
 
-@injectable()
 export default class UncommittedFile {
-  @inject(Types.IChildProcessGateway)
-  childProcess!: ChildProcessGateway;
-
-  @inject(Types.IEditorGateway)
-  editorGateway!: EditorGateway;
-
-  @inject(Spawn)
-  spawn!: Spawn;
+  constructor(
+    public childProcess: ChildProcessGateway,
+    public editorGateway: EditorGateway,
+    public spawn: Spawn
+  ) {}
 
   /**
    * Shows a warning if there are uncommitted files in the repo.

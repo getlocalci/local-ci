@@ -1,15 +1,11 @@
-import { inject, injectable } from 'inversify';
 import ChildProcessGateway from 'gateway/ChildProcessGateway';
 import Spawn from 'common/Spawn';
-import Types from 'common/Types';
 
-@injectable()
 class Docker {
-  @inject(Types.IChildProcessGateway)
-  childProcessGateway!: ChildProcessGateway;
-
-  @inject(Spawn)
-  spawn!: Spawn;
+  constructor(
+    public childProcessGateway: ChildProcessGateway,
+    public spawn: Spawn
+  ) {}
 
   getError(): string {
     try {

@@ -1,20 +1,8 @@
-import AppTestHarness from 'test-tool/helper/AppTestHarness';
-import FakeEditorGateway from 'gateway/FakeEditorGateway';
-import JobFactory from 'job/JobFactory';
-
-let editorGateway: FakeEditorGateway;
-let jobFactory: JobFactory;
-let testHarness: AppTestHarness;
+import getContainer from 'test-tool/TestRoot';
 
 describe('Job', () => {
-  beforeEach(() => {
-    testHarness = new AppTestHarness();
-    testHarness.init();
-    jobFactory = testHarness.container.get(JobFactory);
-    editorGateway = testHarness.editorGateway;
-  });
-
   test('no element passed', () => {
+    const { jobFactory } = getContainer();
     const jobName = 'this-is-your-job';
     expect(jobFactory.create(jobName, false, false).getJobName()).toEqual(
       jobName
@@ -22,6 +10,7 @@ describe('Job', () => {
   });
 
   test('is running', () => {
+    const { jobFactory } = getContainer();
     expect(jobFactory.create('example-job', false, false).contextValue).toEqual(
       undefined
     );
@@ -32,6 +21,7 @@ describe('Job', () => {
   });
 
   test('is success', () => {
+    const { jobFactory } = getContainer();
     const job = jobFactory.create('example', false, false);
     job.setIsSuccess();
     expect(job.description).toEqual('✅');
@@ -41,6 +31,7 @@ describe('Job', () => {
   });
 
   test('is expanded', () => {
+    const { editorGateway, jobFactory } = getContainer();
     const job = jobFactory.create('example', false, false);
 
     job.setExpanded();

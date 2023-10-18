@@ -1,10 +1,7 @@
-import { inject, injectable } from 'inversify';
 import FsGateway from 'gateway/FsGateway';
 
-@injectable()
 export default class PipelineParameter {
-  @inject(FsGateway)
-  fsGateway!: FsGateway;
+  constructor(public fsGateway: FsGateway) {}
 
   replace(parametersPath: string, configFilePath: string): void {
     if (

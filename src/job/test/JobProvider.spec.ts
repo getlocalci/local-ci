@@ -1,28 +1,17 @@
-import AppTestHarness from 'test-tool/helper/AppTestHarness';
-import getContextStub from 'test-tool/helper/getContextStub';
-import JobProviderFactory from 'job/JobProviderFactory';
-import JobFactory from 'job/JobFactory';
 import JobTreeItem from 'job/JobTreeItem';
-
-let testHarness: AppTestHarness;
-let jobProviderFactory: JobProviderFactory;
-let jobFactory: JobFactory;
+import getContextStub from 'test-tool/helper/getContextStub';
+import getContainer from 'test-tool/TestRoot';
 
 describe('JobProvider', () => {
-  beforeEach(() => {
-    testHarness = new AppTestHarness();
-    testHarness.init();
-    jobFactory = testHarness.container.get(JobFactory);
-    jobProviderFactory = testHarness.container.get(JobProviderFactory);
-  });
-
   test('no element passed', () => {
+    const { jobProviderFactory } = getContainer();
     expect(jobProviderFactory.create(getContextStub()).getChildren()).toEqual(
       []
     );
   });
 
   test('no child', () => {
+    const { jobFactory, jobProviderFactory } = getContainer();
     const provider = jobProviderFactory.create(getContextStub());
     expect(
       provider.getChildren(jobFactory.create('foo', false, false))
@@ -30,6 +19,7 @@ describe('JobProvider', () => {
   });
 
   test('two children', () => {
+    const { jobFactory, jobProviderFactory } = getContainer();
     const allJobs = new Map();
     allJobs.set('foo', []);
     allJobs.set('baz', ['foo']);

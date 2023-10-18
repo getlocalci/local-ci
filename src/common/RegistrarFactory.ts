@@ -1,6 +1,4 @@
-import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
-import Types from 'common/Types';
 import Complain from 'command/Complain';
 import ConfigFile from 'config/ConfigFile';
 import CreateConfigFile from 'command/CreateConfigFile';
@@ -28,32 +26,31 @@ import ShowLogFile from 'command/ShowLogFile';
 import StartDocker from 'command/StartDocker';
 import TryProcessAgain from '../command/TryProcessAgain';
 
-@injectable()
 export default class RegistrarFactory {
   constructor(
-    @inject(Complain) private complain: Complain,
-    @inject(ConfigFile) private configFile: ConfigFile,
-    @inject(CreateConfigFile) private createConfigFile: CreateConfigFile,
-    @inject(DebugRepo) private debugRepo: DebugRepo,
-    @inject(EnterLicense) private enterLicense: EnterLicense,
-    @inject(EnterToken) private enterToken: EnterToken,
-    @inject(ExitAllJobs) private exitAllJobs: ExitAllJobs,
-    @inject(ExitJob) private exitJob: ExitJob,
-    @inject(FirstActivation) private firstActivation: FirstActivation,
-    @inject(GetLicense) private getLicense: GetLicense,
-    @inject(Help) private help: Help,
-    @inject(LicenseInput) private licenseInput: LicenseInput,
-    @inject(LogProviderFactory) private logProviderFactory: LogProviderFactory,
-    @inject(Refresh) private refresh: Refresh,
-    @inject(RefreshLicenseTree) private refreshLicenseTree: RefreshLicenseTree,
-    @inject(ReRunJob) private reRunJob: ReRunJob,
-    @inject(RunJob) private runJob: RunJob,
-    @inject(RunWalkthroughJob) private runWalkthroughJob: RunWalkthroughJob,
-    @inject(SelectRepo) private selectRepo: SelectRepo,
-    @inject(ShowLogFile) private showLogFile: ShowLogFile,
-    @inject(StartDocker) private startDocker: StartDocker,
-    @inject(TryProcessAgain) private tryProcessAgain: TryProcessAgain,
-    @inject(Types.IEditorGateway) private editorGateway: EditorGateway
+    private complain: Complain,
+    private configFile: ConfigFile,
+    private createConfigFile: CreateConfigFile,
+    private debugRepo: DebugRepo,
+    private enterLicense: EnterLicense,
+    private enterToken: EnterToken,
+    private exitAllJobs: ExitAllJobs,
+    private exitJob: ExitJob,
+    private firstActivation: FirstActivation,
+    private getLicense: GetLicense,
+    private help: Help,
+    private licenseInput: LicenseInput,
+    private logProviderFactory: LogProviderFactory,
+    private refresh: Refresh,
+    private refreshLicenseTree: RefreshLicenseTree,
+    private reRunJob: ReRunJob,
+    private runJob: RunJob,
+    private runWalkthroughJob: RunWalkthroughJob,
+    private selectRepo: SelectRepo,
+    private showLogFile: ShowLogFile,
+    private startDocker: StartDocker,
+    private tryProcessAgain: TryProcessAgain,
+    private editorGateway: EditorGateway
   ) {}
 
   create(

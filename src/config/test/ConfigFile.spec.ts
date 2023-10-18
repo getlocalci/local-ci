@@ -1,7 +1,4 @@
-import ConfigFile from 'config/ConfigFile';
-import AppTestHarness from 'test-tool/helper/AppTestHarness';
-import EditorGateway from 'gateway/EditorGateway';
-import Types from 'common/Types';
+import getContainer from 'test-tool/TestRoot';
 import getContextStub from 'test-tool/helper/getContextStub';
 
 function getMockContext(filePath: string) {
@@ -19,19 +16,9 @@ function getMockContext(filePath: string) {
   };
 }
 
-let testHarness: AppTestHarness;
-let configFile: ConfigFile;
-let editorGateway: EditorGateway;
-
 describe('ConfigFile', () => {
-  beforeEach(() => {
-    testHarness = new AppTestHarness();
-    testHarness.init();
-    configFile = testHarness.container.get(ConfigFile);
-    editorGateway = testHarness.container.get(Types.IEditorGateway);
-  });
-
   test('stored config file', async () => {
+    const { configFile, editorGateway } = getContainer();
     editorGateway.editor.workspace.getWorkspaceFolder = jest
       .fn()
       .mockImplementationOnce(() => ({ name: 'example' }));

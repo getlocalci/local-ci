@@ -1,19 +1,12 @@
-import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
-import Types from 'common/Types';
 import EditorGateway from 'gateway/EditorGateway';
 import getLicenseErrorMessage from 'license/getLicenseErrorMessage';
 import License from './License';
 import sanitizeLicenseKey from './sanitizeLicenseKey';
 import { LICENSE_ERROR, GET_LICENSE_KEY_URL, LICENSE_KEY } from 'constant';
 
-@injectable()
 export default class LicenseInput {
-  @inject(Types.IEditorGateway)
-  editorGateway!: EditorGateway;
-
-  @inject(License)
-  license!: License;
+  constructor(public editorGateway: EditorGateway, public license: License) {}
 
   async show(
     context: vscode.ExtensionContext,

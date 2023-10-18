@@ -1,6 +1,4 @@
-import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
-import Types from './Types';
 import FsGateway from 'gateway/FsGateway';
 import JobProviderFactory from 'job/JobProviderFactory';
 import LicenseProviderFactory from 'license/LicenseProviderFactory';
@@ -8,22 +6,14 @@ import RegistrarFactory from './RegistrarFactory';
 import ReporterGateway from 'gateway/ReporterGateway';
 import { HOST_TMP_DIRECTORY } from 'constant';
 
-@injectable()
 export default class LocalCi {
-  @inject(Types.IFsGateway)
-  fsGateway!: FsGateway;
-
-  @inject(JobProviderFactory)
-  jobProviderFactory!: JobProviderFactory;
-
-  @inject(LicenseProviderFactory)
-  licenseProviderFactory!: LicenseProviderFactory;
-
-  @inject(RegistrarFactory)
-  registrarFactory!: RegistrarFactory;
-
-  @inject(Types.IReporterGateway)
-  reporterGateway!: ReporterGateway;
+  constructor(
+    public fsGateway: FsGateway,
+    public jobProviderFactory: JobProviderFactory,
+    public licenseProviderFactory: LicenseProviderFactory,
+    public registrarFactory: RegistrarFactory,
+    public reporterGateway: ReporterGateway
+  ) {}
 
   activate(context: vscode.ExtensionContext) {
     this.reporterGateway.reporter.sendTelemetryEvent('activate');

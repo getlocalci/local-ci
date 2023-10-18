@@ -1,6 +1,4 @@
 import * as path from 'path';
-import { inject, injectable } from 'inversify';
-import Types from 'common/Types';
 import { JobError } from './JobProvider';
 import LogFactory from 'log/LogFactory';
 import type vscode from 'vscode';
@@ -25,28 +23,16 @@ import {
 type Logs = Record<string, string[]>;
 type JobDependencies = Map<string, string[] | null> | undefined;
 
-@injectable()
 export default class Children {
-  @inject(CommandFactory)
-  commandFactory!: CommandFactory;
-
-  @inject(Types.IEditorGateway)
-  editorGateway!: EditorGateway;
-
-  @inject(JobFactory)
-  jobFactory!: JobFactory;
-
-  @inject(LogFactory)
-  logFactory!: LogFactory;
-
-  @inject(NativeCommandFactory)
-  nativeCommandFactory!: NativeCommandFactory;
-
-  @inject(WarningCommandFactory)
-  warningCommandFactory!: WarningCommandFactory;
-
-  @inject(WarningFactory)
-  warningFactory!: WarningFactory;
+  constructor(
+    public commandFactory: CommandFactory,
+    public editorGateway: EditorGateway,
+    public jobFactory: JobFactory,
+    public logFactory: LogFactory,
+    public nativeCommandFactory: NativeCommandFactory,
+    public warningCommandFactory: WarningCommandFactory,
+    public warningFactory: WarningFactory
+  ) {}
 
   get(
     jobs: string[],

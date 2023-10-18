@@ -1,23 +1,9 @@
-import AppTestHarness from 'test-tool/helper/AppTestHarness';
-import BuildAgentSettings from 'config/BuildAgentSettings';
-import FakeChildProcessGateway from 'gateway/FakeChildProcessGateway';
-import FakeOsGateway from 'gateway/FakeOsGateway';
-
-let buildAgentSettings: BuildAgentSettings;
-let childProcessGateway: FakeChildProcessGateway;
-let osGateway: FakeOsGateway;
-let testHarness: AppTestHarness;
+import getContainer from 'test-tool/TestRoot';
 
 describe('BuildAgentSettings', () => {
-  beforeEach(() => {
-    testHarness = new AppTestHarness();
-    testHarness.init();
-    buildAgentSettings = testHarness.container.get(BuildAgentSettings);
-    osGateway = testHarness.osGateway;
-    childProcessGateway = testHarness.childProcessGateway;
-  });
-
   test('should not set the settings on a Linux machine', () => {
+    const { buildAgentSettings, childProcessGateway, osGateway } =
+      getContainer();
     const spawnSpy = jest.fn();
     osGateway.os.type = jest.fn().mockImplementationOnce(() => 'Intel');
     osGateway.os.arch = jest.fn().mockImplementationOnce(() => 'x64');
@@ -28,6 +14,8 @@ describe('BuildAgentSettings', () => {
   });
 
   test('should not set the settings on an M1 Mac machine', () => {
+    const { buildAgentSettings, childProcessGateway, osGateway } =
+      getContainer();
     const spawnSpy = jest.fn();
     osGateway.os.type = jest.fn().mockImplementationOnce(() => 'Darwin');
     osGateway.os.arch = jest.fn().mockImplementationOnce(() => 'arm64');
@@ -38,6 +26,8 @@ describe('BuildAgentSettings', () => {
   });
 
   test('should set the settings on an Intel Mac machine', () => {
+    const { buildAgentSettings, childProcessGateway, osGateway } =
+      getContainer();
     const spawnSpy = jest.fn();
     osGateway.os.type = jest.fn().mockImplementationOnce(() => 'Darwin');
     osGateway.os.arch = jest.fn().mockImplementationOnce(() => 'x64');

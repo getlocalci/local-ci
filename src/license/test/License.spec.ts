@@ -1,23 +1,15 @@
-import AppTestHarness from 'test-tool/helper/AppTestHarness';
 import getContextStub from 'test-tool/helper/getContextStub';
-import License from 'license/License';
 import { LICENSE_VALIDITY, LICENSE_VALIDITY_CACHE_EXPIRATION } from 'constant';
-
-let testHarness: AppTestHarness;
-let license: License;
+import getContainer from 'test-tool/TestRoot';
 
 describe('License', () => {
-  beforeEach(() => {
-    testHarness = new AppTestHarness();
-    testHarness.init();
-    license = testHarness.container.get(License);
-  });
-
   test('no license key', async () => {
+    const { license } = getContainer();
     expect(await license.isValid(getContextStub(), true, '')).toBe(false);
   });
 
   test('cached license validation', async () => {
+    const { license } = getContainer();
     const mockContext = getContextStub();
 
     expect(

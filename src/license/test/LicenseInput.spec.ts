@@ -1,18 +1,9 @@
-import AppTestHarness from 'test-tool/helper/AppTestHarness';
 import getContextStub from 'test-tool/helper/getContextStub';
-import LicenseInput from 'license/LicenseInput';
-
-let testHarness: AppTestHarness;
-let licenseInput: LicenseInput;
+import getContainer from 'test-tool/TestRoot';
 
 describe('LicenseInput', () => {
-  beforeEach(() => {
-    testHarness = new AppTestHarness();
-    testHarness.init();
-    licenseInput = testHarness.container.get(LicenseInput);
-  });
-
   test('license is not valid', async () => {
+    const { licenseInput } = getContainer();
     const completedCallbackSpy = jest.fn();
     const successCallbackSpy = jest.fn();
     await licenseInput.show(

@@ -1,20 +1,10 @@
-import AppTestHarness from 'test-tool/helper/AppTestHarness';
-import DebugRepo from 'command/DebugRepo';
 import getContextStub from 'test-tool/helper/getContextStub';
-import JobProviderFactory from 'job/JobProviderFactory';
-
-let debugRepo: DebugRepo;
-let jobProviderFactory: JobProviderFactory;
+import getContainer from 'test-tool/TestRoot';
 
 describe('DebugRepo command', () => {
-  beforeEach(() => {
-    const testHarness = new AppTestHarness();
-    testHarness.init();
-    jobProviderFactory = testHarness.container.get(JobProviderFactory);
-    debugRepo = testHarness.container.get(DebugRepo);
-  });
-
   test('selects the repo if there is a path', () => {
+    const { jobProviderFactory, debugRepo } = getContainer();
+
     const updateSpy = jest.fn().mockImplementationOnce(async () => null);
     const contextStub = {
       ...getContextStub(),

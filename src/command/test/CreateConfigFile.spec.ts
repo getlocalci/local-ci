@@ -1,30 +1,19 @@
-import AppTestHarness from 'test-tool/helper/AppTestHarness';
-import CreateConfigFile from 'command/CreateConfigFile';
-import FakeEditorGateway from 'gateway/FakeEditorGateway';
-import FakeReporterGateway from 'gateway/FakeReporterGateway';
 import getContextStub from 'test-tool/helper/getContextStub';
-import JobProviderFactory from 'job/JobProviderFactory';
-
-let createConfigFile: CreateConfigFile;
-let editorGateway: FakeEditorGateway;
-let jobProviderFactory: JobProviderFactory;
-let reporterGateway: FakeReporterGateway;
+import getContainer from 'test-tool/TestRoot';
 
 describe('CreateConfigFile command', () => {
-  beforeEach(() => {
-    const testHarness = new AppTestHarness();
-    testHarness.init();
-    createConfigFile = testHarness.container.get(CreateConfigFile);
-    editorGateway = testHarness.editorGateway;
-    reporterGateway = testHarness.reporterGateway;
-    jobProviderFactory = testHarness.container.get(JobProviderFactory);
-  });
-
   test('creates the config when there is a workspace folder', async () => {
+    const {
+      createConfigFile,
+      editorGateway,
+      reporterGateway,
+      jobProviderFactory,
+    } = getContainer();
     const reporterSpy = jest.fn();
     reporterGateway.reporter.sendTelemetryEvent = reporterSpy;
 
     const uri = 'foo/baz/';
+    // @ts-expect-error read-only property.
     editorGateway.editor.workspace.workspaceFolders = [
       {
         uri: {

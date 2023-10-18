@@ -1,19 +1,13 @@
-import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
 import type { Command } from '.';
 import { getBinaryPath } from '../../node/binary';
 import EditorGateway from 'gateway/EditorGateway';
-import Types from 'common/Types';
 import { JOB_TREE_VIEW_ID } from 'constant';
 
-@injectable()
 export default class EnterToken implements Command {
-  @inject(Types.IEditorGateway)
-  editorGateway!: EditorGateway;
-
   commandName: string;
 
-  constructor() {
+  constructor(public editorGateway: EditorGateway) {
     this.commandName = `${JOB_TREE_VIEW_ID}.enterToken`;
   }
 

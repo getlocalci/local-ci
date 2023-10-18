@@ -1,21 +1,9 @@
-import AppTestHarness from 'test-tool/helper/AppTestHarness';
-import Email from 'license/Email';
-import FakeHttpGateway from 'gateway/FakeHttpGateway';
 import { EMAIL_ENDPOINT } from 'constant';
-
-let email: Email;
-let httpGateway: FakeHttpGateway;
-let testHarness: AppTestHarness;
+import getContainer from 'test-tool/TestRoot';
 
 describe('Email', () => {
-  beforeEach(() => {
-    testHarness = new AppTestHarness();
-    testHarness.init();
-    email = testHarness.container.get(Email);
-    httpGateway = testHarness.httpGateway;
-  });
-
   test('only email', async () => {
+    const { email, httpGateway } = getContainer();
     const emailAddress = 'a@example.com';
 
     const postSpy = jest.fn();
@@ -30,6 +18,7 @@ describe('Email', () => {
   });
 
   test('all fields', async () => {
+    const { email, httpGateway } = getContainer();
     const emailAddress = 'a@example.com';
     const name = 'Jane';
     const optedIn = true;

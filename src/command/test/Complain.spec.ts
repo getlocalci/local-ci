@@ -1,22 +1,12 @@
-import AppTestHarness from 'test-tool/helper/AppTestHarness';
-import FakeEditorGateway from 'gateway/FakeEditorGateway';
-import Complain from 'command/Complain';
-
-let complain: Complain;
-let editorGateway: FakeEditorGateway;
+import getContainer from 'test-tool/TestRoot';
 
 describe('Complain command', () => {
-  beforeEach(() => {
-    const testHarness = new AppTestHarness();
-    testHarness.init();
-    complain = testHarness.container.get(Complain);
-    editorGateway = testHarness.editorGateway;
-  });
-
   test('opens the complain email url', () => {
+    const { complain, editorGateway } = getContainer();
     const editorSpy = jest.fn();
     editorGateway.editor.env.openExternal = editorSpy;
     const stubUri = 'emailto:ryan@getlocalci.com';
+    // @ts-expect-error stub is the wrong type.
     editorGateway.editor.Uri.parse = () => stubUri;
 
     complain.getCallback()();

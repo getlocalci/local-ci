@@ -1,5 +1,4 @@
 import * as cp from 'child_process';
-import { inject, injectable } from 'inversify';
 import EditorGateway from './EditorGateway';
 
 /**
@@ -8,13 +7,12 @@ import EditorGateway from './EditorGateway';
  * To debug the bash commands run with ChildProcessGateway.cp.spawn(),
  * replaces ChildProcessGateway with this file in AppIoc.ts.
  */
-@injectable()
 export default class LoggingChildProcessGateway {
   cp;
   outputChannel;
   outputChannelId = 'Local CI';
 
-  constructor(@inject(EditorGateway) private editorGateway: EditorGateway) {
+  constructor(private editorGateway: EditorGateway) {
     this.cp = {
       ...cp,
       spawn: (

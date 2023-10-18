@@ -1,21 +1,15 @@
-import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
-import Types from 'common/Types';
 import EditorGateway from 'gateway/EditorGateway';
 import Email from 'license/Email';
 import ReporterGateway from 'gateway/ReporterGateway';
 import { EXTENSION_ID, TRIAL_STARTED_TIMESTAMP } from 'constant';
 
-@injectable()
 export default class FirstActivation {
-  @inject(Types.IEditorGateway)
-  editorGateway!: EditorGateway;
-
-  @inject(Types.IReporterGateway)
-  reporterGateway!: ReporterGateway;
-
-  @inject(Email)
-  email!: Email;
+  constructor(
+    public editorGateway: EditorGateway,
+    public reporterGateway: ReporterGateway,
+    public email: Email
+  ) {}
 
   handle(context: vscode.ExtensionContext) {
     if (!context.globalState.get(TRIAL_STARTED_TIMESTAMP)) {

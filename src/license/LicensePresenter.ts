@@ -1,4 +1,3 @@
-import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
 import getLicenseErrorMessage from './getLicenseErrorMessage';
 import getTimeRemainingInTrial from './getTimeRemainingInTrial';
@@ -15,10 +14,8 @@ import {
   TRIAL_STARTED_TIMESTAMP,
 } from 'constant';
 
-@injectable()
 export default class LicensePresenter {
-  @inject(License)
-  license!: License;
+  constructor(public license: License) {}
 
   async getView(context: vscode.ExtensionContext): Promise<string> {
     context.secrets.delete(LICENSE_VALIDITY);

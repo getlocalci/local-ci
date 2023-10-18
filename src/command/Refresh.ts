@@ -1,10 +1,8 @@
-import { injectable } from 'inversify';
 import type vscode from 'vscode';
 import type { Command } from '.';
 import JobProvider from 'job/JobProvider';
 import { JOB_TREE_VIEW_ID } from 'constant';
 
-@injectable()
 export default class Refresh implements Command {
   commandName: string;
 
@@ -12,7 +10,7 @@ export default class Refresh implements Command {
     this.commandName = `${JOB_TREE_VIEW_ID}.refresh`;
   }
 
-  getCallback(context: vscode.ExtensionContext, jobProvider: JobProvider) {
+  getCallback(_context: vscode.ExtensionContext, jobProvider: JobProvider) {
     return () => {
       jobProvider.hardRefresh();
     };

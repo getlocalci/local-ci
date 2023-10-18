@@ -1,26 +1,11 @@
-import AppTestHarness from 'test-tool/helper/AppTestHarness';
-import FakeEditorGateway from 'gateway/FakeEditorGateway';
-import FakeOsGateway from 'gateway/FakeOsGateway';
-import Spawn from 'common/Spawn';
-
-let editorGateway: FakeEditorGateway;
-let osGateway: FakeOsGateway;
-let spawn: Spawn;
-let testHarness: AppTestHarness;
+import getContainer from 'test-tool/TestRoot';
 
 describe('Spawn', () => {
-  beforeEach(() => {
-    testHarness = new AppTestHarness();
-    testHarness.init();
-    editorGateway = testHarness.editorGateway;
-
-    osGateway = testHarness.osGateway;
-    spawn = testHarness.container.get(Spawn);
-  });
-
   test('has working directory', () => {
+    const { editorGateway, osGateway, spawn } = getContainer();
     osGateway.os.platform = () => 'darwin';
     const path = 'example';
+    // @ts-expect-error read-only property.
     editorGateway.editor.workspace.workspaceFolders = [
       {
         uri: { path },
@@ -31,11 +16,14 @@ describe('Spawn', () => {
   });
 
   test('has bin directory', () => {
+    const { osGateway, spawn } = getContainer();
     osGateway.os.platform = () => 'darwin';
     expect(spawn.getOptions().env.PATH.includes('/usr/local/bin'));
   });
 
   test('with cwd argument', () => {
+    const { spawn } = getContainer();
+
     expect(spawn.getOptions('/foo/baz').cwd).toEqual('/foo/baz');
   });
 });

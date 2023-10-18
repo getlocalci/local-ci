@@ -1,6 +1,4 @@
-import { inject, injectable } from 'inversify';
 import type vscode from 'vscode';
-import Types from 'common/Types';
 import AllConfigFiles from './AllConfigFiles';
 import EditorGateway from 'gateway/EditorGateway';
 import ReporterGateway from 'gateway/ReporterGateway';
@@ -10,16 +8,12 @@ import {
   SELECT_REPO_COMMAND,
 } from 'constant';
 
-@injectable()
 export default class ConfigFile {
-  @inject(AllConfigFiles)
-  allConfigFiles!: AllConfigFiles;
-
-  @inject(Types.IEditorGateway)
-  editorGateway!: EditorGateway;
-
-  @inject(Types.IReporterGateway)
-  reporterGateway!: ReporterGateway;
+  constructor(
+    public allConfigFiles: AllConfigFiles,
+    public editorGateway: EditorGateway,
+    public reporterGateway: ReporterGateway
+  ) {}
 
   /**
    * Gets the absolute path of the selected .circleci/config.yml to run the jobs on.

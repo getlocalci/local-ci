@@ -1,19 +1,13 @@
-import { inject, injectable } from 'inversify';
-import Types from 'common/Types';
 import ChildProcessGateway from 'gateway/ChildProcessGateway';
 import EditorGateway from 'gateway/EditorGateway';
 import Spawn from 'common/Spawn';
 
-@injectable()
 export default class FinalTerminal {
-  @inject(Types.IChildProcessGateway)
-  childProcessGateway!: ChildProcessGateway;
-
-  @inject(Types.IEditorGateway)
-  editorGateway!: EditorGateway;
-
-  @inject(Spawn)
-  spawn!: Spawn;
+  constructor(
+    public childProcessGateway: ChildProcessGateway,
+    public editorGateway: EditorGateway,
+    public spawn: Spawn
+  ) {}
 
   // @todo: this isn't working.
   // It probably needs to run the logic to get the latest image again.
