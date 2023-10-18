@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 
-/** Stub class for the editor. */
 export default class FakeEditorGateway {
   editor = {
     commands: {

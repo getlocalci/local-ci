@@ -1,4 +1,3 @@
-/** Stub class for filesystem. */
 export default class FakeFsGateway {
   fs = {
     existsSync: () => null,
