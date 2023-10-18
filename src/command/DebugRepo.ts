@@ -5,7 +5,7 @@ import ReporterGateway from 'gateway/ReporterGateway';
 import { SELECTED_CONFIG_PATH } from 'constant';
 
 export default class DebugRepo {
-  commandName:    string;
+  commandName: string;
 
   constructor(
     public editorGateway: EditorGateway,

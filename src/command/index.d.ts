@@ -5,8 +5,8 @@ import LicenseProvider from 'license/LicenseProvider';
 export interface Command {
   commandName: string;
   getCallback: (
-    context: vscode.ExtensionContext,
-    jobProvider: JobProvider,
+    context:  vscode.ExtensionContext,
+       jobProvider: JobProvider,
     licenseProvider: LicenseProvider,
   ) => (arg0: any) => void | Promise<void>;
 }
