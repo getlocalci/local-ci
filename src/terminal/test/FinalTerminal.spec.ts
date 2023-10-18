@@ -1,21 +1,9 @@
-import ChildProcessGateway from 'gateway/ChildProcessGateway';
-import EditorGateway from 'gateway/EditorGateway';
-import FinalTerminal from '../FinalTerminal';
 import getContainer from 'test-tool/TestRoot';
 
-let childProcessGateway: ChildProcessGateway;
-let editorGateway: EditorGateway;
-let finalTerminal: FinalTerminal;
-
 describe('FinalTerminal', () => {
-  beforeEach(() => {
-    const container = getContainer();
-    finalTerminal = container.finalTerminal;
-    childProcessGateway = container.childProcessGateway;
-    editorGateway = container.editorGateway;
-  });
-
   test('no helper message', async () => {
+    const { childProcessGateway, editorGateway, finalTerminal } =
+      getContainer();
     const showInformationMessageSpy = jest.fn();
     editorGateway.editor.window.showInformationMessage =
       showInformationMessageSpy;
@@ -36,6 +24,8 @@ describe('FinalTerminal', () => {
   });
 
   test('with helper message', async () => {
+    const { childProcessGateway, editorGateway, finalTerminal } =
+      getContainer();
     const showInformationMessageSpy = jest.fn();
     editorGateway.editor.window.showInformationMessage =
       showInformationMessageSpy;

@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import LicensePresenter from 'license/LicensePresenter';
 import { LICENSE_VALIDITY, LICENSE_VALIDITY_CACHE_EXPIRATION } from 'constant';
 import getContextStub from 'test-tool/helper/getContextStub';
 import getContainer from 'test-tool/TestRoot';
@@ -32,14 +31,9 @@ function getMockContext(licenseKey: string, cachedValidity: boolean) {
   };
 }
 
-let licensePresenter: LicensePresenter;
-
 describe('LicensePresenter', () => {
-  beforeEach(() => {
-    licensePresenter = getContainer().licensePresenter;
-  });
-
   test('no license', async () => {
+    const { licensePresenter } = getContainer();
     expect(
       (await licensePresenter.getView(getMockContext('', false))).includes(
         'Enter license key'
@@ -48,6 +42,7 @@ describe('LicensePresenter', () => {
   });
 
   test('cached valid license', async () => {
+    const { licensePresenter } = getContainer();
     const actual = await licensePresenter.getView(
       getMockContext('123456789', true)
     );

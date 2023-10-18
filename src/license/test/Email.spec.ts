@@ -1,19 +1,9 @@
-import Email from 'license/Email';
-import HttpGateway from 'gateway/HttpGateway';
 import { EMAIL_ENDPOINT } from 'constant';
 import getContainer from 'test-tool/TestRoot';
 
-let email: Email;
-let httpGateway: HttpGateway;
-
 describe('Email', () => {
-  beforeEach(() => {
-    const container = getContainer();
-    email = container.email;
-    httpGateway = container.httpGateway;
-  });
-
   test('only email', async () => {
+    const { email, httpGateway } = getContainer();
     const emailAddress = 'a@example.com';
 
     const postSpy = jest.fn();
@@ -28,6 +18,7 @@ describe('Email', () => {
   });
 
   test('all fields', async () => {
+    const { email, httpGateway } = getContainer();
     const emailAddress = 'a@example.com';
     const name = 'Jane';
     const optedIn = true;

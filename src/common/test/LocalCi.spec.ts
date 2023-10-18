@@ -1,22 +1,9 @@
-import EditorGateway from 'gateway/EditorGateway';
-import FsGateway from 'gateway/FsGateway';
 import getContextStub from 'test-tool/helper/getContextStub';
-import LocalCi from 'common/LocalCi';
 import getContainer from 'test-tool/TestRoot';
 
-let editorGateway: EditorGateway;
-let fsGateway: FsGateway;
-let localCi: LocalCi;
-
 describe('LocalCi', () => {
-  beforeEach(() => {
-    const container = getContainer();
-    localCi = container.localCi;
-    editorGateway = container.editorGateway;
-    fsGateway = container.fsGateway;
-  });
-
   test('activate registers commands', () => {
+    const { localCi, editorGateway } = getContainer();
     const expectedCommands = [
       'local-ci.email.complain',
       'local-ci.create.config',
@@ -58,6 +45,7 @@ describe('LocalCi', () => {
   });
 
   test('deactivate removes the tmp/ file', () => {
+    const { localCi, fsGateway } = getContainer();
     fsGateway.fs.rmSync = jest.fn();
     localCi.deactivate();
 

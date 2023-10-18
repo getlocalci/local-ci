@@ -1,18 +1,8 @@
-import EditorGateway from 'gateway/EditorGateway';
-import JobFactory from 'job/JobFactory';
 import getContainer from 'test-tool/TestRoot';
 
-let editorGateway: EditorGateway;
-let jobFactory: JobFactory;
-
 describe('Job', () => {
-  beforeEach(() => {
-    const container = getContainer();
-    jobFactory = container.jobFactory;
-    editorGateway = container.editorGateway;
-  });
-
   test('no element passed', () => {
+    const { jobFactory } = getContainer();
     const jobName = 'this-is-your-job';
     expect(jobFactory.create(jobName, false, false).getJobName()).toEqual(
       jobName
@@ -20,6 +10,7 @@ describe('Job', () => {
   });
 
   test('is running', () => {
+    const { jobFactory } = getContainer();
     expect(jobFactory.create('example-job', false, false).contextValue).toEqual(
       undefined
     );
@@ -30,6 +21,7 @@ describe('Job', () => {
   });
 
   test('is success', () => {
+    const { jobFactory } = getContainer();
     const job = jobFactory.create('example', false, false);
     job.setIsSuccess();
     expect(job.description).toEqual('✅');
@@ -39,6 +31,7 @@ describe('Job', () => {
   });
 
   test('is expanded', () => {
+    const { editorGateway, jobFactory } = getContainer();
     const job = jobFactory.create('example', false, false);
 
     job.setExpanded();

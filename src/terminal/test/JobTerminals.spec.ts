@@ -1,18 +1,8 @@
-import EditorGateway from 'gateway/EditorGateway';
-import JobTerminals from 'terminal/JobTerminals';
 import getContainer from 'test-tool/TestRoot';
 
-let editorGateway: EditorGateway;
-let jobTerminals: JobTerminals;
-
 describe('JobTerminals', () => {
-  beforeEach(() => {
-    const container = getContainer();
-    jobTerminals = container.jobTerminals;
-    editorGateway = container.editorGateway;
-  });
-
   test('terminal is not disposed', async () => {
+    const { editorGateway, jobTerminals } = getContainer();
     const jobName = 'build';
     const disposeSpy = jest.fn();
     // @ts-expect-error read-only property.
@@ -28,6 +18,7 @@ describe('JobTerminals', () => {
   });
 
   test('terminal is disposed', async () => {
+    const { editorGateway, jobTerminals } = getContainer();
     const jobName = 'build';
     const disposeSpy = jest.fn();
     // @ts-expect-error read-only property.

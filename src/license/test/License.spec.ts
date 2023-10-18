@@ -1,20 +1,15 @@
 import getContextStub from 'test-tool/helper/getContextStub';
-import License from 'license/License';
 import { LICENSE_VALIDITY, LICENSE_VALIDITY_CACHE_EXPIRATION } from 'constant';
 import getContainer from 'test-tool/TestRoot';
 
-let license: License;
-
 describe('License', () => {
-  beforeEach(() => {
-    license = getContainer().license;
-  });
-
   test('no license key', async () => {
+    const { license } = getContainer();
     expect(await license.isValid(getContextStub(), true, '')).toBe(false);
   });
 
   test('cached license validation', async () => {
+    const { license } = getContainer();
     const mockContext = getContextStub();
 
     expect(

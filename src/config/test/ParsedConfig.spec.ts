@@ -1,19 +1,9 @@
-import FsGateway from 'gateway/FsGateway';
 import onlyJobsYml from 'test-tool/fixture/only-jobs.yml';
-import ParsedConfig from 'config/ParsedConfig';
 import getContainer from 'test-tool/TestRoot';
 
-let fsGateway: FsGateway;
-let parsedConfig: ParsedConfig;
-
 describe('ParsedConfig', () => {
-  beforeEach(() => {
-    const container = getContainer();
-    parsedConfig = container.parsedConfig;
-    fsGateway = container.fsGateway;
-  });
-
   test('no config', () => {
+    const { fsGateway, parsedConfig } = getContainer();
     const existsSyncSpy = jest.fn().mockImplementationOnce(() => false);
     fsGateway.fs.existsSync = existsSyncSpy;
 
@@ -21,6 +11,7 @@ describe('ParsedConfig', () => {
   });
 
   test('with config', () => {
+    const { fsGateway, parsedConfig } = getContainer();
     const existsSyncSpy = jest.fn().mockImplementationOnce(() => true);
     const readFileSyncSpy = jest.fn().mockImplementationOnce(() => onlyJobsYml);
 

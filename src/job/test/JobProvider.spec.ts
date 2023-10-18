@@ -1,26 +1,17 @@
-import getContextStub from 'test-tool/helper/getContextStub';
-import JobProviderFactory from 'job/JobProviderFactory';
-import JobFactory from 'job/JobFactory';
 import JobTreeItem from 'job/JobTreeItem';
+import getContextStub from 'test-tool/helper/getContextStub';
 import getContainer from 'test-tool/TestRoot';
 
-let jobProviderFactory: JobProviderFactory;
-let jobFactory: JobFactory;
-
 describe('JobProvider', () => {
-  beforeEach(() => {
-    const container = getContainer();
-    jobFactory = container.jobFactory;
-    jobProviderFactory = container.jobProviderFactory;
-  });
-
   test('no element passed', () => {
+    const { jobProviderFactory } = getContainer();
     expect(jobProviderFactory.create(getContextStub()).getChildren()).toEqual(
       []
     );
   });
 
   test('no child', () => {
+    const { jobFactory, jobProviderFactory } = getContainer();
     const provider = jobProviderFactory.create(getContextStub());
     expect(
       provider.getChildren(jobFactory.create('foo', false, false))
@@ -28,6 +19,7 @@ describe('JobProvider', () => {
   });
 
   test('two children', () => {
+    const { jobFactory, jobProviderFactory } = getContainer();
     const allJobs = new Map();
     allJobs.set('foo', []);
     allJobs.set('baz', ['foo']);

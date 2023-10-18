@@ -1,8 +1,5 @@
-import ChildProcessGateway from 'gateway/ChildProcessGateway';
-import EditorGateway from 'gateway/EditorGateway';
-import getContextStub from 'test-tool/helper/getContextStub';
-import UncommittedFile from 'containerization/UncommittedFile';
 import getContainer from 'test-tool/TestRoot';
+import getContextStub from 'test-tool/helper/getContextStub';
 
 function getMockContext(isSuppressed: boolean) {
   const initialContext = getContextStub();
@@ -17,26 +14,19 @@ function getMockContext(isSuppressed: boolean) {
   };
 }
 
-let childProcessGateway: ChildProcessGateway;
-let editorGateway: EditorGateway;
-let uncommittedFile: UncommittedFile;
-
 describe('uncommittedWarning', () => {
-  beforeEach(() => {
-    const container = getContainer();
-    uncommittedFile = container.uncommittedFile;
-    childProcessGateway = container.childProcessGateway;
-    editorGateway = container.editorGateway;
-  });
-
   test('warning is suppressed', async () => {
+    const { editorGateway, uncommittedFile } = getContainer();
     const showWarningMessageSpy = jest.fn();
     (editorGateway.editor.window.showWarningMessage = showWarningMessageSpy),
       uncommittedFile.warn(getMockContext(true), '/foo/baz', 'build', []);
+
     expect(showWarningMessageSpy).not.toHaveBeenCalled();
   });
 
   test('no uncommitted file', async () => {
+    const { childProcessGateway, editorGateway, uncommittedFile } =
+      getContainer();
     const showWarningMessageSpy = jest.fn();
     editorGateway.editor.window.showWarningMessage = (message: string) => {
       return new Promise(() => {
@@ -58,6 +48,8 @@ describe('uncommittedWarning', () => {
   });
 
   test('only an uncommitted config file should not show a warning', async () => {
+    const { childProcessGateway, editorGateway, uncommittedFile } =
+      getContainer();
     const showWarningMessageSpy = jest.fn();
     editorGateway.editor.window.showWarningMessage = (message: string) => {
       return new Promise(() => {
@@ -79,6 +71,8 @@ describe('uncommittedWarning', () => {
   });
 
   test('with uncommitted files', async () => {
+    const { childProcessGateway, editorGateway, uncommittedFile } =
+      getContainer();
     const showWarningMessageSpy = jest.fn();
     editorGateway.editor.window.showWarningMessage = (message: string) => {
       return new Promise(() => {
@@ -100,6 +94,8 @@ describe('uncommittedWarning', () => {
   });
 
   test('not a checkout job', async () => {
+    const { childProcessGateway, editorGateway, uncommittedFile } =
+      getContainer();
     const showWarningMessageSpy = jest.fn();
     editorGateway.editor.window.showWarningMessage = (message: string) => {
       return new Promise(() => {

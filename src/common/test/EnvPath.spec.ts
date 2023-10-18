@@ -1,22 +1,9 @@
-import EnvPath from 'common/EnvPath';
-import OsGateway from 'gateway/OsGateway';
-import ProcessGateway from 'gateway/ProcessGateway';
 import getContainer from 'test-tool/TestRoot';
 
-let envPath: EnvPath;
-let osGateway: OsGateway;
-let processGateway: ProcessGateway;
-
 describe('EnvPath', () => {
-  beforeEach(() => {
-    const container = getContainer();
-    envPath = container.envPath;
-    osGateway = container.osGateway;
-    processGateway = container.processGateway;
-  });
-
   describe('get', () => {
     test('on Linux', () => {
+      const { envPath, osGateway, processGateway } = getContainer();
       osGateway.os.type = jest.fn().mockImplementationOnce(() => 'Linux');
       processGateway.process.env = { PATH: '' };
 
@@ -24,6 +11,7 @@ describe('EnvPath', () => {
     });
 
     test('on Mac without the bin path', () => {
+      const { envPath, osGateway, processGateway } = getContainer();
       osGateway.os.type = jest.fn().mockImplementationOnce(() => 'Darwin');
       processGateway.process.env = { PATH: 'Users/Foo/' };
 
@@ -31,6 +19,7 @@ describe('EnvPath', () => {
     });
 
     test('on Mac with the bin path', () => {
+      const { envPath, osGateway, processGateway } = getContainer();
       osGateway.os.type = jest.fn().mockImplementationOnce(() => 'Darwin');
       processGateway.process.env = { PATH: 'Users/Foo/:/usr/local/bin' };
 
@@ -40,16 +29,19 @@ describe('EnvPath', () => {
 
   describe('isMac', () => {
     test('mac', () => {
+      const { envPath, osGateway } = getContainer();
       osGateway.os.type = () => 'Darwin';
       expect(envPath.isMac());
     });
 
     test('linux', () => {
+      const { envPath, osGateway } = getContainer();
       osGateway.os.type = () => 'Linux';
       expect(envPath.isMac()).toEqual(false);
     });
 
     test('windows', () => {
+      const { envPath, osGateway } = getContainer();
       osGateway.os.type = () => 'Windows_NT';
       expect(envPath.isMac()).toEqual(false);
     });

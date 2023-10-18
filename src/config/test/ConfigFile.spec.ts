@@ -1,7 +1,5 @@
-import ConfigFile from 'config/ConfigFile';
-import EditorGateway from 'gateway/EditorGateway';
-import getContextStub from 'test-tool/helper/getContextStub';
 import getContainer from 'test-tool/TestRoot';
+import getContextStub from 'test-tool/helper/getContextStub';
 
 function getMockContext(filePath: string) {
   const initialContext = getContextStub();
@@ -18,17 +16,9 @@ function getMockContext(filePath: string) {
   };
 }
 
-let configFile: ConfigFile;
-let editorGateway: EditorGateway;
-
 describe('ConfigFile', () => {
-  beforeEach(() => {
-    const container = getContainer();
-    configFile = container.configFile;
-    editorGateway = container.editorGateway;
-  });
-
   test('stored config file', async () => {
+    const { configFile, editorGateway } = getContainer();
     editorGateway.editor.workspace.getWorkspaceFolder = jest
       .fn()
       .mockImplementationOnce(() => ({ name: 'example' }));

@@ -1,22 +1,8 @@
-import EditorGateway from 'gateway/EditorGateway';
-import OsGateway from 'gateway/OsGateway';
-import Spawn from 'common/Spawn';
 import getContainer from 'test-tool/TestRoot';
 
-let editorGateway: EditorGateway;
-let osGateway: OsGateway;
-let spawn: Spawn;
-
 describe('Spawn', () => {
-  beforeEach(() => {
-    const container = getContainer();
-    editorGateway = container.editorGateway;
-
-    osGateway = container.osGateway;
-    spawn = container.spawn;
-  });
-
   test('has working directory', () => {
+    const { editorGateway, osGateway, spawn } = getContainer();
     osGateway.os.platform = () => 'darwin';
     const path = 'example';
     // @ts-expect-error read-only property.
@@ -30,11 +16,14 @@ describe('Spawn', () => {
   });
 
   test('has bin directory', () => {
+    const { osGateway, spawn } = getContainer();
     osGateway.os.platform = () => 'darwin';
     expect(spawn.getOptions().env.PATH.includes('/usr/local/bin'));
   });
 
   test('with cwd argument', () => {
+    const { spawn } = getContainer();
+
     expect(spawn.getOptions('/foo/baz').cwd).toEqual('/foo/baz');
   });
 });

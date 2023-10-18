@@ -1,18 +1,8 @@
-import EditorGateway from 'gateway/EditorGateway';
-import CommandDecorators from '../CommandDecorators';
 import getContainer from 'test-tool/TestRoot';
 
-let editorGateway: EditorGateway;
-let commandDecorators: CommandDecorators;
-
 describe('CommandDecorators', () => {
-  beforeEach(() => {
-    const container = getContainer();
-    editorGateway = container.editorGateway;
-    commandDecorators = container.commandDecorators;
-  });
-
   test('neither pre nor post command enabled', () => {
+    const { commandDecorators } = getContainer();
     expect(commandDecorators.get()).toEqual({
       getPreCommand: '',
       getPostCommand: '',
@@ -22,6 +12,8 @@ describe('CommandDecorators', () => {
   });
 
   test('both pre and post command enabled', () => {
+    const { commandDecorators, editorGateway } = getContainer();
+
     // @ts-expect-error stub is missing properties.
     editorGateway.editor.workspace.getConfiguration = jest.fn(() => {
       return {

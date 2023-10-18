@@ -1,21 +1,9 @@
-import BuildAgentSettings from 'config/BuildAgentSettings';
-import ChildProcessGateway from 'gateway/ChildProcessGateway';
-import OsGateway from 'gateway/OsGateway';
 import getContainer from 'test-tool/TestRoot';
 
-let buildAgentSettings: BuildAgentSettings;
-let childProcessGateway: ChildProcessGateway;
-let osGateway: OsGateway;
-
 describe('BuildAgentSettings', () => {
-  beforeEach(() => {
-    const container = getContainer();
-    buildAgentSettings = container.buildAgentSettings;
-    osGateway = container.osGateway;
-    childProcessGateway = container.childProcessGateway;
-  });
-
   test('should not set the settings on a Linux machine', () => {
+    const { buildAgentSettings, childProcessGateway, osGateway } =
+      getContainer();
     const spawnSpy = jest.fn();
     osGateway.os.type = jest.fn().mockImplementationOnce(() => 'Intel');
     osGateway.os.arch = jest.fn().mockImplementationOnce(() => 'x64');
@@ -26,6 +14,8 @@ describe('BuildAgentSettings', () => {
   });
 
   test('should not set the settings on an M1 Mac machine', () => {
+    const { buildAgentSettings, childProcessGateway, osGateway } =
+      getContainer();
     const spawnSpy = jest.fn();
     osGateway.os.type = jest.fn().mockImplementationOnce(() => 'Darwin');
     osGateway.os.arch = jest.fn().mockImplementationOnce(() => 'arm64');
@@ -36,6 +26,8 @@ describe('BuildAgentSettings', () => {
   });
 
   test('should set the settings on an Intel Mac machine', () => {
+    const { buildAgentSettings, childProcessGateway, osGateway } =
+      getContainer();
     const spawnSpy = jest.fn();
     osGateway.os.type = jest.fn().mockImplementationOnce(() => 'Darwin');
     osGateway.os.arch = jest.fn().mockImplementationOnce(() => 'x64');

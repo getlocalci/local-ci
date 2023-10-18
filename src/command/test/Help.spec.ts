@@ -1,21 +1,8 @@
-import EditorGateway from 'gateway/EditorGateway';
-import ReporterGateway from 'gateway/ReporterGateway';
-import Help from 'command/Help';
 import getContainer from 'test-tool/TestRoot';
 
-let help: Help;
-let editorGateway: EditorGateway;
-let reporterGateway: ReporterGateway;
-
 describe('Help command', () => {
-  beforeEach(() => {
-    const container = getContainer();
-    help = container.help;
-    editorGateway = container.editorGateway;
-    reporterGateway = container.reporterGateway;
-  });
-
   test('calls the reporter event', () => {
+    const { help, reporterGateway } = getContainer();
     const reporterSpy = jest.fn();
     reporterGateway.reporter.sendTelemetryEvent = reporterSpy;
 
@@ -25,6 +12,7 @@ describe('Help command', () => {
   });
 
   test('opens an external link', () => {
+    const { editorGateway, help } = getContainer();
     const editorSpy = jest.fn();
     editorGateway.editor.env.openExternal = editorSpy;
     const stubUri = 'https://example.com/stub';
