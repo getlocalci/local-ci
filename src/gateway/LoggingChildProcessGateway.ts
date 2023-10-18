@@ -5,7 +5,7 @@ import EditorGateway from './EditorGateway';
  * Not used in the production build.
  *
  * To debug the bash commands run with ChildProcessGateway.cp.spawn(),
- * replaces ChildProcessGateway with this file in AppIoc.ts.
+ * replace ChildProcessGateway with this file in CompositionRoot.ts.
  */
 export default class LoggingChildProcessGateway {
   cp;
