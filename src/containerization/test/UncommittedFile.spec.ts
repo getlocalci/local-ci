@@ -18,8 +18,8 @@ describe('uncommittedWarning', () => {
   test('warning is suppressed', async () => {
     const { editorGateway, uncommittedFile } = getContainer();
     const showWarningMessageSpy = jest.fn();
-    (editorGateway.editor.window.showWarningMessage = showWarningMessageSpy),
-      uncommittedFile.warn(getMockContext(true), '/foo/baz', 'build', []);
+    editorGateway.editor.window.showWarningMessage = showWarningMessageSpy;
+    uncommittedFile.warn(getMockContext(true), '/foo/baz', 'build', []);
 
     expect(showWarningMessageSpy).not.toHaveBeenCalled();
   });
@@ -38,7 +38,7 @@ describe('uncommittedWarning', () => {
     childProcessGateway.cp.spawn = jest.fn().mockImplementationOnce(() => {
       return {
         stdout: {
-          on: (event: unknown, callback: CallableFunction) => callback(data),
+          on: (_event: unknown, callback: CallableFunction) => callback(data),
         },
       };
     });
@@ -61,7 +61,7 @@ describe('uncommittedWarning', () => {
     childProcessGateway.cp.spawn = jest.fn().mockImplementationOnce(() => {
       return {
         stdout: {
-          on: (event: unknown, callback: CallableFunction) => callback(data),
+          on: (_event: unknown, callback: CallableFunction) => callback(data),
         },
       };
     });
@@ -84,7 +84,7 @@ describe('uncommittedWarning', () => {
     childProcessGateway.cp.spawn = jest.fn().mockImplementationOnce(() => {
       return {
         stdout: {
-          on: (event: unknown, callback: CallableFunction) => callback(data),
+          on: (_event: unknown, callback: CallableFunction) => callback(data),
         },
       };
     });
@@ -107,7 +107,7 @@ describe('uncommittedWarning', () => {
     childProcessGateway.cp.spawn = jest.fn().mockImplementationOnce(() => {
       return {
         stdout: {
-          on: (event: unknown, callback: CallableFunction) => callback(data),
+          on: (_event: unknown, callback: CallableFunction) => callback(data),
         },
       };
     });
