@@ -1,6 +1,6 @@
 #!/bin/sh
 
-staged_files=$(git diff --diff-filter=d --staged --name-only | grep -E 'src\/\S*\.ts$')
+staged_files=$(git diff --diff-filter=d --staged --name-only | grep -E '^src\/\S*\.ts$')
 if [ -n "$staged_files" ]
 	then
 	if ! npm run lint:fix
@@ -8,5 +8,5 @@ if [ -n "$staged_files" ]
 		exit 1
 	fi
 
-	git add "$staged_js_files"
+	echo "$staged_js_files" | xargs git add
 fi

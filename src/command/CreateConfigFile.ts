@@ -5,7 +5,7 @@ import EditorGateway from 'gateway/EditorGateway';
 import getStarterConfig from 'config/getStarterConfig';
 import JobProvider from 'job/JobProvider';
 import ReporterGateway from 'gateway/ReporterGateway';
-import { CREATE_CONFIG_FILE_COMMAND } from 'constant';
+import {   CREATE_CONFIG_FILE_COMMAND } from 'constant';
 
 export default class CreateConfigFile implements Command {
   commandName: string;
