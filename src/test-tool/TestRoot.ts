@@ -1,3 +1,11 @@
+import FakeChildProcessGateway from 'gateway/FakeChildProcessGateway';
+import FakeEditorGateway from 'gateway/FakeEditorGateway';
+import FakeEnvVar from 'process/FakeEnvVar';
+import FakeFsGateway from 'gateway/FakeFsGateway';
+import FakeHttpGateway from 'gateway/FakeHttpGateway';
+import FakeOsGateway from 'gateway/FakeOsGateway';
+import FakeProcessGateway from 'gateway/FakeProcessGateway';
+import FakeReporterGateway from 'gateway/FakeReporterGateway';
 import AllConfigFiles from 'config/AllConfigFiles';
 import AllJobs from 'job/AllJobs';
 import BuildAgentSettings from 'config/BuildAgentSettings';
@@ -20,14 +28,6 @@ import EnvPath from 'common/EnvPath';
 import EnvVar from 'process/EnvVar';
 import ExitAllJobs from 'command/ExitAllJobs';
 import ExitJob from 'command/ExitJob';
-import FakeChildProcessGateway from 'gateway/FakeChildProcessGateway';
-import FakeEditorGateway from 'gateway/FakeEditorGateway';
-import FakeEnvVar from 'process/FakeEnvVar';
-import FakeFsGateway from 'gateway/FakeFsGateway';
-import FakeHttpGateway from 'gateway/FakeHttpGateway';
-import FakeOsGateway from 'gateway/FakeOsGateway';
-import FakeProcessGateway from 'gateway/FakeProcessGateway';
-import FakeReporterGateway from 'gateway/FakeReporterGateway';
 import FinalTerminal from 'terminal/FinalTerminal';
 import FirstActivation from 'job/FirstActivation';
 import FsGateway from 'gateway/FsGateway';
@@ -266,19 +266,19 @@ export default function getContainer() {
     email,
     envPath,
     envVar,
-    help,
-    images,
     finalTerminal,
     fsGateway,
+    help,
     httpGateway,
+    images,
     jobFactory,
     jobProviderFactory,
+    jobTerminals,
     license,
     licenseInput,
     licensePresenter,
     localCi,
     osGateway,
-    jobTerminals,
     parsedConfig,
     processFile,
     processGateway,
