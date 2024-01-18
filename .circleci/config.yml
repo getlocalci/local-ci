@@ -8,11 +8,9 @@ jobs:
     executor: node/default
     steps:
       - checkout
-      - node/install-packages:
-          app-dir: .circleci/dynamic
       - run:
           name: Generate config
-          command: npm start
+          command: npm ci && npm start
           working_directory: .circleci/dynamic
       - continuation/continue:
           configuration_path: .circleci/dynamic/dynamicConfig.yml
