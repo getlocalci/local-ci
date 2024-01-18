@@ -10,7 +10,7 @@ jobs:
       - checkout
       - run:
           name: Generate config
-          command: npm ci && npm run start
+          command: nvm use && npm ci && npm run start
           working_directory: .circleci/dynamic
       - continuation/continue:
           configuration_path: .circleci/dynamic/dynamicConfig.yml
