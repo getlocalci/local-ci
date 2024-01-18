@@ -1,5 +1,8 @@
 # Change Log
 
+## 2.2.0 - 17 January 2024
+- Update some dependencies to the latest. [#257](https://github.com/getlocalci/local-ci/pull/257)
+
 ## 2.1.3 - 16 October 2023
 - Add my email to the main page. [#252](https://github.com/getlocalci/local-ci/pull/252)
 
