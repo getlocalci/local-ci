@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  continuation: circleci/continuation@0.3
+  continuation: circleci/continuation@1.0
   node: circleci/node@5.2
 setup: true
 jobs:
