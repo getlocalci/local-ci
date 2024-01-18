@@ -8,7 +8,7 @@
   "scripts": {
     "lint": "prettier --check index.ts",
     "lint:fix": "prettier --write index.ts",
-    "start": "ts-node --esm --skipIgnore index"
+    "start": "ts-node --esm --skipIgnore index.ts"
   },
   "license": "GPL-2.0-or-later",
   "devDependencies": {
