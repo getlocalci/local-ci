@@ -8,6 +8,7 @@ jobs:
     executor: node/default
     steps:
       - checkout
+      - node/install
       - run:
           name: Generate config
           command: nvm use && npm ci && npm run start
