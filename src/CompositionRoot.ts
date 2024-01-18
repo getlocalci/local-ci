@@ -73,7 +73,7 @@ const fsGateway = new FsGateway();
 const httpGateway = new HttpGateway();
 const osGateway = new OsGateway();
 const processGateway = new ProcessGateway();
-const reporterGateway = new ReporterGateway(editorGateway);
+const reporterGateway = new ReporterGateway();
 
 const parsedConfig = new ParsedConfig(fsGateway);
 const allJobs = new AllJobs(parsedConfig);

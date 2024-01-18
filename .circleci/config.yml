@@ -1,13 +1,14 @@
 version: 2.1
 orbs:
-  continuation: circleci/continuation@0.3
-  node: circleci/node@5.0
+  continuation: circleci/continuation@1.0
+  node: circleci/node@5.2
 setup: true
 jobs:
   generate-config:
     executor: node/default
     steps:
       - checkout
+      - node/install
       - node/install-packages:
           app-dir: .circleci/dynamic
       - run:
