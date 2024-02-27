@@ -41,7 +41,6 @@ export default class License {
       return !!context.globalState.get(LICENSE_VALIDITY);
     }
 
-    console.debug('this.httpGateway is', this.httpGateway);
     let response;
     try {
       response = await this.httpGateway.get(licenseValidationEndpoint, {

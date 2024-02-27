@@ -1,12 +1,11 @@
 import { inject, injectable } from 'inversify';
 import axios from 'axios';
 import Types from 'common/Types';
-import Cache from 'gateway/Cache';
 
 @injectable()
 export default class HttpGateway {
   @inject(Types.ICache)
-  cache!: Cache;
+  cache!: any; // eslint-disable-line @typescript-eslint/no-explicit-any
 
   async get(url: string, config: Record<string, unknown>) {
     if (this.cache.has(url)) {
