@@ -14,7 +14,7 @@ import Volume from 'containerization/Volume';
 
 export const iocContainer = new BaseIoc().buildBaseTemplate();
 
-iocContainer.bind(Types.ICache).to(Cache).inSingletonScope();
+iocContainer.bind(Types.ICache).toConstructor(Cache);
 iocContainer
   .bind(Types.IChildProcessGateway)
   .to(ChildProcessGateway)

@@ -1,8 +1,5 @@
-import { injectable } from 'inversify';
-
 type Store = { [k: string]: { val: unknown; exp: number } };
 
-@injectable()
 export default class Cache {
   store: Store;
 
