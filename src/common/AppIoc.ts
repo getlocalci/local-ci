@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import BaseIoc from 'common/BaseIoc';
+import Cache from 'common/Cache';
 import ChildProcessGateway from 'gateway/ChildProcessGateway';
 import EditorGateway from 'gateway/EditorGateway';
 import EnvVar from 'process/EnvVar';
@@ -13,6 +14,7 @@ import Volume from 'containerization/Volume';
 
 export const iocContainer = new BaseIoc().buildBaseTemplate();
 
+iocContainer.bind(Types.ICache).to(Cache).inSingletonScope();
 iocContainer
   .bind(Types.IChildProcessGateway)
   .to(ChildProcessGateway)

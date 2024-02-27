@@ -1,10 +1,23 @@
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import axios from 'axios';
+import Types from 'common/Types';
+import Cache from 'common/Cache';
 
 @injectable()
 export default class HttpGateway {
+  @inject(Types.ICache)
+  cache!: Cache;
+
   async get(url: string, config: Record<string, unknown>) {
-    return await axios.get(url, config);
+    if (this.cache.has(url)) {
+      console.log('the cache has');
+      return this.cache.get(url);
+    }
+
+    const result = await axios.get(url, config);
+    this.cache = this.cache.set(url, result);
+
+    return result;
   }
 
   async post(url: string, config: Record<string, unknown>) {

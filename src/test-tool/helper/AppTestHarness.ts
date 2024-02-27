@@ -1,6 +1,7 @@
 import { Container } from 'inversify';
 import Types from 'common/Types';
 import BaseIOC from 'common/BaseIoc';
+import FakeCache from 'common/FakeCache';
 import FakeChildProcessGateway from 'gateway/FakeChildProcessGateway';
 import FakeEditorGateway from 'gateway/FakeEditorGateway';
 import FakeEnvVar from 'process/FakeEnvVar';
@@ -23,6 +24,7 @@ export default class AppTestHarness {
 
   init() {
     this.container = new BaseIOC().buildBaseTemplate();
+    this.container.bind(Types.ICache).to(FakeCache).inSingletonScope();
     this.container
       .bind(Types.IChildProcessGateway)
       .to(FakeChildProcessGateway)

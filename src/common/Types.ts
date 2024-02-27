@@ -1,4 +1,5 @@
 export default {
+  ICache: Symbol.for('ICache'),
   IChildProcessGateway: Symbol.for('IChildProcessGateway'),
   IEditorGateway: Symbol.for('IEditorGateway'),
   IEnvVar: Symbol.for('IEnvVar'),
