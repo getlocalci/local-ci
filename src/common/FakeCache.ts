@@ -1,6 +1,8 @@
 /* eslint @typescript-eslint/no-empty-function: 0 */
+import { injectable } from 'inversify';
+
+@injectable()
 export default class FakeCache {
-  constructor() {}
   get() {}
   has() {
     return false;
