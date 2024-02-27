@@ -4,7 +4,11 @@ type Store = { [k: string]: { val: unknown; exp: number } };
 
 @injectable()
 export default class Cache {
-  constructor(private store: Store = {}) {}
+  store: Store;
+
+  constructor(store: Store = {}) {
+    this.store = Object.freeze(store);
+  }
 
   get(key: string) {
     if (!this.has(key)) {

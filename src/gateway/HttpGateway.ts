@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import axios from 'axios';
 import Types from 'common/Types';
-import Cache from 'common/Cache';
+import Cache from 'gateway/Cache';
 
 @injectable()
 export default class HttpGateway {
@@ -10,7 +10,6 @@ export default class HttpGateway {
 
   async get(url: string, config: Record<string, unknown>) {
     if (this.cache.has(url)) {
-      console.log('the cache has');
       return this.cache.get(url);
     }
 
