@@ -1,8 +1,6 @@
 /* eslint @typescript-eslint/no-empty-function: 0 */
-type Store = { [k: string]: { val: unknown; exp: number } };
-
 export default class FakeCache {
-  constructor(private store: Store = {}) {}
+  constructor() {}
   get() {}
   has() {
     return false;
