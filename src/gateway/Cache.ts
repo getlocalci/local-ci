@@ -4,7 +4,7 @@ export default class Cache {
   store: Store;
 
   constructor(store: Store = {}) {
-    this.store = Object.freeze(store);
+    this.store = store;
   }
 
   get(key: string) {
@@ -19,17 +19,15 @@ export default class Cache {
   }
 
   set(key: string, val: unknown, exp = 86400000, now = new Date().getTime()) {
-    return new Cache({
-      ...this.store,
-      [key]: {
-        val,
-        exp: exp + now,
-      },
-    }).expire();
+    this.store[key] = {
+      val,
+      exp: exp + now,
+    };
+    this.expire();
   }
 
   private expire() {
-    return new Cache(this.expireMany(this.store, 20));
+    this.store = this.expireMany(this.store, 20);
   }
 
   private expired(store: Store, key: string, now = new Date().getTime()) {
