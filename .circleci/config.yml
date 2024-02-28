@@ -1,6 +1,5 @@
 version: 2.1
 orbs:
-  continuation: circleci/continuation@1.0
   node: circleci/node@5.2
 setup: true
 jobs:
@@ -18,6 +17,8 @@ jobs:
       - continuation/continue:
           configuration_path: .circleci/dynamic/dynamicConfig.yml
 workflows:
-  dynamic-workflow:
+  test:
     jobs:
-      - generate-config
+      - node/test
+      - node/test:
+          run-command: 'lint'
