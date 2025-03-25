@@ -286,6 +286,7 @@
     "prettier": "^2.6.1",
     "raw-loader": "^4.0.2",
     "shellcheck": "^1.1.0",
+    "tar-fs": "^3.0.8",
     "ts-jest": "^29.1.1",
     "ts-loader": "^9.2.8",
     "typescript": "^5.3.3",
