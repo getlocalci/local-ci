@@ -12,8 +12,9 @@
     "baseUrl": "src",
     "strict": true,
     "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
     "esModuleInterop": true,
-    "experimentalDecorators": true
+    "allowSyntheticDefaultImports": true
   },
   "exclude": [
     "node_modules",

@@ -2,7 +2,6 @@ import FakeChildProcessGateway from 'gateway/FakeChildProcessGateway';
 import FakeEditorGateway from 'gateway/FakeEditorGateway';
 import FakeEnvVar from 'process/FakeEnvVar';
 import FakeFsGateway from 'gateway/FakeFsGateway';
-import FakeHttpGateway from 'gateway/FakeHttpGateway';
 import FakeOsGateway from 'gateway/FakeOsGateway';
 import FakeProcessGateway from 'gateway/FakeProcessGateway';
 import FakeReporterGateway from 'gateway/FakeReporterGateway';
@@ -14,36 +13,26 @@ import Images from 'containerization/Images';
 import ChildProcessGateway from 'gateway/ChildProcessGateway';
 import CommandDecorators from 'terminal/CommandDecorators';
 import CommandFactory from 'job/ComandFactory';
-import Complain from 'command/Complain';
 import Config from 'config/Config';
 import ConfigFile from 'config/ConfigFile';
 import CreateConfigFile from 'command/CreateConfigFile';
 import DebugRepo from 'command/DebugRepo';
 import Docker from 'containerization/Docker';
 import EditorGateway from 'gateway/EditorGateway';
-import Email from 'license/Email';
-import EnterLicense from 'command/EnterLicense';
 import EnterToken from 'command/EnterToken';
 import EnvPath from 'common/EnvPath';
 import EnvVar from 'process/EnvVar';
 import ExitAllJobs from 'command/ExitAllJobs';
 import ExitJob from 'command/ExitJob';
 import FinalTerminal from 'terminal/FinalTerminal';
-import FirstActivation from 'job/FirstActivation';
 import FsGateway from 'gateway/FsGateway';
-import GetLicense from 'command/GetLicense';
 import Help from 'command/Help';
-import HttpGateway from 'gateway/HttpGateway';
 import JobFactory from 'job/JobFactory';
 import JobListener from 'job/JobListener';
 import JobProviderFactory from 'job/JobProviderFactory';
 import JobRunner from 'job/JobRunner';
 import JobTerminals from 'terminal/JobTerminals';
 import LatestCommittedImage from 'containerization/LatestCommittedImage';
-import License from 'license/License';
-import LicenseInput from 'license/LicenseInput';
-import LicensePresenter from 'license/LicensePresenter';
-import LicenseProviderFactory from 'license/LicenseProviderFactory';
 import LocalCi from '../common/LocalCi';
 import LogFactory from 'log/LogFactory';
 import LogFile from 'log/LogFile';
@@ -69,7 +58,6 @@ import UncommittedFile from 'containerization/UncommittedFile';
 import WarningCommandFactory from 'job/WarningCommandFactory';
 import WarningFactory from 'job/WarningFactory';
 import Workspace from 'common/Workspace';
-import RefreshLicenseTree from 'command/RefreshLicenseTree';
 import ShowLogFile from 'command/ShowLogFile';
 import StartDocker from 'command/StartDocker';
 import ReporterGateway from 'gateway/ReporterGateway';
@@ -81,7 +69,6 @@ export default function getContainer() {
   const editorGateway = new FakeEditorGateway() as unknown as EditorGateway;
   const envVar = new FakeEnvVar() as unknown as EnvVar;
   const fsGateway = new FakeFsGateway() as unknown as FsGateway;
-  const httpGateway = new FakeHttpGateway() as unknown as HttpGateway;
   const osGateway = new FakeOsGateway() as unknown as OsGateway;
   const processGateway = new FakeProcessGateway() as unknown as ProcessGateway;
   const reporterGateway =
@@ -137,7 +124,6 @@ export default function getContainer() {
   const createConfigFile = new CreateConfigFile(editorGateway, reporterGateway);
   const debugRepo = new DebugRepo(editorGateway, reporterGateway);
   const docker = new Docker(childProcessGateway, spawn);
-  const email = new Email(editorGateway, httpGateway, reporterGateway);
   const enterToken = new EnterToken(editorGateway);
   const images = new Images(childProcessGateway, spawn);
   const exitAllJobs = new ExitAllJobs(images, editorGateway, reporterGateway);
@@ -187,8 +173,6 @@ export default function getContainer() {
   );
   const jobTerminals = new JobTerminals(editorGateway);
   const exitJob = new ExitJob(jobFactory, jobRunner, jobTerminals);
-  const getLicense = new GetLicense(editorGateway);
-  const license = new License(editorGateway, httpGateway);
   const retryer = new Retryer();
   const jobProviderFactory = new JobProviderFactory(
     allConfigFiles,
@@ -198,7 +182,6 @@ export default function getContainer() {
     docker,
     editorGateway,
     fsGateway,
-    license,
     config,
     jobFactory,
     logFactory,
@@ -208,32 +191,17 @@ export default function getContainer() {
     allJobs
   );
 
-  const licenseInput = new LicenseInput(editorGateway, license);
-  const licensePresenter = new LicensePresenter(license);
-  const licenseProviderFactory = new LicenseProviderFactory(
-    license,
-    licenseInput,
-    licensePresenter,
-    editorGateway
-  );
-  const complain = new Complain(editorGateway);
   const help = new Help(editorGateway, reporterGateway);
   const registrarFactory = new RegistrarFactory(
-    complain,
     configFile,
     createConfigFile,
     debugRepo,
-    new EnterLicense(licenseInput),
     enterToken,
     exitAllJobs,
     exitJob,
-    new FirstActivation(editorGateway, reporterGateway, email),
-    getLicense,
     help,
-    licenseInput,
     new LogProviderFactory(fsGateway),
     new Refresh(),
-    new RefreshLicenseTree(editorGateway),
     new ReRunJob(editorGateway, jobRunner, jobTerminals, reporterGateway),
     new RunJob(editorGateway, jobRunner, reporterGateway),
     new RunWalkthroughJob(config, configFile, editorGateway, reporterGateway),
@@ -247,7 +215,6 @@ export default function getContainer() {
   const localCi = new LocalCi(
     fsGateway,
     jobProviderFactory,
-    licenseProviderFactory,
     registrarFactory,
     reporterGateway
   );
@@ -257,26 +224,20 @@ export default function getContainer() {
     buildAgentSettings,
     childProcessGateway,
     commandDecorators,
-    complain,
     configFile,
     createConfigFile,
     debugRepo,
     docker,
     editorGateway,
-    email,
     envPath,
     envVar,
     finalTerminal,
     fsGateway,
     help,
-    httpGateway,
     images,
     jobFactory,
     jobProviderFactory,
     jobTerminals,
-    license,
-    licenseInput,
-    licensePresenter,
     localCi,
     osGateway,
     parsedConfig,

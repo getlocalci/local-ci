@@ -1,5 +1,8 @@
 # Change Log
 
+## 2.3.0 - 25 March 2025
+- Make this extension free. [#260](https://github.com/getlocalci/local-ci/pull/260)
+
 ## 2.2.0 - 17 January 2024
 - Update some dependencies to the latest. [#257](https://github.com/getlocalci/local-ci/pull/257)
 

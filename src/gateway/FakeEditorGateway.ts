@@ -25,7 +25,6 @@ export default class FakeEditorGateway {
       createTreeView: () => null,
       registerUriHandler: () => null,
       registerTreeDataProvider: () => null,
-      registerWebviewViewProvider: () => null,
       showInformationMessage: async (message: string) => message,
       showTextDocument: async (message: string) => message,
       showWarningMessage: async (message: string) => message,

@@ -7,8 +7,8 @@
       "type": "npm",
       "script": "watch",
       "problemMatcher": [
-        "$ts-webpack-watch",
-        "$tslint-webpack-watch"
+        "$tsc-watch",
+        "$tsc"
       ],
       "isBackground": true,
       "presentation": {

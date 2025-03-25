@@ -1,7 +1,6 @@
 import type vscode from 'vscode';
 import FsGateway from 'gateway/FsGateway';
 import JobProviderFactory from 'job/JobProviderFactory';
-import LicenseProviderFactory from 'license/LicenseProviderFactory';
 import RegistrarFactory from './RegistrarFactory';
 import ReporterGateway from 'gateway/ReporterGateway';
 import { HOST_TMP_DIRECTORY } from 'constant';
@@ -10,7 +9,6 @@ export default class LocalCi {
   constructor(
     public fsGateway: FsGateway,
     public jobProviderFactory: JobProviderFactory,
-    public licenseProviderFactory: LicenseProviderFactory,
     public registrarFactory: RegistrarFactory,
     public reporterGateway: ReporterGateway
   ) {}
@@ -20,14 +18,7 @@ export default class LocalCi {
     const jobProvider = this.jobProviderFactory.create(context);
     jobProvider.init();
 
-    const licenseProvider = this.licenseProviderFactory.create(context, () =>
-      jobProvider.hardRefresh()
-    );
-    const registrar = this.registrarFactory.create(
-      context,
-      jobProvider,
-      licenseProvider
-    );
+    const registrar = this.registrarFactory.create(context, jobProvider);
 
     registrar.registerHandlers();
     context.subscriptions.push(

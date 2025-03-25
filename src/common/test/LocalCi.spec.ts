@@ -5,17 +5,13 @@ describe('LocalCi', () => {
   test('activate registers commands', () => {
     const { localCi, editorGateway } = getContainer();
     const expectedCommands = [
-      'local-ci.email.complain',
       'local-ci.create.config',
       'local-ci.debug.repo',
-      'local-ci.license.enter',
       'localCiJobs.enterToken',
       'localCiJobs.exitAllJobs',
       'local-ci.job.exit',
-      'local-ci.license.get',
       'localCiJobs.help',
       'localCiJobs.refresh',
-      'localCiLicense.refresh',
       'local-ci.job.rerun',
       'local-ci.job.run',
       'local-ci.runWalkthroughJob',

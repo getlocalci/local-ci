@@ -10,16 +10,11 @@ import ConfigFile from 'config/ConfigFile';
 import EditorGateway from 'gateway/EditorGateway';
 import FsGateway from 'gateway/FsGateway';
 import getLogFilesDirectory from 'log/getLogFilesDirectory';
-import getTrialLength from 'license/getTrialLength';
-import isTrialExpired from 'license/isTrialExpired';
 import JobTreeItem from './JobTreeItem';
-import License from 'license/License';
 import ReporterGateway from 'gateway/ReporterGateway';
-import { TRIAL_STARTED_TIMESTAMP } from '../constant';
 
 export enum JobError {
   DockerNotRunning,
-  LicenseKey,
   NoConfigFilePathInWorkspace,
   NoConfigFilePathSelected,
   NoFolderOpen,
@@ -49,7 +44,6 @@ export default class JobProvider
     private docker: Docker,
     private editorGateway: EditorGateway,
     private fsGateway: FsGateway,
-    private license: License,
     private processedConfig: Config,
     private retryer: Retryer,
     private allJobs: AllJobs,
@@ -70,7 +64,6 @@ export default class JobProvider
     }
   }
 
-  /** Refreshes the TreeView, without processing the config file. */
   async refresh(job?: vscode.TreeItem, skipMessage?: boolean): Promise<void> {
     await this.loadJobs(true, skipMessage);
     await this.loadLogs();
@@ -79,7 +72,6 @@ export default class JobProvider
     }
   }
 
-  /** Processes the config file(s) and refreshes. */
   async hardRefresh(
     job?: JobTreeItem,
     suppressMessage?: boolean
@@ -135,18 +127,6 @@ export default class JobProvider
 
       processedConfig = configResult.processedConfig;
       processError = configResult.processError;
-    }
-
-    const shouldEnableExtension =
-      (await this.license.isValid(this.context)) ||
-      !isTrialExpired(
-        this.context.globalState.get(TRIAL_STARTED_TIMESTAMP),
-        getTrialLength(this.context)
-      );
-
-    if (!shouldEnableExtension) {
-      this.setError(JobError.LicenseKey);
-      return;
     }
 
     if (!this.docker.isRunning()) {

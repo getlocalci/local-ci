@@ -10,10 +10,7 @@ import WarningFactory from './WarningFactory';
 import WarningCommandFactory from './WarningCommandFactory';
 import type EditorGateway from 'gateway/EditorGateway';
 import {
-  COMPLAIN_COMMAND,
   CREATE_CONFIG_FILE_COMMAND,
-  ENTER_LICENSE_COMMAND,
-  GET_LICENSE_COMMAND,
   JOB_TREE_VIEW_ID,
   PROCESS_TRY_AGAIN_COMMAND,
   SELECT_REPO_COMMAND,
@@ -128,14 +125,6 @@ export default class Children {
             'Try Again',
             `${JOB_TREE_VIEW_ID}.refresh`
           ),
-          this.commandFactory.create('Complain To Me', COMPLAIN_COMMAND),
-        ];
-      case JobError.LicenseKey:
-        return [
-          this.warningFactory.create('Please enter a Local CI license key.'),
-          this.commandFactory.create('Get License', GET_LICENSE_COMMAND),
-          this.commandFactory.create('Enter License', ENTER_LICENSE_COMMAND),
-          this.commandFactory.create('Complain To Me', COMPLAIN_COMMAND),
         ];
       case JobError.NoFolderOpen:
         return [
@@ -147,7 +136,6 @@ export default class Children {
             'Open a folder',
             'workbench.action.files.openFileFolder'
           ),
-          this.commandFactory.create('Complain to me', COMPLAIN_COMMAND),
         ];
       case JobError.NoConfigFilePathInWorkspace:
         return [
@@ -156,7 +144,6 @@ export default class Children {
             'Create a config for me',
             CREATE_CONFIG_FILE_COMMAND
           ),
-          this.commandFactory.create('Complain to me', COMPLAIN_COMMAND),
         ];
       case JobError.NoConfigFilePathSelected:
         return [
@@ -165,7 +152,6 @@ export default class Children {
             SELECT_REPO_COMMAND
           ),
           this.commandFactory.create('Select repo', SELECT_REPO_COMMAND),
-          this.commandFactory.create('Complain to me', COMPLAIN_COMMAND),
         ];
       case JobError.ProcessFile:
         return [
@@ -182,7 +168,6 @@ export default class Children {
               .join(' ')
           ),
           this.commandFactory.create('Try Again', PROCESS_TRY_AGAIN_COMMAND),
-          this.commandFactory.create('Complain To Me', COMPLAIN_COMMAND),
         ];
       default:
         return [];
