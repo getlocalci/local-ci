@@ -1,6 +1,5 @@
 import type vscode from 'vscode';
 import type { Command } from 'command/index';
-import Complain from 'command/Complain';
 import ConfigFile from 'config/ConfigFile';
 import CreateConfigFile from 'command/CreateConfigFile';
 import Delayer from 'job/Delayer';
@@ -27,7 +26,6 @@ export default class Registrar {
   constructor(
     public context: vscode.ExtensionContext,
     public jobProvider: JobProvider,
-    private complain: Complain,
     private configFile: ConfigFile,
     private createConfigFile: CreateConfigFile,
     private debugRepo: DebugRepo,
@@ -49,7 +47,6 @@ export default class Registrar {
 
   registerCommands(): vscode.Disposable[] {
     return [
-      this.complain,
       this.createConfigFile,
       this.debugRepo,
       this.enterToken,

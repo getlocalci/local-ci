@@ -1,5 +1,4 @@
 import type vscode from 'vscode';
-import Complain from 'command/Complain';
 import ConfigFile from 'config/ConfigFile';
 import CreateConfigFile from 'command/CreateConfigFile';
 import DebugRepo from 'command/DebugRepo';
@@ -22,7 +21,6 @@ import TryProcessAgain from '../command/TryProcessAgain';
 
 export default class RegistrarFactory {
   constructor(
-    private complain: Complain,
     private configFile: ConfigFile,
     private createConfigFile: CreateConfigFile,
     private debugRepo: DebugRepo,
@@ -46,7 +44,6 @@ export default class RegistrarFactory {
     return new Registrar(
       context,
       jobProvider,
-      this.complain,
       this.configFile,
       this.createConfigFile,
       this.debugRepo,

@@ -5,7 +5,6 @@ describe('LocalCi', () => {
   test('activate registers commands', () => {
     const { localCi, editorGateway } = getContainer();
     const expectedCommands = [
-      'local-ci.email.complain',
       'local-ci.create.config',
       'local-ci.debug.repo',
       'localCiJobs.enterToken',

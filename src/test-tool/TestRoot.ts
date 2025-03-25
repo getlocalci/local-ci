@@ -13,7 +13,6 @@ import Images from 'containerization/Images';
 import ChildProcessGateway from 'gateway/ChildProcessGateway';
 import CommandDecorators from 'terminal/CommandDecorators';
 import CommandFactory from 'job/ComandFactory';
-import Complain from 'command/Complain';
 import Config from 'config/Config';
 import ConfigFile from 'config/ConfigFile';
 import CreateConfigFile from 'command/CreateConfigFile';
@@ -192,10 +191,8 @@ export default function getContainer() {
     allJobs
   );
 
-  const complain = new Complain(editorGateway);
   const help = new Help(editorGateway, reporterGateway);
   const registrarFactory = new RegistrarFactory(
-    complain,
     configFile,
     createConfigFile,
     debugRepo,
@@ -227,7 +224,6 @@ export default function getContainer() {
     buildAgentSettings,
     childProcessGateway,
     commandDecorators,
-    complain,
     configFile,
     createConfigFile,
     debugRepo,

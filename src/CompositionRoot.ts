@@ -12,7 +12,6 @@ import Children from 'job/Children';
 import Images from 'containerization/Images';
 import CommandDecorators from 'terminal/CommandDecorators';
 import CommandFactory from 'job/ComandFactory';
-import Complain from 'command/Complain';
 import Config from 'config/Config';
 import ConfigFile from 'config/ConfigFile';
 import CreateConfigFile from 'command/CreateConfigFile';
@@ -179,7 +178,6 @@ const jobProviderFactory = new JobProviderFactory(
 );
 
 const registrarFactory = new RegistrarFactory(
-  new Complain(editorGateway),
   configFile,
   createConfigFile,
   debugRepo,
