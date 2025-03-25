@@ -10,13 +10,17 @@ const baseTerminal = {
   hide: jest.fn(),
   dispose: jest.fn(),
   state: { isInteractedWith: false },
+  shellIntegration: undefined,
 };
 
 describe('areTerminalsClosed', () => {
   test('only one is closed', () => {
     expect(
       areTerminalsClosed(
-        { ...baseTerminal, exitStatus: { code: 1, reason: 1 } },
+        {
+          ...baseTerminal,
+          exitStatus: { code: 1, reason: 1 },
+        },
         baseTerminal
       )
     ).toEqual(false);

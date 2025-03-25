@@ -12,8 +12,6 @@ import type EditorGateway from 'gateway/EditorGateway';
 import {
   COMPLAIN_COMMAND,
   CREATE_CONFIG_FILE_COMMAND,
-  ENTER_LICENSE_COMMAND,
-  GET_LICENSE_COMMAND,
   JOB_TREE_VIEW_ID,
   PROCESS_TRY_AGAIN_COMMAND,
   SELECT_REPO_COMMAND,
@@ -128,13 +126,6 @@ export default class Children {
             'Try Again',
             `${JOB_TREE_VIEW_ID}.refresh`
           ),
-          this.commandFactory.create('Complain To Me', COMPLAIN_COMMAND),
-        ];
-      case JobError.LicenseKey:
-        return [
-          this.warningFactory.create('Please enter a Local CI license key.'),
-          this.commandFactory.create('Get License', GET_LICENSE_COMMAND),
-          this.commandFactory.create('Enter License', ENTER_LICENSE_COMMAND),
           this.commandFactory.create('Complain To Me', COMPLAIN_COMMAND),
         ];
       case JobError.NoFolderOpen:

@@ -2,7 +2,7 @@
   "name": "local-ci",
   "displayName": "Local CI",
   "description": "Debug CircleCI® workflows locally, with Bash access during and after. Free trial, then paid.",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "publisher": "LocalCI",
   "contributors": [
     "Ryan Kienstra"
@@ -20,8 +20,8 @@
   ],
   "qna": "https://github.com/getlocalci/local-ci/discussions",
   "engines": {
-    "vscode": "^1.60.0",
-    "node": "16"
+    "vscode": "^1.98.0",
+    "node": "20"
   },
   "os": [
     "!win32"
@@ -46,10 +46,7 @@
     "localCiJobs.selectRepo",
     "onCommand:local-ci.runWalkthroughJob",
     "onCommand:local-ci.debugWalkthroughJob",
-    "onCommand:local-ci.job.run",
     "onUri",
-    "onView:localCiJobs",
-    "onView:localCiLicense",
     "workspaceContains:**/.circleci/config.yml"
   ],
   "main": "./dist/extension.js",
@@ -117,11 +114,6 @@
         "command": "localCiJobs.enterToken",
         "title": "Local CI: Token Entry",
         "icon": "$(record-keys)"
-      },
-      {
-        "command": "localCiLicense.refresh",
-        "title": "Local CI: Refresh License Information",
-        "icon": "$(refresh)"
       }
     ],
     "keybindings": [
@@ -157,16 +149,11 @@
           "command": "localCiJobs.enterToken",
           "when": "view == localCiJobs",
           "group": "navigation"
-        },
-        {
-          "command": "localCiLicense.refresh",
-          "when": "view == localCiLicense",
-          "group": "navigation"
         }
       ],
       "explorer/context": [
         {
-          "when": "resourcePath =~ /.circleci/config.yml/",
+          "when": "resourceFilename == 'config.yml' && resourcePath =~ /.circleci/",
           "command": "local-ci.debug.repo"
         }
       ],
@@ -181,13 +168,9 @@
     "views": {
       "localCiDebugger": [
         {
+          "icon": "resources/logo.svg",
           "id": "localCiJobs",
           "name": "CircleCI® Jobs"
-        },
-        {
-          "id": "localCiLicense",
-          "name": "Local CI License Key",
-          "type": "webview"
         }
       ]
     },
@@ -252,16 +235,6 @@
   },
   "badges": [
     {
-      "url": "https://img.shields.io/badge/%24-paid-orange",
-      "href": "https://getlocalci.com/pricing/?utm_medium=extension&utm_source=badge",
-      "description": "Buy license key"
-    },
-    {
-      "url": "https://img.shields.io/badge/trial-30%20day-orange",
-      "href": "https://getlocalci.com/pricing/?utm_medium=extension&utm_source=badge",
-      "description": "30 day free trial"
-    },
-    {
       "url": "https://img.shields.io/badge/platform-macOS-yellow",
       "href": "https://en.wikipedia.org/wiki/MacOS",
       "description": "Platform: macOS"
@@ -290,16 +263,18 @@
     "test:watch": "jest --watch"
   },
   "devDependencies": {
-    "@cloudflare/binary-install": "^0.2.0",
     "@fluffy-spoon/substitute": "^1.208.0",
     "@types/glob": "^8.0.0",
     "@types/jest": "^29.2.0",
     "@types/js-yaml": "^4.0.1",
-    "@types/node": "^18.11.5",
-    "@types/vscode": "^1.60.0",
+    "@types/node": "^22.13.13",
+    "@types/vscode": "^1.98.0",
     "@typescript-eslint/eslint-plugin": "^6.19.0",
     "@typescript-eslint/parser": "^6.19.0",
-    "@vscode/vsce": "^2.22.0",
+    "@vscode/extension-telemetry": "^0.9.8",
+    "@vscode/vsce": "^3.3.0",
+    "axios": "^1.8.3",
+    "chownr": "^3.0.0",
     "eslint": "^8.16.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
@@ -315,12 +290,7 @@
     "ts-loader": "^9.2.8",
     "typescript": "^5.3.3",
     "util": "^0.12.4",
-    "webpack": "^5.70.0",
-    "webpack-cli": "^4.9.2"
-  },
-  "dependencies": {
-    "@vscode/extension-telemetry": "^0.9.2",
-    "axios": "^1.6.5",
-    "cross-sha256": "^1.2.0"
+    "webpack": "^5.98.0",
+    "webpack-cli": "^6.0.1"
   }
 }

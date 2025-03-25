@@ -1,5 +1,3 @@
-[![Buy license key](https://img.shields.io/badge/%24-paid-orange)](https://getlocalci.com/pricing/?utm_medium=extension&utm_source=readme)
-[![30 day free trial](https://img.shields.io/badge/trial-30%20day-orange)](https://getlocalci.com/pricing/?utm_medium=extension&utm_source=readme)
 [![Platform: macOS](https://img.shields.io/badge/platform-macOS-yellow)](https://en.wikipedia.org/wiki/MacOS)
 [![Requires CircleCI®](https://img.shields.io/badge/requires-CirlcleCI%C2%AE-yellow)](https://circleci.com/docs/2.0/first-steps/)
 
@@ -51,12 +49,6 @@ You can run most [dynamic configs](https://getlocalci.com/circleci-dynamic-confi
 
 Find out in seconds whether the setup is right, all in your local.
 
-## License Key
-
-Local CI requires a [license key](https://getlocalci.com/pricing/?utm_medium=extension&utm_source=readme) for $20 per month.
-
-But first you'll get a free 30-day trial, no credit card needed.
-
 ## Requirements
 
 [CircleCI®](https://circleci.com/docs/2.0/first-steps/), [macOS](https://en.wikipedia.org/wiki/MacOS), [Docker](https://www.docker.com/)
@@ -77,21 +69,13 @@ You can opt out of all telemetry by adding this to your VS Code `settings.json`:
 
 If you haven't opted out, here are the [telemetry events](https://github.com/getlocalci/local-ci/search?q=reporter.send) sent via [VS Code telemetry](https://code.visualstudio.com/docs/getstarted/telemetry).
 
-If you haven't entered a license key, like during the free trial, the only interaction this extension has with Local CI's site is if you optionally enter your email on first activating this extension.
+The only interaction this extension has with Local CI's site is if you optionally enter your email on first activating this extension.
 
 It does interact with CircleCI® and Docker to process and run the jobs.
 
 But the jobs still only run locally.
 
 Local CI has no server that runs jobs, so the site has no knowledge of the jobs or any data from them.
-
-If you have entered a license key, it only sends to the [Local CI site](https://getlocalci.com) a `GET` request with the license key and a `SHA-256` hash of your VS Code [machineId](https://code.visualstudio.com/api/references/vscode-api#env).
-
-This is to verify that the license key is only used on 1 machine.
-
-Here's an example [machineId](https://code.visualstudio.com/api/references/vscode-api#env): `b068aef3da6acff9c9bf4f129135ffd56adbfa294aeb8117c7264164c1a277d4`
-
-And that [machineId](https://code.visualstudio.com/api/references/vscode-api#env) is hashed with `SHA-256` before sending it in the `GET` request.
 
 Feel free to look at the [source code](https://github.com/getlocalci/local-ci/tree/develop/src) for how Local CI works.
 

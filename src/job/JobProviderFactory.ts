@@ -10,7 +10,6 @@ import EditorGateway from 'gateway/EditorGateway';
 import FsGateway from 'gateway/FsGateway';
 import JobFactory from './JobFactory';
 import JobProvider from './JobProvider';
-import License from 'license/License';
 import LogFactory from 'log/LogFactory';
 import ReporterGateway from 'gateway/ReporterGateway';
 import WarningFactory from './WarningFactory';
@@ -25,7 +24,6 @@ export default class JobProviderFactory {
     public docker: Docker,
     public editorGateway: EditorGateway,
     public fsGateway: FsGateway,
-    public license: License,
     public config: Config,
     public jobFactory: JobFactory,
     public logFactory: LogFactory,
@@ -48,7 +46,6 @@ export default class JobProviderFactory {
       this.docker,
       this.editorGateway,
       this.fsGateway,
-      this.license,
       this.config,
       this.retryer,
       this.allJobs,

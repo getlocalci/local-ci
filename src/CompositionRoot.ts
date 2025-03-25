@@ -2,7 +2,6 @@ import ChildProcessGateway from 'gateway/ChildProcessGateway';
 import EditorGateway from 'gateway/EditorGateway';
 import EnvVar from 'process/EnvVar';
 import FsGateway from 'gateway/FsGateway';
-import HttpGateway from 'gateway/HttpGateway';
 import OsGateway from 'gateway/OsGateway';
 import ProcessGateway from 'gateway/ProcessGateway';
 import ReporterGateway from 'gateway/ReporterGateway';
@@ -19,15 +18,11 @@ import ConfigFile from 'config/ConfigFile';
 import CreateConfigFile from 'command/CreateConfigFile';
 import DebugRepo from 'command/DebugRepo';
 import Docker from 'containerization/Docker';
-import Email from 'license/Email';
-import EnterLicense from 'command/EnterLicense';
 import EnterToken from 'command/EnterToken';
 import EnvPath from 'common/EnvPath';
 import ExitAllJobs from 'command/ExitAllJobs';
 import ExitJob from 'command/ExitJob';
 import FinalTerminal from 'terminal/FinalTerminal';
-import FirstActivation from 'job/FirstActivation';
-import GetLicense from 'command/GetLicense';
 import Help from 'command/Help';
 import JobFactory from 'job/JobFactory';
 import JobListener from 'job/JobListener';
@@ -36,10 +31,6 @@ import JobRunner from 'job/JobRunner';
 import JobTerminals from 'terminal/JobTerminals';
 import LatestCommittedImage from 'containerization/LatestCommittedImage';
 import LocalCi from './common/LocalCi';
-import License from 'license/License';
-import LicenseInput from 'license/LicenseInput';
-import LicensePresenter from 'license/LicensePresenter';
-import LicenseProviderFactory from 'license/LicenseProviderFactory';
 import LogFactory from 'log/LogFactory';
 import LogFile from 'log/LogFile';
 import LogProviderFactory from 'log/LogProviderFactory';
@@ -49,7 +40,6 @@ import Persistence from 'process/Persistence';
 import PipelineParameter from 'config/PipelineParameter';
 import ProcessFile from 'process/ProcessFile';
 import Refresh from 'command/Refresh';
-import RefreshLicenseTree from 'command/RefreshLicenseTree';
 import RegistrarFactory from 'common/RegistrarFactory';
 import ReRunJob from 'command/ReRunJob';
 import Retryer from 'job/Retryer';
@@ -70,7 +60,6 @@ import Workspace from 'common/Workspace';
 const childProcessGateway = new ChildProcessGateway();
 const editorGateway = new EditorGateway();
 const fsGateway = new FsGateway();
-const httpGateway = new HttpGateway();
 const osGateway = new OsGateway();
 const processGateway = new ProcessGateway();
 const reporterGateway = new ReporterGateway();
@@ -123,7 +112,6 @@ const configFile = new ConfigFile(
 const createConfigFile = new CreateConfigFile(editorGateway, reporterGateway);
 const debugRepo = new DebugRepo(editorGateway, reporterGateway);
 const docker = new Docker(childProcessGateway, spawn);
-const email = new Email(editorGateway, httpGateway, reporterGateway);
 const enterToken = new EnterToken(editorGateway);
 const images = new Images(childProcessGateway, spawn);
 const exitAllJobs = new ExitAllJobs(images, editorGateway, reporterGateway);
@@ -172,8 +160,6 @@ const jobRunner = new JobRunner(
 );
 const jobTerminals = new JobTerminals(editorGateway);
 const exitJob = new ExitJob(jobFactory, jobRunner, jobTerminals);
-const getLicense = new GetLicense(editorGateway);
-const license = new License(editorGateway, httpGateway);
 const retryer = new Retryer();
 const jobProviderFactory = new JobProviderFactory(
   allConfigFiles,
@@ -183,7 +169,6 @@ const jobProviderFactory = new JobProviderFactory(
   docker,
   editorGateway,
   fsGateway,
-  license,
   config,
   jobFactory,
   logFactory,
@@ -193,30 +178,17 @@ const jobProviderFactory = new JobProviderFactory(
   allJobs
 );
 
-const licenseInput = new LicenseInput(editorGateway, license);
-const licensePresenter = new LicensePresenter(license);
-const licenseProviderFactory = new LicenseProviderFactory(
-  license,
-  licenseInput,
-  licensePresenter,
-  editorGateway
-);
 const registrarFactory = new RegistrarFactory(
   new Complain(editorGateway),
   configFile,
   createConfigFile,
   debugRepo,
-  new EnterLicense(licenseInput),
   enterToken,
   exitAllJobs,
   exitJob,
-  new FirstActivation(editorGateway, reporterGateway, email),
-  getLicense,
   new Help(editorGateway, reporterGateway),
-  licenseInput,
   new LogProviderFactory(fsGateway),
   new Refresh(),
-  new RefreshLicenseTree(editorGateway),
   new ReRunJob(editorGateway, jobRunner, jobTerminals, reporterGateway),
   new RunJob(editorGateway, jobRunner, reporterGateway),
   new RunWalkthroughJob(config, configFile, editorGateway, reporterGateway),
@@ -230,7 +202,6 @@ const registrarFactory = new RegistrarFactory(
 export const app = new LocalCi(
   fsGateway,
   jobProviderFactory,
-  licenseProviderFactory,
   registrarFactory,
   reporterGateway
 );
