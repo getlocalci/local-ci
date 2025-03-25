@@ -55,48 +55,44 @@ function downloadAndExtract(url, installDirectory) {
   return new Promise((resolve, reject) => {
     const tempFilePath = path.join(installDirectory, 'temp.tar.gz');
 
-    // Ensure the install directory exists
     fs.mkdirSync(installDirectory, { recursive: true });
+    const file = fs.createWriteStream(tempFilePath);
+    https.get(url, (response) => {
+      if (response.statusCode === 302 && response.headers.location) {
+        response.destroy();
+        return download(response.headers.location);
+      }
 
-    const download = (currentUrl) => {
-      const file = fs.createWriteStream(tempFilePath);
-      https.get(currentUrl, (response) => {
-        if (response.statusCode === 302 && response.headers.location) {
-          response.destroy();
-          return download(response.headers.location);
-        }
+      if (response.statusCode !== 200) {
+        return reject(new Error(`Failed to download binary: ${response.statusCode}`));
+      }
 
-        if (response.statusCode !== 200) {
-          return reject(new Error(`Failed to download binary: ${response.statusCode}`));
-        }
+      response.pipe(file);
+      file.on('finish', () => {
+        file.close(() => {
+          const tempExtractDir = path.join(installDirectory, 'temp-extract');
+          fs.mkdirSync(tempExtractDir, { recursive: true });
 
-        response.pipe(file);
-        file.on('finish', () => {
-          file.close(() => {
-            const tempExtractDir = path.join(installDirectory, 'temp-extract');
-            fs.mkdirSync(tempExtractDir, { recursive: true });
+          fs.createReadStream(tempFilePath)
+            .pipe(zlib.createGunzip())
+            .pipe(tar.extract(tempExtractDir))
+            .on('finish', () => {
+              fs.readdirSync(tempExtractDir).forEach((dir) => {
+                fs.readdirSync(path.join(tempExtractDir, dir)).forEach((file) => {
+                  if (file === 'circleci') {
+                    const srcPath = path.join(tempExtractDir, dir, file);
+                    const destPath = path.join(installDirectory, file);
+                    fs.renameSync(srcPath, destPath);
+                  }
+                })
+              });
 
-            fs.createReadStream(tempFilePath)
-              .pipe(zlib.createGunzip())
-              .pipe(tar.extract(tempExtractDir))
-              .on('finish', () => {
-                fs.readdirSync(tempExtractDir).forEach((dir) => {
-                  fs.readdirSync(path.join(tempExtractDir, dir)).forEach((file) => {
-                    if (file === 'circleci') {
-                      const srcPath = path.join(tempExtractDir, dir, file);
-                      const destPath = path.join(installDirectory, file);
-                      fs.renameSync(srcPath, destPath);
-                    }
-                  })
-                });
+              fs.rmSync(tempExtractDir, { recursive: true, force: true });
+              fs.unlinkSync(tempFilePath);
 
-                fs.rmSync(tempExtractDir, { recursive: true, force: true });
-                fs.unlinkSync(tempFilePath);
-
-                resolve();
-              })
-              .on('error', (err) => {
-              // Clean up on error
+              resolve();
+            })
+            .on('error', (err) => {
               if (fs.existsSync(tempExtractDir)) {
                 fs.rmSync(tempExtractDir, { recursive: true, force: true });
               }
@@ -104,21 +100,17 @@ function downloadAndExtract(url, installDirectory) {
                 fs.unlinkSync(tempFilePath);
               }
               reject(err);
-              });
-          });
+            });
         });
-      }).on('error', (err) => {
-        if (fs.existsSync(tempFilePath)) {
-          fs.unlinkSync(tempFilePath);
-        }
-        reject(err);
       });
-    };
-
-    download(url);
+    }).on('error', (err) => {
+      if (fs.existsSync(tempFilePath)) {
+        fs.unlinkSync(tempFilePath);
+      }
+      reject(err);
+    });
   });
 }
-
 
 async function install() {
   for (const platform of supportedPlatforms) {
