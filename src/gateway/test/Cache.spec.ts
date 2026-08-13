@@ -2,26 +2,19 @@ import Cache from '../Cache';
 
 describe('Cache', () => {
   it('can set and get a value', () => {
-    const cache = new Cache();
-    cache.set('foo', 'baz');
-    expect(cache.get('foo')).toBe('baz');
+    expect(new Cache().set('foo', 'baz').get('foo')).toBe('baz');
   });
 
   it('in get(), throws an error if a key does not exist', () => {
     expect(() => new Cache().get('foo')).toThrow('The key foo does not exist');
-    expect(() => {
-      const cache = new Cache();
-      cache.set('foo', 'baz', 0, new Date().getTime() - 1);
-      cache.get('foo');
-    }).toThrow('The key foo does not exist');
+    expect(() =>
+      new Cache().set('foo', 'baz', 0, new Date().getTime() - 1).get('foo')
+    ).toThrow('The key foo does not exist');
   });
 
   it('gets whether it has a value', () => {
-    const cache = new Cache();
-    expect(cache.has('foo')).toBe(false);
-
-    cache.set('foo', 'baz');
-    expect(cache.has('foo')).toBe(true);
+    expect(new Cache().has('foo')).toBe(false);
+    expect(new Cache().set('foo', 'baz').has('foo')).toBe(true);
   });
 
   describe('cache respects key expiration', () => {
@@ -41,9 +34,9 @@ describe('Cache', () => {
       h: { val: 'lorem', exp: 0 },
       i: { val: 'lorem', exp: 0 },
       j: { val: 'lorem', exp: 0 },
-    });
-    cache.set('foo', 'ipsum');
-    cache.set('baz', 'another');
+    })
+      .set('foo', 'ipsum')
+      .set('baz', 'another');
 
     expect(cache.has('foo')).toBe(true);
     expect(cache.has('baz')).toBe(true);

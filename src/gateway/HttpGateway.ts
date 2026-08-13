@@ -13,7 +13,7 @@ export default class HttpGateway {
     }
 
     const result = await axios.get(url, config);
-    this.cache.set(url, result);
+    this.cache = this.cache.set(url, result);
 
     return result;
   }
